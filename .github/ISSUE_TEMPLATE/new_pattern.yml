@@ -1,0 +1,37 @@
+name: "💡 New pattern or exemplar"
+description: Propose adding a pattern, anti-pattern, production exemplar, or framework/vendor update.
+labels: ["proposal"]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of addition?
+      options:
+        - Production exemplar (a system worth studying)
+        - Composition pattern
+        - Anti-pattern
+        - Framework / vendor update
+        - Reading-list entry
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: The proposal
+      description: What should be added, and where in the standard does it belong?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Why does this belong in a standard? Link a production writeup, a reproducible result, or a credible primary source.
+    validations:
+      required: true
+  - type: textarea
+    id: teaches
+    attributes:
+      label: What does it teach that the current content doesn't?
+    validations:
+      required: false

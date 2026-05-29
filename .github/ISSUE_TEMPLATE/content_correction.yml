@@ -1,0 +1,45 @@
+name: "📝 Content correction"
+description: Report something in the standard or skills that is wrong, outdated, or missing a source.
+labels: ["correction"]
+body:
+  - type: dropdown
+    id: location
+    attributes:
+      label: Where is the issue?
+      options:
+        - STANDARD.md
+        - docs/STANDARD.ru.md
+        - skills/agentic-product-architect (master)
+        - skills — architecture-design
+        - skills — context-engineering
+        - skills — harness-engineering
+        - skills — tool-design-mcp
+        - skills — memory-architecture
+        - skills — durable-execution
+        - skills — eval-driven-dev
+        - skills — framework-selection
+        - skills — production-readiness
+        - skills — antipatterns-review
+        - README / other
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: What does it currently say?
+      description: Quote the exact passage (with a section heading or line range if you can).
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What should it say, and why?
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Primary source
+      description: A link backing the correction. Single-vendor benchmarks are directional, not ground truth.
+    validations:
+      required: false

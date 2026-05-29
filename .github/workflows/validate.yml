@@ -1,0 +1,45 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  links:
+    name: Internal links & skill frontmatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check relative links resolve
+        run: |
+          set -euo pipefail
+          status=0
+          # Extract markdown relative links (skip http/https/mailto and in-page anchors).
+          links=$(grep -rohE '\]\(([^)]+)\)' --include='*.md' . \
+            | sed -E 's/.*\]\(([^)]+)\)/\1/' \
+            | grep -vE '^(https?:|mailto:|#)' \
+            | sed -E 's/#.*$//' | sort -u)
+          while IFS= read -r link; do
+            [ -z "$link" ] && continue
+            if [ ! -e "$link" ]; then
+              echo "::error::Broken relative link: $link"
+              status=1
+            fi
+          done <<< "$links"
+          exit $status
+
+      - name: Check every SKILL.md has name + description frontmatter
+        run: |
+          set -euo pipefail
+          status=0
+          while IFS= read -r f; do
+            if ! head -n 10 "$f" | grep -q '^name:'; then
+              echo "::error::$f missing 'name:' frontmatter"; status=1
+            fi
+            if ! head -n 10 "$f" | grep -q '^description:'; then
+              echo "::error::$f missing 'description:' frontmatter"; status=1
+            fi
+          done < <(find skills -name 'SKILL.md')
+          exit $status
