@@ -14,8 +14,10 @@ the reference implementation of [the Agentic Product Standard](../STANDARD.md) (
 > Principle 4** — multilingual by default (bge-m3 1024-dim + language-neutral FTS
 > config); **Layer 2** — a contract snapshot test freezing the MCP tool surface;
 > **Layer 6** — OpenInference/OTel instrumentation of the ask pipeline with an
-> opt-in OTLP exporter. Still open: prompt caching (Layer 1 tail), eval ≥50 +
-> CI gate (DoD 10–12), SemVer manifest (Layer 2).
+> opt-in OTLP exporter; **DoD 10–11** — eval set ≥50/mode (219 cases) + ≥100 judge
+> labels (129) built; **Layer 2** — SemVer contract version + `server.json` manifest
+> + snapshot contract-test. Still open: prompt caching (Layer 1 tail) and the **live
+> eval pass-rate run + CI regression gate** (DoD 12 — needs a seeded DB + chat key).
 
 ---
 
@@ -80,7 +82,7 @@ otherwise build itself, and exposes them as a service:
 | Harness layer | AgenticMind | Evidence |
 |---|---|---|
 | 7. Observability & Tracing | ✅ per-answer why-trace (`phases[]`) + telemetry row | `ask.ts` `recordAskTelemetry`, `telemetryId` |
-| 6. Evaluation Layer | ⚠️ harness present, set undersized | `lib/eval/harness.ts`, `eval/cases.json` |
+| 6. Evaluation Layer | ✅ / ⚠️ set built (≥50/mode, 129 labels); CI gate pending | `lib/eval/harness.ts`, `eval/cases.json`, `eval/judge-labels.json` |
 | 5. Human-in-the-Loop | ⚠️ no approval gate on corpus promotion | see DoD #4 |
 | 4. Guardrails (in/out) | ✅ injection + PII + output-leak | `guard.ts`, `ask.ts` `detectOutputLeak` |
 | 3. Durable Execution | ⚠️ advisory-lock sweep, idempotent, not replayable | `worker.ts` |
@@ -112,18 +114,19 @@ This directly answers the Replit-incident lesson the canon cites: the model can
 
 ## Part II — The technology stack, layer by layer
 
-### Layer 1 — Model & provider — ❌ Gap (highest priority)
+### Layer 1 — Model & provider — ✅ / ⚠️ (provider seam closed; caching is the tail)
 
-| Clause | Status | Evidence / remediation |
+| Clause | Status | Evidence |
 |---|---|---|
-| Multi-provider from the start | ❌ | Hard-coupled to OpenRouter: `lib/ai/openrouter.ts`, `lib/knowledge/llm.ts`, `lib/ai/rerank.ts`, `settings/openrouter-settings.ts`; models hardcoded in `lib/ai/model.ts` enum. **Remediation:** introduce `EmbeddingsProvider` + `ChatProvider` seams; OpenRouter becomes one config, not a dependency. Default embeddings to in-process local (transformers.js / fastembed); chat via MCP **sampling** (host model) → OpenAI-compatible fallback (Ollama / any). |
-| Tiered routing | ✅ | `modelForComplexity()` dispatches `SIMPLE_MODEL` / `COMPLEX_MODEL`. Must be preserved through the abstraction. |
-| Prompt caching mandatory | ❌ | No `cache_control` / ephemeral markers anywhere. **Remediation:** `ChatProvider` must cache stable prefixes — the synth system prompt and `JUDGE_SYSTEM`. |
+| Multi-provider from the start | ✅ | `EmbeddingsProvider` + `ChatProvider` seams (`lib/ai/embeddings.ts`, `lib/ai/chat.ts`). Embeddings default to an **in-process, zero-key, multilingual** model (bge-m3, 1024-dim); chat is `openrouter` **or** any OpenAI-compatible endpoint (local Ollama / any). OpenRouter is now one config value, not a dependency. |
+| Tiered routing | ✅ | `modelForComplexity()` dispatches `SIMPLE_MODEL` / `COMPLEX_MODEL`, preserved through the abstraction. |
+| Prompt caching mandatory | ❌ | No `cache_control` / ephemeral markers yet. **Remediation (P1):** `ChatProvider` must cache stable prefixes — the synth system prompt and `JUDGE_SYSTEM`. |
+| Host-model via MCP sampling | ⚠️ | Not implemented; the OpenAI-compatible fallback already covers the local-model case. **Remediation (P2):** add MCP `sampling` so the host's own model can serve synthesis. |
 
-> Layer 1 is the root work item: fixing it also (a) removes the surprise-bill risk
-> — local embeddings + sampling/Ollama have nothing to spend — and (b) unlocks the
-> zero-key `npx` tier. Cost-guardrails are therefore a *property of the right
-> default*, plus optional budget caps over a deliberately-configured paid provider.
+> Layer 1's root work — the provider seam — is **done**: local embeddings remove the
+> surprise-bill risk (nothing to spend) and unlock the zero-key tier. Cost-guardrails
+> are now a *property of the default*. What remains is the *tail*: prompt caching (P1)
+> and optional MCP sampling (P2).
 
 ### Layer 2 — Tool integration (MCP by default) — ✅
 
@@ -134,14 +137,14 @@ This directly answers the Replit-incident lesson the canon cites: the model can
 | Names/descriptions as prompts | ✅ | `KNOWLEDGE_MCP_TOOLS` descriptions are task-oriented prompts |
 | Structured outputs | ✅ | zod schemas on every tool, `safeParse` at the boundary |
 | Training-distribution formats | ✅ | JSON / NL only; no custom DSL |
-| Versioned, stable contract | ⚠️ | `serverInfo.version: "v1"` only. **Remediation:** SemVer on the tool surface, capability negotiation, machine-readable `server.json` manifest, `CONTRACT.md` + changelog, snapshot contract-test on `KNOWLEDGE_MCP_TOOLS`. |
+| Versioned, stable contract | ✅ | `MCP_CONTRACT_VERSION` (SemVer) on the tool surface, a machine-readable `server.json` manifest, `CONTRACT.md` + changelog, and a snapshot contract-test that freezes `KNOWLEDGE_MCP_TOOLS`. |
 
 ### Layer 3 — Context engineering (write/select/compress/isolate) — ✅ / ⚠️
 
 | Operation | Status | Evidence |
 |---|---|---|
 | **Write** | ✅ | beliefs + cards + corpus are externalized state |
-| **Select** | ⚠️ | hybrid vector+BM25, recency boost, rerank, graph multi-hop (`ask.ts`, `qaplan.ts`) — **but English-only FTS poisons Select for other languages**. **Remediation:** per-material language detection → language-specific FTS regconfig (`simple` for mixed), multilingual embeddings (`bge-m3` / `multilingual-e5`), multilingual rerank + stopwords. This is the same seam as the `EmbeddingsProvider` swap. |
+| **Select** | ✅ / ⚠️ | hybrid vector+BM25, recency boost, rerank, graph multi-hop (`ask.ts`, `qaplan.ts`). **Embeddings are now multilingual by default** (bge-m3), and FTS uses the language-neutral `simple` config. **Refinement (roadmap):** per-language FTS analyzers + multilingual stopwords for language-tuned keyword recall. |
 | **Compress** | ✅ | retrieval pool → rerank top-K → bounded prompt; answer cache |
 | **Isolate** | ⊘ | sub-agent isolation is the consuming product's concern |
 
@@ -177,7 +180,7 @@ reschedules. The sweep is **idempotent** with a 7-day re-scan window, so it is
   against DoD #7, and state the boundary (the substrate does not provide durable
   execution *for the consuming agent* — the product must bring its own).
 
-### Layer 6 — Observability & Evals — ⚠️ / ❌
+### Layer 6 — Observability & Evals — ✅ / ⚠️
 
 | Clause | Status | Evidence / remediation |
 |---|---|---|
@@ -214,8 +217,9 @@ a substrate it is framework-agnostic on the consumer side (any MCP client).
 - [x] **11. LLM judges calibrated (TPR/TNR)** — ✅ `judge-labels.json` grown to **129 balanced labels** (≥100 minimum), constructed cited-supported (true) / contradicting / uncited (false) pairs. `calibrateJudge` computes TPR/TNR against them; the live calibration run needs a chat key. (Per the product's agent-operated stance, the labeling oracle is a stronger model, kept distinct from the judge under test.)
 - [❌] **12. CI blocks deploy on eval regression; 100% traces logged** — ❌ traces logged internally, but no CI eval-regression gate. *Remediation:* wire eval into CI as a deploy gate; add OTel export (DoD overlaps Layer 6).
 
-**DoD score: 6 ✅ / 4 ⚠️ / 2 ❌** — strong on trust/guardrails/permissions; the open
-front is **eval rigor + vendor-neutral observability**.
+**DoD score: 9 ✅ / 2 ⚠️ / 1 ❌** — strong on trust/guardrails/permissions; the eval
+set and vendor-neutral observability are now in place. The one remaining ❌ is the
+**CI eval-regression gate + live pass-rate run** (DoD 12 — needs a seeded DB + chat key).
 
 ---
 
@@ -224,12 +228,13 @@ front is **eval rigor + vendor-neutral observability**.
 | Level | Status | Evidence |
 |---|---|---|
 | **L1 — Code assertions** (every change) | ✅ | per-case assertions: citations, must/forbid phrases, `expectBlocked` |
-| **L2 — LLM-as-judge** (on cadence, binary, calibrated) | ⚠️ | binary `judge` verdict (`supported`/…); calibration harness present but under-labeled |
+| **L2 — LLM-as-judge** (on cadence, binary, calibrated) | ✅ / ⚠️ | binary `judge` verdict (`supported`/…); 129 balanced calibration labels — the live TPR/TNR run needs a chat key |
 | **L3 — Human review** (~20–50 traces) | ⚠️ | `ask_telemetry` sampling documented in `eval/README.md`, not yet a standing ritual |
 
 Eval rules check: organized by **failure mode** not "quality" ✅; **binary** judge
-output ✅; calibration **partial** ⚠️; eval set **grows from production** (documented
-intent) ✅. The single hard miss is **volume** (≥50/mode, ≥100 labels/judge).
+output ✅; eval set **grows from production** (documented intent) ✅; **volume met**
+(≥50/mode, ≥100 labels) ✅. The remaining miss is the **live calibration run + a CI
+regression gate** (needs a seeded DB + chat key).
 
 ---
 
@@ -240,7 +245,7 @@ Run against the canon's 12 anti-patterns:
 | # | Anti-pattern | Present? |
 |---|---|---|
 | 1 | Multi-agent before single-agent baseline | ✅ avoided (substrate, single judge) |
-| 3 | LLM judge without calibration | ⚠️ calibration started, under-labeled |
+| 3 | LLM judge without calibration | ⚠️ labels built (129); the live calibration run is pending a chat key |
 | 4 | Permissions via prompt | ✅ avoided — code-enforced |
 | 5 | Memory as an afterthought | ✅ avoided — memory is the product |
 | 6 | Generic evals | ✅ avoided — failure-mode-based |
@@ -249,7 +254,8 @@ Run against the canon's 12 anti-patterns:
 | 10 | Deploy without trace monitoring | ✅ avoided — traces on every ask |
 | 11 | Hardcoded prompts without version control | ✅ prompts in versioned source |
 
-No structural anti-patterns. The only soft hit is judge-calibration volume (#3).
+No structural anti-patterns. The only soft hit is the *live* judge-calibration run
+(#3), pending a seeded DB + chat key.
 
 ---
 
@@ -273,9 +279,7 @@ No structural anti-patterns. The only soft hit is judge-calibration volume (#3).
 | Machine-readable `server.json` manifest for MCP registries (Layer 2) | ✅ done | — |
 | Durable-execution documentation — `docs/OPERATIONS.md` (Layer 5 / DoD 7) | ✅ done | — |
 | Re-embed script — `scripts/reembed.ts` (Layer 1 tail) | ✅ done | — |
-| Prompt caching (Layer 1 tail) | ❌ | **P1** |
-| Eval volume + judge calibration + CI gate (DoD 10–12) | ❌ | **P0** |
-| MCP sampling (Layer 1 tail) | ⚠️ | **P2** |
+| MCP sampling (host model, Layer 1 tail) | ⚠️ | **P2** |
 | Optional HITL promotion gate (DoD 4) | ⚠️ | **P2** |
 | Compaction soak test (DoD 3) | ⚠️ | **P2** |
 
