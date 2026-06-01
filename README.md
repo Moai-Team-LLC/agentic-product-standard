@@ -86,6 +86,16 @@ Two artifacts, one idea:
 
 The skill set works with [Claude Code](https://claude.com/claude-code). One master skill routes to ten specialized sub-skills; each is independently triggerable.
 
+### Fastest: one command, no clone
+
+If you have [`skills`](https://github.com/mattpocock/skills) (the community skill installer), pull the skill straight from this repo — it scans `skills/`, lets you pick `agentic-product-architect`, and installs it into the agents you choose:
+
+```bash
+npx skills@latest add Moai-Team-LLC/agentic-product-standard
+```
+
+> This installs the **skills only**. To also stand up the runnable memory layer ([AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)), run the `setup.sh --with-agenticmind` flow below — or, after adding the skills, point your agent's MCP client at a self-hosted AgenticMind (see its [Quickstart](https://github.com/Moai-Team-LLC/AgenticMind#-quickstart)).
+
 ### Quick setup (one train)
 
 `setup.sh` installs the skills and, in the same run, can stand up **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** — the reference implementation — as a runnable **knowledge & memory layer** your agent calls over MCP. Design guidance *and* a working substrate, end to end:

@@ -1,0 +1,10 @@
+# Code owners — auto-requested for review on matching paths.
+# Docs: https://docs.github.com/articles/about-code-owners
+
+# Default owner for everything in the repo
+*       @AlexDuchDev
+
+# The canonical standard and the skill set are the stable core — review carefully.
+/STANDARD.md            @AlexDuchDev
+/skills/                @AlexDuchDev
+/setup.sh               @AlexDuchDev
