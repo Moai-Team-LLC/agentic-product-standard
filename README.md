@@ -12,7 +12,7 @@
 [![Standard v1.0](https://img.shields.io/badge/Standard-v1.0-blue.svg)](STANDARD.md)
 [![Stars](https://img.shields.io/github/stars/Moai-Team-LLC/agentic-product-standard?style=social)](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers)
 
-**[Read the Standard →](STANDARD.md)**  ·  **[Install the Skills →](#-install-the-skills)**  ·  **[Decision Checklist →](#-the-10-question-checklist)**
+**[Product Standard →](STANDARD.md)**  ·  **[Agent Standard →](AGENT_STANDARD.md)**  ·  **[Install the Skills →](#-install-the-skills)**  ·  **[Decision Checklist →](#-the-10-question-checklist)**
 
 </div>
 
@@ -60,7 +60,8 @@ Five principles converged *independently* across the production practices of the
 
 ```
 agentic-product-standard/
-├── STANDARD.md                          ← the canonical standard
+├── STANDARD.md                          ← the canonical standard (product level)
+├── AGENT_STANDARD.md                    ← the single-agent operational standard (mirrored in agent-builder)
 ├── CONTEXT.md                           ← shared vocabulary every skill speaks
 ├── setup.sh                             ← quick setup: skills + (optional) AgenticMind, one run
 ├── examples/agenticmind-case-study.md   ← reference implementation, audited against the canon
@@ -81,9 +82,10 @@ agentic-product-standard/
         └── antipatterns-review/          ← code review through 12 known failure modes
 ```
 
-Two artifacts, one idea:
+Two standards, one practice:
 
-- **[`STANDARD.md`](STANDARD.md)** is the *reference* — read it once, return to it often.
+- **[`STANDARD.md`](STANDARD.md)** is the *product-level* reference — read it once, return to it often.
+- **[`AGENT_STANDARD.md`](AGENT_STANDARD.md)** is the *single-agent* operational standard — contract, schemas, permission tiers, durable state, evals (also bundled into the `agent-builder` skill so it ships self-contained).
 - **[`skills/`](skills/)** is the *practice* — two Claude Code skills (`agent-builder` for one agent, `agentic-product-architect` for multi-agent products) that auto-load the right guidance while you design, build, and review.
 
 ## 🚀 Install the skills

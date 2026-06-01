@@ -47,3 +47,14 @@ jobs:
             fi
           done < <(find skills -name 'SKILL.md')
           exit $status
+
+      - name: AGENT_STANDARD.md root copy stays in sync with the bundled skill copy
+        run: |
+          # The single-agent standard is first-class at the repo root AND bundled
+          # into skills/agent-builder/ so the skill ships self-contained. The two
+          # must be byte-identical (the doc is written link-free so location does
+          # not matter). Edit one, then copy to the other.
+          if ! diff -q AGENT_STANDARD.md skills/agent-builder/AGENT_STANDARD.md; then
+            echo "::error::AGENT_STANDARD.md (root) and skills/agent-builder/AGENT_STANDARD.md have drifted — they must be identical. Run: cp AGENT_STANDARD.md skills/agent-builder/AGENT_STANDARD.md"
+            exit 1
+          fi
