@@ -10,7 +10,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Claude Code Skills](https://img.shields.io/badge/Claude%20Code-Skills-d97757.svg)](skills/agentic-product-architect)
 [![Standard v1.0](https://img.shields.io/badge/Standard-v1.0-blue.svg)](STANDARD.md)
-[![Stars](https://img.shields.io/github/stars/AlexDuchDev/agentic-product-standard?style=social)](https://github.com/AlexDuchDev/agentic-product-standard/stargazers)
+[![Stars](https://img.shields.io/github/stars/Moai-Team-LLC/agentic-product-standard?style=social)](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers)
 
 **[Read the Standard →](STANDARD.md)**  ·  **[Install the Skills →](#-install-the-skills)**  ·  **[Decision Checklist →](#-the-10-question-checklist)**
 
@@ -29,6 +29,7 @@ Most teams ship agent demos. Few ship agents that survive contact with productio
 - [The five principles](#the-five-principles)
 - [What's in this repo](#whats-in-this-repo)
 - [Install the skills](#-install-the-skills)
+- [The reference implementation](#-the-reference-implementation)
 - [The Autonomy Ladder](#the-autonomy-ladder)
 - [The five composition patterns](#the-five-composition-patterns)
 - [The 7-layer harness](#the-7-layer-harness)
@@ -60,6 +61,8 @@ Five principles converged *independently* across the production practices of the
 ```
 agentic-product-standard/
 ├── STANDARD.md                          ← the canonical standard
+├── setup.sh                             ← quick setup: skills + (optional) AgenticMind, one run
+├── examples/agenticmind-case-study.md   ← reference implementation, audited against the canon
 └── skills/agentic-product-architect/    ← Claude Code skill set (operationalizes the standard)
     ├── SKILL.md                          ← master: router + philosophy
     ├── architecture-design/              ← autonomy ladder, 5 patterns, single vs multi
@@ -83,10 +86,29 @@ Two artifacts, one idea:
 
 The skill set works with [Claude Code](https://claude.com/claude-code). One master skill routes to ten specialized sub-skills; each is independently triggerable.
 
+### Quick setup (one train)
+
+`setup.sh` installs the skills and, in the same run, can stand up **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** — the reference implementation — as a runnable **knowledge & memory layer** your agent calls over MCP. Design guidance *and* a working substrate, end to end:
+
+```bash
+git clone https://github.com/Moai-Team-LLC/agentic-product-standard.git
+cd agentic-product-standard
+./setup.sh --with-agenticmind        # skills → clone AgenticMind → its setup.sh (deps + Postgres + migrations)
+```
+
+Run bare (`./setup.sh`) and it installs the skills, then *asks* whether to set AgenticMind up next. AgenticMind's leg needs [Bun](https://bun.sh) ≥1.3 + Docker; the skills themselves need neither.
+
+```bash
+./setup.sh                  # install skills here, then prompt about AgenticMind
+./setup.sh --user           # install skills into ~/.claude/skills (every project)
+./setup.sh --skills-only    # skills only, no prompt
+```
+
+### Manual install
+
 **User-level (available in every project):**
 
 ```bash
-git clone https://github.com/AlexDuchDev/agentic-product-standard.git
 cp -R agentic-product-standard/skills/agentic-product-architect ~/.claude/skills/
 ```
 
@@ -98,6 +120,17 @@ cp -R /path/to/agentic-product-standard/skills/agentic-product-architect .claude
 ```
 
 Claude Code discovers skills via each `SKILL.md` and its YAML frontmatter. Once installed, the master skill auto-triggers when you mention building an agent, an agentic product, a multi-agent system, an agent loop, or any major agentic framework (LangGraph, CrewAI, OpenAI Agents SDK, Claude Agent SDK, Pydantic AI, AutoGen). Ask a focused question — *"Mem0 or Zep?"*, *"how should I structure context?"*, *"review my agent code"* — and the relevant sub-skill loads directly.
+
+## 🌐 The reference implementation
+
+The standard tells you *how*; **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** is a repo you can *run*. It's the flagship reference implementation — an auditable, self-improving **knowledge & memory layer** that agentic products plug into over MCP (the OSS pick for the memory slot in [`memory-architecture`](skills/agentic-product-architect/memory-architecture)). The [`./setup.sh --with-agenticmind`](#quick-setup-one-train) flow above stands it up in the same run.
+
+|     | Repo | Use it when |
+| --- | --- | --- |
+| 📐 | **agentic-product-standard** (this repo) | You're **designing or building** an agent / agentic product — the standard + skills tell you *how*. |
+| 🧠 | **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** | You need a **knowledge & memory layer** for your agent — a working implementation you can run. |
+
+See the [**AgenticMind case study**](examples/agenticmind-case-study.md) for a layer-by-layer map of how that repo implements this canon.
 
 ## The Autonomy Ladder
 
@@ -223,7 +256,7 @@ The architectural canons (the autonomy ladder, the 5 patterns, single-vs-multi, 
 
 <div align="center">
 
-**If this saved you a week of architecture debates, [star the repo](https://github.com/AlexDuchDev/agentic-product-standard/stargazers) ⭐ so others find it.**
+**If this saved you a week of architecture debates, [star the repo](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers) ⭐ so others find it.**
 
 *v1.0 · assembled from production practices as of May 2026*
 
