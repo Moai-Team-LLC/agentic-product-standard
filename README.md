@@ -61,8 +61,10 @@ Five principles converged *independently* across the production practices of the
 ```
 agentic-product-standard/
 ├── STANDARD.md                          ← the canonical standard
+├── CONTEXT.md                           ← shared vocabulary every skill speaks
 ├── setup.sh                             ← quick setup: skills + (optional) AgenticMind, one run
 ├── examples/agenticmind-case-study.md   ← reference implementation, audited against the canon
+├── docs/adr/                            ← architecture decision records (why the repo is shaped this way)
 └── skills/agentic-product-architect/    ← Claude Code skill set (operationalizes the standard)
     ├── SKILL.md                          ← master: router + philosophy
     ├── architecture-design/              ← autonomy ladder, 5 patterns, single vs multi
