@@ -16,18 +16,22 @@ jobs:
         run: |
           set -euo pipefail
           status=0
-          # Extract markdown relative links (skip http/https/mailto and in-page anchors).
-          links=$(grep -rohE '\]\(([^)]+)\)' --include='*.md' . \
-            | sed -E 's/.*\]\(([^)]+)\)/\1/' \
-            | grep -vE '^(https?:|mailto:|#)' \
-            | sed -E 's/#.*$//' | sort -u)
-          while IFS= read -r link; do
-            [ -z "$link" ] && continue
-            if [ ! -e "$link" ]; then
-              echo "::error::Broken relative link: $link"
-              status=1
-            fi
-          done <<< "$links"
+          # Resolve each markdown relative link against ITS OWN file's directory
+          # (how GitHub renders them) — not against the repo root. Skip
+          # http/https/mailto and pure in-page anchors; strip any #anchor.
+          while IFS= read -r md; do
+            dir=$(dirname "$md")
+            while IFS= read -r link; do
+              [ -z "$link" ] && continue
+              if [ ! -e "$dir/$link" ]; then
+                echo "::error file=$md::Broken relative link: $link"
+                status=1
+              fi
+            done < <(grep -oE '\]\([^)]+\)' "$md" \
+                       | sed -E 's/^\]\(([^)]+)\)$/\1/' \
+                       | grep -vE '^(https?:|mailto:|#)' \
+                       | sed -E 's/#.*$//')
+          done < <(find . -name '*.md' -not -path './.git/*' -not -path './node_modules/*')
           exit $status
 
       - name: Check every SKILL.md has name + description frontmatter
