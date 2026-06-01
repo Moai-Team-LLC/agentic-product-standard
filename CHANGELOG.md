@@ -3,10 +3,12 @@
 All notable changes to The Agentic Product Standard are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [1.4.0] — 2026-06-01
 
 ### Added
 - **`tenant-isolation` sub-skill** — multi-tenancy for agentic products: the pooled / bridge / silo isolation models, the agent-specific leakage paths most teams miss (cross-tenant retrieval, memory, **cache**, traces, a model-supplied `tenant_id`, sub-agent hand-off), `tenant_id` modeled as a principal dimension enforced below the LLM (fail-closed), reference RLS patterns, and a mandatory code-asserted cross-tenant leakage eval. Threaded into `AGENT_STANDARD.md`, `STANDARD.md` (Part III), the `production-readiness` and `memory-architecture` sub-skills, the master router, and the `agent-builder` eval template.
+
+[1.4.0]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v1.4.0
 
 ## [1.3.0] — 2026-06-01
 
