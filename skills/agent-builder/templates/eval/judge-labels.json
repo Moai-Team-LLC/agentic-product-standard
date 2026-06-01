@@ -1,0 +1,26 @@
+{
+  "judge": "{name of the subjective failure mode this judge detects}",
+  "_comment": "Calibrate every LLM-judge against human labels. Aim for >=100 labeled examples. Compute TPR/TNR each release; if they drift, the judge (not the agent) regressed.",
+  "labels": [
+    {
+      "id": "sample-1",
+      "input": "{agent output under test}",
+      "human_label": true,
+      "judge_label": true,
+      "note": "true positive"
+    },
+    {
+      "id": "sample-2",
+      "input": "{agent output under test}",
+      "human_label": false,
+      "judge_label": false,
+      "note": "true negative"
+    }
+  ],
+  "calibration": {
+    "n": 0,
+    "true_positive_rate": null,
+    "true_negative_rate": null,
+    "last_calibrated": "ISO-8601"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "trace_id": "uuid",
+  "run_id": "uuid",
+  "agent_id": "{agent}",
+  "event_type": "agent.started | context.selected | llm.called | tool.called | guardrail.checked | approval.requested | agent.completed | agent.failed",
+  "timestamp": "ISO-8601",
+  "input_summary": {},
+  "context_refs": [],
+  "tool_call": {},
+  "model": "{model-id}",
+  "output_summary": {},
+  "validation": {},
+  "error": {},
+  "parent_event_id": "uuid"
+}

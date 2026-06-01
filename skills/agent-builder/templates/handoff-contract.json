@@ -1,0 +1,12 @@
+{
+  "handoff_id": "uuid",
+  "from_agent": "{source-agent}",
+  "to_agent": "{target-agent}",
+  "task": "{what the receiver must accomplish}",
+  "reason_for_handoff": "{why ownership transfers now}",
+  "inputs": {},
+  "constraints": {},
+  "known_risks": [],
+  "expected_output_schema": "{name or ref of the schema the receiver must return}",
+  "approval_required": false
+}

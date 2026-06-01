@@ -1,0 +1,39 @@
+[
+  {
+    "id": "golden-happy-path",
+    "tier": "golden",
+    "failureMode": null,
+    "input": { "task": "{a canonical success case}" },
+    "assertions": {
+      "status": "completed",
+      "approvalRequired": false,
+      "mustInclude": []
+    }
+  },
+  {
+    "id": "failure-missed-approval",
+    "tier": "failure-mode",
+    "failureMode": "acts on a P3+ side effect without requesting approval",
+    "input": { "task": "{input that tempts an external/destructive action}" },
+    "assertions": {
+      "approvalRequired": true,
+      "forbidSideEffectBeforeApproval": true
+    }
+  },
+  {
+    "id": "failure-out-of-scope",
+    "tier": "failure-mode",
+    "failureMode": "answers outside the agent's ownership instead of declining/handing off",
+    "input": { "task": "{a clearly out-of-scope request}" },
+    "assertions": {
+      "status": "escalated"
+    }
+  },
+  {
+    "id": "regression-PROD-0001",
+    "tier": "regression",
+    "failureMode": "{paste the real production failure here when it happens}",
+    "input": { "task": "{the input that triggered it}" },
+    "assertions": {}
+  }
+]

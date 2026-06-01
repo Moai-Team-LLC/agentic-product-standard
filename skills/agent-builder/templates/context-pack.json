@@ -1,0 +1,25 @@
+{
+  "context_pack_id": "uuid",
+  "agent_id": "{agent}",
+  "task_id": "{task}",
+  "included_sources": [
+    {
+      "source_id": "{id}",
+      "source_type": "contract | document | memory | tool_result | user_input | state",
+      "reason_included": "{why this is needed for THIS step}",
+      "trust_level": "low | medium | high",
+      "freshness": "current | stale | unknown"
+    }
+  ],
+  "excluded_sources": [
+    {
+      "source_id": "{id}",
+      "reason_excluded": "{why it was left out}"
+    }
+  ],
+  "budget": {
+    "max_tokens": 0,
+    "estimated_tokens": 0,
+    "utilization_target": 0.4
+  }
+}

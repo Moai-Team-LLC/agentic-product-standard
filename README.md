@@ -65,32 +65,34 @@ agentic-product-standard/
 ├── setup.sh                             ← quick setup: skills + (optional) AgenticMind, one run
 ├── examples/agenticmind-case-study.md   ← reference implementation, audited against the canon
 ├── docs/adr/                            ← architecture decision records (why the repo is shaped this way)
-└── skills/agentic-product-architect/    ← Claude Code skill set (operationalizes the standard)
-    ├── SKILL.md                          ← master: router + philosophy
-    ├── architecture-design/              ← autonomy ladder, 5 patterns, single vs multi
-    ├── context-engineering/              ← write/select/compress/isolate, the 40% rule
-    ├── harness-engineering/              ← the 7 layers around the LLM loop
-    ├── tool-design-mcp/                  ← MCP-first, <20 tools, RAG-MCP, sandboxing
-    ├── memory-architecture/              ← Mem0 / Zep / Letta / LangMem / files
-    ├── durable-execution/                ← Temporal Workflow + Activity pattern
-    ├── eval-driven-dev/                  ← Husain/Shankar pyramid + judge calibration
-    ├── framework-selection/              ← LangGraph / Claude SDK / OpenAI SDK / others
-    ├── production-readiness/             ← 12-point Definition of Done audit
-    └── antipatterns-review/              ← code review through 12 known failure modes
+└── skills/                              ← Claude Code skill set (operationalizes the standard)
+    ├── agent-builder/                    ← single-agent track (bundles AGENT_STANDARD.md + templates/)
+    └── agentic-product-architect/        ← multi-agent track: master router + sub-skills
+        ├── SKILL.md                      ← master: router + philosophy
+        ├── architecture-design/          ← autonomy ladder, 5 patterns, single vs multi
+        ├── context-engineering/          ← write/select/compress/isolate, the 40% rule
+        ├── harness-engineering/          ← the 7 layers around the LLM loop
+        ├── tool-design-mcp/              ← MCP-first, <20 tools, RAG-MCP, sandboxing
+        ├── memory-architecture/          ← Mem0 / Zep / Letta / LangMem / files
+        ├── durable-execution/            ← Temporal Workflow + Activity pattern
+        ├── eval-driven-dev/              ← Husain/Shankar pyramid + judge calibration
+        ├── framework-selection/          ← LangGraph / Claude SDK / OpenAI SDK / others
+        ├── production-readiness/         ← 12-point Definition of Done audit
+        └── antipatterns-review/          ← code review through 12 known failure modes
 ```
 
 Two artifacts, one idea:
 
 - **[`STANDARD.md`](STANDARD.md)** is the *reference* — read it once, return to it often.
-- **[`skills/`](skills/agentic-product-architect)** is the *practice* — a hybrid Claude Code skill that auto-loads the right guidance while you design, build, and review agents.
+- **[`skills/`](skills/)** is the *practice* — two Claude Code skills (`agent-builder` for one agent, `agentic-product-architect` for multi-agent products) that auto-load the right guidance while you design, build, and review.
 
 ## 🚀 Install the skills
 
-The skill set works with [Claude Code](https://claude.com/claude-code). One master skill routes to ten specialized sub-skills; each is independently triggerable.
+The skill set works with [Claude Code](https://claude.com/claude-code). Two tracks share the same sub-skills: **`agent-builder`** for building one production-grade agent (it bundles `AGENT_STANDARD.md` + copy-paste `templates/`), and **`agentic-product-architect`** — a master skill that routes to ten specialized sub-skills for multi-agent products. Each is independently triggerable.
 
 ### Fastest: one command, no clone
 
-If you have [`skills`](https://github.com/mattpocock/skills) (the community skill installer), pull the skill straight from this repo — it scans `skills/`, lets you pick `agentic-product-architect`, and installs it into the agents you choose:
+If you have [`skills`](https://github.com/mattpocock/skills) (the community skill installer), pull the skill straight from this repo — it scans `skills/`, lets you pick `agent-builder` and/or `agentic-product-architect`, and installs them into the agents you choose:
 
 ```bash
 npx skills@latest add Moai-Team-LLC/agentic-product-standard
@@ -121,17 +123,17 @@ Run bare (`./setup.sh`) and it installs the skills, then *asks* whether to set A
 **User-level (available in every project):**
 
 ```bash
-cp -R agentic-product-standard/skills/agentic-product-architect ~/.claude/skills/
+cp -R agentic-product-standard/skills/* ~/.claude/skills/   # both tracks; they share sub-skills
 ```
 
 **Project-level (scoped to one repo):**
 
 ```bash
 mkdir -p .claude/skills
-cp -R /path/to/agentic-product-standard/skills/agentic-product-architect .claude/skills/
+cp -R /path/to/agentic-product-standard/skills/* .claude/skills/   # both tracks
 ```
 
-Claude Code discovers skills via each `SKILL.md` and its YAML frontmatter. Once installed, the master skill auto-triggers when you mention building an agent, an agentic product, a multi-agent system, an agent loop, or any major agentic framework (LangGraph, CrewAI, OpenAI Agents SDK, Claude Agent SDK, Pydantic AI, AutoGen). Ask a focused question — *"Mem0 or Zep?"*, *"how should I structure context?"*, *"review my agent code"* — and the relevant sub-skill loads directly.
+Claude Code discovers skills via each `SKILL.md` and its YAML frontmatter. Once installed, `agent-builder` triggers when you set out to build, implement, or review **one** agent, while `agentic-product-architect` triggers for multi-agent products, an agent loop, or any major agentic framework (LangGraph, CrewAI, OpenAI Agents SDK, Claude Agent SDK, Pydantic AI, AutoGen). Ask a focused question — *"Mem0 or Zep?"*, *"how should I structure context?"*, *"review my agent code"* — and the relevant sub-skill loads directly.
 
 ## 🌐 The reference implementation
 
