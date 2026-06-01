@@ -14,14 +14,14 @@ Especially welcome:
 - **Corrections** — a claim that's wrong, outdated, or missing a source.
 - **New exemplars** — a production system whose architecture teaches something the current ones don't.
 - **Framework / vendor updates** — the landscape in `framework-selection` and `memory-architecture` shifts quarterly.
-- **Translations** — the standard ships in English ([`STANDARD.md`](STANDARD.md)) and Russian ([`docs/STANDARD.ru.md`](docs/STANDARD.ru.md)). More languages are welcome under `docs/STANDARD.<lang>.md`.
+- **Translations** — the standard ships in English ([`STANDARD.md`](STANDARD.md)). Translations are welcome under `docs/STANDARD.<lang>.md`.
 - **Skill improvements** — sharper routing, clearer diagnostics, better examples in any `SKILL.md`.
 
 ## Ground rules
 
 1. **Cite primary sources.** "Anthropic says X" needs a link. Single-vendor benchmarks are directional, not ground truth — frame them that way (this is anti-pattern #12).
 2. **Prefer the boring, durable claim** over the exciting, fragile one. The standard tilts toward what survives the next model release.
-3. **Keep the English and Russian standards in sync.** If you change a canon in one, note it in your PR so the other can be updated.
+3. **Keep the standard and the skills in sync.** If you change a canon in `STANDARD.md`, update the matching `SKILL.md` so the guidance doesn't drift.
 4. **Don't add code templates.** The skill set teaches judgment, not boilerplate — framework-specific code rots fast and lives better in the framework's own docs.
 5. **One topic per PR.** A vendor update and a new exemplar are two PRs.
 

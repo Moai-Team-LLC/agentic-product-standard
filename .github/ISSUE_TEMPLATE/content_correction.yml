@@ -8,7 +8,6 @@ body:
       label: Where is the issue?
       options:
         - STANDARD.md
-        - docs/STANDARD.ru.md
         - skills/agentic-product-architect (master)
         - skills — architecture-design
         - skills — context-engineering

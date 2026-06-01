@@ -2,8 +2,6 @@
 
 *The canonical standard for building modern agentic products.*
 
-> **Russian original:** [`docs/STANDARD.ru.md`](docs/STANDARD.ru.md)
-
 ---
 
 ## Philosophy of the standard

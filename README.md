@@ -59,8 +59,7 @@ Five principles converged *independently* across the production practices of the
 
 ```
 agentic-product-standard/
-├── STANDARD.md                          ← the canonical standard (English)
-├── docs/STANDARD.ru.md                  ← original (Russian)
+├── STANDARD.md                          ← the canonical standard
 └── skills/agentic-product-architect/    ← Claude Code skill set (operationalizes the standard)
     ├── SKILL.md                          ← master: router + philosophy
     ├── architecture-design/              ← autonomy ladder, 5 patterns, single vs multi
