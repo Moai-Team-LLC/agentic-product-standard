@@ -903,6 +903,17 @@ propose tool call
 - Never let the model invent tool names.
 - Never let tool permissions live only in the prompt.
 
+## Tenant Isolation
+
+If the product is multi-tenant, `tenant_id` is part of the principal — *who is calling* — alongside the P0–P6 permission tier, not a tool argument the model fills. An agent is a confused deputy: isolation enforced in the prompt will eventually leak one tenant's data to another via injection, an ambiguous query, or a mis-targeted tool call. Enforce below the model, fail closed.
+
+- Derive `tenant_id` from the authenticated session/token only — never from the model, prompt, or context. No resolvable tenant means reject the request; there is no default tenant.
+- Enforce at the data boundary in code (row-level security or the repository layer), so a fully prompt-injected agent still cannot widen scope. Same gate that pins permissions pins the tenant.
+- Thread the tenant through every path: queries, tool calls, long-term memory namespaces, the answer/embedding cache key, traces, sub-agent messages, and background jobs. One unscoped path defeats the boundary.
+- The leakage paths agents add beyond ordinary SaaS: cross-tenant retrieval (filter inside the index, not after top-k), un-namespaced memory, a tenant-agnostic cache serving A's answer to B, mixed traces/eval sets, and lost tenant context on hand-off. Walk each one.
+- Tools ignore any tenant the model supplies; a tenant mismatch is a fail-closed precondition and is audited.
+- Choose an isolation model per data store — pooled with row-level security (default for many tenants), schema-per-tenant, or database/deploy-per-tenant (strongest) — and record it in the Agent Contract.
+
 ---
 
 # Sub-Skill 6: Reliability & Durable Execution Architect
@@ -1057,6 +1068,7 @@ Each agent must have:
 - Run expensive judges on a cadence or before release.
 - Block deployment on critical regression.
 - Keep eval cases versioned.
+- Multi-tenant products: a cross-tenant leakage eval is mandatory and code-asserted (never a judge). Seed tenant A with a unique canary, then as tenant B query for it — plus an injection variant that tells the agent to ignore its tenant — across search, memory recall, the warmed cache, and any sub-agent hand-off. Any A-content reaching B fails the build.
 
 ## Trace Schema
 
@@ -1128,6 +1140,15 @@ Determine whether an agentic system is safe and reliable enough for production.
 - [ ] Financial actions require approval.
 - [ ] External communication requires approval.
 - [ ] Tool calls are logged.
+
+### Tenant Isolation (if multi-tenant)
+
+- [ ] An isolation model is chosen per data store and recorded in the Agent Contract.
+- [ ] `tenant_id` is derived from auth only; a request with no tenant fails closed.
+- [ ] Isolation is enforced below the LLM (row-level security / repository layer) and survives prompt injection.
+- [ ] Retrieval, memory, cache keys, traces, sub-agent messages, and background jobs are all tenant-scoped.
+- [ ] Tools ignore any model-supplied tenant; a mismatch is audited and rejected.
+- [ ] A code-asserted cross-tenant leakage eval exists and runs in CI.
 
 ### Reliability
 

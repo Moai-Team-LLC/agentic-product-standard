@@ -41,6 +41,7 @@ Map the user's question to one of these dimensions:
 | "Long-running / pause/resume / retries / crashes / state persistence" | `durable-execution/` |
 | "Evals / LLM-as-judge / failure analysis / metrics / regression tests" | `eval-driven-dev/` |
 | "Which framework? LangGraph or CrewAI? OpenAI Agents SDK vs Claude SDK?" | `framework-selection/` |
+| "Multi-tenant / tenant isolation / B2B SaaS agent / can tenant A see tenant B's data / RLS / per-customer namespacing / noisy neighbor" | `tenant-isolation/` |
 | "Is this production-ready? / pre-launch checklist / DoD" | `production-readiness/` |
 | "Review my agent code / what's wrong with this / code review" | `antipatterns-review/` |
 
@@ -156,6 +157,7 @@ Always consult the relevant sub-skill before answering a substantive question in
 - `harness-engineering/SKILL.md` — 7-layer harness model, Cycle of Trust, what 98% of code does
 - `tool-design-mcp/SKILL.md` — MCP-first integration, tool description as prompt, RAG-MCP
 - `memory-architecture/SKILL.md` — Mem0 vs Zep vs Letta vs LangMem vs files vs AgenticMind; selection matrix
+- `tenant-isolation/SKILL.md` — pooled/bridge/silo models, the agent leakage paths (retrieval/memory/cache/trace/model-supplied tenant_id), tenant_id as a principal dimension, the cross-tenant leakage eval
 
 ## Reference implementation
 

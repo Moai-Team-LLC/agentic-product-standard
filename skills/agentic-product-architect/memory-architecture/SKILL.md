@@ -154,6 +154,8 @@ Pattern: write to episodic always (full trace), distill into semantic on a caden
 | "Latency exploded after adding memory" | Loading too much per turn | Top-K with floor; smaller retrieval window |
 | "Privacy incident: user A saw user B's data" | Per-user namespace not enforced | Hard isolation in storage layer; never trust LLM to filter |
 
+> **Multi-tenant memory:** namespace the store by `(tenant_id[, user_id])`, enforced in the storage layer, not by the agent. Un-namespaced memory is one of the cross-tenant leakage paths — if the product has tenants, read the `tenant-isolation` skill.
+
 ## Output of this skill
 
 When the conversation completes, the user should have:

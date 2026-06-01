@@ -197,6 +197,7 @@ An agentic product is **not production-ready** until all 12 items are satisfied:
 - [ ] **4.** All destructive actions require explicit human approval
 - [ ] **5.** Permissions enforced by code, not by prompt
 - [ ] **6.** Tool execution sandboxed (containers / OAuth scopes / least privilege)
+- [ ] **(if multi-tenant)** Tenant isolation enforced below the LLM (row-level security / repository layer); `tenant_id` derived from auth, never from the model; retrieval, memory, cache, traces, and sub-agents all tenant-scoped; a code-asserted cross-tenant leakage eval runs in CI — see the `tenant-isolation` skill
 
 ### Reliability
 - [ ] **7.** Durable execution: pause/resume/retry works across a killed process

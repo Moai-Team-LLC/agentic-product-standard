@@ -82,6 +82,23 @@ This is an audit checklist, not a feature list. Walk through it with the user; m
 
 ---
 
+### Tenant isolation (if multi-tenant)
+
+Skip this whole section if the product is single-tenant or deployed per customer. Otherwise every box must be checked — there is no partial cross-tenant isolation.
+
+- [ ] Isolation model chosen per data store (pooled + RLS / schema-per-tenant / DB-per-tenant) and recorded in the Agent Contract
+- [ ] `tenant_id` is part of the authenticated principal; a request with no resolvable tenant fails closed (no default tenant)
+- [ ] Isolation enforced below the LLM (row-level security or repository layer); verified to hold under prompt injection
+- [ ] Retrieval filtered inside the index (not post-top-k), memory namespaced, cache key includes `tenant_id`, traces tagged, sub-agent messages and background jobs carry the tenant
+- [ ] Tools ignore any model-supplied tenant; a mismatch is audited and rejected
+- [ ] A code-asserted cross-tenant leakage eval (canary seeded as A, queried as B incl. an injection variant) runs in CI
+
+**Why:** an agent is a confused deputy — prompt-level isolation leaks. The first cross-tenant leak is a churn-and-lawsuit event, and retrofitting isolation is the migration nobody budgets for. See the `tenant-isolation` skill.
+
+**Common gap:** a tenant-agnostic answer cache serving tenant A's response to tenant B; `tenant_id` passed as a tool argument the model can be talked into changing.
+
+---
+
 ### Reliability
 
 #### 7. Durable execution: pause/resume/retry works on killed process

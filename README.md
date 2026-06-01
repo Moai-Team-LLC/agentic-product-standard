@@ -75,6 +75,7 @@ agentic-product-standard/
         ├── harness-engineering/          ← the 7 layers around the LLM loop
         ├── tool-design-mcp/              ← MCP-first, <20 tools, RAG-MCP, sandboxing
         ├── memory-architecture/          ← Mem0 / Zep / Letta / LangMem / files
+        ├── tenant-isolation/             ← multi-tenant: pooled/silo, leakage paths, leakage eval
         ├── durable-execution/            ← Temporal Workflow + Activity pattern
         ├── eval-driven-dev/              ← Husain/Shankar pyramid + judge calibration
         ├── framework-selection/          ← LangGraph / Claude SDK / OpenAI SDK / others
