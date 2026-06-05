@@ -8,13 +8,14 @@
 
 **An agentic product is not "a product with AI." It is a product where part of the process is dynamically directed by an LLM within a deterministic architecture with explicit trust boundaries.**
 
-The standard is built on five principles that converged independently in the production practices of Anthropic, OpenAI, Cognition, Sierra, and LangChain across 2024–2026:
+The standard is built on six principles that converged independently in the production practices of Anthropic, OpenAI, Cognition, Sierra, and LangChain across 2024–2026:
 
 1. **Determinism by default, agency by necessity** — every degree of autonomy must be earned, not granted upfront.
 2. **Architecture beats framework** — patterns outlive libraries.
 3. **Harness > model** — 98% of reliability lives in the code around the LLM, not in the LLM itself.
 4. **Context engineering is the core engineering discipline** — what enters the context window determines everything.
 5. **Eval-driven development is non-negotiable** — no measurement, no improvement; no trace review, no understanding.
+6. **Security is a structural property, not a guardrail** — an agent's safety comes from architecture (identity, least privilege, isolation, pinned tool definitions), not from filters bolted onto the edges. Content filters top out near ~97% accuracy, so ~3% of injection attacks succeed by design — a property you mitigate structurally, not a number you tune.
 
 ---
 
@@ -55,31 +56,39 @@ This is the vocabulary of the industry. Every agentic product is assembled from 
 
 **Sub-agents return synthesis, not transcript.** Never pass a sub-agent's raw output up to the parent.
 
+**The 2026 consensus has settled on orchestrator-subagent, not peer-to-peer.** Anthropic's research system, the Claude Code Task tool, and Cognition's 2026 follow-up ("Multi-Agents: What's Actually Working") converge on a single lead that spawns isolated subagents and consumes their summaries. Peer-to-peer agent buses, shared scratchpads, and free-form agent "debates" remain research curiosities — they multiply context, compound errors, and resist evaluation. If you reach for multi-agent, reach for an orchestrator.
+
 ### Canon 4. Harness architecture
 
-The harness is everything that surrounds the LLM loop. **In a production agent, the harness is 98% of the code.** A minimal harness contains seven layers:
+The harness is everything that surrounds the LLM loop. **In a production agent, the harness is 98% of the code.** A minimal harness contains eight layers:
 
 ```
-┌─────────────────────────────────────────────┐
-│  7. Observability & Tracing                 │ ← log EVERYTHING
-├─────────────────────────────────────────────┤
-│  6. Evaluation Layer (CI gates)             │ ← block regressions
-├─────────────────────────────────────────────┤
-│  5. Human-in-the-Loop (notify/ask/review)   │ ← approval gates
-├─────────────────────────────────────────────┤
-│  4. Guardrails (input/output validation)    │ ← defense in depth
-├─────────────────────────────────────────────┤
-│  3. Durable Execution (Workflow + Activity) │ ← pause/resume/retry
-├─────────────────────────────────────────────┤
-│  2. Context & Memory Management             │ ← write/select/compress/isolate
-├─────────────────────────────────────────────┤
-│  1. Agent Loop (gather → act → verify)      │ ← the "agent" proper
-└─────────────────────────────────────────────┘
+╔═════════════════════════════════════════════╗
+║  8. Security & Identity  (CROSS-CUTTING)    ║ ← threat model · injection defense · agent identity · least-privilege scoped tokens · pinned tool defs · sandboxing
+╠═════════════════════════════════════════════╣
+║ ┌─────────────────────────────────────────┐ ║
+║ │  7. Observability & Tracing             │ ║ ← log EVERYTHING
+║ ├─────────────────────────────────────────┤ ║
+║ │  6. Evaluation Layer (CI gates)         │ ║ ← block regressions
+║ ├─────────────────────────────────────────┤ ║
+║ │  5. Human-in-the-Loop (notify/ask/review)│║ ← approval gates
+║ ├─────────────────────────────────────────┤ ║
+║ │  4. Guardrails (input/output validation)│ ║ ← defense in depth
+║ ├─────────────────────────────────────────┤ ║
+║ │  3. Durable Execution (Workflow+Activity)│ ║ ← pause/resume/retry
+║ ├─────────────────────────────────────────┤ ║
+║ │  2. Context & Memory Management         │ ║ ← write/select/compress/isolate
+║ ├─────────────────────────────────────────┤ ║
+║ │  1. Agent Loop (gather → act → verify)  │ ║ ← the "agent" proper
+║ └─────────────────────────────────────────┘ ║
+╚═════════════════════════════════════════════╝
               ↕ MCP / function calling
        ┌──────────────────────────┐
        │   Tools & Resources      │
        └──────────────────────────┘
 ```
+
+**Layer 8 is cross-cutting, not a stage you bolt on at the end.** Identity, least privilege, and isolation constrain every layer beneath them; injection defense spans both input and output (layer 4) but cannot live there alone. A guardrail is one tactic inside Security & Identity — not a substitute for it. See Principle 6 and Part II · Layer 8.
 
 ### Canon 5. The Cycle of Trust
 
@@ -105,9 +114,9 @@ log trace → update memory
 
 ### Layer 2: Tool integration — **MCP by default**
 
-- **MCP (Model Context Protocol)** — the agent ↔ tool standard. By early 2026: 10,000+ servers, 177,000+ tools.
-- **A2A (Agent2Agent)** — the agent ↔ agent standard (Google → Linux Foundation).
-- **Do not write custom integrations** where an MCP server already exists. Do not write tool-only code where the tool should be reusable — wrap it in MCP.
+- **MCP (Model Context Protocol)** — the agent ↔ tool standard, donated to the Linux Foundation's Agentic AI Foundation (Dec 2025). Target the **stable 2025-11-25 spec** today (async tasks, elicitation, extensions) and branch for the **2026-07-28 release candidate** (stateless core, MCP Apps / server-rendered UI, hardened OAuth 2.1 / OIDC). Prefer **remote Streamable HTTP + OAuth 2.1 with Resource Indicators**, externalize session state, and use **elicitation** for human-in-the-loop rather than a side channel.
+- **A2A (Agent2Agent)** — the agent ↔ agent standard, now at the **Linux Foundation** (since June 2025): 150+ supporting orgs (AWS, Cisco, Google, IBM, Microsoft, Salesforce, SAP, ServiceNow), 22,000+ stars by April 2026. Reach for A2A **only when crossing a vendor / framework / org boundary** — inside one system, tightly-coupled subagents should share context or call functions directly.
+- **Do not write custom integrations** where an MCP server already exists. Do not write tool-only code where the tool should be reusable — wrap it in MCP. **Treat community MCP servers as untrusted supply chain** — see Layer 8.
 
 **Tool design rules:**
 - <20 active tools per agent (above that — RAG-MCP to select the relevant subset, +3.2× accuracy on correct tool selection)
@@ -124,7 +133,7 @@ log trace → update memory
 | **Compress** | Long conversation history | Multi-layer compaction (drop low-value → summarize) |
 | **Isolate** | Sub-tasks with independent contexts | Sub-agents with their own windows |
 
-**The 40% rule:** keep context-window usage below 40% of the limit. Degradation past that point is non-linear.
+**The 40% rule:** keep context-window usage below 40% of the limit. Degradation past that point is non-linear — this is **harness-engineering doctrine, not a hedge.** Chroma's "context rot" research and Databricks' retrieval studies show accuracy degrading well before the window is full (from ~32k tokens). Bigger windows do **not** repeal the rule: *"no matter how big context windows get, you always get better results if you use less of them"* (Horthy). The frontier technique is **just-in-time retrieval** — Claude Code's glob + grep + read over precomputed vector RAG — pulling context on demand instead of front-loading it.
 
 ### Layer 4: Memory
 
@@ -162,7 +171,9 @@ Options:
 | **Braintrust** | Eval-driven CI/CD deploy gating |
 | **Arize Phoenix** | OpenTelemetry-native, ML monitoring lineage |
 
-**Instrument via OpenInference / OpenLLMetry** — so you can swap vendors later without re-instrumenting.
+**Instrument on the OpenTelemetry GenAI semantic conventions** (Semantic Conventions ≥1.40.0) — so you can swap vendors later without re-instrumenting. Emit the standard agent-lifecycle spans (`create_agent`, `invoke_agent`, `execute_tool`, `invoke_workflow`), the `gen_ai.client.operation.duration` metric, and `gen_ai.client.token.usage`; keep payloads opt-in for PII. Datadog, Honeycomb, New Relic, Grafana and the major frameworks emit these natively. (OTel GenAI is still "Development" status — adopt now via `OTEL_SEMCONV_STABILITY_OPT_IN` and expect attribute churn.)
+
+**Distinguish LLM observability from agent observability.** LLM observability is per-call (tokens, latency, cost); **agent observability** is trajectory-, multi-turn-, and session-level (did the agent take a sane path?). You need both. Run **online / production evals**: evaluators on completed threads, with failing live traces routed back into the offline eval set.
 
 ### Layer 7: Framework selection
 
@@ -179,14 +190,45 @@ The deciding factor is the **dominant constraint**, not the hype:
 | TypeScript full-stack | **Mastra** |
 | Programmatic prompt optimization | **DSPy** |
 | MCP-native + Temporal | **mcp-agent (lastmile-ai)** |
+| .NET / enterprise Microsoft stack | **Microsoft Agent Framework (1.0 GA)** |
+
+**2026 framework reality (verify before quoting — this layer ages fastest):**
+- **Microsoft Agent Framework 1.0 went GA (April 2026)** and supersedes both AutoGen and Semantic Kernel, which are now in maintenance mode. Reframe any "AutoGen" reference as **AG2** (the community fork) or **MAF**.
+- The vendor SDKs — **OpenAI Agents SDK, Google ADK, Claude Agent SDK** — are all production-grade as of 2026.
+- **LangGraph** is the stateful-workflow default; **Pydantic AI** is the type-safe pick; **CrewAI** is fastest for role-based prototyping.
+- Treat **MCP-native vs. adapter** as a portability hedge: an MCP-native tool layer ports across harnesses; framework-specific tool wrappers do not.
 
 **Anthropic's million-dollar advice:** *"Start by using LLM APIs directly: many patterns can be implemented in a few lines of code. If you do use a framework, ensure you understand the underlying code."*
+
+### Layer 8: Security & Identity — **cross-cutting**
+
+Security is Principle 6 and the 8th harness layer. It is the largest gap in most agentic products. Anchor the discipline on the **OWASP Top 10 for Agentic Applications (2026 edition)** — ASI01 *Agent Goal Hijack* through ASI10 *Rogue Agents* — which names agent-specific risks (delegated-identity abuse, cross-agent prompt injection, runtime tool composition) that no single "guardrails" layer covers.
+
+**The lethal trifecta (Willison).** An agent that simultaneously has (1) access to **private data**, (2) exposure to **untrusted content**, and (3) the ability to **communicate externally** can be turned into an exfiltration tool by prompt injection. Run this as a structural check on **every** deployment; if all three are present, break one leg (gate egress, quarantine untrusted input, or scope data) before shipping.
+
+**MCP supply-chain controls.** Community MCP servers are an untrusted supply chain — subject to *tool poisoning*, *rug pulls* (a server mutates tool descriptions after approval), full schema poisoning, and confused-deputy attacks. Therefore:
+- **Pin tool definitions by cryptographic hash; alert on any change** (per the OWASP MCP Security Cheat Sheet).
+- **Version-pin and signature-check** community servers; install only from an **allow-listed registry**.
+- Use **OAuth 2.1 + Resource Indicators**; never pass tokens through; never over-scope.
+
+**Agent identity & least privilege.** Each agent gets a distinct, scoped, least-privilege identity; tokens are short-lived and audience-bound; tool execution is sandboxed. Identity is derived from auth, never asserted by the model.
+
+### Layer 9: Cost & FinOps — **cross-cutting**
+
+Agentic systems are expensive in a way chat never was. Anthropic reports agents use **~4× the tokens of chat, and multi-agent systems ~15×**; Gartner puts agentic tasks at **5–30× the tokens** of a standard chatbot; the FinOps Foundation's *State of FinOps 2026* finds **98% of orgs now manage AI spend** (up from 31% two years prior). Token usage alone explains ~80% of cost variance; tool-call count and model choice are the other two factors.
+
+Make cost a first-class engineering constraint, not a month-end surprise:
+- **Per-run token / cost ceilings enforced in code** — a circuit breaker that halts a runaway autonomous session. (Most published multi-agent architectures leave this gap open; close it.)
+- **Prompt / KV caching** on stable prefixes (system prompt, tool schemas): up to ~90% cost and ~85% latency reduction on long prompts.
+- **Model routing / cascades** — small model for routing & classification, flagship for reasoning.
+- **Measure cost-per-outcome, not just total spend** — wire cost into the same traces as Layer 6.
+- **The multi-agent economics rule:** only pay the 15× when the task value justifies it. If a single agent clears the bar, the orchestra is waste.
 
 ---
 
 ## Part III. Production readiness — Definition of Done
 
-An agentic product is **not production-ready** until all 12 items are satisfied:
+An agentic product is **not production-ready** until all 15 items are satisfied:
 
 ### Context and state
 - [ ] **1.** Context utilization < 40% in a typical cycle
@@ -208,6 +250,13 @@ An agentic product is **not production-ready** until all 12 items are satisfied:
 - [ ] **10.** Eval set ≥50 examples per top-priority failure mode
 - [ ] **11.** LLM judges calibrated against human labels (TPR/TNR tracked)
 - [ ] **12.** CI blocks deploy on eval regression; 100% of production traces logged
+
+### Security & identity
+- [ ] **13.** Lethal-trifecta check performed and documented (private data × untrusted content × external comms — at least one leg broken if all three are present)
+- [ ] **14.** MCP tool definitions pinned by hash with change alerts; servers installed only from an allow-listed registry; OAuth 2.1 scoped tokens, no token passthrough
+
+### Cost
+- [ ] **15.** Per-run token / cost ceiling enforced **in code** (circuit breaker on runaway sessions); cost-per-task tracked in traces
 
 ---
 
@@ -236,6 +285,11 @@ This discipline matters more than the choice of framework.
 3. **Calibrate every judge.** A minimum of 100 human-labeled examples per judge; track TPR/TNR every release.
 4. **Product-specific evals.** Generic "helpfulness" does not catch real failures. Evals are built around observed failure modes ("missed human handoff," "wrong tool selection").
 5. **The eval set grows from production.** Every new failure mode becomes a permanent regression test.
+6. **Evaluate the trajectory, not only the final answer.** For agents, score the path — multi-turn, session-level: tool selection, recovery, policy adherence — not just the last message. A right answer reached by a reckless path is a latent incident.
+7. **Track reliability with `pass^k`, not just `pass@1`.** `pass^k` (does it succeed on *all* k attempts) exposes the consistency that a single run hides — the metric that matters for anything autonomous.
+8. **Run online evals.** Evaluators on completed production threads, with failing live traces routed back into the offline set (closes the loop with Layer 6).
+
+*Reference benchmarks (as orientation, never as ground truth — see anti-pattern 12): τ-bench / τ²-bench (policy adherence, dual-control), SWE-bench Verified, GAIA, TerminalBench, WebArena. LLM-as-judge agrees with humans ~85% of the time but carries position / verbosity / self-preference bias — keep judges binary and calibrated.*
 
 ---
 
@@ -252,6 +306,14 @@ A minimal reading list. **These sources are not references — they are the oper
 6. **LangChain — "Context Engineering for Agents"** (Lance Martin) — write/select/compress/isolate
 7. **Hamel Husain — "A Field Guide to Rapidly Improving AI Products"** + "Your AI Product Needs Evals" — eval discipline
 8. **Anthropic — "Building agents with the Claude Agent SDK"** (Sept 2025) — a guide to harness design
+9. **Anthropic — "Effective Context Engineering for AI Agents"** (Sept 2025) — just-in-time retrieval, the consensus definition of context engineering
+
+### Specs, protocols & security canon (2025–2026)
+- **OWASP — Top 10 for Agentic Applications (2026 edition)** + *Agentic AI Threats and Mitigations* + the **MCP Security Cheat Sheet** — the threat model for Layer 8
+- **Simon Willison — "The lethal trifecta"** (June 2025) — the deployment check every agent must pass
+- **OpenTelemetry — GenAI semantic conventions** — the vendor-neutral observability standard (Layer 6)
+- **MCP specification** (2025-11-25 stable; 2026-07-28 RC) and the **A2A specification** (Linux Foundation) — the interop protocols
+- **GEPA** (reflective prompt evolution, ICLR 2026) + **DSPy** — programmatic optimization, the bridge before any weight update
 
 ### Reference exemplars for studying architecture
 - **Claude Code** — harness design, 5-layer compaction, 7-mode permissions (arXiv:2604.14228)
@@ -327,6 +389,11 @@ A minimal reading list. **These sources are not references — they are the oper
 10. **Deploy without trace monitoring.** Most failures are routing/tool-selection — visible only in traces.
 11. **Hardcoded prompts without version control.** Prompts are code.
 12. **Trusting single-vendor benchmarks.** Anthropic's 90.2% lift, Letta's 500+ interactions — directionally correct, not absolute truth.
+13. **Trusting community MCP servers without pinning or scanning.** Tool descriptions can mutate after you approve them (rug pull). Pin by hash; alert on change.
+14. **Deploying the lethal trifecta with no mitigation.** Private data + untrusted content + external comms = an exfiltration channel. Break one leg.
+15. **Token passthrough / over-scoped OAuth.** Forwarding a user's token, or minting broad scopes "to be safe," is a confused-deputy waiting to happen.
+16. **No budget ceiling on autonomous sessions.** Without a per-run cost circuit breaker, one bad loop is an unbounded invoice.
+17. **Peer-to-peer multi-agent buses.** Free-form agent debates multiply context and resist evaluation. Use an orchestrator with isolated subagents.
 
 ---
 
@@ -345,7 +412,23 @@ Before starting any agentic project, run through this checklist:
 □ Who validates? (assertion / LLM judge / human review — for which layer?)
 □ Trace storage and retention — where, how long?
 □ Eval set: how many examples, who labels, how does it grow?
+□ Does the deployment hit the lethal trifecta? If so, which leg do we break?
+□ Are MCP tool definitions pinned, and servers installed from an allow-list?
+□ What is the per-run token/cost ceiling, and where in the code is it enforced?
 ```
+
+---
+
+## Part IX. Emerging & deferred
+
+Tracked deliberately, but **not** yet promoted to first-class standard surface — naming what we refuse to over-specify is part of the discipline. Reach for these only when the dominant constraint demands it.
+
+- **Inter-agent protocols (A2A) in depth.** The decision rule lives in Layer 2: internal function calls / shared context for tightly-coupled subagents; A2A only across vendor / framework / org boundaries. A full protocol playbook is deferred until cross-org agent deployments are common in practice.
+- **Model adaptation (RL / fine-tuning / programmatic optimization).** Decision ladder: prompt → context-engineer → **programmatic optimization (DSPy / GEPA)** → RL or fine-tune *only* when a verifiable reward and a rollout budget exist. **Engineer the harness first** remains the right 2026 default; GEPA/DSPy is the named bridge before any weight update.
+- **Agent experience (AX).** Ambient / event-driven agents, the agent-inbox UX, and notify / ask / review trust calibration extend the existing Human-in-the-Loop layer — see Harrison Chase's ambient-agents work. Extend HITL; do not duplicate it.
+- **Orchestration topologies beyond orchestrator-worker** (blackboard, hierarchical, market-based, swarm) — documented as map, but 2026 evidence favors orchestrator-subagent for reliability (Canon 3).
+- **Agentic / Graph RAG.** Claude Code abandoned precomputed vector RAG for grep-style agentic retrieval (Layer 3); GraphRAG earns its keep on genuinely multi-hop questions.
+- **Computer-use & voice agents.** First-class in the Claude Agent SDK (computer use) and benchmarked by τ-Voice (full-duplex voice) — emerging deployment patterns, not yet core.
 
 ---
 
