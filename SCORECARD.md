@@ -1,0 +1,89 @@
+# Agentic Product Self-Assessment Scorecard
+
+*A factor-by-factor maturity check for any agentic product, scored against [`STANDARD.md`](STANDARD.md) and [`AGENT_STANDARD.md`](AGENT_STANDARD.md).*
+
+Most standards ship principles but no way to ask *"where do we actually stand?"* This scorecard does. Answer every item **Yes / No / N-A**, then read your maturity off the gates below. It is deliberately binary — a half-met control is a No.
+
+> **How to use it.** Run it on one agentic product, with the team in the room, against a real deployment (not the slide). Disagreements are the point — they surface the controls nobody owns. Re-run each release; the score should only ratchet up.
+
+---
+
+## Maturity levels (mapped to the Autonomy Ladder)
+
+| Level | Autonomy Ladder | Meaning |
+|---|---|---|
+| **M0 — Prototype** | L0–L1 (single call / augmented) | Works on a demo. No production claim. |
+| **M1 — Shippable** | L2 (workflow) | Contracts, schemas, guardrails, an eval set, permissions in code. Safe to put in front of users behind a workflow. |
+| **M2 — Production** | L3 (orchestrator-worker) | Durable, observable, tenant-isolated, security-checked, cost-bounded, CI-gated on evals. |
+| **M3 — Autonomous-ready** | L4 (autonomous loop) | Online evals, `pass^k` reliability, red-team kit run, full OTel trajectory observability. Earns the right to an open-ended loop. |
+
+**Your level is the highest band whose every gate item is satisfied.** One unmet gate item caps you at the level below — there is no partial credit, and no skipping a band.
+
+---
+
+## The scorecard
+
+Each item lists the **gate level** at which it becomes mandatory. Items map to the Definition of Done in `STANDARD.md` (Part III) and `AGENT_STANDARD.md`.
+
+### Architecture & contracts
+- [ ] **(M1)** The system uses the least autonomous architecture sufficient for the task.
+- [ ] **(M1)** Every agent has an Agent Contract; every tool a Tool Contract.
+- [ ] **(M1)** Acceptance criteria are *hard-to-vary*: each names the single probe that falsifies it.
+- [ ] **(M2)** Each escalation in autonomy was earned by ≥90% eval pass rate at the level below.
+- [ ] **(M2)** Multi-agent (if any) is an orchestrator with isolated subagents — not a peer-to-peer bus.
+
+### Context & state
+- [ ] **(M1)** Context-window utilization stays below ~40% in a typical cycle.
+- [ ] **(M1)** State is externalized (does not live only in the context window).
+- [ ] **(M2)** Compaction is tested on long-running scenarios; sub-agent outputs are condensed.
+
+### Tools & permissions
+- [ ] **(M1)** Tools are allow-listed; active count < 20 per agent (or RAG-over-tools).
+- [ ] **(M1)** Tool inputs are schema-validated; permissions enforced in **code**, not prompt.
+- [ ] **(M1)** Destructive / financial / external-comms actions require human approval.
+- [ ] **(M2)** Tool execution is sandboxed (containers / OAuth scopes / least privilege).
+
+### Security & identity
+- [ ] **(M2)** Lethal-trifecta check performed and documented; if all three legs present, one is broken.
+- [ ] **(M2)** MCP tool definitions pinned by hash with change alerts; servers from an allow-listed registry, version-pinned + signature-checked.
+- [ ] **(M2)** OAuth 2.1 scoped, short-lived, audience-bound tokens; no token passthrough; no over-scoping.
+- [ ] **(M2)** Each agent has a distinct least-privilege identity; identity & tenant derived from auth, never the model.
+- [ ] **(M3)** Indirect prompt injection (poisoned docs / tool output) is in the threat model and red-team tested.
+
+### Tenant isolation *(if multi-tenant)*
+- [ ] **(M2)** `tenant_id` derived from auth only; no-tenant requests fail closed.
+- [ ] **(M2)** Isolation enforced below the LLM (RLS / repository layer); survives prompt injection.
+- [ ] **(M2)** Retrieval, memory, cache keys, traces, sub-agent messages, jobs are all tenant-scoped.
+- [ ] **(M2)** A code-asserted cross-tenant leakage eval runs in CI.
+
+### Cost
+- [ ] **(M2)** Per-run token/cost ceiling enforced in code (circuit breaker on runaway sessions).
+- [ ] **(M2)** Prompt/KV caching enabled on stable prefixes; cost-per-task tracked in traces.
+- [ ] **(M2)** For multi-agent, the task value justifies the ~15× token cost.
+
+### Reliability
+- [ ] **(M2)** Durable execution: pause / resume / retry survives a killed process.
+- [ ] **(M1)** Structured outputs validated by schema; assertions on the critical path.
+- [ ] **(M1)** Guardrails (schema, PII, jailbreak, indirect-injection, egress) on input and output.
+
+### Evals & observability
+- [ ] **(M1)** Eval set ≥ 50 examples per top-priority failure mode; built from real traces.
+- [ ] **(M2)** LLM judges are binary and calibrated against human labels (TPR/TNR tracked).
+- [ ] **(M2)** CI blocks deploy on eval regression; 100% of production runs traced.
+- [ ] **(M3)** Traces follow OTel GenAI conventions and capture the **trajectory**, not just the final answer.
+- [ ] **(M3)** Online evals run on completed production threads; failing traces feed the offline set.
+- [ ] **(M3)** Reliability tracked with `pass^k`, not only `pass@1`.
+
+### Maintenance discipline
+- [ ] **(M2)** Every forbidden action has a code-asserted anti-criterion (not prose alone).
+- [ ] **(M3)** Rules are tagged anti-fragile vs. fragile; fragile scaffolding is re-tested each model upgrade (bitter-pill).
+
+---
+
+## Scoring
+
+1. Mark every item Yes / No / N-A.
+2. For each band M1 → M2 → M3, check that **all** items at or below that gate are Yes (or N-A).
+3. Your maturity is the highest band that fully passes. The first No you hit is your next piece of work.
+
+> A score is a snapshot, not a trophy. The standard's one durable rule still holds: *the model is the variable, the harness is the constant — invest proportionally.*

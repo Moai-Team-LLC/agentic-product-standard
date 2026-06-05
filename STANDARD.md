@@ -258,6 +258,8 @@ An agentic product is **not production-ready** until all 15 items are satisfied:
 ### Cost
 - [ ] **15.** Per-run token / cost ceiling enforced **in code** (circuit breaker on runaway sessions); cost-per-task tracked in traces
 
+> **Score yourself.** [`SCORECARD.md`](SCORECARD.md) turns this DoD into a Yes/No maturity self-assessment (M0–M3, mapped to the Autonomy Ladder) — run it with the team against a real deployment each release.
+
 ---
 
 ## Part IV. Eval discipline (per Husain/Shankar)
