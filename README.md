@@ -9,7 +9,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Claude Code Skills](https://img.shields.io/badge/Claude%20Code-Skills-d97757.svg)](skills/agentic-product-architect)
-[![Standard v1.0](https://img.shields.io/badge/Standard-v1.0-blue.svg)](STANDARD.md)
+[![Standard v2.0](https://img.shields.io/badge/Standard-v2.0-blue.svg)](STANDARD.md)
+[![Self-assessment scorecard](https://img.shields.io/badge/scorecard-M0–M3-success.svg)](SCORECARD.md)
 [![Stars](https://img.shields.io/github/stars/Moai-Team-LLC/agentic-product-standard?style=social)](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers)
 
 **[Product Standard →](STANDARD.md)**  ·  **[Agent Standard →](AGENT_STANDARD.md)**  ·  **[Install the Skills →](#-install-the-skills)**  ·  **[Decision Checklist →](#-the-10-question-checklist)**
@@ -26,14 +27,15 @@ Most teams ship agent demos. Few ship agents that survive contact with productio
 ## Table of contents
 
 - [Why this exists](#why-this-exists)
-- [The five principles](#the-five-principles)
+- [The six principles](#the-six-principles)
 - [What's in this repo](#whats-in-this-repo)
 - [Install the skills](#-install-the-skills)
 - [The reference implementation](#-the-reference-implementation)
 - [The Autonomy Ladder](#the-autonomy-ladder)
 - [The five composition patterns](#the-five-composition-patterns)
-- [The 7-layer harness](#the-7-layer-harness)
+- [The 8-layer harness](#the-8-layer-harness)
 - [The 10-question checklist](#-the-10-question-checklist)
+- [Score yourself](#-score-yourself)
 - [Production readiness — Definition of Done](#production-readiness--definition-of-done)
 - [Anti-patterns](#anti-patterns)
 - [Reading list](#reading-list)
@@ -42,9 +44,9 @@ Most teams ship agent demos. Few ship agents that survive contact with productio
 
 ## Why this exists
 
-Five principles converged *independently* across the production practices of the labs and the leading practitioners. They are the spine of every decision in this standard:
+Six principles converged *independently* across the production practices of the labs and the leading practitioners. They are the spine of every decision in this standard:
 
-## The five principles
+## The six principles
 
 | # | Principle | What it means |
 |---|---|---|
@@ -53,6 +55,7 @@ Five principles converged *independently* across the production practices of the
 | 3 | **Harness > model** | 98% of reliability lives in the code *around* the LLM. |
 | 4 | **Context engineering is the core discipline** | What enters the context window determines everything. |
 | 5 | **Eval-driven development is non-negotiable** | No measurement → no improvement. No trace review → no understanding. |
+| 6 | **Security is a structural property, not a guardrail** | Safety comes from architecture — identity, least privilege, isolation, pinned tools — not filters bolted onto the edges. |
 
 > **The single most important rule:** *Architecture is what remains when the model improves. The model is the variable, the harness is the constant. Invest proportionally.*
 
@@ -62,8 +65,11 @@ Five principles converged *independently* across the production practices of the
 agentic-product-standard/
 ├── STANDARD.md                          ← the canonical standard (product level)
 ├── AGENT_STANDARD.md                    ← the single-agent operational standard (mirrored in agent-builder)
+├── SCORECARD.md                         ← M0–M3 self-assessment, mapped to the Autonomy Ladder
 ├── CONTEXT.md                           ← shared vocabulary every skill speaks
 ├── setup.sh                             ← quick setup: skills + (optional) AgenticMind, one run
+├── templates/security/                  ← red-team kit: lethal-trifecta gate, injection suite, MCP pin
+├── templates/ci/eval-gate.yml           ← CI workflow that blocks merges on eval regression
 ├── examples/agenticmind-case-study.md   ← reference implementation, audited against the canon
 ├── docs/adr/                            ← architecture decision records (why the repo is shaped this way)
 └── skills/                              ← Claude Code skill set (operationalizes the standard)
@@ -72,7 +78,7 @@ agentic-product-standard/
         ├── SKILL.md                      ← master: router + philosophy
         ├── architecture-design/          ← autonomy ladder, 5 patterns, single vs multi
         ├── context-engineering/          ← write/select/compress/isolate, the 40% rule
-        ├── harness-engineering/          ← the 7 layers around the LLM loop
+        ├── harness-engineering/          ← the 8 layers around the LLM loop
         ├── tool-design-mcp/              ← MCP-first, <20 tools, RAG-MCP, sandboxing
         ├── memory-architecture/          ← Mem0 / Zep / Letta / LangMem / files
         ├── tenant-isolation/             ← multi-tenant: pooled/silo, leakage paths, leakage eval
@@ -175,30 +181,28 @@ Compose agentic products from these primitives *like Lego* — before reaching f
 
 **Meta-principle:** first try to solve the task by composing these patterns in deterministic code. A full agent loop is the *last* resort.
 
-## The 7-layer harness
+## The 8-layer harness
 
 In a production agent, the harness — everything *around* the LLM loop — is **98% of the code**.
 
 ```
-┌─────────────────────────────────────────────┐
-│  7. Observability & Tracing                 │ ← log EVERYTHING
-├─────────────────────────────────────────────┤
-│  6. Evaluation Layer (CI gates)             │ ← block regressions
-├─────────────────────────────────────────────┤
-│  5. Human-in-the-Loop (notify/ask/review)   │ ← approval gates
-├─────────────────────────────────────────────┤
-│  4. Guardrails (input/output validation)    │ ← defense in depth
-├─────────────────────────────────────────────┤
-│  3. Durable Execution (Workflow + Activity) │ ← pause/resume/retry
-├─────────────────────────────────────────────┤
-│  2. Context & Memory Management             │ ← write/select/compress/isolate
-├─────────────────────────────────────────────┤
-│  1. Agent Loop (gather → act → verify)      │ ← the "agent" proper
-└─────────────────────────────────────────────┘
+╔═════════════════════════════════════════════╗
+║  8. Security & Identity  (CROSS-CUTTING)    ║ ← threat model · injection defense · agent identity · least-privilege tokens · pinned tool defs
+╠═════════════════════════════════════════════╣
+║   7. Observability & Tracing                ║ ← log EVERYTHING
+║   6. Evaluation Layer (CI gates)            ║ ← block regressions
+║   5. Human-in-the-Loop (notify/ask/review)  ║ ← approval gates
+║   4. Guardrails (input/output validation)   ║ ← defense in depth
+║   3. Durable Execution (Workflow + Activity)║ ← pause/resume/retry
+║   2. Context & Memory Management            ║ ← write/select/compress/isolate
+║   1. Agent Loop (gather → act → verify)     ║ ← the "agent" proper
+╚═════════════════════════════════════════════╝
               ↕ MCP / function calling
 ```
 
 > **Permission boundaries are enforced by code, never by prompt.** The Replit incident of 2025 — an agent wiped a production database for 1,200+ companies despite an explicit "code freeze" in its prompt — is the canonical proof. The model will ignore prompt-level restrictions under enough pressure. Code won't.
+
+> **Layer 8 is cross-cutting (v2.0).** Identity, least privilege, and isolation constrain every layer; injection defense spans input and output. Run the **lethal-trifecta** check (private data × untrusted content × external comms) on every deployment, and **pin MCP tool definitions by hash** so a server can't rug-pull you. A guardrail is one tactic, not the discipline — see [`STANDARD.md` · Layer 8](STANDARD.md) and the [red-team kit](templates/security/README.md).
 
 ## ✅ The 10-question checklist
 
@@ -219,15 +223,29 @@ Run this before drafting any architecture. It unblocks 80% of design debates.
 
 If you can't answer half of these, **slow down and answer them together — don't write code yet.**
 
+## 📊 Score yourself
+
+Principles are easy to nod along to; **[`SCORECARD.md`](SCORECARD.md)** makes you prove it. It turns the Definition of Done into a binary Yes/No maturity self-assessment with four bands mapped to the Autonomy Ladder:
+
+| Band | Autonomy | Means |
+|---|---|---|
+| **M0 · Prototype** | L0–L1 | Works on a demo. No production claim. |
+| **M1 · Shippable** | L2 | Contracts, schemas, guardrails, an eval set, permissions in code. |
+| **M2 · Production** | L3 | Durable, observable, tenant-isolated, **security-checked, cost-bounded**, CI-gated. |
+| **M3 · Autonomous-ready** | L4 | Online evals, `pass^k` reliability, red-team kit run, full OTel trajectory traces. |
+
+Run it with the team against a real deployment each release — the first **No** you hit is your next piece of work.
+
 ## Production readiness — Definition of Done
 
-An agentic product is **not production-ready** until all 12 are satisfied. Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
+An agentic product is **not production-ready** until all **15** are satisfied. Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
 
-| Context & state | Tools & permissions | Reliability | Evals & observability |
+| Context & state | Tools & security | Reliability | Evals & observability |
 |---|---|---|---|
 | Context < 40% | Destructive actions need approval | Durable pause/resume/retry | ≥50 evals per failure mode |
 | State externalized | Permissions in code, not prompt | Schema-validated outputs | Judges calibrated (TPR/TNR) |
 | Compaction tested | Sandboxed tool execution | Input/output guardrails | CI blocks regression; 100% traced |
+| — | **Lethal-trifecta check; MCP tool defs pinned** | **Per-run cost ceiling in code** | Trajectory + online evals |
 
 ## Anti-patterns
 
@@ -245,6 +263,11 @@ The fastest way to recognize a doomed agent project — the skill set's `antipat
 10. Deploying without trace monitoring
 11. Hardcoded prompts without version control
 12. Treating single-vendor benchmarks as ground truth
+13. Trusting community MCP servers without pinning or scanning (rug pulls)
+14. Deploying the lethal trifecta with no mitigation
+15. Token passthrough / over-scoped OAuth (confused deputy)
+16. No budget ceiling on autonomous sessions
+17. Peer-to-peer multi-agent buses instead of an orchestrator
 
 ## Reading list
 
@@ -258,6 +281,9 @@ The operational base — not reference docs. Read in order:
 6. LangChain — *Context Engineering for Agents* (Lance Martin)
 7. Hamel Husain — *A Field Guide to Rapidly Improving AI Products* + *Your AI Product Needs Evals*
 8. Anthropic — *Building agents with the Claude Agent SDK*
+9. Anthropic — *Effective Context Engineering for AI Agents* (just-in-time retrieval)
+10. OWASP — *Top 10 for Agentic Applications (2026)* + Simon Willison — *The lethal trifecta*
+11. OpenTelemetry — *GenAI semantic conventions* (the observability standard)
 
 ## Contributing
 
@@ -275,6 +301,6 @@ The architectural canons (the autonomy ladder, the 5 patterns, single-vs-multi, 
 
 **If this saved you a week of architecture debates, [star the repo](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers) ⭐ so others find it.**
 
-*v1.0 · assembled from production practices as of May 2026*
+*v2.0 · assembled from production practices as of June 2026*
 
 </div>

@@ -3,6 +3,25 @@
 All notable changes to The Agentic Product Standard are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.0.0] — 2026-06-06
+
+The "credibility document → operational tool" increment. Security becomes first-class, cost becomes a discipline, the 2026 landscape is refreshed, and the standard ships its first runnable artifacts and a self-assessment scorecard.
+
+### Added
+- **Security as a first-class concern.** New **Principle 6** ("Security is a structural property, not a guardrail"), an **8th harness layer** (Security & Identity, cross-cutting), a new **Layer 8** in the stack (OWASP Top 10 for Agentic Applications, the **lethal trifecta** check, MCP supply-chain controls, OAuth 2.1, agent identity), and **Operating Doctrine 7** in `AGENT_STANDARD.md`. Hardened the Tool Permission sub-skill and guardrails (indirect injection, egress check); added DoD items 13–14, Non-Negotiable Rules 21–22, and four anti-patterns.
+- **Cost & FinOps discipline.** New **Layer 9** (per-run token/cost ceilings, prompt/KV caching, model routing, cost-per-outcome, the multi-agent ~15× economics rule), DoD item 15, and a budget-ceiling anti-pattern.
+- **Self-assessment scorecard** ([`SCORECARD.md`](SCORECARD.md)) — a binary M0–M3 maturity model mapped to the Autonomy Ladder, scored against the Definition of Done plus the new security/cost items.
+- **Runnable artifacts** — a red-team kit ([`templates/security/`](templates/security/README.md): lethal-trifecta gate, indirect-prompt-injection suite, MCP tool-definition hash-pinning / rug-pull detector) and a CI eval-gating workflow template ([`templates/ci/eval-gate.yml`](templates/ci/eval-gate.yml)).
+- **PAI-derived rules** (adapted from Daniel Miessler's Personal AI Infrastructure, MIT) — Doctrine **6 Bitter-Pilled Maintenance** (shrink the harness as models improve), **closed enumerations over open vocabularies**, **derived anti-criteria** from every forbidden action, **hard-to-vary** acceptance criteria, a **conjecture/refutation learning trail** on regressions, conservative-escalation default, and Non-Negotiable Rules 19–20.
+- **Part IX: Emerging & deferred** — an explicit "not yet promoted" list (A2A depth, model adaptation / RL, agent experience, orchestration topologies, agentic/Graph RAG, computer-use & voice).
+
+### Changed
+- **2026 refresh:** Microsoft Agent Framework 1.0 GA (AutoGen + Semantic Kernel → maintenance), production-grade vendor SDKs, MCP 2025-11-25 stable / 2026-07-28 RC + OAuth 2.1 + registry, A2A at the Linux Foundation; observability re-anchored on **OpenTelemetry GenAI semantic conventions** (agent vs. LLM observability, online evals); the **40% rule** reframed as harness doctrine backed by context-rot research; single-vs-multi-agent reaffirmed as the **orchestrator-subagent** consensus.
+- **Evals:** added trajectory / multi-turn / session-level evaluation, the **`pass^k`** reliability metric, online/production evals, and reference benchmarks.
+- Definition of Done grew from **12 → 15** items.
+
+[2.0.0]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v2.0.0
+
 ## [1.4.0] — 2026-06-01
 
 ### Added
