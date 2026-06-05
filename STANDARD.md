@@ -213,6 +213,8 @@ Security is Principle 6 and the 8th harness layer. It is the largest gap in most
 
 **Agent identity & least privilege.** Each agent gets a distinct, scoped, least-privilege identity; tokens are short-lived and audience-bound; tool execution is sandboxed. Identity is derived from auth, never asserted by the model.
 
+> **Runnable:** [`templates/security/`](templates/security/README.md) ships a red-team kit — a lethal-trifecta gate, indirect-prompt-injection test cases, and an MCP tool-definition hash-pinning / rug-pull detector.
+
 ### Layer 9: Cost & FinOps — **cross-cutting**
 
 Agentic systems are expensive in a way chat never was. Anthropic reports agents use **~4× the tokens of chat, and multi-agent systems ~15×**; Gartner puts agentic tasks at **5–30× the tokens** of a standard chatbot; the FinOps Foundation's *State of FinOps 2026* finds **98% of orgs now manage AI spend** (up from 31% two years prior). Token usage alone explains ~80% of cost variance; tool-call count and model choice are the other two factors.
@@ -292,6 +294,8 @@ This discipline matters more than the choice of framework.
 8. **Run online evals.** Evaluators on completed production threads, with failing live traces routed back into the offline set (closes the loop with Layer 6).
 
 *Reference benchmarks (as orientation, never as ground truth — see anti-pattern 12): τ-bench / τ²-bench (policy adherence, dual-control), SWE-bench Verified, GAIA, TerminalBench, WebArena. LLM-as-judge agrees with humans ~85% of the time but carries position / verbosity / self-preference bias — keep judges binary and calibrated.*
+
+> **Runnable:** [`templates/ci/eval-gate.yml`](templates/ci/eval-gate.yml) is a copy-paste CI workflow that blocks a merge when the eval pass-rate drops below the ≥90% gate (DoD item 12).
 
 ---
 
