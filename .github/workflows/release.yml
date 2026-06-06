@@ -1,0 +1,47 @@
+name: release
+
+# On a version tag, publish a GitHub Release whose notes are the matching
+# CHANGELOG.md section. This is the project's automatic "news of an update":
+# it lands on the Releases page, notifies watchers, and feeds /releases.atom.
+# Push a tag to trigger it, e.g.:  git tag v2.0.0 && git push origin v2.0.0
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+
+permissions:
+  contents: write   # create the release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract this version's CHANGELOG section
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          # Print the body between "## [VERSION]" and the next "## [" heading.
+          awk -v v="$VERSION" '
+            $0 ~ ("^## \\[" v "\\]") { f=1; next }
+            f && /^## \[/ { exit }
+            f { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "no CHANGELOG section for $VERSION; falling back to auto-generated notes" >&2
+            echo "FALLBACK=1" >> "$GITHUB_ENV"
+          fi
+
+      - name: Create the GitHub Release
+        run: |
+          set -euo pipefail
+          if [ "${FALLBACK:-0}" = "1" ]; then
+            gh release create "$GITHUB_REF_NAME" \
+              --title "$GITHUB_REF_NAME" --generate-notes --verify-tag
+          else
+            gh release create "$GITHUB_REF_NAME" \
+              --title "$GITHUB_REF_NAME" --notes-file notes.md --verify-tag
+          fi
