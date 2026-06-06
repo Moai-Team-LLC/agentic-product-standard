@@ -106,6 +106,12 @@ Treat context as an engineered resource:
 - **Select** only the relevant context for the current step.
 - **Compress** old or low-value context.
 - **Isolate** independent sub-tasks into separate context windows.
+- **Closed enumerations over open vocabularies.** For any rule the model has
+  shown willingness to satisfy cosmetically (selecting from a category, naming a
+  capability, choosing a label), inline the *complete allowed set* in the context
+  read at runtime. A pointer to another file leaks the vocabulary under pressure:
+  the model fills the gap with plausible-but-invented values that pass a shallow
+  check. Any value not in the closed set is a failure, not a creative liberty.
 
 **The 40% rule:** keep context-window utilization below ~40% of the model's limit. Degradation past that threshold is non-linear — recall drops sharply in the "dumb zone." Avoid filling the context window with raw transcripts, large files, irrelevant prior decisions, or unused tool descriptions.
 
@@ -135,6 +141,48 @@ Start with:
 
 Each production failure becomes a permanent regression test.
 
+### 6. Bitter-Pilled Maintenance
+
+The harness should shrink as models improve. Prescriptive instructions added to
+compensate for a model's weakness become dead weight once the weakness is gone —
+and every unnecessary rule competes for attention and degrades the rules that
+still matter.
+
+Audit instructions, prompts, and contracts on a cadence with one test:
+
+> **"Would a smarter model make this rule unnecessary?"**
+> If yes, it is scaffolding, not architecture — remove it.
+
+Tag every rule as **anti-fragile** or **fragile**:
+
+| Class | Keep / Cut | Examples |
+|---|---|---|
+| **Anti-fragile** | Keep | Verification harnesses, eval sets, data pipelines, tool contracts, specific DO/DON'T examples, routing rules, accumulated failure gotchas |
+| **Fragile** | Cut or re-test | Chain-of-thought orchestrators, output-format parsers, retry cascades, numeric "personality" scales, abstract value statements, process descriptions the agent does not actually follow |
+
+Fragile rules that cannot be cut yet (the model still needs them) are flagged for
+re-test on the next model upgrade — they are debt, not architecture.
+
+### 7. Security Is Structural
+
+An agent's safety comes from architecture — identity, least privilege, isolation,
+pinned tool definitions — not from filters bolted onto the edges. A guardrail is
+one tactic, not the discipline. Content filters top out near ~97% accuracy, so
+~3% of injection attacks succeed *by design*; you mitigate that structurally.
+
+Three checks belong in every design, not just at review:
+
+- **The lethal trifecta.** If an agent simultaneously has (1) access to private
+  data, (2) exposure to untrusted content, and (3) the ability to communicate
+  externally, prompt injection can turn it into an exfiltration tool. Break one
+  leg — gate egress, quarantine untrusted input, or scope the data — before shipping.
+- **The MCP supply chain.** Community MCP servers are untrusted code whose tool
+  descriptions can mutate after approval (rug pull). Pin tool definitions by hash,
+  alert on change, install only from an allow-listed registry.
+- **Agent identity.** Each agent gets a distinct, least-privilege, short-lived,
+  audience-bound identity. Identity and tenant are derived from auth, never asserted
+  by the model. (Map controls to the OWASP Top 10 for Agentic Applications.)
+
 ---
 
 ## Skill Activation
@@ -157,6 +205,10 @@ Determine whether the user is asking to:
 10. Harden for production.
 
 Then choose the appropriate sub-skill from the orchestrator below.
+
+On uncertain classification, bias toward more verification and less autonomy.
+Under-scoping the work (too little control, too much agency granted on a guess) is
+the more expensive failure to recover from than over-scoping it.
 
 ### Step 2: Choose the Minimal Architecture
 
@@ -368,8 +420,18 @@ What must be written to trace.
 - An agent must not perform external side effects unless explicitly permitted.
 - Destructive actions always require human approval.
 - The output must be schema-validatable.
-- The acceptance criteria must be testable.
+- The acceptance criteria must be *hard-to-vary*: a criterion is well-formed only
+  if you can name the single probe (Read / Grep / Bash / curl / SELECT / test run)
+  that returns yes/no on whether it is met. If you cannot name the falsifying
+  test, it is not yet a criterion — it is a wish. Split any criterion that needs
+  more than one probe (signals: the word "and", scope words like "all"/"every",
+  two independent failure modes).
 - The failure modes must be concrete, not generic.
+- Every **Forbidden Action** (contract §8) and **Non-Ownership** clause (§3) must
+  yield at least one *anti-criterion*: a code assertion that fails if the forbidden
+  thing happens (e.g. `expect(trace.events.filter(e => e.type === "email.send")).toHaveLength(0)`).
+  Prose forbiddance is not enforcement — the derived assertion is. Anti-criteria
+  belong in the Level 1 code-assertion eval layer, never in an LLM judge.
 
 ## Anti-Patterns
 
@@ -891,7 +953,7 @@ propose tool call
 ## Tool Safety Rules
 
 - Treat tools as RPC surfaces exposed to untrusted input.
-- Use least-privilege credentials and OAuth scopes.
+- Use least-privilege credentials and OAuth 2.1 scopes (with Resource Indicators). **Never pass a user's token through to a downstream tool, and never over-scope "to be safe"** — both are confused-deputy openings.
 - Use sandboxing where possible.
 - Separate read tools from write tools.
 - Separate draft creation from publishing.
@@ -902,6 +964,8 @@ propose tool call
 - Log every tool call with input summary and output summary.
 - Never let the model invent tool names.
 - Never let tool permissions live only in the prompt.
+- **Pin MCP tool definitions by cryptographic hash and alert on any change** — a server can mutate a tool's description after you approved it (rug pull / tool poisoning). Install community servers only from an allow-listed registry, version-pinned and signature-checked. Treat every external MCP server as untrusted supply chain.
+- **Run the lethal-trifecta check on the tool set as a whole:** if the agent can reach private data, ingest untrusted content, *and* communicate externally, break one leg before shipping (see Doctrine 7).
 
 ## Tenant Isolation
 
@@ -950,10 +1014,11 @@ Validate both input and output in code, not in the prompt. Multiple cheap guardr
 Minimum guardrail set:
 - **Schema validation** on every critical path.
 - **PII** detection/redaction where relevant.
-- **Prompt-injection / jailbreak** detection.
+- **Prompt-injection / jailbreak** detection — including **indirect** injection (malicious instructions hidden in retrieved documents, tool output, or web content, not just the user turn). This is the dangerous variant for agents.
 - **Content classification** for unsafe output.
+- **Egress / exfiltration check** on outbound actions when the agent touches private data — the output-side leg of the lethal trifecta (Doctrine 7).
 
-Run guardrails **in parallel** with the main agent when latency matters; run them as **blocking** checks when risk is high.
+Run guardrails **in parallel** with the main agent when latency matters; run them as **blocking** checks when risk is high. Guardrails are one tactic inside Security & Identity (Doctrine 7), not a substitute for structural controls — a filter that catches ~97% still passes ~3% of injections.
 
 ## Human-in-the-Loop
 
@@ -1064,11 +1129,27 @@ Each agent must have:
 - Write evals before claiming the agent works.
 - Start with product-specific failure modes (e.g. "missed human handoff," "wrong tool selection"), not generic metrics.
 - Add every production failure to regression tests.
+- Each regression entry carries a four-field **learning trail**, so the eval set
+  records *why* understanding changed, not just the failing input:
+
+  ```text
+  conjectured: <the belief that turned out wrong>
+  refuted by:  <the trace / observation that broke it>
+  learned:     <the corrected understanding>
+  criterion now: <the new assertion or eval added as a result>
+  ```
+
+  An entry missing any of the four fields is a note, not a regression. This is the
+  human-readable "why" behind the test; the test itself is still the enforcement.
 - Run fast assertions on every change.
 - Run expensive judges on a cadence or before release.
 - Block deployment on critical regression.
 - Keep eval cases versioned.
 - Multi-tenant products: a cross-tenant leakage eval is mandatory and code-asserted (never a judge). Seed tenant A with a unique canary, then as tenant B query for it — plus an injection variant that tells the agent to ignore its tenant — across search, memory recall, the warmed cache, and any sub-agent hand-off. Any A-content reaching B fails the build.
+- The cross-tenant canary above is a *special case of an anti-criterion* — a
+  code-asserted test that fails when a forbidden thing occurs. Generalize it:
+  derive an anti-criterion from **every** forbidden action and non-ownership
+  clause in the agent contract, not only from tenant isolation.
 
 ## Trace Schema
 
@@ -1150,6 +1231,20 @@ Determine whether an agentic system is safe and reliable enough for production.
 - [ ] Tools ignore any model-supplied tenant; a mismatch is audited and rejected.
 - [ ] A code-asserted cross-tenant leakage eval exists and runs in CI.
 
+### Security & Identity
+
+- [ ] The lethal-trifecta check is performed and documented; if all three legs are present, at least one is broken.
+- [ ] MCP tool definitions are pinned by hash with change alerts; servers come from an allow-listed registry, version-pinned and signature-checked.
+- [ ] Tokens are OAuth 2.1 scoped, short-lived, and audience-bound; no token passthrough; no over-scoping.
+- [ ] Each agent has a distinct least-privilege identity; identity and tenant are derived from auth, never from the model.
+- [ ] Indirect prompt injection (poisoned documents / tool output) is in the threat model, not just user-turn injection.
+
+### Cost
+
+- [ ] A per-run token / cost ceiling is enforced in code (circuit breaker on runaway sessions).
+- [ ] Cost-per-task is tracked in traces; prompt/KV caching is enabled on stable prefixes.
+- [ ] For multi-agent designs, the value of the task justifies the ~15× token cost.
+
 ### Reliability
 
 - [ ] Agent execution can retry with backoff.
@@ -1227,9 +1322,12 @@ An agent is done only when all of these are true:
 - [ ] Permissions are enforced in code.
 - [ ] Side effects are classified (P0–P6).
 - [ ] Approval gates exist where needed.
+- [ ] Lethal-trifecta check performed and documented; a leg is broken if all three are present.
+- [ ] MCP tool definitions pinned by hash; servers allow-listed; OAuth 2.1 scoped tokens, no passthrough.
+- [ ] Per-run token/cost ceiling enforced in code; cost-per-task tracked.
 - [ ] Retry, timeout, and idempotency policies exist.
 - [ ] Long-running work can pause/resume.
-- [ ] Trace events are emitted.
+- [ ] Trace events are emitted (OTel GenAI conventions).
 - [ ] Known failure modes are documented.
 - [ ] Golden evals exist.
 - [ ] Failure-mode evals exist.
@@ -1412,6 +1510,10 @@ Return:
 16. Do not claim production readiness without traces.
 17. Do not add autonomy without eval evidence.
 18. Do not choose a framework before defining the architecture.
+19. Do not express a forbidden action only in prose — pair it with a code-asserted anti-criterion.
+20. Do not let the model select from an open vocabulary where a closed enumeration can be inlined.
+21. Do not ship the lethal trifecta (private data × untrusted content × external comms) without breaking at least one leg.
+22. Do not load community MCP tool definitions without pinning them by hash and alerting on change.
 
 ---
 
@@ -1490,5 +1592,6 @@ directionally correct, not as audited benchmarks.
 | HITL patterns notify / ask / review; agent inbox; interrupt between tool selection and invocation | LangChain (Harrison Chase), *Introducing ambient agents* (Jan 14, 2025) |
 | Guardrails as defense in depth; structured outputs + assertions catch more than judges; trace-based monitoring | OpenAI / Anthropic / Husain reliability-stack consensus |
 | Framework choice by dominant constraint, not hype | Research synthesis across LangGraph, OpenAI Agents SDK, Claude Agent SDK, CrewAI, Pydantic AI, LlamaIndex |
+| Bitter-pill maintenance (shrink the harness as models improve); closed-enumeration over open vocabulary; derived anti-criteria; conjecture/refutation learning trail | Personal AI Infrastructure (PAI), Daniel Miessler, MIT License (Algorithm v6.3.0; ISA; BitterPillEngineering) |
 
 **Caveats.** The field moves quarterly — "production-grade" drifts. The single-vs-multi-agent boundary is genuinely unsettled at the edge and task classification is itself a judgment call. Memory-vendor and multi-agent benchmarks are largely self-reported. Security (MCP auth, prompt-injection defense, supply-chain integrity of community servers/skills) is the least-mature dimension; treat every agent-executable tool surface with the paranoia you would apply to any RPC endpoint exposed to untrusted input.

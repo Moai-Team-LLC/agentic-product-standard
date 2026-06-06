@@ -1,0 +1,60 @@
+# CI eval-gating workflow — TEMPLATE.
+#
+# The standard mandates "CI blocks deploy on eval regression" (DoD 12) but a
+# mandate is not a mechanism. Copy this into your agent repo at
+# .github/workflows/eval-gate.yml and wire the two TODO points to your stack.
+#
+# Contract: your eval command prints a JSON line {"pass_rate": <0..1>, ...} as
+# its LAST line of stdout (or adapt the parse step). The job fails if the rate
+# is below MIN_PASS_RATE — that is the gate.
+
+name: eval-gate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+env:
+  MIN_PASS_RATE: "0.90"   # escalation gate from the Autonomy Ladder (≥90%)
+
+jobs:
+  evals:
+    name: Block merge on eval regression
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # TODO: set up your runtime (node/python/etc.) and install deps.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+
+      - name: Run evals
+        id: run
+        run: |
+          set -euo pipefail
+          # TODO: replace with your eval command; it must print a final JSON
+          # line containing "pass_rate". Capture the whole output and the tail.
+          python -m evals --report json | tee eval-output.txt
+
+      - name: Gate on pass rate
+        run: |
+          set -euo pipefail
+          rate="$(grep -oE '"pass_rate"[[:space:]]*:[[:space:]]*[0-9.]+' eval-output.txt \
+                   | tail -1 | grep -oE '[0-9.]+$')"
+          if [ -z "${rate:-}" ]; then
+            echo "::error::no pass_rate found in eval output"; exit 1
+          fi
+          echo "pass_rate=$rate (gate: $MIN_PASS_RATE)"
+          awk -v r="$rate" -v m="$MIN_PASS_RATE" 'BEGIN{ exit !(r+0 >= m+0) }' || {
+            echo "::error::eval pass rate $rate is below the $MIN_PASS_RATE gate"; exit 1; }
+          echo "eval gate passed."
+
+      - name: Upload eval report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report
+          path: eval-output.txt

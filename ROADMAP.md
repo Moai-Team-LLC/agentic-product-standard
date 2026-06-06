@@ -25,7 +25,7 @@ direction. Issues and PRs that move these forward are very welcome; see
 
 - **Translations** of `STANDARD.md` (the canon travels; the field is global).
 - **Editor coverage beyond Claude Code** — adapt the skill set for other agentic IDEs.
-- **Conformance checklist** — a machine-checkable "does my repo follow the standard?" linter.
+- **Conformance linter** — a machine-checkable "does my repo follow the standard?" tool. v2.0 ships the *manual* version ([`SCORECARD.md`](SCORECARD.md)) plus runnable security/CI checks ([`templates/`](templates/security/README.md)); automating the scorecard is the open ask.
 
 ## Out of scope
 
