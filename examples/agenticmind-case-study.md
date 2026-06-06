@@ -1,7 +1,7 @@
 # Case study — AgenticMind vs. the Agentic Product Standard
 
 *A layer-by-layer compliance audit of [AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind),
-the reference implementation of [the Agentic Product Standard](../STANDARD.md) (v1.0).*
+the reference implementation of [the Agentic Product Standard](../STANDARD.md) (v2.0).*
 
 > **Audit basis.** This document maps the AgenticMind codebase against the canon
 > clause-by-clause, with file-level evidence. It is a working compliance tracker,
@@ -18,6 +18,11 @@ the reference implementation of [the Agentic Product Standard](../STANDARD.md) (
 > labels (129) built; **Layer 2** — SemVer contract version + `server.json` manifest
 > + snapshot contract-test. Still open: prompt caching (Layer 1 tail) and the **live
 > eval pass-rate run + CI regression gate** (DoD 12 — needs a seeded DB + chat key).
+>
+> **Re-audited against Standard v2.0 (2026-06-06).** v2.0 makes security first-class
+> (Layer 8), adds cost/FinOps (Layer 9), and ships a maturity scorecard. Those deltas
+> are assessed in **Part VIII** below; net result: **M1, with most of M2 met** and a
+> short, named list of M2 gaps.
 
 ---
 
@@ -259,6 +264,52 @@ No structural anti-patterns. The only soft hit is the *live* judge-calibration r
 
 ---
 
+## Part VIII — Standard v2.0 deltas (security · cost · scorecard)
+
+v2.0 promotes **security to a first-class concern** (Principle 6, harness Layer 8, stack
+Layer 8), adds a **Cost & FinOps** layer (Layer 9), and ships a **maturity scorecard**.
+This part audits AgenticMind against those additions; the v1 audit above still holds for
+everything else.
+
+### Layer 8 — Security & Identity — ✅ / ⚠️
+
+| Clause (v2.0) | Status | Evidence / remediation |
+|---|---|---|
+| Identity & tenant from auth, never the model | ✅ reference-grade | tenant comes from the verified token; `withTenant` sets `app.current_tenant`; Postgres RLS scopes every read/write (`apps/server/src/mcp.ts`, migration `0003`) |
+| Least-privilege identity; permissions in code | ✅ | scoped, revocable, fail-closed bearer; `hasScope()` |
+| Guardrails: indirect-injection + egress, in/out | ✅ / ⚠️ | `guardInput` (injection EN+RU) + `redactPii` + `detectOutputLeak` (`guard.ts`); **prompt_injection is a first-class eval mode (54 cases)**. ⚠️ injection is checked on the *question*; **poisoned-corpus** indirect injection is mitigated by citation-enforcement + faithfulness but not yet red-teamed. *Remediation (P1):* run the v2.0 red-team kit (`templates/security/`) on the ingest→ask path. |
+| Lethal-trifecta check documented; one leg broken | ⚠️ | All three legs are reachable — private corpus + **untrusted ingest** (`kl_ingest`) + **egress** (synthesis calls the chat model). The break: the model sees only retrieved, **citation-gated** context, its output is **faithfulness-checked**, and it has **no outbound tool surface** (the server exposes data, not actions). *Remediation (P1):* record this analysis in `docs/security-model.md`. |
+| OAuth 2.1 scoped / audience-bound; no over-scoping | ⚠️ by design | Scoped, short-lived (JWT `exp`), revocable bearer; the static `MCP_API_KEY` is all-scope for trusted single-tenant use. Full OAuth 2.1 + IdP is the **enterprise-edition** boundary. |
+| MCP supply-chain: pin tool defs by hash, signed servers | ⊘ N/A (server, not consumer) | AgenticMind **is** the MCP server; it consumes no third-party MCP tools to pin. Its own images are **cosign-signed with SBOM + SLSA provenance** (`release-images.yml`). |
+
+### Layer 9 — Cost & FinOps — ⚠️
+
+| Clause (v2.0) | Status | Evidence / remediation |
+|---|---|---|
+| Per-run token/cost ceiling in code | ❌ | Retrieval is token-budgeted (`tokenBudget` + `packByTokenBudget`), but there's no per-run **synthesis** cost ceiling. *Remediation (P1).* |
+| Prompt/KV caching on stable prefixes | ❌ | No `cache_control` on the synth/judge system prompts. *Remediation (P1, carried from Layer 1 tail).* |
+| Cost-per-task tracked in traces | ⚠️ | The why-trace records phases/model/timings; token/cost per task is not yet emitted. *Remediation (P2):* add usage to the OpenInference span. |
+| Multi-agent ~15× economics justified | ⊘ N/A | Single judge, not a multi-agent fan-out. |
+
+### Definition of Done — new v2.0 items (13–15)
+
+- [⚠️] **13. Lethal-trifecta + indirect-injection in the threat model** — analysis done + documented; poisoned-corpus red-team pending (P1).
+- [x] **14. Identity & tenant from auth; isolation below the LLM** — ✅ RLS, tenant-from-token. ⚠️ a code-asserted cross-tenant leakage eval is not yet in CI (*P1*; note RLS is bypassed under a superuser DB role, so the test needs a non-superuser role).
+- [❌] **15. Per-run cost ceiling + prompt caching** — see Layer 9.
+
+### Scorecard verdict (`SCORECARD.md`)
+
+| Maturity | Result |
+|---|---|
+| **M1 — Shippable** | ✅ all items met — contracts, schemas, code-enforced permissions, guardrails (in+out), eval set ≥50/mode, externalized state |
+| **M2 — Production** | ⚠️ **most met** — durable sweep, tenant RLS, judge calibration, 100% traced. **Open:** CI eval-regression gate (DoD 12), prompt caching + per-run cost ceiling (Layer 9), code-asserted cross-tenant leakage eval (DoD 14), OAuth 2.1 (enterprise) |
+| **M3 — Autonomous-ready** | ⊘ largely N/A — AgenticMind is an L1/L2 substrate by design, not an L4 loop. OTel CHAIN span ✅; trajectory / `pass^k` / online-eval are the consuming product's concern. |
+
+**Net: M1, on the cusp of M2.** Closing the four M2 items (all on the remediation list
+below) makes AgenticMind a clean **M2** reference implementation of v2.0.
+
+---
+
 ## Compliance summary & prioritized remediation
 
 | Area | Verdict | Priority |
@@ -296,5 +347,6 @@ No structural anti-patterns. The only soft hit is the *live* judge-calibration r
 
 ---
 
-*Audit against Agentic Product Standard v1.0. Re-run this checklist on every release;
-each new production failure mode becomes a permanent eval case (Part IV, rule 5).*
+*Audit against Agentic Product Standard v2.0 (v1 layers in Parts I–VII, v2.0 deltas in
+Part VIII). Re-run this checklist on every release; each new production failure mode
+becomes a permanent eval case (Part IV, rule 5).*
