@@ -1,6 +1,6 @@
 ---
 name: harness-engineering
-description: Design the harness — the 7-layer scaffolding around the LLM loop that makes agents reliable. Covers the agent loop itself (gather/act/verify), context management, durable execution, guardrails, human-in-the-loop, evals, and observability. In production agents, the harness is 98% of the code. Use whenever the user is structuring code around an agent loop, asks "how do I make this reliable / production-ready," is implementing verification, retry logic, sub-agent delegation, permission systems, approval gates, or wants to understand what makes Claude Code / Codex / Devin work beyond the model.
+description: Design the harness — the 8-layer scaffolding around the LLM loop that makes agents reliable. Covers the agent loop itself (gather/act/verify), context management, durable execution, guardrails, human-in-the-loop, evals, observability, and the cross-cutting security & identity layer. In production agents, the harness is 98% of the code. Use whenever the user is structuring code around an agent loop, asks "how do I make this reliable / production-ready," is implementing verification, retry logic, sub-agent delegation, permission systems, approval gates, or wants to understand what makes Claude Code / Codex / Devin work beyond the model.
 ---
 
 # Harness Engineering
@@ -9,9 +9,9 @@ OpenAI's "Harness Engineering" post and Liu et al.'s Claude Code analysis (arXiv
 
 LangChain's empirical finding (March 2026): holding model constant at gpt-5.2-codex, their coding agent moved from Top 30 to Top 5 on Terminal Bench 2.0 (52.8% → 66.5%) **only by changing the harness**. As model capability converges, harness quality is the durable competitive advantage.
 
-## The 7-layer harness model
+## The 8-layer harness model
 
-Every production agent has these layers. Build them in this order; skipping is technical debt:
+Every production agent has these layers — seven in the stack below, plus a **cross-cutting Security & Identity layer (layer 8)** that constrains all of them. Build the stack in this order; skipping is technical debt:
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -201,6 +201,17 @@ Sub-agents:
 
 This is Claude Code's Task tool. It's Anthropic Research's sub-researcher pattern. The shape repeats because it works.
 
+## Layer 8: Security & Identity (cross-cutting)
+
+Not a box in the stack — a layer that wraps all seven. Safety is structural, not a filter bolted on the edge (content classifiers top out ~97%, so ~3% of injection lands by design). The cross-cutting controls:
+
+- **Agent identity & least privilege** — each agent gets a distinct, scoped, short-lived identity; identity and `tenant_id` come from auth, never the model.
+- **Lethal-trifecta check** — private data + untrusted content + external comms together = an exfiltration channel; break one leg before shipping.
+- **MCP supply chain** — pin tool definitions by hash, alert on change (rug pulls), install from an allow-listed registry.
+- **Injection defense spans input *and* output** — including indirect injection (poisoned documents / tool output), plus an egress check.
+
+Full treatment: `../../../STANDARD.md` (Principle 6 / Layer 8), `../../../AGENT_STANDARD.md` (Doctrine 7), and the `tool-design-mcp` skill's `SECURE-WRITE-ACTIONS.md`.
+
 ## Harness as the durable advantage
 
 When the user is choosing where to invest engineering time, redirect this conversation:
@@ -214,7 +225,7 @@ When the user is choosing where to invest engineering time, redirect this conver
 When the conversation completes, the user should have:
 
 1. The agent loop sketched as `(state, event) → new_state` with explicit termination conditions
-2. Decisions for each of the 7 layers — what's in scope for v1
+2. Decisions for each of the 8 layers — what's in scope for v1
 3. Cycle of Trust enforced for at least the top destructive actions
 4. Sub-agent boundaries defined (if applicable)
 5. A short list of "what could go wrong" mapped to which layer catches it

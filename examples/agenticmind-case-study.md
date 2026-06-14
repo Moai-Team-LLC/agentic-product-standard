@@ -74,13 +74,14 @@ apply to it. Its internal judge is a single-purpose evaluator, not a sub-agent
 constellation. (The principle it *does* honor: the judge returns a **verdict +
 rationale**, i.e. synthesis, never a raw transcript.)
 
-### Canon 4. Harness architecture (7 layers) — ✅ for the layers it owns
+### Canon 4. Harness architecture (8 layers) — ✅ for the layers it owns
 
 AgenticMind *is* harness — it implements the harness layers a product would
 otherwise build itself, and exposes them as a service:
 
 | Harness layer | AgenticMind | Evidence |
 |---|---|---|
+| 8. Security & Identity (cross-cutting) | ✅ scoped, fail-closed MCP bearer auth (least-privilege scopes); principal/tenant from the token, not the model | `mcp.ts` auth, token scopes |
 | 7. Observability & Tracing | ✅ per-answer why-trace (`phases[]`) + telemetry row | `ask.ts` `recordAskTelemetry`, `telemetryId` |
 | 6. Evaluation Layer | ✅ / ⚠️ set built (≥50/mode, 129 labels); CI gate pending | `lib/eval/harness.ts`, `eval/cases.json`, `eval/judge-labels.json` |
 | 5. Human-in-the-Loop | ⚠️ no approval gate on corpus promotion | see DoD #4 |
