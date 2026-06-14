@@ -11,13 +11,14 @@ You are now operating as an Agentic Product Architect. This master skill encodes
 
 An agentic product is **not "a product with AI"**. It is a product where part of the process is dynamically directed by an LLM within a deterministic architecture with explicit trust boundaries.
 
-Five principles govern every decision:
+Six principles govern every decision:
 
 1. **Determinism by default, agency by necessity.** Each degree of autonomy must be earned, not granted upfront.
 2. **Architecture beats framework.** Patterns outlive libraries.
 3. **Harness > model.** 98% of reliability lives in the code around the LLM, not in the LLM itself.
 4. **Context engineering is the core engineering discipline.** What enters the context window determines everything.
 5. **Eval-driven development is non-negotiable.** No measurement → no improvement. No trace review → no understanding.
+6. **Security is a structural property, not a guardrail.** Safety comes from architecture — identity, least privilege, isolation, pinned tools — not filters bolted onto the edges.
 
 ## The single most important rule
 
@@ -154,7 +155,7 @@ Always consult the relevant sub-skill before answering a substantive question in
 
 - `architecture-design/SKILL.md` — autonomy ladder, 5 patterns, single vs multi-agent decision, reference exemplars
 - `context-engineering/SKILL.md` — write/select/compress/isolate, the 40% rule, CLAUDE.md pattern
-- `harness-engineering/SKILL.md` — 7-layer harness model, Cycle of Trust, what 98% of code does
+- `harness-engineering/SKILL.md` — 8-layer harness model, Cycle of Trust, what 98% of code does
 - `tool-design-mcp/SKILL.md` — MCP-first integration, tool description as prompt, RAG-MCP
 - `memory-architecture/SKILL.md` — Mem0 vs Zep vs Letta vs LangMem vs files vs AgenticMind; selection matrix
 - `tenant-isolation/SKILL.md` — pooled/bridge/silo models, the agent leakage paths (retrieval/memory/cache/trace/model-supplied tenant_id), tenant_id as a principal dimension, the cross-tenant leakage eval

@@ -9,7 +9,7 @@ agentic-product-architect/
 ├── SKILL.md                          ← master: router + philosophy
 ├── architecture-design/SKILL.md      ← autonomy ladder, 5 patterns, single vs multi
 ├── context-engineering/SKILL.md      ← write/select/compress/isolate, 40% rule
-├── harness-engineering/SKILL.md      ← the 7 layers around the LLM loop
+├── harness-engineering/SKILL.md      ← the 8 layers around the LLM loop
 ├── tool-design-mcp/SKILL.md          ← MCP-first, <20 tools, RAG-MCP, sandboxing
 ├── memory-architecture/SKILL.md      ← Mem0 / Zep / Letta / LangMem / files decision
 ├── durable-execution/SKILL.md        ← Temporal Workflow + Activity pattern
@@ -21,7 +21,7 @@ agentic-product-architect/
 
 ## How it works
 
-The master skill (`agentic-product-architect`) auto-triggers whenever the user mentions building an agent, agentic product, multi-agent system, agent loop, or any major agentic framework. It loads the philosophy (the five principles, the autonomy ladder, the five composition patterns) and routes to the relevant sub-skill based on the user's specific question.
+The master skill (`agentic-product-architect`) auto-triggers whenever the user mentions building an agent, agentic product, multi-agent system, agent loop, or any major agentic framework. It loads the philosophy (the six principles, the autonomy ladder, the five composition patterns) and routes to the relevant sub-skill based on the user's specific question.
 
 Each sub-skill is independently triggerable when the user asks something specific to its domain — e.g., a question about Mem0 vs Zep auto-loads `memory-architecture/SKILL.md` without going through the master.
 
@@ -43,7 +43,7 @@ Claude Code discovers skills via the SKILL.md files and their YAML frontmatter (
 
 **Why hybrid?** Building agentic products spans 10+ distinct concerns (architecture, evals, durability, etc.). A monolithic skill would either be too shallow on each concern, or too long for Claude's context budget. The master provides the philosophy and routing; specialized sub-skills load only when needed.
 
-**Why these 10 sub-skills?** They map to the 8 sections of the Agentic Product Standard v1.0 plus two operational skills (production readiness audit, antipatterns review) that surface naturally in real building work.
+**Why these 10 sub-skills?** They map to the core sections of the Agentic Product Standard plus two operational skills (production readiness audit, antipatterns review) that surface naturally in real building work.
 
 **Why no code templates or scripts?** This skill set teaches architectural judgment, not boilerplate. The relevant code is framework-specific and changes quarterly; the patterns and judgment are durable. When you need code, use the framework's docs (referenced by name in `framework-selection/`).
 
@@ -62,6 +62,6 @@ The content distills production practices from:
 
 ## Versioning
 
-v1.0 — May 2026
+v2.1 — June 2026
 
-Skills should evolve. The field moves fast; revisit quarterly. The architectural canons (lestnitsa, 5 patterns, single-vs-multi, harness) are stable. Specific vendors and framework rankings will shift.
+Skills should evolve. The field moves fast; revisit quarterly. The architectural canons (the autonomy ladder, 5 patterns, single-vs-multi, the harness) are stable. Specific vendors and framework rankings will shift.
