@@ -1,26 +1,26 @@
 ---
 name: antipatterns-review
-description: Review existing agentic code, designs, or plans through the lens of the 12 canonical antipatterns. Diagnose what's likely to fail in production. Use whenever the user asks you to review their agent code, asks "what's wrong with this design," is debugging mysterious failures, or wants a second opinion on an architecture. Also use proactively when you notice any of the 12 antipatterns in a conversation, even if the user didn't ask for review.
+description: Review existing agentic code, designs, or plans through the lens of the 17 canonical antipatterns. Diagnose what's likely to fail in production. Use whenever the user asks you to review their agent code, asks "what's wrong with this design," is debugging mysterious failures, or wants a second opinion on an architecture. Also use proactively when you notice any of the 17 antipatterns in a conversation, even if the user didn't ask for review.
 ---
 
 # Antipatterns Review
 
-This skill is your code-review mode. Walk through the user's design, code, or plan and check for each of the 12 canonical antipatterns. For each found, name it, explain the failure mode it produces, and propose the fix.
+This skill is your code-review mode. Walk through the user's design, code, or plan and check for each of the 17 canonical antipatterns. For each found, name it, explain the failure mode it produces, and propose the fix.
 
-This is not a generic "review my code." It's a targeted scan against the 12 known failure patterns that have hit real production agentic products.
+This is not a generic "review my code." It's a targeted scan against the 17 known failure patterns that have hit real production agentic products.
 
 ## How to apply this skill
 
 When invoked, do this:
 
 1. Ask the user to share what you're reviewing (code, design doc, screenshot, description)
-2. Walk through the 12 antipatterns in order
+2. Walk through the 17 antipatterns in order
 3. For each: pass / present / unclear, with evidence
 4. For each "present": name it, explain the failure, propose the fix
 5. Prioritize by severity (critical > high > medium > low)
 6. Summarize the top 3 to fix first
 
-## The 12 antipatterns
+## The 17 antipatterns
 
 ### 1. Multi-agent before single-agent baseline
 
@@ -169,6 +169,66 @@ When invoked, do this:
 
 ---
 
+### 13. Trusting community MCP servers without pinning or scanning
+
+**Signal:** MCP servers are installed straight from a URL or a community list; tool definitions are approved once and never re-checked; no hash pin, no change alert.
+
+**Failure mode:** the tool description you approved is not the one running next week. A server can mutate its tool definitions after you trust it (rug pull) — the model now follows instructions you never reviewed. The supply chain is the attack surface.
+
+**Fix:** install only from an allow-listed registry. Pin tool definitions by hash and alert on any change. Scan tool descriptions for injected instructions before first use and after each version bump.
+
+**Severity:** Critical — silent compromise through a trusted dependency
+
+---
+
+### 14. Deploying the lethal trifecta with no mitigation
+
+**Signal:** the agent has access to private data, ingests untrusted content (web, email, documents), and can communicate externally (send, post, call out) — and all three legs are live with nothing breaking the chain.
+
+**Failure mode:** injected content reads a secret and exfiltrates it. The three capabilities are individually reasonable; together they are an exfiltration channel. Prompt-level "don't leak data" does not hold.
+
+**Fix:** run the lethal-trifecta check (Simon Willison). If all three legs are present, break at least one by design — strip untrusted content before it reaches a privileged context, drop the external-comms capability on that path, or gate egress through an allow-list the model cannot edit.
+
+**Severity:** Critical — direct data-exfiltration risk
+
+---
+
+### 15. Token passthrough / over-scoped OAuth
+
+**Signal:** the agent forwards the user's token to downstream services, or holds OAuth scopes far broader than the task needs ("full access, to be safe").
+
+**Failure mode:** confused deputy. A coerced or injected agent acts with the user's full authority across systems; one over-scoped token turns a small compromise into a large one. Blast radius is set by the scope, not by the bug.
+
+**Fix:** mint per-integration OAuth 2.1 scoped tokens for exactly what the task needs; never forward the user's token downstream. Treat scope as a security boundary — least privilege, audited, time-bounded where possible.
+
+**Severity:** Critical — confused-deputy / privilege-escalation risk
+
+---
+
+### 16. No budget ceiling on autonomous sessions
+
+**Signal:** autonomous or long-running sessions have no per-run token/cost cap enforced in code; cost is watched on a dashboard, if at all.
+
+**Failure mode:** one bad loop is an unbounded invoice. A retry storm or a self-prompting cycle runs until someone notices the bill — the dashboard reports the damage, it doesn't stop it.
+
+**Fix:** enforce a hard per-run token/cost ceiling in code (a circuit breaker) that halts a runaway or looping session. Record cost-per-task in traces so the ceiling is tuned from real data.
+
+**Severity:** High — unbounded cost exposure
+
+---
+
+### 17. Peer-to-peer multi-agent buses instead of an orchestrator
+
+**Signal:** agents talk to each other freely on a shared bus or in a group "debate"; there is no single coordinator owning the task and the context.
+
+**Failure mode:** free-form agent-to-agent chatter multiplies context, compounds misunderstandings between sub-agents, and resists evaluation — you cannot score a path no one owns. Coordination overhead dominates; debugging is guesswork.
+
+**Fix:** use an orchestrator with isolated sub-agents. The orchestrator owns the task and the context; sub-agents receive scoped briefs and return results. Communication flows through the coordinator, not a peer mesh.
+
+**Severity:** High — unevaluable, context-multiplying coordination
+
+---
+
 ## Severity scale (when reporting)
 
 | Severity | Meaning | Action |
@@ -217,15 +277,15 @@ Be specific. Quote the user's code or design when pointing to a problem.
 
 - It is not a generic code review (style, performance, testing patterns)
 - It is not a security audit (use a security review for that)
-- It is not a complete production-readiness check (use `production-readiness/` for the full 12-point DoD)
+- It is not a complete production-readiness check (use `production-readiness/` for the full 15-point DoD)
 
-Focus on the 12 antipatterns; route the user to the right place for other concerns.
+Focus on the 17 antipatterns; route the user to the right place for other concerns.
 
 ## Output of this skill
 
 When the review completes, the user should have:
 
-1. A pass/present/unclear scorecard for all 12 antipatterns
+1. A pass/present/unclear scorecard for all 17 antipatterns
 2. For each "present": named issue, failure mode, proposed fix
 3. Severity ranking
 4. Top 3 to fix this week, with concrete next steps

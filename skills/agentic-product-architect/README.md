@@ -15,8 +15,8 @@ agentic-product-architect/
 ├── durable-execution/SKILL.md        ← Temporal Workflow + Activity pattern
 ├── eval-driven-dev/SKILL.md          ← Husain/Shankar pyramid + judge calibration
 ├── framework-selection/SKILL.md      ← LangGraph / Claude SDK / OpenAI SDK / others
-├── production-readiness/SKILL.md     ← 12-point Definition of Done audit
-└── antipatterns-review/SKILL.md      ← code review through 12 known failure modes
+├── production-readiness/SKILL.md     ← 15-point Definition of Done audit
+└── antipatterns-review/SKILL.md      ← code review through 17 known failure modes
 ```
 
 ## How it works
@@ -28,7 +28,7 @@ Each sub-skill is independently triggerable when the user asks something specifi
 The hybrid design means:
 - A new conversation about "I'm thinking about building an agentic product" → master loads, walks through the 10-question checklist, then pulls in sub-skills as needed.
 - A focused conversation about "how should I structure context?" → `context-engineering` loads directly.
-- A code review request → `antipatterns-review` scans through the 12 antipatterns.
+- A code review request → `antipatterns-review` scans through the 17 antipatterns.
 
 ## Installation in Claude Code
 

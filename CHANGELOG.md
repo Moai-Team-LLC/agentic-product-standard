@@ -3,6 +3,13 @@
 All notable changes to The Agentic Product Standard are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.2.0] — 2026-06-14
+
+### Changed
+- **`agentic-product-architect` sub-skills resynced with Standard v2.0.** The `production-readiness` sub-skill now enumerates the full **15-point** Definition of Done — adding the security/identity and cost items that landed in v2.0: the **lethal-trifecta check** (13), **MCP tool-definition pinning + allow-listed registry + OAuth 2.1 scoped tokens** (14), and a **per-run token/cost ceiling enforced in code** (15) — each as a full audit point with checklist, *Why*, and *Common gap*. The `antipatterns-review` sub-skill now lists all **17** anti-patterns, adding: trusting community MCP servers without pinning/scanning (13), deploying the lethal trifecta with no mitigation (14), token passthrough / over-scoped OAuth (15), no budget ceiling on autonomous sessions (16), and peer-to-peer multi-agent buses instead of an orchestrator (17) — each with *Signal*, *Failure mode*, *Fix*, and *Severity*. All "12" counts in both sub-skills and the track `README.md` updated to 15 / 17. No change to `STANDARD.md` or `AGENT_STANDARD.md`; this aligns the skills with the canon they already reference.
+
+[2.2.0]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v2.2.0
+
 ## [2.1.0] — 2026-06-06
 
 ### Added
