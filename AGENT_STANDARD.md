@@ -966,6 +966,7 @@ propose tool call
 - Never let tool permissions live only in the prompt.
 - **Pin MCP tool definitions by cryptographic hash and alert on any change** — a server can mutate a tool's description after you approved it (rug pull / tool poisoning). Install community servers only from an allow-listed registry, version-pinned and signature-checked. Treat every external MCP server as untrusted supply chain.
 - **Run the lethal-trifecta check on the tool set as a whole:** if the agent can reach private data, ingest untrusted content, *and* communicate externally, break one leg before shipping (see Doctrine 7).
+- **Writes are earned, not standing.** Default the session to read-only; a P3+ mutation requires explicit, time-bounded, scoped *elevation* confirmed **out-of-band** — through a channel the agent cannot read (the agent must never see the OTP/secret, or it can self-approve). Each write cites its exact target; destructive (P6) actions get a dry-run preview first. Credential reads return metadata only, never the secret. (Full pattern: the `tool-design-mcp` skill's `SECURE-WRITE-ACTIONS.md`.)
 
 ## Tenant Isolation
 

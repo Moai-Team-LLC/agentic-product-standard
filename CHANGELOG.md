@@ -3,6 +3,13 @@
 All notable changes to The Agentic Product Standard are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.1.0] — 2026-06-06
+
+### Added
+- **Secure Write Actions pattern** ([`skills/agentic-product-architect/tool-design-mcp/SECURE-WRITE-ACTIONS.md`](skills/agentic-product-architect/tool-design-mcp/SECURE-WRITE-ACTIONS.md)) — the operational write path behind "require approval": read-only by default; P3+ mutations need explicit, scoped, time-bounded **elevation** confirmed **out-of-band** through a channel the agent cannot read (no self-approval); each write cites its exact target; destructive actions get a dry-run; credential reads return metadata only. Mapped to the P0–P6 tiers and composed with Layer 8 / the lethal-trifecta check. Threaded into the `tool-design-mcp` skill and `AGENT_STANDARD.md` Tool Safety Rules. Distilled vendor-neutrally from Descope's MCP-server design + OAuth 2.1.
+
+[2.1.0]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v2.1.0
+
 ## [2.0.0] — 2026-06-06
 
 The "credibility document → operational tool" increment. Security becomes first-class, cost becomes a discipline, the 2026 landscape is refreshed, and the standard ships its first runnable artifacts and a self-assessment scorecard.
