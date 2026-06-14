@@ -150,6 +150,10 @@ agent invokes destructive_tool(params)
 
 This is the difference between "the agent asks permission" (prompt-level, bypassable) and "the agent must obtain a permission token" (code-level, enforced).
 
+### Secure write actions (the write path)
+
+"Require approval" is necessary but underspecified. The operational pattern — **read-only by default; writes are elevated, scoped, time-bounded, and confirmed out-of-band (the agent never sees the confirmation secret); destructive changes get a dry-run first** — is its own companion doc: [`SECURE-WRITE-ACTIONS.md`](SECURE-WRITE-ACTIONS.md). Read it whenever an agent or MCP server you're designing can mutate state (P3+).
+
 ## Sandboxing
 
 Tool execution surfaces are attack surfaces. Minimum:
