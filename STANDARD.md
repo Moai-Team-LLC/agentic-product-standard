@@ -435,6 +435,7 @@ Tracked deliberately, but **not** yet promoted to first-class standard surface �
 - **Orchestration topologies beyond orchestrator-worker** (blackboard, hierarchical, market-based, swarm) — documented as map, but 2026 evidence favors orchestrator-subagent for reliability (Canon 3).
 - **Agentic / Graph RAG.** Claude Code abandoned precomputed vector RAG for grep-style agentic retrieval (Layer 3); GraphRAG earns its keep on genuinely multi-hop questions.
 - **Computer-use & voice agents.** First-class in the Claude Agent SDK (computer use) and benchmarked by τ-Voice (full-duplex voice) — emerging deployment patterns, not yet core.
+- **Curated-context formats (`llms.txt`, OKF).** `llms.txt` (a single-file navigation pointer) and **OKF** — Google Cloud's Open Knowledge Format, v0.1, a git-distributed bundle of Markdown concept files cross-linked into a graph — standardize the *knowledge an agent consumes*, upstream of the agent system this standard governs. Treat them as the **supply side of context engineering** (Layer 3 · Select / just-in-time retrieval): adopt as a source, don't mandate a v0.1 spec. Details in the `context-engineering` skill. *(Aptly, this repo is already that shape — Markdown concepts + frontmatter + an index.)*
 
 ---
 

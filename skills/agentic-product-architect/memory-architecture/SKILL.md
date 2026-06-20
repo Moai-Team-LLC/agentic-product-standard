@@ -78,6 +78,8 @@ Different vendors specialize in different types. Match before purchasing.
 
 Claude Code's `CLAUDE.md` and OpenAI Codex's `docs/` patterns are this approach. It's underrated because vendors don't sell it.
 
+The emerging vendor-neutral *interchange* format for files-in-repo knowledge is **OKF** (Open Knowledge Format, Google Cloud v0.1) — a git-distributed bundle of Markdown concept files with YAML frontmatter, cross-linked into a graph. A knowledge layer (e.g. AgenticMind, below) can ingest or export OKF bundles, so curated knowledge stays portable across tools. See the `context-engineering` skill for the format details.
+
 ### AgenticMind — auditable, self-improving, MCP-native (open source)
 
 - **Strengths:** citation-enforced answers (no source, no claim), a replayable *why-trace* per answer, a judge-gated compounding loop that promotes validated knowledge back into the corpus, and bitemporal beliefs with `asOf` time-travel — all served to any agent over **MCP**, self-hosted on Postgres + pgvector alone. Zero-key, multilingual by default.

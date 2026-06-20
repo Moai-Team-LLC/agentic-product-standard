@@ -101,6 +101,19 @@ The strongest pattern for evolving agent context. The principles:
 
 Reference: `docs/architecture.md`, `docs/patterns.md`, `docs/glossary.md`, etc., with `CLAUDE.md` as the entry pointer.
 
+## Curated context formats: llms.txt and OKF
+
+The **Select** operation needs a *source*. Two emerging, vendor-neutral, Markdown-based formats standardize the curated knowledge an agent consumes — so you publish a source once and any agent can read it, instead of every agent re-scraping your surfaces:
+
+- **`llms.txt`** (Jeremy Howard, 2024) — a single Markdown file at the site root: an H1 name, a blockquote summary, and H2 lists of links to the canonical pages. A **navigation pointer**: "cite these, don't crawl everything."
+- **OKF — Open Knowledge Format** (Google Cloud, v0.1, June 2026) — a *directory bundle* of Markdown **concept files**, each with YAML frontmatter (`type` required; `title` / `description` / `resource` / `tags` / `timestamp` recommended), cross-linked into a **knowledge graph**, with a reserved `index.md` for progressive disclosure. The knowledge **library** itself, not just a pointer. Git-distributed, "consumers MUST tolerate broken links," minimal conformance.
+
+They **compose, not compete**: `llms.txt` points to the OKF bundle root (e.g. `/okf/index.md`). Pointer + library.
+
+**Why this belongs in context engineering:** both let the agent do **just-in-time retrieval** — follow the index / walk the graph on demand rather than ingesting everything up front (the 40% rule, again). And the shape is one you already know: Markdown + frontmatter + cross-links + an index file. This very skill set *is* that shape — a master `SKILL.md` index over concept files. Publishing your knowledge as OKF is mostly a matter of frontmatter discipline, not a rewrite.
+
+**Caution (v0.1):** OKF is days old with deliberately minimal conformance. Adopt it as a *source your Select layer reads*; don't restructure your whole knowledge base around a v0.1 spec yet (see `STANDARD.md` Part IX, Emerging & deferred). A knowledge/memory layer can also ingest or export OKF bundles — see `memory-architecture`.
+
 ## Per-step context budgeting
 
 For each LLM call in the architecture, define a budget:
