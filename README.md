@@ -152,6 +152,9 @@ The standard tells you *how*; **[AgenticMind](https://github.com/Moai-Team-LLC/A
 | --- | --- | --- |
 | 📐 | **agentic-product-standard** (this repo) | You're **designing or building** an agent / agentic product — the standard + skills tell you *how*. |
 | 🧠 | **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** | You need a **knowledge & memory layer** for your agent — a working implementation you can run. |
+| 🚦 | **[AgenticOps](https://github.com/Moai-Team-LLC/AgenticOps)** | You're **running a fleet** — the standard's Fleet operations surface: manifests, backlog, scheduler, telemetry, policy. |
+| 🩺 | **[AgenticSelfHealingCode](https://github.com/Moai-Team-LLC/AgenticSelfHealingCode)** | Your product needs **self-healing ops** — incident diagnosis (RCA copilot), test-suite healing, outcome-earned autonomy per the ladder. |
+| 📊 | **Agent Performance Layer (APL)** — public release in progress | You need **observability & evals** — OTel traces, golden-set evals, failure clusters. |
 
 See the [**AgenticMind case study**](examples/agenticmind-case-study.md) for a layer-by-layer map of how that repo implements this canon.
 
