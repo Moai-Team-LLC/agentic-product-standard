@@ -146,12 +146,15 @@ Claude Code discovers skills via each `SKILL.md` and its YAML frontmatter. Once 
 
 ## 🌐 The reference implementation
 
-The standard tells you *how*; **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** is a repo you can *run*. It's the flagship reference implementation — an auditable, self-improving **knowledge & memory layer** that agentic products plug into over MCP (the OSS pick for the memory slot in [`memory-architecture`](skills/agentic-product-architect/memory-architecture)). The [`./setup.sh --with-agenticmind`](#quick-setup-one-train) flow above stands it up in the same run.
+The standard tells you *how*; the **AgenticProduct** family gives you runnable reference implementations to adopt per surface. **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** is the flagship — an auditable, self-improving **knowledge & memory layer** agents plug into over MCP (the OSS pick for the memory slot in [`memory-architecture`](skills/agentic-product-architect/memory-architecture)); the [`./setup.sh --with-agenticmind`](#quick-setup-one-train) flow above stands it up in the same run.
 
 |     | Repo | Use it when |
 | --- | --- | --- |
 | 📐 | **agentic-product-standard** (this repo) | You're **designing or building** an agent / agentic product — the standard + skills tell you *how*. |
+| ⚙️ | **[AgenticOps](https://github.com/Moai-Team-LLC/AgenticOps)** | You need to **run a fleet** of long-lived agents as deployed infrastructure — manifests, scheduling, a durable backlog, bounded runs, fleet health. |
 | 🧠 | **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** | You need a **knowledge & memory layer** for your agent — a working implementation you can run. |
+| 📈 | **[AgenticPerformance](https://github.com/Moai-Team-LLC/AgenticPerformance)** | You need to **measure and improve** your agents — traces, golden-set evals with a CI gate, failure clusters, a governed improvement loop. |
+| 🩹 | **[AgenticSelfHealingCode](https://github.com/Moai-Team-LLC/AgenticSelfHealingCode)** · <sub>public release in progress</sub> | You need agents to **heal what breaks** — production monitoring, incident RCA, and test-suite repair. |
 
 See the [**AgenticMind case study**](examples/agenticmind-case-study.md) for a layer-by-layer map of how that repo implements this canon.
 
