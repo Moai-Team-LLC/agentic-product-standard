@@ -6,6 +6,8 @@ Most standards ship principles but no way to ask *"where do we actually stand?"*
 
 > **How to use it.** Run it on one agentic product, with the team in the room, against a real deployment (not the slide). Disagreements are the point — they surface the controls nobody owns. Re-run each release; the score should only ratchet up.
 
+> **The paved road.** Many of these controls come satisfied out of the box if you run the recommended reference stack — the **[AgenticProduct family](ECOSYSTEM.md)**: AgenticMind (memory), AgenticOps (runtime & fleet ops), AgenticPerformance (evals & observability), AgenticSelfHealingCode (self-healing). It's the fastest way to green, not a requirement — you can satisfy any item your own way (Principle 2). See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
+
 ---
 
 ## Maturity levels (mapped to the Autonomy Ladder)

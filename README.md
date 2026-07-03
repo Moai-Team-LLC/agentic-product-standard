@@ -30,7 +30,7 @@ Most teams ship agent demos. Few ship agents that survive contact with productio
 - [The six principles](#the-six-principles)
 - [What's in this repo](#whats-in-this-repo)
 - [Install the skills](#-install-the-skills)
-- [The reference implementation](#-the-reference-implementation)
+- [The AgenticProduct family](#-the-agenticproduct-family)
 - [The Autonomy Ladder](#the-autonomy-ladder)
 - [The five composition patterns](#the-five-composition-patterns)
 - [The 8-layer harness](#the-8-layer-harness)
@@ -86,7 +86,8 @@ agentic-product-standard/
         ├── eval-driven-dev/              ← Husain/Shankar pyramid + judge calibration
         ├── framework-selection/          ← LangGraph / Claude SDK / OpenAI SDK / others
         ├── production-readiness/         ← 12-point Definition of Done audit
-        └── antipatterns-review/          ← code review through 12 known failure modes
+        ├── antipatterns-review/          ← code review through 12 known failure modes
+        └── reference-stack/              ← the paved road: install & wire the AgenticProduct family
 ```
 
 Two standards, one practice:
@@ -144,16 +145,19 @@ cp -R /path/to/agentic-product-standard/skills/* .claude/skills/   # both tracks
 
 Claude Code discovers skills via each `SKILL.md` and its YAML frontmatter. Once installed, `agent-builder` triggers when you set out to build, implement, or review **one** agent, while `agentic-product-architect` triggers for multi-agent products, an agent loop, or any major agentic framework (LangGraph, CrewAI, OpenAI Agents SDK, Claude Agent SDK, Pydantic AI, AutoGen). Ask a focused question — *"Mem0 or Zep?"*, *"how should I structure context?"*, *"review my agent code"* — and the relevant sub-skill loads directly.
 
-## 🌐 The reference implementation
+## 🌐 The AgenticProduct family
 
-The standard tells you *how*; **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** is a repo you can *run*. It's the flagship reference implementation — an auditable, self-improving **knowledge & memory layer** that agentic products plug into over MCP (the OSS pick for the memory slot in [`memory-architecture`](skills/agentic-product-architect/memory-architecture)). The [`./setup.sh --with-agenticmind`](#quick-setup-one-train) flow above stands it up in the same run.
+The standard tells you *how*; four reference implementations are repos you can *run* — each building one surface the standard defines. **AgenticOps** *runs* the fleet, **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** *judges and grounds* its answers, **AgenticPerformance** *measures and improves* what runs, and **AgenticSelfHealingCode** *repairs* what breaks — all conforming to this standard.
 
-|     | Repo | Use it when |
-| --- | --- | --- |
-| 📐 | **agentic-product-standard** (this repo) | You're **designing or building** an agent / agentic product — the standard + skills tell you *how*. |
-| 🧠 | **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** | You need a **knowledge & memory layer** for your agent — a working implementation you can run. |
+|     | Member | Role | License |
+| --- | --- | --- | --- |
+| 📐 | **agentic-product-standard** (this repo) | The contract | MIT |
+| 🧠 | **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** | Knowledge & memory (Context & Memory) | Apache-2.0 |
+| 🚦 | **[AgenticOps](https://github.com/Moai-Team-LLC/AgenticOps)** | Runtime & fleet operations | Apache-2.0 |
+| 📈 | **AgenticPerformance (APL)** *(private beta — opening soon)* | Evals & observability, error taxonomy, improvement loop | Apache-2.0 |
+| 🩺 | **AgenticSelfHealingCode** *(private beta — opening soon)* | Self-healing ops (RCA, test-suite healing, auto-repair) | Apache-2.0 |
 
-See the [**AgenticMind case study**](examples/agenticmind-case-study.md) for a layer-by-layer map of how that repo implements this canon.
+**[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** remains the flagship reference implementation — an auditable, self-improving **knowledge & memory layer** agents plug into over MCP (the OSS pick for the memory slot in [`memory-architecture`](skills/agentic-product-architect/memory-architecture)); install it with [`./setup.sh --with-agenticmind`](#quick-setup-one-train). See its [**case study**](examples/agenticmind-case-study.md) for a layer-by-layer conformance map, and **[`ECOSYSTEM.md`](ECOSYSTEM.md)** for the full family — which surface each repo implements, its status, and how they compose.
 
 ## The Autonomy Ladder
 
