@@ -76,6 +76,14 @@ Each item lists the **gate level** at which it becomes mandatory. Items map to t
 - [ ] **(M3)** Online evals run on completed production threads; failing traces feed the offline set.
 - [ ] **(M3)** Reliability tracked with `pass^k`, not only `pass@1`.
 
+### Fleet operations *(if running a persistent fleet)*
+- [ ] **(M2)** Each deployed agent is a versioned **runtime manifest** (resources, schedule, runtime + model, env interpolation), distinct from its Agent Contract; the same manifest runs in dev and prod, with agent-logic split from the platform prompt injected at run time.
+- [ ] **(M2)** Scheduled / triggered runs are coordinated by a lock (fire-once across replicas); missed runs (misfires) are detected and handled, not silently dropped.
+- [ ] **(M2)** Overflow work queues in a durable backlog that survives a restart — no in-memory-only work queue.
+- [ ] **(M2)** Per-agent isolation + resource limits; runs terminate gracefully (drain, then SIGINT→SIGKILL); deploy / start / stop / restart are operations, not full redeploys.
+- [ ] **(M3)** Fleet observability: per-agent health/heartbeat + topology, plus an append-only operational audit (lifecycle / auth / tool-call events), on top of the per-run traces above.
+- [ ] **(M3)** Inter-agent calls follow an explicit "who-may-call-whom" matrix (default deny); coordination prefers an event bus over hard-wired calls.
+
 ### Maintenance discipline
 - [ ] **(M2)** Every forbidden action has a code-asserted anti-criterion (not prose alone).
 - [ ] **(M3)** Rules are tagged anti-fragile vs. fragile; fragile scaffolding is re-tested each model upgrade (bitter-pill).

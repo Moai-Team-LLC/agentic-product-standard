@@ -160,6 +160,8 @@ Options:
 - **Inngest / Restate** — operationally simpler; for TypeScript teams
 - **LangGraph checkpointer** (Postgres) — built in if you're already on LangGraph
 
+**Fleet operations — when you run many long-lived agents.** Everything above is single-agent durability: one loop pauses, resumes, retries. Operating a *fleet* of scheduled, long-lived agents adds a Day-2 surface the layers above stop short of: the agent as a versioned **deployable manifest** (resources, schedule, runtime, env) distinct from its Agent Contract; **coordinated scheduling** — a lock so a cron fires once across replicas, with misfire handling — backed by a **durable backlog** that survives restarts; per-agent lifecycle (deploy / start / stop / restart) and graceful termination; and **fleet observability** — per-agent health plus an append-only operational audit, layered on the per-run traces of Layer 6. Keep it lean: a runner is a function with limits, not a platform, until a real fleet exists. The `SCORECARD.md` *Fleet operations* section gates this; `examples/agenticops-case-study.md` maps each gate to a reference implementation.
+
 ### Layer 6: Observability & Evals
 
 **Do not launch to production without observability.** The minimal set:
