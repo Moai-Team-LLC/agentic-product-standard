@@ -71,7 +71,7 @@ Metaprinciple: solve the task by composing these patterns on deterministic code 
 
 Model choice matters. The harness matters more. In a production coding agent, roughly **98% of the code is harness**, not the model loop — and as model capability converges, harness quality is the durable competitive advantage.
 
-A production agent must be surrounded by these seven harness layers:
+A production agent must be surrounded by **eight** harness layers: the seven in the stack below, plus a **cross-cutting Security & Identity layer** (see Doctrine 7) that constrains all of them.
 
 ```text
 ┌───────────────────────────────────────────────┐

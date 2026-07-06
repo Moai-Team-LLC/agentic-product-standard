@@ -6,7 +6,7 @@ Thanks for helping improve **The Agentic Product Standard**. This is a living do
 
 The standard has two kinds of content, and they invite different contributions:
 
-- **Stable canons** — the autonomy ladder, the five composition patterns, single-vs-multi-agent, the seven-layer harness, the Cycle of Trust. These change rarely. Challenge them only with strong evidence (a production writeup, a reproducible result, a credible primary source).
+- **Stable canons** — the autonomy ladder, the five composition patterns, single-vs-multi-agent, the eight-layer harness, the Cycle of Trust. These change rarely. Challenge them only with strong evidence (a production writeup, a reproducible result, a credible primary source).
 - **Fast-moving specifics** — vendor rankings, framework recommendations, tool counts, cost figures, reading-list entries. These age quickly. **PRs that update them are exactly what we want.**
 
 Especially welcome:

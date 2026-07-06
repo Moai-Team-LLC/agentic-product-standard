@@ -21,7 +21,7 @@ intentionally lightweight — the project is young — and will grow as the comm
   migration note in [`CHANGELOG.md`](CHANGELOG.md).
 
 The architectural canons (the autonomy ladder, the 5 composition patterns, single-vs-multi,
-the 7-layer harness) are deliberately **stable**. Vendor rankings and framework specifics are
+the 8-layer harness) are deliberately **stable**. Vendor rankings and framework specifics are
 expected to churn — those PRs are the easy yes.
 
 ## Becoming a maintainer
