@@ -1,15 +1,15 @@
 ---
 name: production-readiness
-description: Audit an agentic product against the 12-point Definition of Done before launch. Covers context, tools, permissions, reliability, evals, observability — the minimum bar for production. Use whenever the user is preparing to launch / ship / deploy an agentic product, asks "is this production-ready," wants a pre-launch checklist, or is doing a code review before going live.
+description: Audit an agentic product against the 15-point Definition of Done before launch. Covers context, tools, permissions, reliability, evals, observability, security, and cost — the minimum bar for production. Use whenever the user is preparing to launch / ship / deploy an agentic product, asks "is this production-ready," wants a pre-launch checklist, or is doing a code review before going live.
 ---
 
-# Production Readiness — 12-Point Definition of Done
+# Production Readiness — 15-Point Definition of Done
 
-An agentic product is not production-ready until all 12 points pass. Each point catches a class of failures that has hit real products.
+An agentic product is not production-ready until all 15 points pass. Each point catches a class of failures that has hit real products.
 
 This is an audit checklist, not a feature list. Walk through it with the user; mark each as pass, gap, or N/A with explicit reasoning. Gaps must be closed or accepted with eyes open.
 
-## The 12 points
+## The 15 points
 
 ### Context and state
 
@@ -172,6 +172,43 @@ Skip this whole section if the product is single-tenant or deployed per customer
 
 ---
 
+### Security and identity
+
+#### 13. Lethal-trifecta check performed and documented
+- [ ] Three legs assessed: access to private data, exposure to untrusted content, ability to communicate externally
+- [ ] If all three are present, at least one leg is broken in design (not by a prompt instruction)
+- [ ] The check and its outcome are written down (in the Agent Contract / threat model), not assumed
+
+**Why:** private data × untrusted content × external comms is an exfiltration channel — injected content reads a secret and ships it out. Simon Willison's lethal trifecta: the deployment check every agent must pass.
+
+**Common gap:** all three legs live and unmitigated because no one drew the diagram; "the model won't do that" stands in for a mitigation.
+
+---
+
+#### 14. MCP tool definitions pinned; servers allow-listed; OAuth 2.1 scoped tokens
+- [ ] Tool definitions pinned by hash, with a change alert (rug-pull detection)
+- [ ] MCP servers installed only from an allow-listed registry — never an arbitrary URL
+- [ ] OAuth 2.1 scoped tokens per integration; no token passthrough (the user's token is never forwarded)
+
+**Why:** an approved tool description can mutate after you approve it; a forwarded or over-scoped token turns the agent into a confused deputy. The supply chain is part of the attack surface.
+
+**Common gap:** installing a community MCP server by URL and trusting its description forever; minting broad OAuth scopes "to be safe."
+
+---
+
+### Cost
+
+#### 15. Per-run token / cost ceiling enforced in code
+- [ ] A hard per-run token / cost ceiling, enforced in code (circuit breaker) — not a guideline or a dashboard
+- [ ] A runaway or looping session trips the breaker and halts
+- [ ] Cost-per-task is recorded in traces
+
+**Why:** without a code-level ceiling, one bad loop is an unbounded invoice. Cost is a reliability property, not just a finance report.
+
+**Common gap:** watching cost in a dashboard after the fact instead of capping it in the request path.
+
+---
+
 ## Audit posture
 
 When running this audit with the user:
@@ -181,9 +218,9 @@ When running this audit with the user:
 - **Estimate effort to close each gap.** Rank them by risk-adjusted cost.
 - **Make the explicit launch decision.** "Launch with these N gaps accepted, address in week 1" is a valid choice. "Launch and hope" is not.
 
-## Post-launch hardening (after the 12 points)
+## Post-launch hardening (after the 15 points)
 
-Once the 12 are met, the next tier of investments:
+Once the 15 are met, the next tier of investments:
 
 - **A/B testing infrastructure** — compare new prompts/models/tools against current production
 - **Cost telemetry per request, per user, per agent type** — find the expensive calls
@@ -195,7 +232,7 @@ Once the 12 are met, the next tier of investments:
 
 ## Common "almost ready" patterns
 
-Teams often have 10 of 12 covered. The common gaps are:
+Teams often have 13 of 15 covered. The common gaps are:
 
 | Gap | Frequency | Severity |
 |---|---|---|
@@ -211,7 +248,7 @@ If the user is short on time, prioritize closing these.
 
 When the audit completes, the user should have:
 
-1. A pass/gap/N/A scorecard across all 12 points
+1. A pass/gap/N/A scorecard across all 15 points
 2. Effort estimate to close each gap
 3. A risk-adjusted prioritization
 4. An explicit launch decision with accepted risks documented
