@@ -149,6 +149,8 @@ Choose by the dominant requirement:
 | **LangMem** | LangChain-native | Already on LangGraph |
 | **Files in repo** | Versioned markdown | When memory must be human-editable |
 
+The reference implementation of this layer is **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** — citation-enforced knowledge & memory served headlessly over MCP, self-hostable on Postgres + pgvector. Bring-your-own (Mem0 / Zep / Letta / files) stays fine (Principle 2); this is the paved road, not a mandate. See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
+
 ### Layer 5: Durable execution — **mandatory**
 
 Stateless agents lose everything on a crash. The minimal standard:
@@ -178,6 +180,8 @@ Options:
 **Instrument on the OpenTelemetry GenAI semantic conventions** (Semantic Conventions ≥1.40.0) — so you can swap vendors later without re-instrumenting. Emit the standard agent-lifecycle spans (`create_agent`, `invoke_agent`, `execute_tool`, `invoke_workflow`), the `gen_ai.client.operation.duration` metric, and `gen_ai.client.token.usage`; keep payloads opt-in for PII. Datadog, Honeycomb, New Relic, Grafana and the major frameworks emit these natively. (OTel GenAI is still "Development" status — adopt now via `OTEL_SEMCONV_STABILITY_OPT_IN` and expect attribute churn.)
 
 **Distinguish LLM observability from agent observability.** LLM observability is per-call (tokens, latency, cost); **agent observability** is trajectory-, multi-turn-, and session-level (did the agent take a sane path?). You need both. Run **online / production evals**: evaluators on completed threads, with failing live traces routed back into the offline eval set.
+
+The reference implementation of this layer is **[AgenticPerformance (APL)](https://github.com/Moai-Team-LLC/AgenticPerformance)** — OTel traces → per-agent golden-set evals with a CI gate, a named failure taxonomy, and a governed improvement loop. Bring your own (LangSmith / Langfuse / Braintrust / Phoenix) is fine (Principle 2); this is the paved road, not a mandate. See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
 
 ### Layer 7: Framework selection
 
@@ -219,6 +223,8 @@ Security is Principle 6 and the 8th harness layer. It is the largest gap in most
 
 > **Runnable:** [`templates/security/`](templates/security/README.md) ships a red-team kit — a lethal-trifecta gate, indirect-prompt-injection test cases, and an MCP tool-definition hash-pinning / rug-pull detector.
 
+The reference implementation for red-teaming this layer is **[AgenticAssurance (AAL)](https://github.com/Moai-Team-LLC/AgenticAssurance)** — an OWASP-Agentic / MITRE-ATLAS attack library plus a toxic-flow graph that finds lethal-trifecta / RCE composition paths single-prompt scanners miss, emitting SARIF for CI code-scanning. It operationalizes the lethal-trifecta check above; framework-neutral, not a runtime guardrail (Principle 2). See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
+
 ### Layer 9: Cost & FinOps — **cross-cutting**
 
 Agentic systems are expensive in a way chat never was. Anthropic reports agents use **~4× the tokens of chat, and multi-agent systems ~15×**; Gartner puts agentic tasks at **5–30× the tokens** of a standard chatbot; the FinOps Foundation's *State of FinOps 2026* finds **98% of orgs now manage AI spend** (up from 31% two years prior). Token usage alone explains ~80% of cost variance; tool-call count and model choice are the other two factors.
@@ -229,6 +235,8 @@ Make cost a first-class engineering constraint, not a month-end surprise:
 - **Model routing / cascades** — small model for routing & classification, flagship for reasoning.
 - **Measure cost-per-outcome, not just total spend** — wire cost into the same traces as Layer 6.
 - **The multi-agent economics rule:** only pay the 15× when the task value justifies it. If a single agent clears the bar, the orchestra is waste.
+
+The reference implementation of this layer (together with Layer 1) is **[AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway)** — per-run/tenant cost ceilings enforced in code, prompt + semantic caching, and eval-sourced routing behind one OpenAI-compatible key. Bring your own gateway (LiteLLM / Portkey / raw Bifrost) is fine (Principle 2); this is the paved road, not a mandate. See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
 
 ---
 

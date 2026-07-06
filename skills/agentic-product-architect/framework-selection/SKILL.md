@@ -191,6 +191,8 @@ Beyond the dominant constraint, check these before committing:
 5. **Escape hatch.** Can you drop down to raw SDK calls when the abstraction doesn't fit?
 6. **Lock-in.** What changes if you swap models? Swap memory? Swap orchestrator?
 
+> **On model lock-in specifically:** the *framework* question is separate from the *provider* question. To swap models or providers without touching agent code, put every call behind one OpenAI-compatible endpoint. The family's reference implementation of that plane is **[AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway)** — provider swap becomes config, not code, with eval-sourced routing and per-run/tenant cost ceilings (harness Layers 1 + 9). Vendor-neutral: keep LiteLLM / Portkey / raw Bifrost if you already run one (Principle 2). See the [`reference-stack`](../reference-stack/SKILL.md) skill.
+
 ## Framework misuse patterns
 
 | Pattern | Why it's wrong | Fix |
