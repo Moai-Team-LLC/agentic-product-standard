@@ -212,6 +212,8 @@ Not a box in the stack — a layer that wraps all seven. Safety is structural, n
 
 Full treatment: `../../../STANDARD.md` (Principle 6 / Layer 8), `../../../AGENT_STANDARD.md` (Doctrine 7), and the `tool-design-mcp` skill's `SECURE-WRITE-ACTIONS.md`.
 
+**Reference implementation (paved road):** red-team this layer with **[AgenticAssurance (AAL)](https://github.com/Moai-Team-LLC/AgenticAssurance)** — an OWASP-Agentic / MITRE-ATLAS attack library plus a toxic-flow graph that finds the lethal-trifecta / RCE composition paths above, emitting SARIF for CI. Framework-neutral, not a runtime guardrail; bring your own red-team process if you have one (Principle 2). See the [`reference-stack`](../reference-stack/SKILL.md) skill.
+
 ## Harness as the durable advantage
 
 When the user is choosing where to invest engineering time, redirect this conversation:
