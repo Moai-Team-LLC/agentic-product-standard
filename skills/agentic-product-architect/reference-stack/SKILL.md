@@ -1,6 +1,6 @@
 ---
 name: reference-stack
-description: The AgenticProduct paved road — how to stand up and wire the family's reference implementations so each surface of the standard is satisfied out of the box. Covers AgenticMind (knowledge & memory over MCP), AgenticOps (runtime & fleet operations), AgenticPerformance/APL (evals & observability over OpenTelemetry), AgenticSelfHealingCode (self-healing ops), and AgenticAssurance/AAL (red-team security assurance). Use whenever the user asks "what should I actually use to build this", wants the batteries-included stack, wants to install or wire our tools, wants conformance without assembling every surface by hand, or mentions AgenticMind / AgenticOps / AgenticPerformance / AgenticSelfHealingCode / AgenticAssurance. The standard stays vendor-neutral (Principle 2) — this is the recommended paved road, not a mandate; bring-your-own is always fine.
+description: The AgenticProduct paved road — how to stand up and wire the family's reference implementations so each surface of the standard is satisfied out of the box. Covers AgenticMind (knowledge & memory over MCP), AgenticOps (runtime & fleet operations), AgenticPerformance/APL (evals & observability over OpenTelemetry), AgenticSelfHealingCode (self-healing ops), AgenticGateway (model & cost plane — one OpenAI-compatible key, eval-sourced routing, cost circuit breakers), and AgenticAssurance/AAL (red-team security assurance). Use whenever the user asks "what should I actually use to build this", wants the batteries-included stack, wants to install or wire our tools, wants conformance without assembling every surface by hand, or mentions AgenticMind / AgenticOps / AgenticPerformance / AgenticSelfHealingCode / AgenticGateway / AgenticAssurance. The standard stays vendor-neutral (Principle 2) — this is the recommended paved road, not a mandate; bring-your-own is always fine.
 ---
 
 # The AgenticProduct paved road (reference stack)
@@ -17,6 +17,7 @@ The standard is vendor-neutral by design — **architecture beats framework** (P
 | Runtime & fleet operations | **[AgenticOps](https://github.com/Moai-Team-LLC/AgenticOps)** | Day-2 operation of many long-lived agents | Bun |
 | Evals & observability (Layers 6–7) | **[AgenticPerformance (APL)](https://github.com/Moai-Team-LLC/AgenticPerformance)** | OTel traces → golden-set evals + failure taxonomy + improvement loop | Bun + Postgres/Timescale |
 | Self-healing ops (reliability & recovery) | **[AgenticSelfHealingCode](https://github.com/Moai-Team-LLC/AgenticSelfHealingCode)** | RCA, test-suite healing, outcome-earned auto-repair | Bun + Postgres/pgvector |
+| Model & provider + Cost & FinOps (Layers 1 + 9) | **[AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway)** | One OpenAI-compatible key → Bifrost data plane; eval-sourced routing, cost circuit breakers, evidence per call | Bun + SQLite (+ Docker for Bifrost) |
 | Security & assurance (Layer 8) | **[AgenticAssurance (AAL)](https://github.com/Moai-Team-LLC/AgenticAssurance)** | Red-team any agent (OWASP Agentic + MITRE ATLAS) → SARIF | Node ≥22 (`npx`) |
 
 ## AgenticMind — the memory surface
@@ -81,6 +82,22 @@ docker compose up               # run it for real on Postgres + pgvector
 ```
 
 **Bring your own if:** you have mature incident tooling and don't want autonomous repair.
+
+## AgenticGateway — the model & cost surface
+
+```bash
+git clone https://github.com/Moai-Team-LLC/AgenticGateway && cd AgenticGateway
+bun install
+cp .env.example .env && echo "AGW_VAULT_KEY=$(openssl rand -hex 32)" >> .env
+docker compose -f bifrost/docker-compose.yml up -d
+bun run src/cli.ts tenant create my-team --budget-usd 25
+bun run src/cli.ts routing sync --from-file fixtures/apl-eval-export.example.json
+bun run dev   # point any OpenAI SDK at :8787 with the printed sk-agw-* key
+```
+
+**Bring your own if:** you already run a gateway (LiteLLM, Portkey, raw
+Bifrost) and only need the Standard's gates — then keep it and satisfy the
+Cost/Model items your own way; AgenticGateway is the paved road, not a lock-in.
 
 ## AgenticAssurance (AAL) — the security & assurance surface
 
