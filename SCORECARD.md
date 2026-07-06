@@ -6,7 +6,7 @@ Most standards ship principles but no way to ask *"where do we actually stand?"*
 
 > **How to use it.** Run it on one agentic product, with the team in the room, against a real deployment (not the slide). Disagreements are the point — they surface the controls nobody owns. Re-run each release; the score should only ratchet up.
 
-> **The paved road.** Many of these controls come satisfied out of the box if you run the recommended reference stack — the **[AgenticProduct family](ECOSYSTEM.md)**: AgenticMind (memory), AgenticOps (runtime & fleet ops), AgenticPerformance (evals & observability), AgenticSelfHealingCode (self-healing), and AgenticAssurance (red-team the Security & Identity items). It's the fastest way to green, not a requirement — you can satisfy any item your own way (Principle 2). See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
+> **The paved road.** Many of these controls come satisfied out of the box if you run the recommended reference stack — the **[AgenticProduct family](ECOSYSTEM.md)**: AgenticMind (memory), AgenticOps (runtime & fleet ops), AgenticPerformance (evals & observability), AgenticSelfHealingCode (self-healing), AgenticGateway (model & cost plane), and AgenticAssurance (red-team the Security & Identity items). It's the fastest way to green, not a requirement — you can satisfy any item your own way (Principle 2). See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
 
 ---
 
@@ -57,6 +57,12 @@ Each item lists the **gate level** at which it becomes mandatory. Items map to t
 - [ ] **(M2)** Isolation enforced below the LLM (RLS / repository layer); survives prompt injection.
 - [ ] **(M2)** Retrieval, memory, cache keys, traces, sub-agent messages, jobs are all tenant-scoped.
 - [ ] **(M2)** A code-asserted cross-tenant leakage eval runs in CI.
+
+### Model & provider *(if calls fan out over multiple models/providers)*
+- [ ] **(M2)** All model calls go through one provider-abstraction point; adding a provider is config, not code.
+- [ ] **(M2)** Model selection per task class is sourced from measured eval results, and the source eval run is recorded.
+- [ ] **(M2)** Clients hold exactly one credential; upstream provider keys are vaulted and never reach clients or logs.
+- [ ] **(M3)** Tenant-scoped budgets, cache, and routing with a cross-tenant leakage test in CI.
 
 ### Cost
 - [ ] **(M2)** Per-run token/cost ceiling enforced in code (circuit breaker on runaway sessions).

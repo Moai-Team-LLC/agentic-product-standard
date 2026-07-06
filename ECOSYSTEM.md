@@ -1,6 +1,6 @@
 # The AgenticProduct family — Ecosystem
 
-The AgenticProduct family is one standard and five reference implementations. The
+The AgenticProduct family is one standard and six reference implementations. The
 standard is the contract — prose-canon (ADR-0002), vendor-neutral, MIT. Each
 implementation is the reference build of one surface the standard defines, and
 conforms to it rather than extends it. This document is a map of the family, not
@@ -15,6 +15,7 @@ a migration guide.
 | Runtime & fleet operations (durable execution + scheduling + fleet health) | AgenticOps | https://github.com/Moai-Team-LLC/AgenticOps | v0.1.0 (2026-06-20), early — some modules are skeletons | Apache-2.0 | Public |
 | Evals & observability (Layer 6 Evaluation + Layer 7 Observability, error taxonomy, improvement loop) | AgenticPerformance (APL) | https://github.com/Moai-Team-LLC/AgenticPerformance | v0.1.0; core/ingest/worker built and tested, SDK next | Apache-2.0 | Public |
 | Self-healing ops (reliability & recovery: RCA, test-suite healing, outcome-earned auto-repair) | AgenticSelfHealingCode | https://github.com/Moai-Team-LLC/AgenticSelfHealingCode | pre-1.0; 203 tests, verified on real Postgres | Apache-2.0 | Public |
+| Model & provider + Cost & FinOps (Layer 1 + Layer 9) | AgenticGateway | https://github.com/Moai-Team-LLC/AgenticGateway | v0.1.0 (2026-07-06); feature-complete, 92 tests, CI green | Apache-2.0 | Public |
 | Security & assurance (red-team the agent: OWASP Agentic + MITRE ATLAS attack library, toxic-flow graph, SARIF) | AgenticAssurance (AAL) | https://github.com/Moai-Team-LLC/AgenticAssurance | offensive core; OWASP-mapped attacks + SARIF/code-scanning output | MIT | Public |
 
 All members are public and open-source: AgenticAssurance and the standard are MIT;
@@ -28,7 +29,7 @@ evaluation, observability, and cross-cutting security and identity. It ships as 
 prose canon plus two Claude Code skill tracks (agent-builder for a single agent,
 agentic-product-architect for multi-agent products).
 
-The five implementations divide the operational surface:
+The six implementations divide the operational surface:
 
 - **AgenticOps runs the fleet.** It is the Day-2 runtime: a runtime manifest that
   treats an agent as a deployable artifact, a bounded runner, timezone-aware
@@ -46,6 +47,11 @@ The five implementations divide the operational surface:
   (an RCA copilot that holds no write/exec tools), test-suite self-healing,
   non-LLM verification and mutation gates, and outcome-earned autonomy — running
   standalone on Postgres + pgvector.
+- **AgenticGateway carries every model call.** It is the model & cost plane: one
+  OpenAI-compatible key on a Bifrost data plane, with eval-sourced tiered routing,
+  a per-tenant key vault, prompt + semantic caching, and per-run cost circuit
+  breakers — emitting a hash-not-text evidence event per call and composing Bifrost
+  rather than re-implementing transport.
 - **AgenticAssurance red-teams the agent.** It is the framework-neutral offensive
   core of the Agent Assurance Layer (AAL): given a capability manifest and a runner
   adapter, it runs an OWASP-Agentic / MITRE-ATLAS attack library against an isolated
