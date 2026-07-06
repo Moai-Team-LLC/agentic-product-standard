@@ -114,6 +114,8 @@ A healthy eval set has 100–500 cases organized by failure mode, with new cases
 
 Evals are useless if they don't block bad deploys.
 
+> **Reference implementation (paved road):** **[AgenticPerformance (APL)](https://github.com/Moai-Team-LLC/AgenticPerformance)** — the family's Evals & observability surface — ships golden-set evals with a CI regression gate, an error taxonomy, and a governed improvement loop over OpenTelemetry, engine-agnostic. Set it up via the [`reference-stack`](../reference-stack/SKILL.md) skill, or bring your own (LangSmith / Langfuse / Braintrust / Phoenix). The standard stays neutral — this is the recommended default, not a requirement.
+
 Minimum CI pipeline:
 
 ```
