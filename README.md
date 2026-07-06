@@ -147,15 +147,16 @@ Claude Code discovers skills via each `SKILL.md` and its YAML frontmatter. Once 
 
 ## 🌐 The AgenticProduct family
 
-The standard tells you *how*; four reference implementations are repos you can *run* — each building one surface the standard defines. **AgenticOps** *runs* the fleet, **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** *judges and grounds* its answers, **AgenticPerformance** *measures and improves* what runs, and **AgenticSelfHealingCode** *repairs* what breaks — all conforming to this standard.
+The standard tells you *how*; five reference implementations are repos you can *run* — each building one surface the standard defines. **AgenticOps** *runs* the fleet, **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** *judges and grounds* its answers, **AgenticPerformance** *measures and improves* what runs, **AgenticSelfHealingCode** *repairs* what breaks, and **AgenticAssurance** *red-teams* it — all conforming to this standard.
 
 |     | Member | Role | License |
 | --- | --- | --- | --- |
 | 📐 | **agentic-product-standard** (this repo) | The contract | MIT |
 | 🧠 | **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** | Knowledge & memory (Context & Memory) | Apache-2.0 |
 | 🚦 | **[AgenticOps](https://github.com/Moai-Team-LLC/AgenticOps)** | Runtime & fleet operations | Apache-2.0 |
-| 📈 | **AgenticPerformance (APL)** *(private beta — opening soon)* | Evals & observability, error taxonomy, improvement loop | Apache-2.0 |
-| 🩺 | **AgenticSelfHealingCode** *(private beta — opening soon)* | Self-healing ops (RCA, test-suite healing, auto-repair) | Apache-2.0 |
+| 📈 | **[AgenticPerformance (APL)](https://github.com/Moai-Team-LLC/AgenticPerformance)** | Evals & observability, error taxonomy, improvement loop | Apache-2.0 |
+| 🩺 | **[AgenticSelfHealingCode](https://github.com/Moai-Team-LLC/AgenticSelfHealingCode)** | Self-healing ops (RCA, test-suite healing, auto-repair) | Apache-2.0 |
+| 🛡️ | **[AgenticAssurance (AAL)](https://github.com/Moai-Team-LLC/AgenticAssurance)** | Security & assurance — red-team any agent (OWASP Agentic + MITRE ATLAS), SARIF output | MIT |
 
 **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** remains the flagship reference implementation — an auditable, self-improving **knowledge & memory layer** agents plug into over MCP (the OSS pick for the memory slot in [`memory-architecture`](skills/agentic-product-architect/memory-architecture)); install it with [`./setup.sh --with-agenticmind`](#quick-setup-one-train). See its [**case study**](examples/agenticmind-case-study.md) for a layer-by-layer conformance map, and **[`ECOSYSTEM.md`](ECOSYSTEM.md)** for the full family — which surface each repo implements, its status, and how they compose.
 

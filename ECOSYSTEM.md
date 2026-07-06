@@ -1,6 +1,6 @@
 # The AgenticProduct family — Ecosystem
 
-The AgenticProduct family is one standard and four reference implementations. The
+The AgenticProduct family is one standard and five reference implementations. The
 standard is the contract — prose-canon (ADR-0002), vendor-neutral, MIT. Each
 implementation is the reference build of one surface the standard defines, and
 conforms to it rather than extends it. This document is a map of the family, not
@@ -13,11 +13,12 @@ a migration guide.
 | The contract (the standard itself) | agentic-product-standard | https://github.com/Moai-Team-LLC/agentic-product-standard | Mature — standard v2.x, latest release v2.1.0 (2026-06-06) | MIT | Public |
 | Knowledge & memory (Layer 2 Context & Memory) | AgenticMind | https://github.com/Moai-Team-LLC/AgenticMind | Public, actively developed, pre-1.0 (tags to v0.12.0; MCP contract v1.2.0) | Apache-2.0 | Public |
 | Runtime & fleet operations (durable execution + scheduling + fleet health) | AgenticOps | https://github.com/Moai-Team-LLC/AgenticOps | v0.1.0 (2026-06-20), early — some modules are skeletons | Apache-2.0 | Public |
-| Evals & observability (Layer 6 Evaluation + Layer 7 Observability, error taxonomy, improvement loop) | AgenticPerformance (APL) | Moai-Team-LLC/AgenticPerformance (opening soon) | v0.1.0 (2026-07-02); core/ingest/worker built and tested, SDK next | Apache-2.0 | Private beta |
-| Self-healing ops (reliability & recovery: RCA, test-suite healing, outcome-earned auto-repair) | AgenticSelfHealingCode | Moai-Team-LLC/AgenticSelfHealingCode (opening soon) | v0.1.0 (2026-07-02), pre-production; 203 tests, verified on real Postgres | Apache-2.0 | Private beta |
+| Evals & observability (Layer 6 Evaluation + Layer 7 Observability, error taxonomy, improvement loop) | AgenticPerformance (APL) | https://github.com/Moai-Team-LLC/AgenticPerformance | v0.1.0; core/ingest/worker built and tested, SDK next | Apache-2.0 | Public |
+| Self-healing ops (reliability & recovery: RCA, test-suite healing, outcome-earned auto-repair) | AgenticSelfHealingCode | https://github.com/Moai-Team-LLC/AgenticSelfHealingCode | pre-1.0; 203 tests, verified on real Postgres | Apache-2.0 | Public |
+| Security & assurance (red-team the agent: OWASP Agentic + MITRE ATLAS attack library, toxic-flow graph, SARIF) | AgenticAssurance (AAL) | https://github.com/Moai-Team-LLC/AgenticAssurance | offensive core; OWASP-mapped attacks + SARIF/code-scanning output | MIT | Public |
 
-Public repositories are linked. AgenticPerformance and AgenticSelfHealingCode are
-in private beta; they are named here but not linked (opening soon).
+All members are public and open-source: AgenticAssurance and the standard are MIT;
+the other implementations are Apache-2.0 (some with a separate enterprise edition).
 
 ## How they compose
 
@@ -27,7 +28,7 @@ evaluation, observability, and cross-cutting security and identity. It ships as 
 prose canon plus two Claude Code skill tracks (agent-builder for a single agent,
 agentic-product-architect for multi-agent products).
 
-The four implementations divide the operational surface:
+The five implementations divide the operational surface:
 
 - **AgenticOps runs the fleet.** It is the Day-2 runtime: a runtime manifest that
   treats an agent as a deployable artifact, a bounded runner, timezone-aware
@@ -45,6 +46,13 @@ The four implementations divide the operational surface:
   (an RCA copilot that holds no write/exec tools), test-suite self-healing,
   non-LLM verification and mutation gates, and outcome-earned autonomy — running
   standalone on Postgres + pgvector.
+- **AgenticAssurance red-teams the agent.** It is the framework-neutral offensive
+  core of the Agent Assurance Layer (AAL): given a capability manifest and a runner
+  adapter, it runs an OWASP-Agentic / MITRE-ATLAS attack library against an isolated
+  copy of the target, builds a toxic-flow graph over the declared tools to find
+  lethal-trifecta / RCE composition paths single-prompt scanners miss, detects
+  text-refusal-vs-side-effect divergence, and emits SARIF for CI code-scanning. Not
+  a runtime guardrail; the compliance/evidence layer is a separate package.
 
 The implementations reference each other through optional adapters, never hard
 dependencies: AgenticPerformance ingests AgenticOps runs and AgenticMind telemetry
@@ -58,7 +66,7 @@ each other. Each implementation carries its own scorecard and, where present, a
 CONFORMANCE.md that maps it onto the standard's harness layers and reports its gaps
 honestly — for example AgenticMind's pending CI eval-regression gate and
 AgenticSelfHealingCode's self-reported 13 gaps (no eval corpus, no OTel yet). Early
-and private-beta members are labeled as such; a badge asserting a surface is a
+members are labeled as such; a badge asserting a surface is a
 claim about the reference build, not a guarantee of feature-completeness. Some
 implementations offer a separate enterprise edition (SSO/RBAC, audit, on-prem); the
 open core is Apache-2.0. The standard remains the canon; this map only points to

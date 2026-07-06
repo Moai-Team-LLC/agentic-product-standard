@@ -52,7 +52,7 @@ If any of these apply to v1, build durable from the start.
 
 ## Implementation choices
 
-> **Reference implementation (paved road):** for running *many* long-lived agents as deployed infrastructure — durable backlog, coordinated scheduling, a bounded runner, fleet health — the family's Runtime & fleet operations surface is **[AgenticOps](https://github.com/Moai-Team-LLC/AgenticOps)** (`bun add github:Moai-Team-LLC/AgenticOps`). For the reliability/recovery side — incident diagnosis, test-suite healing, outcome-earned auto-repair — it's **AgenticSelfHealingCode** *(private beta — opening soon)*. Both via the [`reference-stack`](../reference-stack/SKILL.md) skill. Recommended default, not a requirement — the options below stand on their own.
+> **Reference implementation (paved road):** for running *many* long-lived agents as deployed infrastructure — durable backlog, coordinated scheduling, a bounded runner, fleet health — the family's Runtime & fleet operations surface is **[AgenticOps](https://github.com/Moai-Team-LLC/AgenticOps)** (`bun add github:Moai-Team-LLC/AgenticOps`). For the reliability/recovery side — incident diagnosis, test-suite healing, outcome-earned auto-repair — it's **[AgenticSelfHealingCode](https://github.com/Moai-Team-LLC/AgenticSelfHealingCode)**. Both via the [`reference-stack`](../reference-stack/SKILL.md) skill. Recommended default, not a requirement — the options below stand on their own.
 
 ### Temporal — the industrial standard
 
