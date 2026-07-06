@@ -112,6 +112,8 @@ log trace → update memory
 - **Tiered routing.** Small model for routing/classification, flagship for reasoning. Per-agent model assignment.
 - **Prompt caching is mandatory** for stable parts (system prompt, tool schemas).
 
+The reference implementation of this layer (together with Layer 9) is **AgenticGateway** — one OpenAI-compatible key on a Bifrost data plane: eval-sourced tiered routing, a key vault, prompt + semantic caching, and per-run cost circuit breakers, with every call emitting hash-not-text evidence. The `SCORECARD.md` *Model & provider* section gates this; `examples/agenticgateway-case-study.md` maps each gate to a module.
+
 ### Layer 2: Tool integration — **MCP by default**
 
 - **MCP (Model Context Protocol)** — the agent ↔ tool standard, donated to the Linux Foundation's Agentic AI Foundation (Dec 2025). Target the **stable 2025-11-25 spec** today (async tasks, elicitation, extensions) and branch for the **2026-07-28 release candidate** (stateless core, MCP Apps / server-rendered UI, hardened OAuth 2.1 / OIDC). Prefer **remote Streamable HTTP + OAuth 2.1 with Resource Indicators**, externalize session state, and use **elicitation** for human-in-the-loop rather than a side channel.
