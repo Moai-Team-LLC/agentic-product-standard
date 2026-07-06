@@ -151,12 +151,12 @@ The standard tells you *how*; five reference implementations are repos you can *
 
 |     | Member | Role | License |
 | --- | --- | --- | --- |
-| 📐 | **agentic-product-standard** (this repo) | The contract | MIT |
-| 🧠 | **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** | Knowledge & memory (Context & Memory) | Apache-2.0 |
-| 🚦 | **[AgenticOps](https://github.com/Moai-Team-LLC/AgenticOps)** | Runtime & fleet operations | Apache-2.0 |
-| 📈 | **[AgenticPerformance (APL)](https://github.com/Moai-Team-LLC/AgenticPerformance)** | Evals & observability, error taxonomy, improvement loop | Apache-2.0 |
-| 🩺 | **[AgenticSelfHealingCode](https://github.com/Moai-Team-LLC/AgenticSelfHealingCode)** | Self-healing ops (RCA, test-suite healing, auto-repair) | Apache-2.0 |
-| 🛡️ | **[AgenticAssurance (AAL)](https://github.com/Moai-Team-LLC/AgenticAssurance)** | Security & assurance — red-team any agent (OWASP Agentic + MITRE ATLAS), SARIF output | MIT |
+| 📐 | **agentic-product-standard** (this repo) | The contract — principles, autonomy ladder, harness layers, eval discipline (+ Claude Code skills). | MIT |
+| ⚙️ | **[AgenticOps](https://github.com/Moai-Team-LLC/AgenticOps)** | Runtime & operations — manifests, scheduling, durable backlog, bounded runner, fleet health. | Apache-2.0 |
+| 🧠 | **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** | Knowledge & memory — auditable, self-improving, citation-enforced, over MCP; Postgres-only. | Apache-2.0 |
+| 📈 | **[AgenticPerformance](https://github.com/Moai-Team-LLC/AgenticPerformance)** | Evals & observability — OTel traces, golden-set evals + CI gate, failure clusters, improvement loop. | Apache-2.0 |
+| 🩹 | **[AgenticSelfHealingCode](https://github.com/Moai-Team-LLC/AgenticSelfHealingCode)** | Self-healing ops — production monitoring, incident diagnosis/RCA, test-suite healing on earned autonomy. | Apache-2.0 |
+| 🛡️ | **[AgenticAssurance (AAL)](https://github.com/Moai-Team-LLC/AgenticAssurance)** | Security & assurance — red-teams any agent (OWASP Agentic + MITRE ATLAS), toxic-flow graph, SARIF output. | MIT |
 
 **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** remains the flagship reference implementation — an auditable, self-improving **knowledge & memory layer** agents plug into over MCP (the OSS pick for the memory slot in [`memory-architecture`](skills/agentic-product-architect/memory-architecture)); install it with [`./setup.sh --with-agenticmind`](#quick-setup-one-train). See its [**case study**](examples/agenticmind-case-study.md) for a layer-by-layer conformance map, and **[`ECOSYSTEM.md`](ECOSYSTEM.md)** for the full family — which surface each repo implements, its status, and how they compose.
 
