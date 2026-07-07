@@ -68,6 +68,7 @@ agentic-product-standard/
 ├── SCORECARD.md                         ← M0–M3 self-assessment, mapped to the Autonomy Ladder
 ├── CONTEXT.md                           ← shared vocabulary every skill speaks
 ├── setup.sh                             ← quick setup: skills + (optional) AgenticMind, one run
+├── family.sh                            ← stand up the whole reference stack locally, one command
 ├── templates/security/                  ← red-team kit: lethal-trifecta gate, injection suite, MCP pin
 ├── templates/ci/eval-gate.yml           ← CI workflow that blocks merges on eval regression
 ├── examples/agenticmind-case-study.md   ← reference implementation, audited against the canon
@@ -162,6 +163,16 @@ The standard tells you *how*; six reference implementations are repos you can *r
 **How they compose.** **AgenticOps** runs the fleet, **AgenticMind** gives agents auditable knowledge & memory, **AgenticPerformance** measures every run with traces and evals, and **AgenticSelfHealingCode** repairs what breaks — closing the **run → remember → measure → heal** loop. **AgenticGateway** is the model plane every LLM call in that loop passes through — one key, eval-measured routing, cost ceilings — and **AgenticAssurance** red-teams any agent in the loop, with the whole stack conforming to the **[agentic-product-standard](https://github.com/Moai-Team-LLC/agentic-product-standard)**.
 
 **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** remains the flagship reference implementation — an auditable, self-improving **knowledge & memory layer** agents plug into over MCP (the OSS pick for the memory slot in [`memory-architecture`](skills/agentic-product-architect/memory-architecture)); install it with [`./setup.sh --with-agenticmind`](#quick-setup-one-train). See its [**case study**](examples/agenticmind-case-study.md) for a layer-by-layer conformance map, and **[`ECOSYSTEM.md`](ECOSYSTEM.md)** for the full family — which surface each repo implements, its status, and how they compose.
+
+**Run the whole family locally — one command.** [`family.sh`](family.sh) clones every member and brings up the three long-lived services (Mind, Performance, Gateway) through each repo's own compose + run scripts, then prints how to use the library (Ops), the CLI (Assurance), and the on-demand demo (SelfHealingCode):
+
+```bash
+./family.sh up        # clone + stand up the reference stack   (needs git, docker, bun)
+./family.sh status    # health of every service
+./family.sh down      # stop everything (Docker volumes preserved)
+```
+
+Generated secrets are written into each member's local `.env` and never printed. Paved road, not a mandate — swap any member for your own (Principle 2).
 
 ## The Autonomy Ladder
 

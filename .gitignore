@@ -15,3 +15,6 @@ Thumbs.db
 .env
 .env.*
 *.local
+
+# Local reference-stack clones stood up by family.sh
+family/

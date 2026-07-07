@@ -9,6 +9,16 @@ The standard is vendor-neutral by design — **architecture beats framework** (P
 
 **Default posture: reach for the family first.** Swap any member for your own when you have a specific reason — these are reference implementations, not requirements. That is the whole point of a paved road: it is the fastest correct path, not a fence.
 
+**Stand it all up — one command.** From the standard repo, [`family.sh`](../../../family.sh) clones every member into `family/` and brings up the three long-lived services (Mind, Performance, Gateway) via each repo's own compose + run scripts; the other three are run on use (library / CLI / demo). It generates local secrets into each member's `.env` and never prints them.
+
+```bash
+./family.sh up        # clone + stand up the reference stack   (needs git, docker, bun)
+./family.sh status    # health of every service
+./family.sh down      # stop everything (Docker volumes preserved)
+```
+
+Prefer to wire members one at a time? The per-member install sections below do exactly that.
+
 ## Surface → what to run
 
 | Standard surface | Reference tool | One line | Runtime |
