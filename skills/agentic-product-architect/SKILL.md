@@ -176,5 +176,5 @@ self-improving corpus. See its layer-by-layer mapping in
 - `durable-execution/SKILL.md` — Temporal pattern, Workflow + Activity split, when to retrofit
 - `eval-driven-dev/SKILL.md` — Husain/Shankar pyramid, error analysis first, judge calibration
 - `framework-selection/SKILL.md` — constraint-based decision matrix; LangGraph/Claude SDK/OpenAI SDK/CrewAI/Pydantic AI
-- `production-readiness/SKILL.md` — 12-point Definition of Done; pre-launch audit
-- `antipatterns-review/SKILL.md` — 12 antipatterns with diagnostic prompts and fixes; code review mode
+- `production-readiness/SKILL.md` — 19-point Definition of Done; pre-launch audit
+- `antipatterns-review/SKILL.md` — 17 antipatterns with diagnostic prompts and fixes; code review mode

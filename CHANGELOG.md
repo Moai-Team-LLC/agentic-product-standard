@@ -3,6 +3,32 @@
 All notable changes to The Agentic Product Standard are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [3.0.0] — 2026-07-11
+
+The **Loop License** release. Names the conditions an agent must satisfy to run *unattended* (Autonomy Ladder L3+) and makes them checkable — the standard's answer to "loop engineering" and the "factory with no QC" failure mode.
+
+### Added
+- **Part IV — The Loop License** (`STANDARD.md`): a new normative section governing **unattended operation (L3+)**. An agent may not run unattended without holding a **Loop License** — six gates, all required and enforced in code: **eval pass-rate threshold, regression gate, declared blast radius, cost cap, kill switch, escalation path**. Ships with a one-page artifact, [`templates/loop-license/CHECKLIST.md`](templates/loop-license/CHECKLIST.md).
+- **Independent verification** (Part IV): self-check by the producing model does not count as verification; deterministic-first; the LLM judge has its own eval and is decorrelated from the writer; a "Writer / Checker, done right" reference pattern.
+- **Stop conditions & fail paths** (Part IV): max iterations, budgets, timeout, and escalation-after-N become mandatory Agent Contract fields — **DoD item 17**.
+- **The ingestion boundary** (Part IV): "find work" is untrusted input — indirect-injection cases in the eval suite, instruction/data separation, least-privilege triggers; a threat checklist mapped to **OWASP LLM01**.
+- **The instruction supply chain** (Part IV): skills, prompts and instructions are supply-chain artifacts — versioned, provenanced, eval-gated before deploy, regression-tested on update, trigger-collision audited; mapped to **OWASP LLM03** and **AIUC-1**.
+- **Economics of the loop** (Part IV): measure cost per run **and** cost per *verified* outcome, declare cost caps — **DoD item 19**.
+- **Architecture-phase declarations** (Part IV): the memory model (retention, provenance, replayability) and the determinism map are declared at design time, as mandatory Agent Contract sections.
+- **Glossary bridge** (Part IV): the loop-engineering lexicon (loop, intent debt, writer/checker, state memory, find work, blast radius) mapped onto the standard's own vocabulary.
+- **Operating Doctrine 8 — The Loop License** in `AGENT_STANDARD.md`, plus Agent Contract sections 14–16 (stop conditions, memory model, determinism map).
+- **Scorecard** gains an *Unattended operation (Loop License)* section (`SCORECARD.md`).
+
+### Changed
+- **Definition of Done 15 → 19** (`STANDARD.md` Part III): items 16 (Loop License), 17 (stop conditions), 18 (independent verification), 19 (loop economics), grouped under *Unattended operation (L3+)*; the `production-readiness` sub-skill and README updated to match.
+- Parts IV–IX renumbered to V–X to seat the Loop License as Part IV.
+- Standard version badge and title → **v3.0**.
+
+### Note
+- This is a **major** release: the new required gates tighten what "conformant" means for any L3+ system, consistent with how v2.0 treated the addition of Layers 8–9. Entries [2.1.0] and [2.2.0] below record interim changes folded into this line.
+
+[3.0.0]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v3.0.0
+
 ## [2.2.0] — 2026-06-14
 
 ### Changed

@@ -1,17 +1,17 @@
 ---
 name: production-readiness
-description: Audit an agentic product against the 15-point Definition of Done before launch. Covers context, tools, permissions, reliability, evals, observability, security, and cost — the minimum bar for production. Use whenever the user is preparing to launch / ship / deploy an agentic product, asks "is this production-ready," wants a pre-launch checklist, or is doing a code review before going live.
+description: Audit an agentic product against the 19-point Definition of Done before launch. Covers context, tools, permissions, reliability, evals, observability, security, and cost — the minimum bar for production. Use whenever the user is preparing to launch / ship / deploy an agentic product, asks "is this production-ready," wants a pre-launch checklist, or is doing a code review before going live.
 ---
 
-# Production Readiness — 15-Point Definition of Done
+# Production Readiness — 19-Point Definition of Done
 
-An agentic product is not production-ready until all 15 points pass. Each point catches a class of failures that has hit real products.
+An agentic product is not production-ready until all 19 points pass. Each point catches a class of failures that has hit real products.
 
 This is an audit checklist, not a feature list. Walk through it with the user; mark each as pass, gap, or N/A with explicit reasoning. Gaps must be closed or accepted with eyes open.
 
 > **The paved road.** Many of these points come satisfied out of the box if you run the **[AgenticProduct family](../../../ECOSYSTEM.md)** reference stack — memory (AgenticMind), runtime & fleet ops (AgenticOps), evals & observability (AgenticPerformance), self-healing (AgenticSelfHealingCode), the model & cost plane (AgenticGateway), and Layer-8 red-teaming (AgenticAssurance). It's the fastest way to green, not a requirement — satisfy any point your own way (Principle 2). See the [`reference-stack`](../reference-stack/SKILL.md) skill.
 
-## The 15 points
+## The 19 points
 
 ### Context and state
 
@@ -209,6 +209,42 @@ Skip this whole section if the product is single-tenant or deployed per customer
 
 **Common gap:** watching cost in a dashboard after the fact instead of capping it in the request path.
 
+### Unattended operation (L3+) — the Loop License
+
+*These four bind only when the agent runs unattended at L3+ (finds its own work, loops without a human in each turn). Full treatment: `STANDARD.md` Part IV + [`templates/loop-license/CHECKLIST.md`](../../../templates/loop-license/CHECKLIST.md).*
+
+#### 16. Loop License held (all six gates)
+- [ ] Eval pass-rate threshold, regression gate, declared blast radius, cost cap, kill switch, escalation path — all six declared, enforced in code, and tested
+- [ ] Missing any one gate → the system is capped at L2 (human-in-the-loop)
+
+**Why:** an unattended loop with no license is a factory with no quality control — it ships whatever it produces at machine speed.
+
+**Common gap:** having evals and a cost cap but no kill switch or declared blast radius, so nothing can stop or bound a run in flight.
+
+#### 17. Stop conditions & fail paths declared and enforced
+- [ ] Max iterations, token/time/spend budgets, and a timeout are in the Agent Contract and enforced by the runner
+- [ ] After N consecutive failures the loop escalates, it does not retry forever
+
+**Why:** "no declared way to stop" is the defining L4 failure.
+
+**Common gap:** budgets exist but there is no escalation-after-N — the loop burns the whole budget retrying a doomed step.
+
+#### 18. Independent verification
+- [ ] The producing model does not grade its own work
+- [ ] Deterministic checks (tests, schema, assertions) run before any LLM judge; the judge is calibrated (see #11) and decorrelated from the writer
+
+**Why:** self-verification shares the writer's blind spots — a pass tells you nothing new.
+
+**Common gap:** a single agent that writes and then "reviews" its own output in the same context.
+
+#### 19. Loop economics
+- [ ] Cost per run **and** cost per *verified* outcome are tracked in traces
+- [ ] Per-run and per-window cost caps are declared
+
+**Why:** a loop that is cheap per call but rarely produces a verified result is expensive — only cost-per-verified-outcome shows it.
+
+**Common gap:** measuring raw spend but never dividing by outcomes that actually passed verification.
+
 ---
 
 ## Audit posture
@@ -220,9 +256,9 @@ When running this audit with the user:
 - **Estimate effort to close each gap.** Rank them by risk-adjusted cost.
 - **Make the explicit launch decision.** "Launch with these N gaps accepted, address in week 1" is a valid choice. "Launch and hope" is not.
 
-## Post-launch hardening (after the 15 points)
+## Post-launch hardening (after the 19 points)
 
-Once the 15 are met, the next tier of investments:
+Once the 19 are met, the next tier of investments:
 
 - **A/B testing infrastructure** — compare new prompts/models/tools against current production
 - **Cost telemetry per request, per user, per agent type** — find the expensive calls
@@ -234,7 +270,7 @@ Once the 15 are met, the next tier of investments:
 
 ## Common "almost ready" patterns
 
-Teams often have 13 of 15 covered. The common gaps are:
+Teams often have 17 of 19 covered. The common gaps are:
 
 | Gap | Frequency | Severity |
 |---|---|---|
@@ -250,7 +286,7 @@ If the user is short on time, prioritize closing these.
 
 When the audit completes, the user should have:
 
-1. A pass/gap/N/A scorecard across all 15 points
+1. A pass/gap/N/A scorecard across all 19 points
 2. Effort estimate to close each gap
 3. A risk-adjusted prioritization
 4. An explicit launch decision with accepted risks documented

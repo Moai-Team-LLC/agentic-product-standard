@@ -84,6 +84,8 @@ For failure modes that need judgment but are too expensive for human review on e
 
 5. **Version the judge prompt.** Treat it as code. Diff reviews. If the judge prompt changes, all historical scores are invalidated.
 
+6. **The judge is decorrelated from the writer.** Self-check by the model that produced the work does not count as verification — it shares its own blind spots. Use a different model or a materially different prompt/context, and let it see the *artifact*, not the writer's reasoning. For unattended (L3+) loops this is mandatory — see the Loop License and the "Writer / Checker, done right" pattern in `STANDARD.md` Part IV.
+
 ### Level 3: Human review
 
 The ultimate authority, but expensive. Reserve for:

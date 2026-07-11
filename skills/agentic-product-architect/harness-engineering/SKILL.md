@@ -138,6 +138,8 @@ HITL is load-bearing, not an afterthought. Harrison Chase's three patterns:
 - Approval UI shows: what action, what inputs, what consequences, what alternatives the agent considered
 - Rejection with feedback feeds back into the loop as new context
 
+**When you remove the human (L3+ unattended operation), the Loop License replaces this gate.** An agent that finds its own work and loops without a human in each turn must hold the six-gate Loop License — eval pass-rate threshold, regression gate, declared blast radius, cost cap, kill switch, escalation path — plus independent verification and a governed instruction supply chain. Full treatment: `STANDARD.md` Part IV; one-page gate: `templates/loop-license/CHECKLIST.md`.
+
 ## Layer 6: Evaluation Layer (CI gates)
 
 Covered in depth by `eval-driven-dev/SKILL.md`. The harness responsibilities:
