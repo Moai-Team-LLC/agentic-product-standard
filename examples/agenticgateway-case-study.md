@@ -36,6 +36,5 @@ re-implemented (a CI grep gate enforces it).
 ## The stack
 
 AgenticOps runs the fleet → its agents' calls flow through **AgenticGateway**
-→ grounded by AgenticMind → measured by AgenticPerformance → repaired by
-AgenticSelfHealingCode → red-teamed by AgenticAssurance — all conforming to
+→ grounded by AgenticMind → measured by AgenticPerformance → red-teamed by AgenticAssurance — all conforming to
 this standard.
