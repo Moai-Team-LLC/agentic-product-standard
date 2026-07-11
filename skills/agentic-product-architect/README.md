@@ -15,7 +15,7 @@ agentic-product-architect/
 ├── durable-execution/SKILL.md        ← Temporal Workflow + Activity pattern
 ├── eval-driven-dev/SKILL.md          ← Husain/Shankar pyramid + judge calibration
 ├── framework-selection/SKILL.md      ← LangGraph / Claude SDK / OpenAI SDK / others
-├── production-readiness/SKILL.md     ← 15-point Definition of Done audit
+├── production-readiness/SKILL.md     ← 19-point Definition of Done audit
 └── antipatterns-review/SKILL.md      ← code review through 17 known failure modes
 ```
 

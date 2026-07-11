@@ -112,7 +112,7 @@ They **compose, not compete**: `llms.txt` points to the OKF bundle root (e.g. `/
 
 **Why this belongs in context engineering:** both let the agent do **just-in-time retrieval** — follow the index / walk the graph on demand rather than ingesting everything up front (the 40% rule, again). And the shape is one you already know: Markdown + frontmatter + cross-links + an index file. This very skill set *is* that shape — a master `SKILL.md` index over concept files. Publishing your knowledge as OKF is mostly a matter of frontmatter discipline, not a rewrite.
 
-**Caution (v0.1):** OKF is days old with deliberately minimal conformance. Adopt it as a *source your Select layer reads*; don't restructure your whole knowledge base around a v0.1 spec yet (see `STANDARD.md` Part IX, Emerging & deferred). A knowledge/memory layer can also ingest or export OKF bundles — see `memory-architecture`.
+**Caution (v0.1):** OKF is days old with deliberately minimal conformance. Adopt it as a *source your Select layer reads*; don't restructure your whole knowledge base around a v0.1 spec yet (see `STANDARD.md` Part X, Emerging & deferred). A knowledge/memory layer can also ingest or export OKF bundles — see `memory-architecture`.
 
 ## Per-step context budgeting
 

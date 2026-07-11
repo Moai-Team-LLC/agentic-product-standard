@@ -76,6 +76,15 @@ Each item lists the **gate level** at which it becomes mandatory. Items map to t
 - [ ] **(M3)** Online evals run on completed production threads; failing traces feed the offline set.
 - [ ] **(M3)** Reliability tracked with `pass^k`, not only `pass@1`.
 
+### Unattended operation *(the Loop License — if the agent runs at L3+ without a human in each turn)*
+- [ ] **(M2)** **Loop License** held: eval pass-rate threshold, regression gate, declared blast radius, cost cap, kill switch, and escalation path — all six declared, enforced in code, tested ([`templates/loop-license/CHECKLIST.md`](templates/loop-license/CHECKLIST.md)).
+- [ ] **(M2)** Stop conditions declared in the Agent Contract and enforced by the runner: max iterations, token/time/spend budgets, timeout, escalation after N consecutive failures.
+- [ ] **(M2)** Independent verification: the producing model does not grade its own work; deterministic checks first; the LLM judge is calibrated and decorrelated from the writer.
+- [ ] **(M2)** "Find work" treated as untrusted input — indirect-injection cases in the eval suite, instruction/data channel separation, least-privilege triggers (OWASP LLM01).
+- [ ] **(M2)** Instruction supply chain governed: skills/prompts/instructions versioned, provenanced, eval-gated before deploy, regression-tested on update, trigger-collisions audited (OWASP LLM03).
+- [ ] **(M2)** Loop economics: cost per run **and** cost per *verified* outcome tracked in traces; per-run/per-window caps declared.
+- [ ] **(M2)** Memory model and determinism map were declared at architecture time (what is persisted, retention, provenance, replayability; which steps are deterministic vs. model-driven).
+
 ### Fleet operations *(if running a persistent fleet)*
 - [ ] **(M2)** Each deployed agent is a versioned **runtime manifest** (resources, schedule, runtime + model, env interpolation), distinct from its Agent Contract; the same manifest runs in dev and prod, with agent-logic split from the platform prompt injected at run time.
 - [ ] **(M2)** Scheduled / triggered runs are coordinated by a lock (fire-once across replicas); missed runs (misfires) are detected and handled, not silently dropped.

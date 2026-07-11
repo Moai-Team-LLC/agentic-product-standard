@@ -1,4 +1,4 @@
-# The Agentic Product Standard v2.0
+# The Agentic Product Standard v3.0
 
 *The canonical standard for building modern agentic products.*
 
@@ -242,7 +242,7 @@ The reference implementation of this layer (together with Layer 1) is **[Agentic
 
 ## Part III. Production readiness — Definition of Done
 
-An agentic product is **not production-ready** until all 15 items are satisfied:
+An agentic product is **not production-ready** until all 19 items are satisfied (items 16–19 bind only at L3+ unattended operation):
 
 ### Context and state
 - [ ] **1.** Context utilization < 40% in a typical cycle
@@ -272,11 +272,120 @@ An agentic product is **not production-ready** until all 15 items are satisfied:
 ### Cost
 - [ ] **15.** Per-run token / cost ceiling enforced **in code** (circuit breaker on runaway sessions); cost-per-task tracked in traces
 
+### Unattended operation (L3+) — the Loop License
+- [ ] **16.** **Loop License** satisfied for any L3+ unattended system: eval pass-rate threshold, regression gate, declared blast radius, cost cap, kill switch, and escalation path — all six declared, enforced in code, and tested (Part IV; [`CHECKLIST`](templates/loop-license/CHECKLIST.md))
+- [ ] **17.** Stop conditions declared in the Agent Contract and enforced by the runner: max iterations, token/time/spend budgets, timeout, escalation after N consecutive failures (Part IV)
+- [ ] **18.** Independent verification: the producing model does not grade its own work; deterministic checks first; any LLM judge is calibrated (item 11) and decorrelated from the writer (Part IV)
+- [ ] **19.** Loop economics: cost per run and cost per *verified* outcome tracked in traces; per-run and per-window cost caps declared (Part IV · Layer 9)
+
 > **Score yourself.** [`SCORECARD.md`](SCORECARD.md) turns this DoD into a Yes/No maturity self-assessment (M0–M3, mapped to the Autonomy Ladder) — run it with the team against a real deployment each release.
 
 ---
 
-## Part IV. Eval discipline (per Husain/Shankar)
+## Part IV. The Loop License — earning unattended operation (L3+)
+
+The Autonomy Ladder (Canon 1) and the Cycle of Trust (Canon 5) hold that autonomy is *earned*, not granted. This Part makes that concrete for the hardest case: an agent that runs **unattended** — finding its own work and looping without a human in each turn (L3 orchestrator-worker and L4 autonomous). The market calls this *loop engineering*; done without discipline it produces **a factory with no quality control**. The **Loop License** is the standard's answer: the conditions a system MUST satisfy *before* it may run unattended, and MUST keep satisfying to stay there.
+
+Everything in this Part binds at **L3+**. Below L3 (a single call, or a workflow with a human in the loop) it is recommended, not required.
+
+### The Loop License
+
+> **MUST — no unattended (L3+) operation without all six of these declared, enforced in code, and tested:**
+> 1. **Eval pass-rate threshold** — a named minimum pass rate on a representative eval set, measured before promotion (Canon 1 · Part V). Below it, the loop does not run unattended.
+> 2. **Regression gate** — CI blocks promotion when the eval pass rate drops against the recorded baseline (DoD 12). A loop that can silently regress has no license.
+> 3. **Declared blast radius** — the maximum scope one unattended run can affect (files, records, spend, external calls, tenants), written down and enforced below the model, never asserted by it.
+> 4. **Cost cap** — a per-run and per-window token/spend ceiling, enforced in code, that halts the loop (Layer 9 · DoD 15).
+> 5. **Kill switch** — an out-of-band control that stops the loop mid-flight without a redeploy, reachable by a human who is not the agent.
+> 6. **Escalation path** — a named human (or higher-authority system) the loop hands to on repeated failure, on hitting a stop condition, or on any action outside the declared blast radius.
+
+These are not six nice-to-haves; they are one license. Missing any single gate caps the system at L2 (human-in-the-loop), regardless of how good the model is. The one-page [`templates/loop-license/CHECKLIST.md`](templates/loop-license/CHECKLIST.md) is the artifact to run against a real deployment, with the team in the room.
+
+### Independent verification
+
+The most common way a loop launders a wrong answer into a shipped one is **self-verification**: the same model that produced the work also declares it correct.
+
+> **MUST, at L3+:**
+> - **Self-check by the producing model does not count as verification.** A model grading its own output shares its own blind spots and failure correlations; a pass tells you nothing new.
+> - **Deterministic-first.** Verify with a deterministic check — tests, schema, assertion, type-check, invariant, diff against a known-good — wherever the property admits one. Reach for an LLM judge only for properties that genuinely require judgment.
+> - **The judge has its own eval.** An LLM judge is itself an agent under this standard: calibrated against human labels, TPR/TNR tracked (DoD 11). An uncalibrated judge is not verification — it is a second opinion of unknown quality.
+> - **The checker is decorrelated from the writer.** A different model, or a materially different prompt and context; no shared scratchpad; and it sees the *artifact*, not the writer's reasoning about why the artifact is fine.
+
+**Writer / Checker, done right (reference pattern).** A Writer produces the artifact under its Agent Contract. A Checker — a separate agent with its own contract, its own eval, and a deterministic layer in front of its judgment — receives only the artifact and the acceptance criteria, and returns a *hard-to-vary* verdict (each criterion names the single probe that falsifies it). The Writer never sees the Checker's internals; the Checker never sees the Writer's chain of thought. Disagreement escalates — it is not averaged away.
+
+### Stop conditions & fail paths
+
+An unattended loop with no declared way to stop is the defining L4 anti-pattern.
+
+> **MUST — every L3+ agent spec declares, and the runner enforces:**
+> - **Max iterations** — a hard turn/step ceiling per run.
+> - **Budgets** — token, wall-clock, and spend ceilings (the cost cap of the Loop License).
+> - **Timeout** — a maximum run duration after which the loop is cancelled, not left hanging.
+> - **Escalation after N failures** — a named threshold of consecutive failed attempts (verification failures, tool errors, guardrail trips) that hands to the escalation path instead of retrying forever.
+
+These are **mandatory sections of the Agent Contract** (`AGENT_STANDARD.md`), declared at design time, not discovered in production. This is DoD item 17.
+
+### The ingestion boundary — "find work" is untrusted input
+
+An L4 loop that selects its own work reads that work from somewhere — a queue, an inbox, a repo, a webhook, a scraped page. **Every one of those is untrusted input.** Treating the find-work step as trusted is how a loop gets hijacked into doing the attacker's work instead of yours (OWASP **LLM01 Prompt Injection**; agentic **ASI01** *Goal Hijack*).
+
+> **MUST, at L3+:**
+> - **Injection tests live in the eval suite.** The find-work path is fuzzed with indirect-injection payloads as part of the standing eval set (Layer 8 · DoD 13), not tested once by hand.
+> - **Instructions and data are separated.** Ingested content is data; it is never concatenated into the instruction channel where it can rewrite the agent's goal (Layer 8 · indirect prompt injection).
+> - **Least privilege on triggers.** What can enqueue work for the loop — and what that work is allowed to reach — is scoped and allow-listed. A trigger is a capability, not an open door.
+
+**Threat checklist:** `[ ]` find-work source classified as untrusted · `[ ]` indirect-injection cases in the eval suite · `[ ]` instruction/data channels separated, verified under a poisoned input · `[ ]` trigger sources allow-listed and least-privileged · `[ ]` egress from a triggered run gated (lethal-trifecta check, Layer 8).
+
+### The instruction supply chain
+
+Skills, prompts, system instructions, tool descriptions and trigger rules are **executable artifacts that steer the loop** — and therefore a supply chain, subject to the same discipline as code dependencies (OWASP **LLM03 Supply Chain**; **AIUC-1** control expectations). A "factory with no QC" is usually a factory whose *instructions* were never version-controlled or evaluated.
+
+> **MUST, at L3+:**
+> - **Versioned** — every skill/prompt/instruction artifact carries a version; what shipped is knowable.
+> - **Provenance** — who authored it, from what source, and why (the change's intent) is recorded.
+> - **Evaluated before deploy** — an instruction change is promoted through the same eval gate as a code change (Part V), never hot-edited into a live loop.
+> - **Regression-tested on update** — updating an instruction re-runs its evals; a prompt change that drops the pass rate is a regression (DoD 12), not a tweak.
+> - **Trigger-collision audited** — where many skills/agents share a trigger space, overlapping or ambiguous activation is audited; two artifacts silently competing for one trigger is a supply-chain defect.
+
+This is the direct answer to "a factory with no QC": the instructions *are* the tooling on the line, and they get inspected like it.
+
+### Economics of the loop
+
+A loop makes cost a first-class risk: it can spend without a human noticing. Layer 9 sets the cost controls; this Part sets what a licensed loop MUST *know* about its own economics.
+
+> **MUST:**
+> - **Measure cost per run** — token and spend, attributed per unattended run, in the same traces as Layer 6.
+> - **Measure cost per *verified* outcome** — spend divided by outcomes that passed independent verification, not raw completions. A loop that is cheap per call but rarely produces a verified result is expensive, and only this metric shows it.
+> - **Declare cost caps** — the per-run and per-window ceilings of the Loop License, stated up front.
+
+The standard fixes **what** to measure and declare, not **how**: the reference implementations of enforcement and measurement are the model/cost plane (Layer 9 · AgenticGateway) and the observability plane (Layer 6 · AgenticPerformance). This is DoD item 19.
+
+### Architecture-phase declarations
+
+Two properties decide whether a loop is operable, and both MUST be **declared during design, not reconstructed after an incident**:
+
+> **MUST — the Agent Contract declares, at architecture time:**
+> - **The memory model** — what the loop persists, for how long (retention), where it came from (provenance), and whether a past run can be **replayed** from it. *"Where does the state live on step 7?"* must have an answer on the whiteboard, not in a post-mortem.
+> - **The determinism map** — which steps are deterministic (pure functions, tools, checks) and which are model-driven, so durability, replay, and verification attach to the right steps (Layer 5). A loop whose determinism boundary is unknown cannot be made durable or independently verified.
+
+These are **mandatory sections of the Agent Contract**, alongside the stop conditions above.
+
+### Glossary bridge — the loop-engineering lexicon
+
+Teams arrive with the market's vocabulary. This standard already holds the concepts under its own names; here is the bridge, so clients are met, not re-educated.
+
+| Market term (loop engineering) | This standard |
+|---|---|
+| Loop / loop engineering | Unattended operation at **L3–L4** on the Autonomy Ladder (Canon 1), governed by the **Loop License** (this Part) |
+| Intent debt | Acceptance criteria that are not *hard-to-vary* — the gap the **Cycle of Trust** (Canon 5) and eval discipline (Part V) close |
+| Writer / Checker | **Independent verification** (this Part): a decorrelated producer and verifier, each an agent under its own contract |
+| State / working memory | **Memory** (Layer 4) + the **memory-model** architecture-phase declaration |
+| Find work | The **ingestion boundary** (this Part) — untrusted input, OWASP LLM01 |
+| Blast radius / kill switch | Loop License gates 3 and 5 (this Part) |
+| Factory with no QC | A loop missing **independent verification** and running an unmanaged **instruction supply chain** |
+
+---
+
+## Part V. Eval discipline (per Husain/Shankar)
 
 This discipline matters more than the choice of framework.
 
@@ -311,7 +420,7 @@ This discipline matters more than the choice of framework.
 
 ---
 
-## Part V. The canon from thought leaders
+## Part VI. The canon from thought leaders
 
 A minimal reading list. **These sources are not references — they are the operational base:**
 
@@ -353,7 +462,7 @@ A minimal reading list. **These sources are not references — they are the oper
 
 ---
 
-## Part VI. A 12-week build roadmap
+## Part VII. A 12-week build roadmap
 
 ### Phase 1 — Prove value (weeks 0–2)
 - Write the workflow as a deterministic pipeline
@@ -391,7 +500,7 @@ A minimal reading list. **These sources are not references — they are the oper
 
 ---
 
-## Part VII. Anti-patterns
+## Part VIII. Anti-patterns
 
 **Do not do this:**
 
@@ -415,7 +524,7 @@ A minimal reading list. **These sources are not references — they are the oper
 
 ---
 
-## Part VIII. Compact decision checklist
+## Part IX. Compact decision checklist
 
 Before starting any agentic project, run through this checklist:
 
@@ -437,7 +546,7 @@ Before starting any agentic project, run through this checklist:
 
 ---
 
-## Part IX. Emerging & deferred
+## Part X. Emerging & deferred
 
 Tracked deliberately, but **not** yet promoted to first-class standard surface — naming what we refuse to over-specify is part of the discipline. Reach for these only when the dominant constraint demands it.
 
@@ -461,4 +570,4 @@ The standard is not dogma. It is a **tilt of the field** toward the practices th
 
 ---
 
-*v2.0 · assembled from production practices as of June 2026*
+*v3.0 · assembled from production practices as of June 2026*

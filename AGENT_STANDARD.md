@@ -183,6 +183,37 @@ Three checks belong in every design, not just at review:
   audience-bound identity. Identity and tenant are derived from auth, never asserted
   by the model. (Map controls to the OWASP Top 10 for Agentic Applications.)
 
+### 8. The Loop License
+
+An agent that runs **unattended** — finding its own work and looping without a
+human in each turn (L3–L4) — must hold a **Loop License** before it ships, and
+keep holding it to stay unattended. Six gates, all required, each enforced in
+code and tested:
+
+1. **Eval pass-rate threshold** — a named minimum on a representative set,
+   measured before promotion.
+2. **Regression gate** — CI blocks promotion when the pass rate drops against baseline.
+3. **Declared blast radius** — the maximum scope one run can affect, enforced below the model.
+4. **Cost cap** — per-run and per-window ceilings enforced in code.
+5. **Kill switch** — an out-of-band stop, reachable by a human who is not the agent.
+6. **Escalation path** — a named human or system the loop hands to on failure or a stop condition.
+
+Two disciplines make the license real:
+
+- **Independent verification.** The producing model does not grade its own work —
+  deterministic checks first, and any LLM judge is calibrated and *decorrelated*
+  from the writer (a different model or materially different context, seeing the
+  artifact, not the writer's reasoning). Writer and Checker are separate agents.
+- **The ingestion boundary and the instruction supply chain.** "Find work" is
+  untrusted input — test it for indirect injection, separate instructions from
+  data, least-privilege the triggers (OWASP LLM01). Skills, prompts and
+  instructions are supply-chain artifacts — versioned, provenanced, eval-gated
+  before deploy, regression-tested on update (OWASP LLM03).
+
+Declare the stop conditions, memory model, and determinism map in the Agent
+Contract at design time. Full treatment: `STANDARD.md` Part IV; the one-page gate
+is `templates/loop-license/CHECKLIST.md`.
+
 ---
 
 ## Skill Activation
@@ -411,6 +442,15 @@ When the agent must stop, ask, hand off, or request human approval.
 
 ## 13. Logging Requirements
 What must be written to trace.
+
+## 14. Stop Conditions *(required at L3+)*
+Max iterations, token/time/spend budgets, timeout, and escalation after N consecutive failures.
+
+## 15. Memory Model *(required at L3+)*
+What is persisted, retention, provenance, and whether a run is replayable from it.
+
+## 16. Determinism Map *(required at L3+)*
+Which steps are deterministic (tools, checks, pure functions) vs. model-driven.
 ```
 
 ## Design Rules

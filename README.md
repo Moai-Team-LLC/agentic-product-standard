@@ -9,7 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Claude Code Skills](https://img.shields.io/badge/Claude%20Code-Skills-d97757.svg)](skills/agentic-product-architect)
-[![Standard v2.0](https://img.shields.io/badge/Standard-v2.0-blue.svg)](STANDARD.md)
+[![Standard v3.0](https://img.shields.io/badge/Standard-v3.0-blue.svg)](STANDARD.md)
 [![Self-assessment scorecard](https://img.shields.io/badge/scorecard-M0–M3-success.svg)](SCORECARD.md)
 [![Stars](https://img.shields.io/github/stars/Moai-Team-LLC/agentic-product-standard?style=social)](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers)
 
@@ -36,6 +36,7 @@ Most teams ship agent demos. Few ship agents that survive contact with productio
 - [The 8-layer harness](#the-8-layer-harness)
 - [The 10-question checklist](#-the-10-question-checklist)
 - [Score yourself](#-score-yourself)
+- [The Loop License](#-the-loop-license)
 - [Production readiness — Definition of Done](#production-readiness--definition-of-done)
 - [Anti-patterns](#anti-patterns)
 - [Reading list](#reading-list)
@@ -71,6 +72,7 @@ agentic-product-standard/
 ├── family.sh                            ← stand up the whole reference stack locally, one command
 ├── templates/security/                  ← red-team kit: lethal-trifecta gate, injection suite, MCP pin
 ├── templates/ci/eval-gate.yml           ← CI workflow that blocks merges on eval regression
+├── templates/loop-license/CHECKLIST.md  ← one-page Loop License gate (six gates, L3+)
 ├── examples/agenticmind-case-study.md   ← reference implementation, audited against the canon
 ├── docs/adr/                            ← architecture decision records (why the repo is shaped this way)
 └── skills/                              ← Claude Code skill set (operationalizes the standard)
@@ -86,8 +88,8 @@ agentic-product-standard/
         ├── durable-execution/            ← Temporal Workflow + Activity pattern
         ├── eval-driven-dev/              ← Husain/Shankar pyramid + judge calibration
         ├── framework-selection/          ← LangGraph / Claude SDK / OpenAI SDK / others
-        ├── production-readiness/         ← 12-point Definition of Done audit
-        ├── antipatterns-review/          ← code review through 12 known failure modes
+        ├── production-readiness/         ← 19-point Definition of Done audit (+ Loop License, L3+)
+        ├── antipatterns-review/          ← code review through 17 known failure modes
         └── reference-stack/              ← the paved road: install & wire the AgenticProduct family
 ```
 
@@ -99,7 +101,7 @@ Two standards, one practice:
 
 ## 🚀 Install the skills
 
-The skill set works with [Claude Code](https://claude.com/claude-code). Two tracks share the same sub-skills: **`agent-builder`** for building one production-grade agent (it bundles `AGENT_STANDARD.md` + copy-paste `templates/`), and **`agentic-product-architect`** — a master skill that routes to ten specialized sub-skills for multi-agent products. Each is independently triggerable.
+The skill set works with [Claude Code](https://claude.com/claude-code). Two tracks share the same sub-skills: **`agent-builder`** for building one production-grade agent (it bundles `AGENT_STANDARD.md` + copy-paste `templates/`), and **`agentic-product-architect`** — a master skill that routes to twelve specialized sub-skills for multi-agent products. Each is independently triggerable.
 
 ### Fastest: one command, no clone
 
@@ -255,9 +257,17 @@ Principles are easy to nod along to; **[`SCORECARD.md`](SCORECARD.md)** makes yo
 
 Run it with the team against a real deployment each release — the first **No** you hit is your next piece of work.
 
+## 🔒 The Loop License
+
+Autonomy is earned, not granted. Before an agent runs **unattended** — finding its own work and looping without a human in each turn (Autonomy Ladder **L3+**) — it must hold a **Loop License**: six gates, all required, each enforced in code and tested.
+
+> **Eval pass-rate threshold · regression gate · declared blast radius · cost cap · kill switch · escalation path.**
+
+Miss any one and the system stays at L2 (human-in-the-loop), no matter how good the model is. Backing the gates: **independent verification** (the producing model never grades its own work — deterministic checks first, a decorrelated calibrated judge second), a governed **instruction supply chain** (skills and prompts are versioned, provenanced, eval-gated artifacts), and a hard **ingestion boundary** ("find work" is untrusted input). Full treatment in [`STANDARD.md` Part IV](STANDARD.md#part-iv-the-loop-license--earning-unattended-operation-l3); the one-page gate is [`templates/loop-license/CHECKLIST.md`](templates/loop-license/CHECKLIST.md).
+
 ## Production readiness — Definition of Done
 
-An agentic product is **not production-ready** until all **15** are satisfied. Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
+An agentic product is **not production-ready** until all **19** are satisfied (items 16–19 bind at L3+ unattended operation). Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
 
 | Context & state | Tools & security | Reliability | Evals & observability |
 |---|---|---|---|
@@ -265,6 +275,8 @@ An agentic product is **not production-ready** until all **15** are satisfied. F
 | State externalized | Permissions in code, not prompt | Schema-validated outputs | Judges calibrated (TPR/TNR) |
 | Compaction tested | Sandboxed tool execution | Input/output guardrails | CI blocks regression; 100% traced |
 | — | **Lethal-trifecta check; MCP tool defs pinned** | **Per-run cost ceiling in code** | Trajectory + online evals |
+
+**Unattended (L3+) — the [Loop License](STANDARD.md#part-iv-the-loop-license--earning-unattended-operation-l3):** stop conditions · independent verification · loop economics, gated by blast radius · cost cap · kill switch · escalation path.
 
 ## Anti-patterns
 
@@ -320,6 +332,6 @@ The architectural canons (the autonomy ladder, the 5 patterns, single-vs-multi, 
 
 **If this saved you a week of architecture debates, [star the repo](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers) ⭐ so others find it.**
 
-*v2.0 · assembled from production practices as of June 2026*
+*v3.0 · assembled from production practices as of June 2026*
 
 </div>
