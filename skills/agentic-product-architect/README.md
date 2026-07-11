@@ -1,6 +1,6 @@
 # Agentic Product Architect — Skill Set
 
-Hybrid skill set for building production-grade agentic products with Claude Code. One master skill (`agentic-product-architect`) routes to ten specialized sub-skills covering architecture, context, harness, tools, memory, durable execution, evals, framework choice, production readiness, and antipattern review.
+Hybrid skill set for building production-grade agentic products with Claude Code. One master skill (`agentic-product-architect`) routes to twelve specialized sub-skills covering architecture, context, harness, tools, memory, durable execution, evals, framework choice, production readiness, and antipattern review.
 
 ## Structure
 
@@ -16,7 +16,9 @@ agentic-product-architect/
 ├── eval-driven-dev/SKILL.md          ← Husain/Shankar pyramid + judge calibration
 ├── framework-selection/SKILL.md      ← LangGraph / Claude SDK / OpenAI SDK / others
 ├── production-readiness/SKILL.md     ← 19-point Definition of Done audit
-└── antipatterns-review/SKILL.md      ← code review through 17 known failure modes
+├── antipatterns-review/SKILL.md      ← code review through 17 known failure modes
+├── tenant-isolation/SKILL.md         ← pooled/silo, leakage paths, cross-tenant leakage eval
+└── reference-stack/SKILL.md          ← the paved road: install & wire the AgenticProduct family
 ```
 
 ## How it works
@@ -43,7 +45,7 @@ Claude Code discovers skills via the SKILL.md files and their YAML frontmatter (
 
 **Why hybrid?** Building agentic products spans 10+ distinct concerns (architecture, evals, durability, etc.). A monolithic skill would either be too shallow on each concern, or too long for Claude's context budget. The master provides the philosophy and routing; specialized sub-skills load only when needed.
 
-**Why these 10 sub-skills?** They map to the core sections of the Agentic Product Standard plus two operational skills (production readiness audit, antipatterns review) that surface naturally in real building work.
+**Why these 12 sub-skills?** They map to the core sections of the Agentic Product Standard plus two operational skills (production readiness audit, antipatterns review) that surface naturally in real building work.
 
 **Why no code templates or scripts?** This skill set teaches architectural judgment, not boilerplate. The relevant code is framework-specific and changes quarterly; the patterns and judgment are durable. When you need code, use the framework's docs (referenced by name in `framework-selection/`).
 
