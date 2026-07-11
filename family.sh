@@ -24,8 +24,8 @@ RUN="$FAMILY/.run"                 # pidfiles + logs for the processes we start
 ORG="https://github.com/Moai-Team-LLC"
 
 # Clone every member so the whole family is present; the three below plus the
-# three run-on-use ones (SelfHealingCode, Ops, Assurance).
-REPOS=(AgenticMind AgenticPerformance AgenticGateway AgenticSelfHealingCode AgenticOps AgenticAssurance)
+# two run-on-use ones (Ops, Assurance).
+REPOS=(AgenticMind AgenticPerformance AgenticGateway AgenticOps AgenticAssurance)
 
 # ---------------------------------------------------------------------------
 # helpers
@@ -162,8 +162,7 @@ The three long-lived services are starting. Give them ~5s, then: $0 status
   AgenticPerformance  OTLP trace ingest        http://localhost:4319/v1/traces
   AgenticGateway      OpenAI-compatible plane  http://localhost:8787   (Bifrost :8080)
 
-The other three members are run on use, not as servers:
-  AgenticSelfHealingCode   cd family/AgenticSelfHealingCode && bun install && bun run demo
+The other two members are run on use, not as servers:
   AgenticOps  (library)    bun add github:Moai-Team-LLC/AgenticOps
   AgenticAssurance (CLI)   npx agent-assurance scan <manifest.json> --sarif out.sarif
 

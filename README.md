@@ -150,7 +150,7 @@ Claude Code discovers skills via each `SKILL.md` and its YAML frontmatter. Once 
 
 ## 🌐 The AgenticProduct family
 
-The standard tells you *how*; six reference implementations are repos you can *run* — each building one surface the standard defines. **AgenticOps** *runs* the fleet, **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** *judges and grounds* its answers, **AgenticPerformance** *measures and improves* what runs, **AgenticSelfHealingCode** *repairs* what breaks, **AgenticGateway** *carries* every model call, and **AgenticAssurance** *red-teams* it — all conforming to this standard.
+The standard tells you *how*; five reference implementations are repos you can *run* — each building one surface the standard defines. **AgenticOps** *runs* the fleet, **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** *judges and grounds* its answers, **AgenticPerformance** *measures and improves* what runs, **AgenticGateway** *carries* every model call, and **AgenticAssurance** *red-teams* it — all conforming to this standard.
 
 |     | Member | Role | License |
 | --- | --- | --- | --- |
@@ -158,15 +158,14 @@ The standard tells you *how*; six reference implementations are repos you can *r
 | ⚙️ | **[AgenticOps](https://github.com/Moai-Team-LLC/AgenticOps)** | Runtime & operations — manifests, scheduling, durable backlog, bounded runner, fleet health. | Apache-2.0 |
 | 🧠 | **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** | Knowledge & memory — auditable, self-improving, citation-enforced, over MCP; Postgres-only. | Apache-2.0 |
 | 📈 | **[AgenticPerformance](https://github.com/Moai-Team-LLC/AgenticPerformance)** | Evals & observability — OTel traces, golden-set evals + CI gate, failure clusters, improvement loop. | Apache-2.0 |
-| 🩹 | **[AgenticSelfHealingCode](https://github.com/Moai-Team-LLC/AgenticSelfHealingCode)** | Self-healing ops — production monitoring, incident diagnosis/RCA, test-suite healing on earned autonomy. | Apache-2.0 |
 | 🌉 | **[AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway)** | Model & cost plane — one key, measured routing, ceilings, cache, evidence. | Apache-2.0 |
 | 🛡️ | **[AgenticAssurance (AAL)](https://github.com/Moai-Team-LLC/AgenticAssurance)** | Security & assurance — red-teams any agent (OWASP Agentic + MITRE ATLAS), toxic-flow graph, SARIF output. | MIT |
 
-**How they compose.** **AgenticOps** runs the fleet, **AgenticMind** gives agents auditable knowledge & memory, **AgenticPerformance** measures every run with traces and evals, and **AgenticSelfHealingCode** repairs what breaks — closing the **run → remember → measure → heal** loop. **AgenticGateway** is the model plane every LLM call in that loop passes through — one key, eval-measured routing, cost ceilings — and **AgenticAssurance** red-teams any agent in the loop, with the whole stack conforming to the **[agentic-product-standard](https://github.com/Moai-Team-LLC/agentic-product-standard)**.
+**How they compose.** **AgenticOps** runs the fleet, **AgenticMind** gives agents auditable knowledge & memory, and **AgenticPerformance** measures every run with traces and evals — closing the **run → remember → measure** loop. **AgenticGateway** is the model plane every LLM call in that loop passes through — one key, eval-measured routing, cost ceilings — and **AgenticAssurance** red-teams any agent in the loop, with the whole stack conforming to the **[agentic-product-standard](https://github.com/Moai-Team-LLC/agentic-product-standard)**.
 
 **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** remains the flagship reference implementation — an auditable, self-improving **knowledge & memory layer** agents plug into over MCP (the OSS pick for the memory slot in [`memory-architecture`](skills/agentic-product-architect/memory-architecture)); install it with [`./setup.sh --with-agenticmind`](#quick-setup-one-train). See its [**case study**](examples/agenticmind-case-study.md) for a layer-by-layer conformance map, and **[`ECOSYSTEM.md`](ECOSYSTEM.md)** for the full family — which surface each repo implements, its status, and how they compose.
 
-**Run the whole family locally — one command.** [`family.sh`](family.sh) clones every member and brings up the three long-lived services (Mind, Performance, Gateway) through each repo's own compose + run scripts, then prints how to use the library (Ops), the CLI (Assurance), and the on-demand demo (SelfHealingCode):
+**Run the whole family locally — one command.** [`family.sh`](family.sh) clones every member and brings up the three long-lived services (Mind, Performance, Gateway) through each repo's own compose + run scripts, then prints how to use the library (Ops) and the CLI (Assurance):
 
 ```bash
 ./family.sh up        # clone + stand up the reference stack   (needs git, docker, bun)
