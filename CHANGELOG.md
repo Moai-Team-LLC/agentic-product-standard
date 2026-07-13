@@ -3,6 +3,26 @@
 All notable changes to The Agentic Product Standard are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [3.1.0] — 2026-07-13
+
+The **Eval-Science** release. Deepens the Loop License (v3.0) with the measurement discipline that makes an autonomy license trustworthy: you cannot license a loop on evals and judges you have not shown to be sound. Origin — a gap analysis against classical ML evaluation practice (judge calibration, retrieval ranking, annotation ops, drift monitoring, HITL operations).
+
+### Added
+- **Part V renamed to "Eval discipline & measurement science"** (`STANDARD.md`), with five new normative subsections:
+  - **Judge calibration & bias** — a verdict that gates L3+/auto-apply/release MUST come from a judge with documented calibration (accuracy + ECE/Brier vs. an anchored ground-truth sample, within a recency window); unvalidated verbalized confidence MUST NOT be a gating signal (use self-consistency / swap-consistency); screen for position, verbosity, and self-preference bias.
+  - **Retrieval evaluation** — memory/retrieval MUST be evaluated with retrieval metrics (Recall@k, MRR) on a labeled set, separately from end-to-end evals; embedding/chunking/index changes MUST pass a retrieval regression gate.
+  - **Ground-truth discipline** — golden sets MUST declare labeling provenance; unanchored sets back no license or release gate; rubrics are versioned instruction artifacts that re-baseline their judges on change.
+  - **Drift monitoring** — deployments MUST monitor input drift with a declared eval-refresh policy; provider-hosted models SHOULD be canaried, a detected change triggering the regression gate.
+  - **Human oversight as a program** — an L3+ Loop License MUST declare a human-oversight plan (sampling schedule per level, reviewer SLA, re-escalation triggers); reviews MUST be captured as stratified labeled data.
+- **Cycle of Trust (Canon 5)** gains a **calibration invariant**: a judge whose status is not `calibrated` MUST NOT gate an L3 transition, auto-apply, or release.
+- **Definition of Done 19 → 23** (items 20–23 plus an L3+ human-oversight item), grouped as *Measurement science & human oversight*.
+- **SCORECARD** gains a *Measurement science & oversight* section; **AGENT_STANDARD** extends Doctrines 4, 5, and 8 (bundled copy kept byte-identical); the glossary bridge maps autorater → Judge, model card → Judge Card, eval set → Golden set, ATO → Loop License, graduation → Cycle of Trust.
+- The `production-readiness` sub-skill, README, and badge updated to match (DoD 19 → 23; Standard v3.1).
+
+Compliance pointers added for EU AI Act Arts. 14 (human oversight), 15 (accuracy & robustness), and 72 (post-market monitoring). Per the standard's threshold philosophy, this mandates *that* thresholds exist and are declared, not their numeric values. The concrete artifacts (Judge Card, retrieval harness, provenance schema, canaries, review pipeline) live in the reference implementations (AgenticPerformance, AgenticMind, AgenticGateway, AgenticAssurance).
+
+[3.1.0]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v3.1.0
+
 ## [3.0.0] — 2026-07-11
 
 The **Loop License** release. Names the conditions an agent must satisfy to run *unattended* (Autonomy Ladder L3+) and makes them checkable — the standard's answer to "loop engineering" and the "factory with no QC" failure mode.

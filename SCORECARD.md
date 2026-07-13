@@ -85,6 +85,16 @@ Each item lists the **gate level** at which it becomes mandatory. Items map to t
 - [ ] **(M2)** Loop economics: cost per run **and** cost per *verified* outcome tracked in traces; per-run/per-window caps declared.
 - [ ] **(M2)** Memory model and determinism map were declared at architecture time (what is persisted, retention, provenance, replayability; which steps are deterministic vs. model-driven).
 
+### Measurement science & oversight *(deepens Evals & observability)*
+- [ ] **(M2)** Any judge that gates L3+/auto-apply/release has a current **Judge Card**: calibration (ECE/Brier) + anchored accuracy vs. a ground-truth sample within a recency window; an `uncalibrated`/`stale` judge gates nothing.
+- [ ] **(M2)** Gating confidence uses validated self-consistency or swap-consistency — **not** raw verbalized confidence; pairwise judging randomizes order or applies a swap-consistency check.
+- [ ] **(M2)** Retrieval / memory evaluated with **Recall@k + MRR** on a labeled set, separately from end-to-end evals; embedding/chunking/index changes pass a retrieval regression gate.
+- [ ] **(M2)** Golden sets declare **labeling provenance** (rubric version, labeler, date, agreement); unanchored sets back no license or gate; rubrics are versioned with judge re-baselining on change.
+- [ ] **(M2)** Inter-judge agreement monitored; sustained near-perfect agreement triggers a decorrelation review, sustained low agreement a rubric review.
+- [ ] **(M2)** Input and behavior **drift** monitored vs. the eval distribution with a declared refresh policy (behavior drift at autonomy ≥ L2).
+- [ ] **(M3)** Provider-hosted models are canaried on a cadence; a detected silent change triggers the eval regression gate before continued reliance.
+- [ ] **(M2, L3+)** Human-oversight program: sampling schedule per autonomy level with automatic re-escalation on regression; reviews captured as stratified labeled data.
+
 ### Fleet operations *(if running a persistent fleet)*
 - [ ] **(M2)** Each deployed agent is a versioned **runtime manifest** (resources, schedule, runtime + model, env interpolation), distinct from its Agent Contract; the same manifest runs in dev and prod, with agent-logic split from the platform prompt injected at run time.
 - [ ] **(M2)** Scheduled / triggered runs are coordinated by a lock (fire-once across replicas); missed runs (misfires) are detected and handled, not silently dropped.
