@@ -1,17 +1,17 @@
 ---
 name: production-readiness
-description: Audit an agentic product against the 19-point Definition of Done before launch. Covers context, tools, permissions, reliability, evals, observability, security, and cost — the minimum bar for production. Use whenever the user is preparing to launch / ship / deploy an agentic product, asks "is this production-ready," wants a pre-launch checklist, or is doing a code review before going live.
+description: Audit an agentic product against the 23-point Definition of Done before launch. Covers context, tools, permissions, reliability, evals, observability, security, cost, the Loop License, and measurement science (judge calibration, retrieval metrics, ground-truth provenance, drift, human oversight) — the minimum bar for production. Use whenever the user is preparing to launch / ship / deploy an agentic product, asks "is this production-ready," wants a pre-launch checklist, or is doing a code review before going live.
 ---
 
-# Production Readiness — 19-Point Definition of Done
+# Production Readiness — 23-Point Definition of Done
 
-An agentic product is not production-ready until all 19 points pass. Each point catches a class of failures that has hit real products.
+An agentic product is not production-ready until all 23 points pass. Each point catches a class of failures that has hit real products.
 
 This is an audit checklist, not a feature list. Walk through it with the user; mark each as pass, gap, or N/A with explicit reasoning. Gaps must be closed or accepted with eyes open.
 
 > **The paved road.** Many of these points come satisfied out of the box if you run the **[AgenticProduct family](../../../ECOSYSTEM.md)** reference stack — memory (AgenticMind), runtime & fleet ops (AgenticOps), evals & observability (AgenticPerformance), the model & cost plane (AgenticGateway), and Layer-8 red-teaming (AgenticAssurance). It's the fastest way to green, not a requirement — satisfy any point your own way (Principle 2). See the [`reference-stack`](../reference-stack/SKILL.md) skill.
 
-## The 19 points
+## The 23 points
 
 ### Context and state
 
@@ -245,6 +245,50 @@ Skip this whole section if the product is single-tenant or deployed per customer
 
 **Common gap:** measuring raw spend but never dividing by outcomes that actually passed verification.
 
+### Measurement science & human oversight
+
+*Items 20–23 deepen the eval bar wherever the relevant component exists; the oversight item binds at L3+. Full treatment: `STANDARD.md` Part V (measurement science).*
+
+#### 20. Judge calibration for gating verdicts
+- [ ] Any judge that gates L3+/auto-apply/release has documented calibration — accuracy + calibration error (ECE/Brier) vs. an anchored ground-truth sample within a declared recency window
+- [ ] The gating confidence signal is validated self-consistency or swap-consistency, never raw verbalized confidence; pairwise judging randomizes order
+
+**Why:** verbalized LLM confidence is systematically overconfident; an uncalibrated judge in a gate is a check that isn't one — it invalidates the Loop License for the levels it gates.
+
+**Common gap:** trusting a judge's "95% confident" verbatim, with no anchored accuracy behind it.
+
+#### 21. Retrieval evaluated on its own terms
+- [ ] Memory/retrieval scored with Recall@k and MRR on a labeled retrieval set, separately from end-to-end task evals
+- [ ] Embedding-model / chunking / index changes pass a retrieval regression gate before deploy
+
+**Why:** retrieval and reasoning fail differently; an end-to-end number that conflates them cannot direct a fix.
+
+**Common gap:** shipping an embedding-model swap because task evals "looked fine," silently dropping Recall@5.
+
+#### 22. Ground-truth provenance
+- [ ] Golden sets declare labeling provenance (rubric version, labeler type, date, agreement); unanchored sets do not back a license or release gate
+- [ ] Rubrics are versioned instruction artifacts; a rubric change re-baselines every judge that uses it
+
+**Why:** a golden set without provenance is unanchored — you don't know what its pass rate means.
+
+**Common gap:** a "golden" set nobody can trace to a rubric version or a labeler.
+
+#### 23. Drift monitoring
+- [ ] Input drift monitored vs. the eval distribution, with a declared refresh policy (thresholds + triggered action)
+- [ ] Provider-hosted models canaried; a detected silent change triggers the regression gate; behavior drift watched at ≥ L2
+
+**Why:** drift answers "when did my evals stop representing production?" — without it a green suite can be measuring the past.
+
+**Common gap:** a golden set refreshed on a calendar, not when production actually moved.
+
+#### (L3+) Human oversight as a program
+- [ ] The Loop License declares a sampling schedule per autonomy level, reviewer SLA, and automatic re-escalation triggers (regression or override-rate spike → previous tier)
+- [ ] Human reviews/overrides are captured as stratified labeled data (escalations **plus** a random routine sample)
+
+**Why:** oversight is an operated program, not a checkbox; graduation must be reversible on regression.
+
+**Common gap:** "human review" that only sees escalated hard cases, skewing the review-derived golden data.
+
 ---
 
 ## Audit posture
@@ -256,9 +300,9 @@ When running this audit with the user:
 - **Estimate effort to close each gap.** Rank them by risk-adjusted cost.
 - **Make the explicit launch decision.** "Launch with these N gaps accepted, address in week 1" is a valid choice. "Launch and hope" is not.
 
-## Post-launch hardening (after the 19 points)
+## Post-launch hardening (after the 23 points)
 
-Once the 19 are met, the next tier of investments:
+Once the 23 are met, the next tier of investments:
 
 - **A/B testing infrastructure** — compare new prompts/models/tools against current production
 - **Cost telemetry per request, per user, per agent type** — find the expensive calls
@@ -270,7 +314,7 @@ Once the 19 are met, the next tier of investments:
 
 ## Common "almost ready" patterns
 
-Teams often have 17 of 19 covered. The common gaps are:
+Teams often have 21 of 23 covered. The common gaps are:
 
 | Gap | Frequency | Severity |
 |---|---|---|
@@ -286,7 +330,7 @@ If the user is short on time, prioritize closing these.
 
 When the audit completes, the user should have:
 
-1. A pass/gap/N/A scorecard across all 19 points
+1. A pass/gap/N/A scorecard across all 23 points
 2. Effort estimate to close each gap
 3. A risk-adjusted prioritization
 4. An explicit launch decision with accepted risks documented

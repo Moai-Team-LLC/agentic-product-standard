@@ -1,4 +1,4 @@
-# The Agentic Product Standard v3.0
+# The Agentic Product Standard v3.1
 
 *The canonical standard for building modern agentic products.*
 
@@ -101,6 +101,8 @@ log trace → update memory
 ```
 
 **Never let the model bypass a permission boundary.** Permissions are enforced by code, not by prompt. The Replit incident of 2025 (an agent wiped the database of 1,200+ companies, ignoring a "code freeze" instruction in its prompt) is the canonical proof of this principle.
+
+**Calibration invariant.** The "verify outcome" step is only trust-bearing if the verifier is. A judge whose calibration status is not `calibrated` (Part V, *Judge calibration*) MUST NOT gate autonomous action at L3+, an auto-apply decision, or a release; a low-confidence verdict abstains and escalates rather than passing. A flaky grader in a release gate is the eval-world equivalent of a prompt-enforced permission — it looks like a check and isn't one.
 
 ---
 
@@ -242,7 +244,7 @@ The reference implementation of this layer (together with Layer 1) is **[Agentic
 
 ## Part III. Production readiness — Definition of Done
 
-An agentic product is **not production-ready** until all 19 items are satisfied (items 16–19 bind only at L3+ unattended operation):
+An agentic product is **not production-ready** until all 23 items are satisfied (items 16–19 and the L3+ oversight item bind only at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists):
 
 ### Context and state
 - [ ] **1.** Context utilization < 40% in a typical cycle
@@ -275,8 +277,15 @@ An agentic product is **not production-ready** until all 19 items are satisfied 
 ### Unattended operation (L3+) — the Loop License
 - [ ] **16.** **Loop License** satisfied for any L3+ unattended system: eval pass-rate threshold, regression gate, declared blast radius, cost cap, kill switch, and escalation path — all six declared, enforced in code, and tested (Part IV; [`CHECKLIST`](templates/loop-license/CHECKLIST.md))
 - [ ] **17.** Stop conditions declared in the Agent Contract and enforced by the runner: max iterations, token/time/spend budgets, timeout, escalation after N consecutive failures (Part IV)
-- [ ] **18.** Independent verification: the producing model does not grade its own work; deterministic checks first; any LLM judge is calibrated (item 11) and decorrelated from the writer (Part IV)
+- [ ] **18.** Independent verification: the producing model does not grade its own work; deterministic checks first; any LLM judge is calibrated (items 11 and 20) and decorrelated from the writer (Part IV)
 - [ ] **19.** Loop economics: cost per run and cost per *verified* outcome tracked in traces; per-run and per-window cost caps declared (Part IV · Layer 9)
+
+### Measurement science & human oversight
+- [ ] **20.** Any judge that gates L3+, auto-apply, or release has **documented calibration** — accuracy + calibration error (ECE/Brier) against an anchored ground-truth sample within a declared recency window; no unvalidated verbalized confidence used as a gating signal (Part V · *Judge calibration*)
+- [ ] **21.** Memory/retrieval components evaluated with **retrieval metrics** (≥ Recall@k, MRR) on a labeled set, independently of end-to-end task evals; embedding/chunking/index changes pass a declared **retrieval regression gate** (Part V · *Retrieval evaluation* · Layer 4)
+- [ ] **22.** Golden sets declare **labeling provenance** (rubric version, labeler type, date, agreement); unanchored sets do not back a license or release gate; rubrics are versioned instruction artifacts with judge re-baselining on change (Part V · *Ground-truth discipline* · Part IV)
+- [ ] **23.** Input drift monitored vs. the eval distribution with a declared **eval-refresh policy**; provider-hosted models canaried, a detected change triggering the eval regression gate (DoD 12) (Part V · *Drift monitoring*)
+- [ ] **(L3+)** The Loop License declares a **human-oversight plan** (sampling schedule per level, reviewer SLA, re-escalation triggers); human reviews captured as stratified labeled data (Part V · *Human oversight*)
 
 > **Score yourself.** [`SCORECARD.md`](SCORECARD.md) turns this DoD into a Yes/No maturity self-assessment (M0–M3, mapped to the Autonomy Ladder) — run it with the team against a real deployment each release.
 
@@ -298,7 +307,7 @@ Everything in this Part binds at **L3+**. Below L3 (a single call, or a workflow
 > 5. **Kill switch** — an out-of-band control that stops the loop mid-flight without a redeploy, reachable by a human who is not the agent.
 > 6. **Escalation path** — a named human (or higher-authority system) the loop hands to on repeated failure, on hitting a stop condition, or on any action outside the declared blast radius.
 
-These are not six nice-to-haves; they are one license. Missing any single gate caps the system at L2 (human-in-the-loop), regardless of how good the model is. The one-page [`templates/loop-license/CHECKLIST.md`](templates/loop-license/CHECKLIST.md) is the artifact to run against a real deployment, with the team in the room.
+These are not six nice-to-haves; they are one license. Missing any single gate caps the system at L2 (human-in-the-loop), regardless of how good the model is. The one-page [`templates/loop-license/CHECKLIST.md`](templates/loop-license/CHECKLIST.md) is the artifact to run against a real deployment, with the team in the room. The license also carries a **human-oversight plan** — a sampling schedule per autonomy level, a reviewer SLA, and automatic re-escalation triggers (Part V, *Human oversight as a program*) — and, where its gates rely on a judge, that judge's **calibration status** (Part V, *Judge calibration*).
 
 ### Independent verification
 
@@ -337,7 +346,7 @@ An L4 loop that selects its own work reads that work from somewhere — a queue,
 
 ### The instruction supply chain
 
-Skills, prompts, system instructions, tool descriptions and trigger rules are **executable artifacts that steer the loop** — and therefore a supply chain, subject to the same discipline as code dependencies (OWASP **LLM03 Supply Chain**; **AIUC-1** control expectations). A "factory with no QC" is usually a factory whose *instructions* were never version-controlled or evaluated.
+Skills, prompts, system instructions, tool descriptions, trigger rules, and judge rubrics (Part V) are **executable artifacts that steer the loop** — and therefore a supply chain, subject to the same discipline as code dependencies (OWASP **LLM03 Supply Chain**; **AIUC-1** control expectations). A "factory with no QC" is usually a factory whose *instructions* were never version-controlled or evaluated.
 
 > **MUST, at L3+:**
 > - **Versioned** — every skill/prompt/instruction artifact carries a version; what shipped is knowable.
@@ -382,12 +391,17 @@ Teams arrive with the market's vocabulary. This standard already holds the conce
 | Find work | The **ingestion boundary** (this Part) — untrusted input, OWASP LLM01 |
 | Blast radius / kill switch | Loop License gates 3 and 5 (this Part) |
 | Factory with no QC | A loop missing **independent verification** and running an unmanaged **instruction supply chain** |
+| Autorater / model grader | **Judge** — an LLM verifier, itself an agent under this standard, calibrated per Part V |
+| Model card (for a grader) | **Judge Card** — the versioned calibration record of a judge (Part V · AgenticPerformance) |
+| Eval set / benchmark | **Golden set** — with declared labeling provenance (Part V · *Ground-truth discipline*) |
+| Operating envelope / Authority to Operate (ATO) | **Loop License** (Part IV), of which calibration and oversight status are inputs |
+| Graduation / promotion criteria | The **Cycle of Trust** (Canon 5) — earned autonomy, re-escalating on regression |
 
 ---
 
-## Part V. Eval discipline (per Husain/Shankar)
+## Part V. Eval discipline & measurement science (per Husain/Shankar)
 
-This discipline matters more than the choice of framework.
+This discipline matters more than the choice of framework. The rules below set the shape of an eval program; the *measurement science* subsections that follow set what makes its numbers trustworthy — because an autonomy license (Part IV) is only as sound as the evals and judges behind it.
 
 ### The three-level eval pyramid
 
@@ -417,6 +431,64 @@ This discipline matters more than the choice of framework.
 *Reference benchmarks (as orientation, never as ground truth — see anti-pattern 12): τ-bench / τ²-bench (policy adherence, dual-control), SWE-bench Verified, GAIA, TerminalBench, WebArena. LLM-as-judge agrees with humans ~85% of the time but carries position / verbosity / self-preference bias — keep judges binary and calibrated.*
 
 > **Runnable:** [`templates/ci/eval-gate.yml`](templates/ci/eval-gate.yml) is a copy-paste CI workflow that blocks a merge when the eval pass-rate drops below the ≥90% gate (DoD item 12).
+
+### Judge calibration & bias
+
+**Calibration** is the agreement between a judge's stated confidence and its empirical accuracy — a judge that says "90% confident" should be right ~90% of the time. Measure it with **ECE** (Expected Calibration Error: bin verdicts by confidence, take the weighted mean gap between accuracy and confidence) and the **Brier score** (mean squared error of confidence vs. outcome); a **reliability diagram** plots confidence against empirical accuracy, with the diagonal as perfect. Verbalized LLM confidence is systematically **over**confident — untrustworthy until validated. Usable confidence signals are **self-consistency** (sample the judge k=3–5 times; the agreement fraction is the signal) and **swap-consistency** (score `(A,B)` and `(B,A)`; a verdict that flips with order is **position bias**, not judgment). Screen every judge for position, **verbosity** (favoring longer output), and **self-preference** bias (favoring its own model family — the mechanism behind the decorrelation rule in Part IV). Keep **reliability vs. validity** distinct: judge–judge agreement is not correctness; validity requires anchoring to ground truth (human labels or deterministic outcomes), or high agreement is merely **correlated error**. This *deepens* eval rule 3 and DoD item 11 (TPR/TNR accuracy) for judges that gate autonomy — accuracy and confidence-calibration are one requirement stated at two depths, not two competing bars.
+
+> **MUST — a verdict that gates autonomous action (L3+), auto-apply, or release:**
+> - comes from a judge with **documented calibration** — accuracy and calibration error measured against an anchored ground-truth sample, within a declared recency window, above declared thresholds;
+> - **never** uses unvalidated verbalized confidence as the gating signal — use validated self-consistency or swap-consistency;
+> - pairwise judging **MUST** randomize order or apply a swap-consistency check.
+>
+> Judges **SHOULD** be screened for position, verbosity, and self-preference bias. A judge's **calibration status is an input to the Loop License** (Part IV): an uncalibrated judge invalidates the license for the levels it gates, and its low-confidence verdicts abstain and escalate rather than passing. *(Reference artifact: the versioned **Judge Card** — AgenticPerformance.)*
+
+*Compliance note: supports EU AI Act Art. 15 (accuracy & robustness) declarations.*
+
+### Retrieval evaluation
+
+Retrieval failures and reasoning failures are different diseases; an end-to-end eval that conflates them cannot direct a fix. Evaluate retrieval on its own terms: **Recall@k** (fraction of queries whose relevant item is in the top-k — the primary memory-retrieval metric), **MRR** (Mean Reciprocal Rank of the first relevant item — "how high did the right thing land"), **Precision@k** (when the context-window budget is tight), and **NDCG@k** (only when relevance is *graded*, not binary). In RAG framing, **context precision / recall** separate retrieved-context relevance from coverage of what was needed to answer.
+
+> **MUST:**
+> - Memory or retrieval components are evaluated with retrieval-specific metrics (at minimum **Recall@k** and **MRR**) against a **labeled retrieval set**, independently of end-to-end task evals;
+> - any change to the **embedding model, chunking, or index parameters** passes a declared **retrieval regression gate** before deploy (starting bar: no Recall@5 regression; `pass^3` for release-critical suites).
+>
+> Failure analysis **SHOULD** attribute each failure to a pipeline stage — `retrieval_miss | reasoning_error | tool_error | verification_error` — so improvement is directed, not guessed.
+
+*Citations prove the answer was grounded in what was retrieved; Recall@k proves the right memory was retrievable — auditability needs both. Reference: AgenticMind retrieval harness; the staged failure taxonomy in AgenticPerformance.*
+
+### Ground-truth discipline
+
+A golden set is only as trustworthy as its labels. A **rubric** (rater guideline) is the written labeling standard — definitions, positive and negative examples, edge-case rules; on this line **LLM judges are raters and rubrics are their guidelines**. Measure **inter-annotator agreement (IAA)** with chance-corrected statistics — **Cohen's κ** (two raters), **Fleiss' κ** (n raters), **Krippendorff's α** (missing data / ordinal); conventional bands: 0.6–0.8 substantial, >0.8 strong. Diagnostically, sustained κ < 0.6 signals an **ambiguous rubric**; sustained κ > 0.95 between "independent" judges signals **suspected correlation** → run a decorrelation review. **Gold questions** (known-answer probes mixed into the judging stream) QA the judge continuously; **adjudication** (a third judge or a human) resolves disagreements, and adjudicated items are the highest-grade golden material. A golden set without **labeling provenance** is **unanchored** — you cannot know what its pass rate means.
+
+> **MUST:**
+> - Golden sets declare **labeling provenance**: rubric version, labeler type, label date, and agreement statistics where multiple labelers were used. **Unanchored sets MUST NOT back an autonomy license or a release gate;**
+> - judge **rubrics are versioned instruction artifacts** under the Instruction Supply Chain (Part IV) — a rubric change **MUST trigger judge re-baselining**.
+>
+> Multi-judge verification **SHOULD** monitor inter-judge agreement: sustained near-perfect agreement **MUST** trigger a decorrelation review, sustained low agreement a rubric review. Judges **SHOULD** be qualified against gold questions before gating duty and monitored with gold probes after.
+
+### Drift monitoring
+
+Drift monitoring answers one question — **"when did my evals stop representing production?"** — turning golden-set upkeep from a calendar habit into a triggered obligation. Taxonomy: **input drift** (task/query mix diverges from the eval distribution), **concept drift** (what counts as a correct outcome changes), **behavior drift** (the agent's action / tool-call mix shifts), **upstream drift** (source APIs or tool contracts change), and **provider drift** (a hosted model silently updated). Detect distribution shift with **PSI** (bands: <0.1 stable, 0.1–0.25 watch, >0.25 act) or a two-sample test; in the LLM era an **embedding-space** method works well — the drift score is the centroid cosine shift plus the AUC of a classifier trained to tell production from golden embeddings (≈0.5 means same distribution, →1.0 means drifted). Note that temperature-0 is not determinism across providers, so canary comparison needs semantic-similarity tiers, not exact match alone.
+
+> **MUST:**
+> - Deployments **monitor input drift** relative to the eval distribution and declare an **eval-refresh policy** — drift thresholds and the triggered action (e.g., auto-open a golden-set refresh);
+> - systems relying on **provider-hosted models SHOULD run scheduled canary evaluations** to catch unannounced model changes; a detected change **MUST trigger the eval regression gate** (DoD 12 · Loop License gate 2) before continued reliance;
+> - **behavior drift** (e.g., tool-call distribution) **SHOULD** be monitored at autonomy ≥ L2.
+>
+> *Reference: the representativeness score in AgenticPerformance; provider canaries in AgenticGateway (Layer 1).*
+
+*Compliance note: implements EU AI Act Art. 72 (post-market monitoring) for agentic deployments.*
+
+### Human oversight as a program
+
+Human-in-the-loop is not a checkbox but an **operated program**: review queues, reviewer SLAs, a sampling strategy, reviewer-quality tracking, and a feedback loop from reviews back into eval data. The **sampling schedule is a trust instrument** — oversight intensity declines as trust is earned (100% review at L2 → 10% audit → 2% spot-checks) and **re-escalates automatically on regression**; graduation is not a one-way door (this operationalizes the Cycle of Trust, Canon 5). Beware **sampling bias**: if only escalated or hard cases reach humans, review-derived labels skew hard — **stratify** (escalations *plus* a random sample of routine traffic).
+
+> **MUST — at L3+:**
+> - a **Loop License declares its human-oversight plan**: review **sampling schedule per autonomy level**, reviewer **SLA**, and automatic **re-escalation triggers** (e.g., a regression-gate failure or override-rate spike drops the loop to the previous tier);
+> - human review decisions and overrides are **captured as labeled evaluation data**, and golden-set ingestion from reviews uses **stratified sampling** to avoid difficulty skew.
+
+*Compliance note: gives concrete form to EU AI Act Art. 14 (human oversight) for agentic systems.*
 
 ---
 
@@ -570,4 +642,4 @@ The standard is not dogma. It is a **tilt of the field** toward the practices th
 
 ---
 
-*v3.0 · assembled from production practices as of June 2026*
+*v3.1 · assembled from production practices as of June 2026*

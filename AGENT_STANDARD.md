@@ -127,6 +127,8 @@ write trace → update memory
 
 Permissions are enforced in **code**, never in the prompt. The model will, given the chance, ignore an instruction it was told to obey. The canonical proof is the July 2025 Replit incident, where an agent deleted the production database of 1,200+ companies despite an explicit "code and action freeze" written into its prompt. Treat every tool surface as an RPC endpoint exposed to untrusted input.
 
+The "verify outcome" step is only trust-bearing if the verifier is. A judge whose calibration status is not `calibrated` (Doctrine 5) MUST NOT gate autonomous action at L3+, an auto-apply, or a release — a low-confidence verdict abstains and escalates. A flaky grader in a release gate is a prompt-enforced permission by another name: it looks like a check and isn't one.
+
 ### 5. Eval-Driven Development
 
 No agent is production-ready without evals.
@@ -140,6 +142,13 @@ Start with:
 - LLM-as-judge only for subjective failure modes, with binary output, calibrated against human labels.
 
 Each production failure becomes a permanent regression test.
+
+**Measurement science — what makes the numbers trustworthy:**
+- **Calibrate judges; don't trust their words.** A judge that gates L3+/auto-apply/release has documented calibration (accuracy + ECE/Brier against an anchored ground-truth sample, within a recency window). Use validated self-consistency or swap-consistency as the confidence signal — never raw verbalized confidence — and screen for position, verbosity, and self-preference bias.
+- **Anchor the golden set.** Declare labeling provenance (rubric version, labeler, date, agreement); an unanchored set backs nothing. Rubrics are versioned instruction artifacts — a rubric change re-baselines its judges.
+- **Evaluate retrieval on its own terms** — Recall@k and MRR against a labeled set, separately from end-to-end task evals; embedding/chunking/index changes pass a retrieval regression gate.
+- **Monitor drift** — input, behavior, and provider — against the eval distribution; a canary that detects a silent provider change triggers the regression gate.
+- **Run human oversight as a program** — a sampling schedule that de-escalates on earned trust and re-escalates on regression; capture reviews as stratified labeled data.
 
 ### 6. Bitter-Pilled Maintenance
 
@@ -207,12 +216,15 @@ Two disciplines make the license real:
 - **The ingestion boundary and the instruction supply chain.** "Find work" is
   untrusted input — test it for indirect injection, separate instructions from
   data, least-privilege the triggers (OWASP LLM01). Skills, prompts and
-  instructions are supply-chain artifacts — versioned, provenanced, eval-gated
-  before deploy, regression-tested on update (OWASP LLM03).
+  instructions (and judge rubrics) are supply-chain artifacts — versioned,
+  provenanced, eval-gated before deploy, regression-tested on update (OWASP LLM03).
 
-Declare the stop conditions, memory model, and determinism map in the Agent
-Contract at design time. Full treatment: `STANDARD.md` Part IV; the one-page gate
-is `templates/loop-license/CHECKLIST.md`.
+A judge's calibration status is an input to the license: an uncalibrated judge
+invalidates it for the levels that judge gates (Doctrine 5). Declare the stop
+conditions, memory model, determinism map, and — at L3+ — the **human-oversight
+plan** (sampling schedule per level, reviewer SLA, re-escalation triggers) in the
+Agent Contract at design time. Full treatment: `STANDARD.md` Part IV; the one-page
+gate is `templates/loop-license/CHECKLIST.md`.
 
 ---
 

@@ -9,7 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Claude Code Skills](https://img.shields.io/badge/Claude%20Code-Skills-d97757.svg)](skills/agentic-product-architect)
-[![Standard v3.0](https://img.shields.io/badge/Standard-v3.0-blue.svg)](STANDARD.md)
+[![Standard v3.1](https://img.shields.io/badge/Standard-v3.1-blue.svg)](STANDARD.md)
 [![Self-assessment scorecard](https://img.shields.io/badge/scorecard-M0–M3-success.svg)](SCORECARD.md)
 [![Stars](https://img.shields.io/github/stars/Moai-Team-LLC/agentic-product-standard?style=social)](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers)
 
@@ -88,7 +88,7 @@ agentic-product-standard/
         ├── durable-execution/            ← Temporal Workflow + Activity pattern
         ├── eval-driven-dev/              ← Husain/Shankar pyramid + judge calibration
         ├── framework-selection/          ← LangGraph / Claude SDK / OpenAI SDK / others
-        ├── production-readiness/         ← 19-point Definition of Done audit (+ Loop License, L3+)
+        ├── production-readiness/         ← 23-point Definition of Done audit (+ Loop License + measurement science, L3+)
         ├── antipatterns-review/          ← code review through 17 known failure modes
         └── reference-stack/              ← the paved road: install & wire the AgenticProduct family
 ```
@@ -266,7 +266,7 @@ Miss any one and the system stays at L2 (human-in-the-loop), no matter how good 
 
 ## Production readiness — Definition of Done
 
-An agentic product is **not production-ready** until all **19** are satisfied (items 16–19 bind at L3+ unattended operation). Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
+An agentic product is **not production-ready** until all **23** are satisfied (items 16–19 and the L3+ oversight item bind at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists). Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
 
 | Context & state | Tools & security | Reliability | Evals & observability |
 |---|---|---|---|
@@ -331,6 +331,6 @@ The architectural canons (the autonomy ladder, the 5 patterns, single-vs-multi, 
 
 **If this saved you a week of architecture debates, [star the repo](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers) ⭐ so others find it.**
 
-*v3.0 · assembled from production practices as of June 2026*
+*v3.1 · assembled from production practices as of June 2026*
 
 </div>

@@ -19,9 +19,10 @@
 - [ ] **Instruction supply chain.** Skills / prompts / instructions are versioned, have recorded provenance, are eval-gated before deploy, are regression-tested on update, and are audited for trigger collisions (OWASP LLM03).
 - [ ] **Loop economics.** Cost per run *and* cost per **verified** outcome are tracked in traces; per-run and per-window caps are declared.
 - [ ] **Architecture-phase declarations.** The memory model (what is persisted, retention, provenance, replayability) and the determinism map (which steps are deterministic vs. model-driven) were declared at design time, not reconstructed after an incident.
+- [ ] **Human-oversight plan (L3+).** A sampling schedule per autonomy level, a reviewer SLA, and automatic re-escalation triggers (a regression-gate failure or override-rate spike drops the loop to the previous tier); human reviews are captured as stratified labeled data — escalations *plus* a random routine sample (Part V, *Human oversight as a program*).
 
 ---
 
 **Scoring.** All boxes Yes → the loop is licensed for unattended L3+ operation, this release. The first No is your next piece of work. Re-run every release; the score should only ratchet up.
 
-*Definition of Done items 16–19 map to this checklist. The reference implementations of enforcement and measurement are the [AgenticProduct family](../../ECOSYSTEM.md) (AgenticGateway for cost/model, AgenticPerformance for evals/observability, AgenticAssurance for the ingestion-boundary red-team) — paved road, not a mandate (Principle 2).*
+*Definition of Done items 16–19 and the L3+ human-oversight item map to this checklist. The reference implementations of enforcement and measurement are the [AgenticProduct family](../../ECOSYSTEM.md) (AgenticGateway for cost/model, AgenticPerformance for evals/observability, AgenticAssurance for the ingestion-boundary red-team) — paved road, not a mandate (Principle 2).*
