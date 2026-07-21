@@ -104,6 +104,8 @@ log trace → update memory
 
 **Calibration invariant.** The "verify outcome" step is only trust-bearing if the verifier is. A judge whose calibration status is not `calibrated` (Part V, *Judge calibration*) MUST NOT gate autonomous action at L3+, an auto-apply decision, or a release; a low-confidence verdict abstains and escalates rather than passing. A flaky grader in a release gate is the eval-world equivalent of a prompt-enforced permission — it looks like a check and isn't one.
 
+**Gate-integrity invariant.** A gate is trust-bearing only if its green state means the property holds — not that the check was silenced. Weakening a correctness, type-safety, security, or eval gate to make CI pass — disabling a rule repo-wide, `@ts-ignore` / `eslint-disable`, `.skip`, deleting an assertion, lowering a threshold — is a defect, not a fix: it removes the exact protection at the moment it fired. A false positive is a *scoping* problem, not a kill switch — confine the exception to the offending file or glob with a named reason, then re-prove the gate still fires by planting what it must catch (an adversarial check). Note that a passing `tsc` is **not** a substitute for the `no-unsafe-*` / `no-explicit-any` lint family: `any` is assignable to everything by design, so the compiler waves it through and the lint rules are what close that hole. Like a prompt-enforced permission, a disabled gate looks like a check and isn't one. The mechanical form of this invariant — a test that fails if the safety rules are ever flipped off — is exemplified in AgenticMind's shared lint config.
+
 ---
 
 ## Part II. The technology stack
