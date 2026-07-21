@@ -1,4 +1,4 @@
-# The Agentic Product Standard v3.1
+# The Agentic Product Standard v3.2
 
 *The canonical standard for building modern agentic products.*
 
@@ -647,4 +647,4 @@ The standard is not dogma. It is a **tilt of the field** toward the practices th
 
 ---
 
-*v3.1 · assembled from production practices as of June 2026*
+*v3.2 · assembled from production practices as of July 2026*
