@@ -2,9 +2,13 @@ name: commitlint
 
 # This repo is docs-only (no package.json), so it validates commit messages in
 # CI with the self-contained wagoid action rather than a local commitlint
-# install. It reads .commitlintrc.json and installs @commitlint/config-conventional
-# in the action environment. The dependency-free .githooks/commit-msg hook gives
-# contributors the same feedback locally; this job is the backstop.
+# install. configFile is set explicitly: without it wagoid defaults to a
+# nonexistent commitlint.config.mjs and silently falls back to bundled
+# config-conventional, ignoring this repo's .commitlintrc.json. The pointer
+# makes CI enforce the intended rules (header-max-length 72), and wagoid
+# installs @commitlint/config-conventional in the action environment. The
+# dependency-free .githooks/commit-msg hook gives contributors the same
+# feedback locally; this job is the backstop.
 on:
   pull_request:
 
@@ -16,3 +20,5 @@ jobs:
         with:
           fetch-depth: 0
       - uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: .commitlintrc.json
