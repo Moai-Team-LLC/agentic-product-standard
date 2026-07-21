@@ -101,5 +101,15 @@ else
   echo "  $0 --with-agenticmind"
 fi
 
+# ----------------------------------------------------------------------------
+# 3. Wire the dependency-free commit-message hook (Conventional Commits)
+# ----------------------------------------------------------------------------
+# Docs-only repo, so this is a zero-dependency shell hook rather than husky.
+# Only meaningful inside the checkout; CI's commitlint job is the backstop.
+if [ -d "$SCRIPT_DIR/.git" ] && [ -f "$SCRIPT_DIR/.githooks/commit-msg" ]; then
+  git -C "$SCRIPT_DIR" config core.hooksPath .githooks
+  echo "==> Enabled the local commit-message hook (.githooks) — Conventional Commits checked on commit."
+fi
+
 echo
 echo "Done. Open your project in Claude Code — the skill auto-triggers on agentic work."

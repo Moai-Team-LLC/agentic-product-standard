@@ -1,0 +1,18 @@
+name: commitlint
+
+# This repo is docs-only (no package.json), so it validates commit messages in
+# CI with the self-contained wagoid action rather than a local commitlint
+# install. It reads .commitlintrc.json and installs @commitlint/config-conventional
+# in the action environment. The dependency-free .githooks/commit-msg hook gives
+# contributors the same feedback locally; this job is the backstop.
+on:
+  pull_request:
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v6
