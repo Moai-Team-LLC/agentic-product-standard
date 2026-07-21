@@ -9,7 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Claude Code Skills](https://img.shields.io/badge/Claude%20Code-Skills-d97757.svg)](skills/agentic-product-architect)
-[![Standard v3.1](https://img.shields.io/badge/Standard-v3.1-blue.svg)](STANDARD.md)
+[![Standard v3.2](https://img.shields.io/badge/Standard-v3.2-blue.svg)](STANDARD.md)
 [![Self-assessment scorecard](https://img.shields.io/badge/scorecard-M0–M3-success.svg)](SCORECARD.md)
 [![Stars](https://img.shields.io/github/stars/Moai-Team-LLC/agentic-product-standard?style=social)](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers)
 
@@ -333,6 +333,6 @@ The architectural canons (the autonomy ladder, the 5 patterns, single-vs-multi, 
 
 **If this saved you a week of architecture debates, [star the repo](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers) ⭐ so others find it.**
 
-*v3.1 · assembled from production practices as of June 2026*
+*v3.2 · assembled from production practices as of July 2026*
 
 </div>

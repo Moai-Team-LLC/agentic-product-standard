@@ -3,14 +3,18 @@
 All notable changes to The Agentic Product Standard are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [3.2.0] — 2026-07-21
+
+The **Gate Integrity** release. A standard that gates autonomy on evals, judges, and CI is only as trustworthy as those gates — and a gate that has been silenced to make CI pass is not a gate, it just looks like one. This release names *gate integrity* as a first-class trust invariant and a Definition-of-Done item. Origin — a real incident in a reference implementation where a `no-unsafe-*` type-safety lint family was disabled repo-wide to get a green check, quietly removing the net that catches `any` leaking into typed code (the hole `strict` `tsc` leaves open by design).
 
 ### Added
 - **Cycle of Trust (Canon 5)** gains a **gate-integrity invariant** (`STANDARD.md`): a gate is trust-bearing only if its green state means the property holds, not that the check was silenced. Weakening a correctness / type-safety / security / eval gate to pass CI — disabling a rule repo-wide, `@ts-ignore`, `.skip`, deleting an assertion, lowering a threshold — is a defect, not a fix; a false positive is scoped to a file/glob with a named reason and the gate re-proven to still fire. The mechanical form (a test that fails if the safety rules are flipped off) is exemplified in AgenticMind's shared lint config.
 - **SCORECARD** gains a *gate-integrity* control under *Maintenance discipline* (M1).
 - **Definition of Done 23 → 24** (`STANDARD.md`, Part III): new item **24 — gate integrity** ("no safety-class gate silenced to pass CI"), binding wherever a correctness/type-safety/security/eval gate exists. The `production-readiness` sub-skill, README, and skill index updated to the 24-point count; point 24 added to the skill's enumerated audit.
 
-_Version number intentionally left as `[Unreleased]`: the maintainer cuts the release tag (and the `Standard vX.Y` badge bump) — `release.yml` fires only on a `v*` tag._
+Per the standard's threshold philosophy, this mandates *that* a green gate must mean the property holds — not any particular tool. The mechanical exemplar (a tripwire test asserting the safety rules stay `error`) lives in the reference implementation, AgenticMind.
+
+[3.2.0]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v3.2.0
 
 ## [3.1.0] — 2026-07-13
 
