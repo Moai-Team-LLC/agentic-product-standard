@@ -29,7 +29,7 @@ Especially welcome:
 
 1. Fork the repo and create a branch: `git checkout -b fix/framework-rankings`.
 2. Make your change. Edit the relevant `STANDARD.md` section and/or the matching `skills/.../SKILL.md`.
-3. Commit using [Conventional Commits](https://www.conventionalcommits.org/) — e.g. `docs: update memory-vendor matrix for 2026 Q3`.
+3. Commit using [Conventional Commits](https://www.conventionalcommits.org/) — e.g. `docs: update memory-vendor matrix for 2026 Q3`. Running `./setup.sh` wires a dependency-free local hook (`.githooks/commit-msg`) that checks this on commit; CI validates every PR commit with `commitlint`. To enable the hook without a full setup: `git config core.hooksPath .githooks`.
 4. Open a PR describing **what changed and why**, with sources for any factual claim.
 
 ## Reporting issues without a PR
