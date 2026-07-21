@@ -110,6 +110,7 @@ Each item lists the **gate level** at which it becomes mandatory. Items map to t
 - [ ] **(M3)** Tenant-scoped budgets, cache, and routing with a cross-tenant leakage test in CI.
 
 ### Maintenance discipline
+- [ ] **(M1)** No safety-class gate is disabled repo-wide to pass CI (correctness test, type-safety / `no-unsafe-*` / `no-explicit-any`, security lint, coverage/mutation floor); false positives are scoped to a file/glob with a named reason, and the gate is re-proven to still fire (Canon 5, *gate-integrity invariant*).
 - [ ] **(M2)** Every forbidden action has a code-asserted anti-criterion (not prose alone).
 - [ ] **(M3)** Rules are tagged anti-fragile vs. fragile; fragile scaffolding is re-tested each model upgrade (bitter-pill).
 

@@ -3,6 +3,14 @@
 All notable changes to The Agentic Product Standard are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+- **Cycle of Trust (Canon 5)** gains a **gate-integrity invariant** (`STANDARD.md`): a gate is trust-bearing only if its green state means the property holds, not that the check was silenced. Weakening a correctness / type-safety / security / eval gate to pass CI — disabling a rule repo-wide, `@ts-ignore`, `.skip`, deleting an assertion, lowering a threshold — is a defect, not a fix; a false positive is scoped to a file/glob with a named reason and the gate re-proven to still fire. The mechanical form (a test that fails if the safety rules are flipped off) is exemplified in AgenticMind's shared lint config.
+- **SCORECARD** gains a *gate-integrity* control under *Maintenance discipline* (M1).
+
+_Deferred to the next version cut: formalize as a numbered Definition of Done item (23 → 24) with the matching README/badge count update._
+
 ## [3.1.0] — 2026-07-13
 
 The **Eval-Science** release. Deepens the Loop License (v3.0) with the measurement discipline that makes an autonomy license trustworthy: you cannot license a loop on evals and judges you have not shown to be sound. Origin — a gap analysis against classical ML evaluation practice (judge calibration, retrieval ranking, annotation ops, drift monitoring, HITL operations).
