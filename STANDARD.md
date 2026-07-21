@@ -246,7 +246,7 @@ The reference implementation of this layer (together with Layer 1) is **[Agentic
 
 ## Part III. Production readiness — Definition of Done
 
-An agentic product is **not production-ready** until all 23 items are satisfied (items 16–19 and the L3+ oversight item bind only at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists):
+An agentic product is **not production-ready** until all 24 items are satisfied (items 16–19 and the L3+ oversight item bind only at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists; item 24 binds wherever a correctness/type-safety/security/eval gate exists):
 
 ### Context and state
 - [ ] **1.** Context utilization < 40% in a typical cycle
@@ -288,6 +288,9 @@ An agentic product is **not production-ready** until all 23 items are satisfied 
 - [ ] **22.** Golden sets declare **labeling provenance** (rubric version, labeler type, date, agreement); unanchored sets do not back a license or release gate; rubrics are versioned instruction artifacts with judge re-baselining on change (Part V · *Ground-truth discipline* · Part IV)
 - [ ] **23.** Input drift monitored vs. the eval distribution with a declared **eval-refresh policy**; provider-hosted models canaried, a detected change triggering the eval regression gate (DoD 12) (Part V · *Drift monitoring*)
 - [ ] **(L3+)** The Loop License declares a **human-oversight plan** (sampling schedule per level, reviewer SLA, re-escalation triggers); human reviews captured as stratified labeled data (Part V · *Human oversight*)
+
+### Gate integrity
+- [ ] **24.** No safety-class gate is disabled repo-wide to pass CI — a correctness test, type-safety (`no-unsafe-*` / `no-explicit-any`), security lint, or a coverage/mutation floor; a false positive is scoped to a file/glob with a named reason and the gate re-proven to still fire (Canon 5, *gate-integrity invariant*). Binds wherever such a gate exists.
 
 > **Score yourself.** [`SCORECARD.md`](SCORECARD.md) turns this DoD into a Yes/No maturity self-assessment (M0–M3, mapped to the Autonomy Ladder) — run it with the team against a real deployment each release.
 

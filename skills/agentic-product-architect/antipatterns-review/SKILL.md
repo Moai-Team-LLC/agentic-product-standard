@@ -277,7 +277,7 @@ Be specific. Quote the user's code or design when pointing to a problem.
 
 - It is not a generic code review (style, performance, testing patterns)
 - It is not a security audit (use a security review for that)
-- It is not a complete production-readiness check (use `production-readiness/` for the full 23-point DoD)
+- It is not a complete production-readiness check (use `production-readiness/` for the full 24-point DoD)
 
 Focus on the 17 antipatterns; route the user to the right place for other concerns.
 

@@ -1,17 +1,17 @@
 ---
 name: production-readiness
-description: Audit an agentic product against the 23-point Definition of Done before launch. Covers context, tools, permissions, reliability, evals, observability, security, cost, the Loop License, and measurement science (judge calibration, retrieval metrics, ground-truth provenance, drift, human oversight) — the minimum bar for production. Use whenever the user is preparing to launch / ship / deploy an agentic product, asks "is this production-ready," wants a pre-launch checklist, or is doing a code review before going live.
+description: Audit an agentic product against the 24-point Definition of Done before launch. Covers context, tools, permissions, reliability, evals, observability, security, cost, the Loop License, and measurement science (judge calibration, retrieval metrics, ground-truth provenance, drift, human oversight) — the minimum bar for production. Use whenever the user is preparing to launch / ship / deploy an agentic product, asks "is this production-ready," wants a pre-launch checklist, or is doing a code review before going live.
 ---
 
-# Production Readiness — 23-Point Definition of Done
+# Production Readiness — 24-Point Definition of Done
 
-An agentic product is not production-ready until all 23 points pass. Each point catches a class of failures that has hit real products.
+An agentic product is not production-ready until all 24 points pass. Each point catches a class of failures that has hit real products.
 
 This is an audit checklist, not a feature list. Walk through it with the user; mark each as pass, gap, or N/A with explicit reasoning. Gaps must be closed or accepted with eyes open.
 
 > **The paved road.** Many of these points come satisfied out of the box if you run the **[AgenticProduct family](../../../ECOSYSTEM.md)** reference stack — memory (AgenticMind), runtime & fleet ops (AgenticOps), evals & observability (AgenticPerformance), the model & cost plane (AgenticGateway), and Layer-8 red-teaming (AgenticAssurance). It's the fastest way to green, not a requirement — satisfy any point your own way (Principle 2). See the [`reference-stack`](../reference-stack/SKILL.md) skill.
 
-## The 23 points
+## The 24 points
 
 ### Context and state
 
@@ -289,6 +289,17 @@ Skip this whole section if the product is single-tenant or deployed per customer
 
 **Common gap:** "human review" that only sees escalated hard cases, skewing the review-derived golden data.
 
+### Gate integrity
+
+#### 24. No safety gate silenced to pass CI
+- [ ] No safety-class gate is disabled repo-wide to make CI green — a correctness test, type-safety (`no-unsafe-*` / `no-explicit-any`), security lint, or a coverage/mutation floor
+- [ ] Any false positive is scoped to a file/glob with a named reason (not a repo-wide `off`, blanket `@ts-ignore`/`eslint-disable`, `.skip`, or a lowered threshold)
+- [ ] After scoping, the gate is re-proven to still fire — plant the thing it must catch and confirm it's caught
+
+**Why:** a gate is trust-bearing only if green means the property holds, not that the check was silenced; disabling it removes the exact protection at the moment it fired. `tsc` passing is not a substitute for the `no-unsafe-*` family — `any` is assignable to everything by design, so the compiler waves it through (Canon 5, *gate-integrity invariant*).
+
+**Common gap:** a flaky lint rule disabled repo-wide to unblock CI, silently blinding every file instead of the one that misfired.
+
 ---
 
 ## Audit posture
@@ -300,9 +311,9 @@ When running this audit with the user:
 - **Estimate effort to close each gap.** Rank them by risk-adjusted cost.
 - **Make the explicit launch decision.** "Launch with these N gaps accepted, address in week 1" is a valid choice. "Launch and hope" is not.
 
-## Post-launch hardening (after the 23 points)
+## Post-launch hardening (after the 24 points)
 
-Once the 23 are met, the next tier of investments:
+Once the 24 are met, the next tier of investments:
 
 - **A/B testing infrastructure** — compare new prompts/models/tools against current production
 - **Cost telemetry per request, per user, per agent type** — find the expensive calls
@@ -330,7 +341,7 @@ If the user is short on time, prioritize closing these.
 
 When the audit completes, the user should have:
 
-1. A pass/gap/N/A scorecard across all 23 points
+1. A pass/gap/N/A scorecard across all 24 points
 2. Effort estimate to close each gap
 3. A risk-adjusted prioritization
 4. An explicit launch decision with accepted risks documented

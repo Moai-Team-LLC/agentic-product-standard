@@ -88,7 +88,7 @@ agentic-product-standard/
         ├── durable-execution/            ← Temporal Workflow + Activity pattern
         ├── eval-driven-dev/              ← Husain/Shankar pyramid + judge calibration
         ├── framework-selection/          ← LangGraph / Claude SDK / OpenAI SDK / others
-        ├── production-readiness/         ← 23-point Definition of Done audit (+ Loop License + measurement science, L3+)
+        ├── production-readiness/         ← 24-point Definition of Done audit (+ Loop License + measurement science, L3+)
         ├── antipatterns-review/          ← code review through 17 known failure modes
         └── reference-stack/              ← the paved road: install & wire the AgenticProduct family
 ```
@@ -268,7 +268,7 @@ Miss any one and the system stays at L2 (human-in-the-loop), no matter how good 
 
 ## Production readiness — Definition of Done
 
-An agentic product is **not production-ready** until all **23** are satisfied (items 16–19 and the L3+ oversight item bind at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists). Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
+An agentic product is **not production-ready** until all **24** are satisfied (items 16–19 and the L3+ oversight item bind at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists). Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
 
 | Context & state | Tools & security | Reliability | Evals & observability |
 |---|---|---|---|
