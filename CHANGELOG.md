@@ -3,6 +3,19 @@
 All notable changes to The Agentic Product Standard are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+- **Layer 5 (Durable execution) gains a durable-HITL invariant** (`STANDARD.md`,
+  Part II): a human-in-the-loop request is a **tool call the agent emits** (MCP
+  elicitation, Layer 2) that **suspends the workflow on the same durable substrate**,
+  resumed by the human's reply as the next event — not an in-process block or a
+  side-channel notification the loop waits on (which loses the work on a crash).
+  Unifies the HITL layer (Canon 4), durable execution (Layer 5), and the Loop
+  License escalation path (Part IV) as one durable-tool-call pattern; folds in
+  12-Factor-Agents F7 (contact humans with tool calls) atop the F6/F12 durability
+  already at Layer 5.
+
 ## [3.2.0] — 2026-07-21
 
 The **Gate Integrity** release. A standard that gates autonomy on evals, judges, and CI is only as trustworthy as those gates — and a gate that has been silenced to make CI pass is not a gate, it just looks like one. This release names *gate integrity* as a first-class trust invariant and a Definition-of-Done item. Origin — a real incident in a reference implementation where a `no-unsafe-*` type-safety lint family was disabled repo-wide to get a green check, quietly removing the net that catches `any` leaking into typed code (the hole `strict` `tsc` leaves open by design).
