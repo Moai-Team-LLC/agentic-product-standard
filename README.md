@@ -35,6 +35,7 @@ Most teams ship agent demos. Few ship agents that survive contact with productio
 - [The five composition patterns](#the-five-composition-patterns)
 - [The 8-layer harness](#the-8-layer-harness)
 - [The 10-question checklist](#-the-10-question-checklist)
+- [The decision tree](templates/decision-tree/README.md)
 - [Score yourself](#-score-yourself)
 - [The Loop License](#-the-loop-license)
 - [Production readiness — Definition of Done](#production-readiness--definition-of-done)
@@ -74,6 +75,7 @@ agentic-product-standard/
 ├── templates/ci/eval-gate.yml           ← CI workflow that blocks merges on eval regression
 ├── templates/loop-license/CHECKLIST.md  ← one-page Loop License gate (six gates, L3+)
 ├── templates/graph-license/CHECKLIST.md ← one-page Graph License gate (composition, L3+)
+├── templates/decision-tree/             ← which architecture to build, and the license it owes
 ├── examples/agenticmind-case-study.md   ← reference implementation, audited against the canon
 ├── docs/adr/                            ← architecture decision records (why the repo is shaped this way)
 └── skills/                              ← Claude Code skill set (operationalizes the standard)
@@ -245,6 +247,8 @@ Run this before drafting any architecture. It unblocks 80% of design debates.
 ```
 
 If you can't answer half of these, **slow down and answer them together — don't write code yet.**
+
+Once you can, [**the decision tree**](templates/decision-tree/README.md) turns these answers into a named architecture **and the license it owes** — every leaf lands on both, because the shape is the easy half.
 
 ## 📊 Score yourself
 

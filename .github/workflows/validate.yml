@@ -48,6 +48,28 @@ jobs:
           done < <(find skills -name 'SKILL.md')
           exit $status
 
+      - name: Decision tree stays derived from the 10-question canon
+        run: |
+          set -euo pipefail
+          # The 10-question checklist in README.md is the single source of truth;
+          # templates/decision-tree/ is a surface over it. Every canon question must
+          # still appear verbatim in the tree's derivation table, so that editing the
+          # canon without revisiting the tree fails here instead of drifting silently.
+          status=0
+          count=0
+          while IFS= read -r q; do
+            count=$((count + 1))
+            if ! grep -qF "$q" templates/decision-tree/README.md; then
+              echo "::error file=templates/decision-tree/README.md::Canon question not carried into the decision tree: $q"
+              status=1
+            fi
+          done < <(awk '/^## .*10-question checklist/{f=1;next} f&&/^## /{exit} f&&/^□ /{sub(/^□ /,"");print}' README.md)
+          if [ "$count" -ne 10 ]; then
+            echo "::error file=README.md::Expected 10 canon questions, found $count — the checklist block moved or changed shape; update this check with it."
+            status=1
+          fi
+          exit $status
+
       - name: AGENT_STANDARD.md root copy stays in sync with the bundled skill copy
         run: |
           # The single-agent standard is first-class at the repo root AND bundled
