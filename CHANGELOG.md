@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-## [3.3.0] — 2026-07-29
+## [3.3.0] — 2026-08-05
 
 The **License Composition** release. v3.0 gave a *loop* a license; a graph of licensed loops multiplies that question rather than answering it. The vocabulary for wiring agents together — nodes, edges, shared state, fan-out — crystallized in the market as *graph engineering* one rung above loop engineering, and arrived with no governance attached. This release supplies it: Part IV now binds the **topology**, not the runtime, and takes no position on which framework draws the graph.
 
