@@ -1,26 +1,26 @@
 ---
 name: antipatterns-review
-description: Review existing agentic code, designs, or plans through the lens of the 17 canonical antipatterns. Diagnose what's likely to fail in production. Use whenever the user asks you to review their agent code, asks "what's wrong with this design," is debugging mysterious failures, or wants a second opinion on an architecture. Also use proactively when you notice any of the 17 antipatterns in a conversation, even if the user didn't ask for review.
+description: Review existing agentic code, designs, or plans through the lens of the 19 canonical antipatterns. Diagnose what's likely to fail in production. Use whenever the user asks you to review their agent code, asks "what's wrong with this design," is debugging mysterious failures, or wants a second opinion on an architecture. Also use proactively when you notice any of the 19 antipatterns in a conversation, even if the user didn't ask for review.
 ---
 
 # Antipatterns Review
 
-This skill is your code-review mode. Walk through the user's design, code, or plan and check for each of the 17 canonical antipatterns. For each found, name it, explain the failure mode it produces, and propose the fix.
+This skill is your code-review mode. Walk through the user's design, code, or plan and check for each of the 19 canonical antipatterns. For each found, name it, explain the failure mode it produces, and propose the fix.
 
-This is not a generic "review my code." It's a targeted scan against the 17 known failure patterns that have hit real production agentic products.
+This is not a generic "review my code." It's a targeted scan against the 19 known failure patterns that have hit real production agentic products.
 
 ## How to apply this skill
 
 When invoked, do this:
 
 1. Ask the user to share what you're reviewing (code, design doc, screenshot, description)
-2. Walk through the 17 antipatterns in order
+2. Walk through the 19 antipatterns in order
 3. For each: pass / present / unclear, with evidence
 4. For each "present": name it, explain the failure, propose the fix
 5. Prioritize by severity (critical > high > medium > low)
 6. Summarize the top 3 to fix first
 
-## The 17 antipatterns
+## The 19 antipatterns
 
 ### 1. Multi-agent before single-agent baseline
 
@@ -229,6 +229,30 @@ When invoked, do this:
 
 ---
 
+### 18. Prose topology counted as a control
+
+**Signal:** the graph's routing is described in an SOP, a skill, or a system prompt — "the researcher hands off to the reviewer, who never writes to production" — and that description is cited in a design review or a license as though it constrained anything. Nothing in the runtime or the code prevents a different route.
+
+**Failure mode:** the topology holds right up until the moment it matters. Under an ambiguous state, a novel input, or an injected instruction, the agent takes an edge the diagram does not have, and every control that assumed the diagram silently no longer applies. The architecture diagram and the running system diverge with no error, because prose cannot fail loudly.
+
+**Fix:** mark every edge class **enforced** or **declared** at architecture time. Enforced means the runtime or the code makes the other routes unavailable. Count only enforced edges as controls in any license; declared edges are documentation. This is the graph-scale form of "permissions enforced by code, not by prompt" (antipattern 4) — an instruction-defined route binds exactly as well as an instruction-defined permission.
+
+**Severity:** High — controls that are believed but not enforced
+
+---
+
+### 19. License inheritance by wiring
+
+**Signal:** "every agent in the graph is production-ready, so the graph is production-ready." Per-node evals exist; there is no end-to-end eval on the composition. Cost caps are per-node with no aggregate ceiling. The kill switch was tested against idle nodes, never against branches in flight. Each node escalates to its own owner.
+
+**Failure mode:** the graph's risks are the ones no node owns. Nodes that pass in isolation fail in composition; fan-out multiplies spend past every per-node cap while each cap reads green; an unlicensed or uncalibrated node on an action path lends the whole path an autonomy it never earned; and when something goes wrong, the escalation path forks and no human is on the hook for the system.
+
+**Fix:** give the graph its own **Graph License** — the six gates re-evaluated at graph scope, plus the weakest-link bound (a path's autonomy level is the minimum licensed level of any node on it), shared-state provenance, fan-in as a declared verification point, and one named escalation owner. Run [`templates/graph-license/CHECKLIST.md`](../../../templates/graph-license/CHECKLIST.md).
+
+**Severity:** Critical — unearned autonomy on paths that reach production
+
+---
+
 ## Severity scale (when reporting)
 
 | Severity | Meaning | Action |
@@ -277,15 +301,15 @@ Be specific. Quote the user's code or design when pointing to a problem.
 
 - It is not a generic code review (style, performance, testing patterns)
 - It is not a security audit (use a security review for that)
-- It is not a complete production-readiness check (use `production-readiness/` for the full 24-point DoD)
+- It is not a complete production-readiness check (use `production-readiness/` for the full 25-point DoD)
 
-Focus on the 17 antipatterns; route the user to the right place for other concerns.
+Focus on the 19 antipatterns; route the user to the right place for other concerns.
 
 ## Output of this skill
 
 When the review completes, the user should have:
 
-1. A pass/present/unclear scorecard for all 17 antipatterns
+1. A pass/present/unclear scorecard for all 19 antipatterns
 2. For each "present": named issue, failure mode, proposed fix
 3. Severity ranking
 4. Top 3 to fix this week, with concrete next steps

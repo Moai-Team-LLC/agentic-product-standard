@@ -1,17 +1,17 @@
 ---
 name: production-readiness
-description: Audit an agentic product against the 24-point Definition of Done before launch. Covers context, tools, permissions, reliability, evals, observability, security, cost, the Loop License, and measurement science (judge calibration, retrieval metrics, ground-truth provenance, drift, human oversight) — the minimum bar for production. Use whenever the user is preparing to launch / ship / deploy an agentic product, asks "is this production-ready," wants a pre-launch checklist, or is doing a code review before going live.
+description: Audit an agentic product against the 25-point Definition of Done before launch. Covers context, tools, permissions, reliability, evals, observability, security, cost, the Loop License, and measurement science (judge calibration, retrieval metrics, ground-truth provenance, drift, human oversight) — the minimum bar for production. Use whenever the user is preparing to launch / ship / deploy an agentic product, asks "is this production-ready," wants a pre-launch checklist, or is doing a code review before going live.
 ---
 
-# Production Readiness — 24-Point Definition of Done
+# Production Readiness — 25-Point Definition of Done
 
-An agentic product is not production-ready until all 24 points pass. Each point catches a class of failures that has hit real products.
+An agentic product is not production-ready until all 25 points pass. Each point catches a class of failures that has hit real products.
 
 This is an audit checklist, not a feature list. Walk through it with the user; mark each as pass, gap, or N/A with explicit reasoning. Gaps must be closed or accepted with eyes open.
 
 > **The paved road.** Many of these points come satisfied out of the box if you run the **[AgenticProduct family](../../../ECOSYSTEM.md)** reference stack — memory (AgenticMind), runtime & fleet ops (AgenticOps), evals & observability (AgenticPerformance), the model & cost plane (AgenticGateway), and Layer-8 red-teaming (AgenticAssurance). It's the fastest way to green, not a requirement — satisfy any point your own way (Principle 2). See the [`reference-stack`](../reference-stack/SKILL.md) skill.
 
-## The 24 points
+## The 25 points
 
 ### Context and state
 
@@ -302,6 +302,22 @@ Skip this whole section if the product is single-tenant or deployed per customer
 
 ---
 
+### Composition (multi-agent)
+
+#### 25. Graph License for any unattended graph of agents
+- [ ] The six gates re-evaluated at **graph** scope: graph-level golden tasks (end-to-end, not the union of per-node suites) · regression gate on that set · blast radius as the **union** of node radii **plus the shared state store** · cost caps **per-node and aggregate** · a kill switch tested against **in-flight parallel branches** · **one** named escalation owner for the graph
+- [ ] **Weakest-link bound** holds: no path to an external action declares an autonomy level above the minimum licensed level of any node on it
+- [ ] Shared state carries **writer provenance** (producing node, timestamp, `verified_by` / `unverified`); consumers can filter on it; no external action fires from an unverified field
+- [ ] Every **fan-in** is a declared verification point or an explicit pass-through with rationale
+- [ ] Every **edge class** is marked **enforced** or **declared**; declared-only edges are not counted as controls
+- [ ] Graph eval suite includes **poisoned-state** scenarios (a hijacked or hallucinating node writing to shared state)
+
+**Why:** a graph of licensed loops is not a licensed graph. The failures that hurt are exactly the ones no single node owns — nodes that pass in isolation failing in composition, fan-out multiplying spend past every per-node cap while each reads green, an uncalibrated node lending a path autonomy it never earned, and an escalation path that forks so no human is on the hook (Part IV, *License Composition*; [`CHECKLIST`](../../../templates/graph-license/CHECKLIST.md)).
+
+**Common gap:** the topology is drawn in an SOP or a system prompt and then cited as a control, though nothing in the runtime prevents a different route (antipattern 18).
+
+---
+
 ## Audit posture
 
 When running this audit with the user:
@@ -311,9 +327,9 @@ When running this audit with the user:
 - **Estimate effort to close each gap.** Rank them by risk-adjusted cost.
 - **Make the explicit launch decision.** "Launch with these N gaps accepted, address in week 1" is a valid choice. "Launch and hope" is not.
 
-## Post-launch hardening (after the 24 points)
+## Post-launch hardening (after the 25 points)
 
-Once the 24 are met, the next tier of investments:
+Once the 25 are met, the next tier of investments:
 
 - **A/B testing infrastructure** — compare new prompts/models/tools against current production
 - **Cost telemetry per request, per user, per agent type** — find the expensive calls
@@ -341,7 +357,7 @@ If the user is short on time, prioritize closing these.
 
 When the audit completes, the user should have:
 
-1. A pass/gap/N/A scorecard across all 24 points
+1. A pass/gap/N/A scorecard across all 25 points
 2. Effort estimate to close each gap
 3. A risk-adjusted prioritization
 4. An explicit launch decision with accepted risks documented

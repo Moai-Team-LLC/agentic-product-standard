@@ -5,7 +5,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [3.3.0] — 2026-07-29
+
+The **License Composition** release. v3.0 gave a *loop* a license; a graph of licensed loops multiplies that question rather than answering it. The vocabulary for wiring agents together — nodes, edges, shared state, fan-out — crystallized in the market as *graph engineering* one rung above loop engineering, and arrived with no governance attached. This release supplies it: Part IV now binds the **topology**, not the runtime, and takes no position on which framework draws the graph.
+
+The load-bearing claim is the negative one. **A graph of licensed loops is not a licensed graph.** The risks that hurt are precisely the ones no single node owns: nodes that pass in isolation failing in composition, fan-out multiplying spend past every per-node cap while each cap reads green, an uncalibrated node lending a whole path an autonomy it never earned, and an escalation path that forks until no human is on the hook for the system.
+
 ### Added
+- **Part IV: License Composition** (`STANDARD.md`) — the **Graph License**: the six Loop License gates re-evaluated at graph scope (graph-level golden tasks rather than the union of per-node suites; a regression gate on that set; blast radius as the union of node radii **plus the shared state store**; cost caps **per-node and aggregate**, because fan-out multiplies burn; a kill switch verified against **in-flight parallel branches**; and one escalation path with one named owner). Plus four bounds that only exist at graph scale: the **weakest-link bound** (a path's autonomy level is the *minimum* licensed level of any node on it — an unlicensed or uncalibrated node caps that path at L2); **shared-state provenance** (writer, timestamp, `verified_by`/`unverified`, filterable, with no external action firing from an unverified field); **fan-in as a verification point** (unverified aggregation upstream of an external action is prohibited at L3+ — merging adds confidence, not correctness, and treating the aggregate as validated is self-verification wearing a topology); and **edges as ingestion boundaries** (a node's output is untrusted input downstream, with poisoned-state scenarios in the graph eval suite, and reviewer nodes calibrated and decorrelated **per edge**).
+- **Declared vs. enforced topology** (`STANDARD.md`, Part IV) — architecture-phase declarations now state, per edge class, whether routing is **enforced** (the runtime or the code makes other routes unavailable) or **declared** (an SOP, a skill, a prompt). **Declared-only edges MUST NOT be counted as controls in any license.** The graph-scale form of "permissions enforced by code, not by prompt" (DoD 5): an instruction-defined route binds exactly as well as an instruction-defined permission — which is to say not at all under adversarial input (Principle 6).
+- **Definition of Done grew 24 → 25.** New item **25** (Graph License), binding wherever more than one agent is composed. Mirrored in the `production-readiness` sub-skill.
+- **[`templates/graph-license/CHECKLIST.md`](templates/graph-license/CHECKLIST.md)** — the one-page gate, sibling of the loop-license checklist and explicitly assuming it: per-node inventory, the six gates at graph scope, **path analysis** (every path to an external action with its weakest link), shared-state provenance, fan-in points and their verification method, per-edge-class enforcement declaration, kill-switch test record, and the named escalation owner.
+- **Anti-patterns 17 → 19.** **18. Prose topology counted as a control** — a route described in an SOP or a system prompt, cited in a review as though it constrained anything; it holds until the moment it matters, and prose cannot fail loudly. **19. License inheritance by wiring** — "every agent is production-ready, so the graph is." Both carry *Signal · Failure mode · Fix · Severity* in the `antipatterns-review` sub-skill.
+- **Glossary bridge extended to the graph-engineering lexicon**, plus a mapping of the market's five-layer ladder (prompt → context → harness → loop → graph engineering) onto the constructs this standard already governs. The ladder is a useful map of what people are talking about; it is not an architecture.
 - **Layer 5 (Durable execution) gains a durable-HITL invariant** (`STANDARD.md`,
   Part II): a human-in-the-loop request is a **tool call the agent emits** (MCP
   elicitation, Layer 2) that **suspends the workflow on the same durable substrate**,
@@ -15,6 +27,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   License escalation path (Part IV) as one durable-tool-call pattern; folds in
   12-Factor-Agents F7 (contact humans with tool calls) atop the F6/F12 durability
   already at Layer 5.
+
+[3.3.0]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v3.3.0
 
 ## [3.2.0] — 2026-07-21
 

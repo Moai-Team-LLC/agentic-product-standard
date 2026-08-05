@@ -9,7 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Claude Code Skills](https://img.shields.io/badge/Claude%20Code-Skills-d97757.svg)](skills/agentic-product-architect)
-[![Standard v3.2](https://img.shields.io/badge/Standard-v3.2-blue.svg)](STANDARD.md)
+[![Standard v3.3](https://img.shields.io/badge/Standard-v3.3-blue.svg)](STANDARD.md)
 [![Self-assessment scorecard](https://img.shields.io/badge/scorecard-M0–M3-success.svg)](SCORECARD.md)
 [![Stars](https://img.shields.io/github/stars/Moai-Team-LLC/agentic-product-standard?style=social)](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers)
 
@@ -73,6 +73,7 @@ agentic-product-standard/
 ├── templates/security/                  ← red-team kit: lethal-trifecta gate, injection suite, MCP pin
 ├── templates/ci/eval-gate.yml           ← CI workflow that blocks merges on eval regression
 ├── templates/loop-license/CHECKLIST.md  ← one-page Loop License gate (six gates, L3+)
+├── templates/graph-license/CHECKLIST.md ← one-page Graph License gate (composition, L3+)
 ├── examples/agenticmind-case-study.md   ← reference implementation, audited against the canon
 ├── docs/adr/                            ← architecture decision records (why the repo is shaped this way)
 └── skills/                              ← Claude Code skill set (operationalizes the standard)
@@ -88,8 +89,8 @@ agentic-product-standard/
         ├── durable-execution/            ← Temporal Workflow + Activity pattern
         ├── eval-driven-dev/              ← Husain/Shankar pyramid + judge calibration
         ├── framework-selection/          ← LangGraph / Claude SDK / OpenAI SDK / others
-        ├── production-readiness/         ← 24-point Definition of Done audit (+ Loop License + measurement science, L3+)
-        ├── antipatterns-review/          ← code review through 17 known failure modes
+        ├── production-readiness/         ← 25-point Definition of Done audit (+ Loop License + measurement science, L3+)
+        ├── antipatterns-review/          ← code review through 19 known failure modes
         └── reference-stack/              ← the paved road: install & wire the AgenticProduct family
 ```
 
@@ -268,7 +269,7 @@ Miss any one and the system stays at L2 (human-in-the-loop), no matter how good 
 
 ## Production readiness — Definition of Done
 
-An agentic product is **not production-ready** until all **24** are satisfied (items 16–19 and the L3+ oversight item bind at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists). Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
+An agentic product is **not production-ready** until all **25** are satisfied (items 16–19 and the L3+ oversight item bind at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists; item 25 binds wherever more than one agent is composed). Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
 
 | Context & state | Tools & security | Reliability | Evals & observability |
 |---|---|---|---|
@@ -300,6 +301,8 @@ The fastest way to recognize a doomed agent project — the skill set's `antipat
 15. Token passthrough / over-scoped OAuth (confused deputy)
 16. No budget ceiling on autonomous sessions
 17. Peer-to-peer multi-agent buses instead of an orchestrator
+18. Prose topology counted as a control (an SOP-defined route is not a guardrail)
+19. License inheritance by wiring (a graph of licensed loops is not a licensed graph)
 
 ## Reading list
 
@@ -333,6 +336,6 @@ The architectural canons (the autonomy ladder, the 5 patterns, single-vs-multi, 
 
 **If this saved you a week of architecture debates, [star the repo](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers) ⭐ so others find it.**
 
-*v3.2 · assembled from production practices as of July 2026*
+*v3.3 · assembled from production practices as of July 2026*
 
 </div>

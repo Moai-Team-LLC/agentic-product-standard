@@ -1,4 +1,4 @@
-# The Agentic Product Standard v3.2
+# The Agentic Product Standard v3.3
 
 *The canonical standard for building modern agentic products.*
 
@@ -248,7 +248,7 @@ The reference implementation of this layer (together with Layer 1) is **[Agentic
 
 ## Part III. Production readiness — Definition of Done
 
-An agentic product is **not production-ready** until all 24 items are satisfied (items 16–19 and the L3+ oversight item bind only at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists; item 24 binds wherever a correctness/type-safety/security/eval gate exists):
+An agentic product is **not production-ready** until all 25 items are satisfied (items 16–19 and the L3+ oversight item bind only at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists; item 24 binds wherever a correctness/type-safety/security/eval gate exists; item 25 binds wherever more than one agent is composed):
 
 ### Context and state
 - [ ] **1.** Context utilization < 40% in a typical cycle
@@ -293,6 +293,9 @@ An agentic product is **not production-ready** until all 24 items are satisfied 
 
 ### Gate integrity
 - [ ] **24.** No safety-class gate is disabled repo-wide to pass CI — a correctness test, type-safety (`no-unsafe-*` / `no-explicit-any`), security lint, or a coverage/mutation floor; a false positive is scoped to a file/glob with a named reason and the gate re-proven to still fire (Canon 5, *gate-integrity invariant*). Binds wherever such a gate exists.
+
+### Composition (multi-agent)
+- [ ] **25.** **Graph License** satisfied for any unattended graph of agents: the six gates re-evaluated at graph scope (graph-level golden tasks, regression gate, blast radius as the union of node radii **plus** the shared state store, per-node **and** aggregate cost caps, a kill switch tested against in-flight parallel branches, one named escalation owner); the **weakest-link bound** holds on every path to an external action; shared state carries writer provenance and verification status; every fan-in is a declared verification point or a rationalized pass-through; every edge class is marked **enforced** or **declared**, and declared-only edges are not counted as controls (Part IV · [`CHECKLIST`](templates/graph-license/CHECKLIST.md))
 
 > **Score yourself.** [`SCORECARD.md`](SCORECARD.md) turns this DoD into a Yes/No maturity self-assessment (M0–M3, mapped to the Autonomy Ladder) — run it with the team against a real deployment each release.
 
@@ -385,9 +388,61 @@ Two properties decide whether a loop is operable, and both MUST be **declared du
 
 These are **mandatory sections of the Agent Contract**, alongside the stop conditions above.
 
-### Glossary bridge — the loop-engineering lexicon
+### License Composition — graphs of licensed loops
+
+Wiring loops into a graph — nodes doing work, edges routing between them, shared state flowing underneath — **multiplies** the Loop License question instead of answering it. The market calls this *graph engineering*. This section defines how licenses compose.
+
+It binds the **topology, not the runtime**: the requirements below take no position on which framework draws the graph (that is Layer 7's question), and they hold whether the edges are a runtime construct, a set of queues, or an orchestrator calling sub-agents.
+
+> **MUST — no license inheritance by wiring.** A graph of licensed loops is not itself licensed. A graph operating unattended MUST hold its own **Graph License**: the six gates, re-evaluated at *graph* scope.
+> 1. **Eval pass-rate threshold** on **graph-level golden tasks** — end-to-end outcomes, not the union of per-node suites. Nodes that each pass in isolation routinely fail in composition.
+> 2. **Regression gate** on that graph-level set (DoD 12).
+> 3. **Declared blast radius** — the **union** of every node's radius **plus the shared state store**, which is a blast surface in its own right.
+> 4. **Cost caps — per-node *and* aggregate.** Fan-out multiplies burn: per-node caps alone do not bound a graph, because the graph's spend is the product of its branching, not the max of its nodes.
+> 5. **Kill switch** that verifiably halts **all** nodes — including in-flight parallel branches. "Verifiably" means tested, with the in-flight case in the test.
+> 6. **Escalation path** — **one** path with **one** named owner for the graph as a whole. A graph in which each node escalates to its own owner has no owner.
+
+The one-page [`templates/graph-license/CHECKLIST.md`](templates/graph-license/CHECKLIST.md) is the artifact to run against a real deployment; it is the sibling of the loop-license checklist and assumes it. This is DoD item 25.
+
+**The weakest-link bound.**
+
+> **MUST — the autonomy level a graph declares for an external action MUST NOT exceed the minimum level licensed to any node on the execution path producing that action.** An unlicensed node — or one gated by an uncalibrated judge (Part V) — anywhere on an action path caps that path at **L2** (propose-approve), regardless of how well-licensed the other nodes are. Autonomy is a property of paths, not of averages.
+
+**Shared state carries provenance.**
+
+> **MUST, at L3+:** every shared-state field carries **writer provenance** — the producing node, a timestamp, and a verification status (`verified_by: <check|judge>`, or `unverified`). Consumers MUST be able to **filter on verification status**, and action nodes MUST NOT trigger external actions from `unverified` fields. State that cannot say where it came from cannot be trusted to authorize anything.
+
+**Fan-in is a verification point.**
+
+> **MUST — every merge point where parallel branches join is declared either a verification point** (a deterministic check or a calibrated judge validates the merged state before anything downstream consumes it) **or an explicit pass-through with written rationale.** Unverified aggregation upstream of an external action is prohibited at L3+.
+
+Aggregating parallel outputs and treating the aggregate as validated is **self-verification in graph form** — the failure named under *Independent verification* above, wearing a topology instead of a prompt. Merging does not add correctness; it only adds confidence.
+
+**Edges are ingestion boundaries.**
+
+> **MUST — a node's output is untrusted input to the nodes downstream of it.** Inter-node handoffs fall under *The ingestion boundary* above in full. The graph's eval suite MUST include **poisoned-state scenarios**: a compromised, hijacked, or simply hallucinating node writing to shared state, with the assertion that downstream nodes do not act on it.
+
+> **MUST — reviewer nodes are judges.** A node whose job is to review another node's work is an LLM judge, and Part V applies to it in full: calibration, the bias battery, and decorrelation from the producer it reviews — **per edge**, not merely once per loop. A reviewer that is decorrelated from one producer and not from another is calibrated for one edge only.
+
+**Declared vs. enforced topology.**
+
+> **MUST — architecture-phase declarations state, per edge class, whether routing is *enforced* or *declared*.** **Enforced** means the runtime or the code constrains it: the edge cannot be traversed otherwise. **Declared** means the agent is *expected* to follow it — an SOP, a skill, a prompt. **Declared-only edges MUST NOT be counted as controls in any license.**
+
+A topology that exists only in prose is documentation, not a guardrail (Principle 6 — security is a structural property). This is the graph-scale form of "permissions enforced by code, not by prompt" (DoD 5): an instruction-defined route is exactly as binding as an instruction-defined permission, which is to say not at all under adversarial input.
+
+### Glossary bridge — the loop- and graph-engineering lexicon
 
 Teams arrive with the market's vocabulary. This standard already holds the concepts under its own names; here is the bridge, so clients are met, not re-educated.
+
+The market narrates its craft as a ladder of five layers. The ladder is a useful map of *what people are talking about*; it is not an architecture. Each rung maps onto something this standard already governs:
+
+| Market term ("the five layers") | This standard |
+|---|---|
+| Prompt engineering | The **Agent Contract** and its instructions (`AGENT_STANDARD.md`) |
+| Context engineering | **Layer 3** — context engineering's four operations, and **Layer 4** memory |
+| "Harness" | The **harness** (Canon 4) — eight layers, of which the market's usage covers roughly Layers 1–3 |
+| Loop engineering | The **Agent Loop** at L3–L4, governed by the **Loop License** (this Part) |
+| Graph engineering | The **five composition patterns** (Canon 2), governed by **License Composition** (this Part) |
 
 | Market term (loop engineering) | This standard |
 |---|---|
@@ -403,6 +458,15 @@ Teams arrive with the market's vocabulary. This standard already holds the conce
 | Eval set / benchmark | **Golden set** — with declared labeling provenance (Part V · *Ground-truth discipline*) |
 | Operating envelope / Authority to Operate (ATO) | **Loop License** (Part IV), of which calibration and oversight status are inputs |
 | Graduation / promotion criteria | The **Cycle of Trust** (Canon 5) — earned autonomy, re-escalating on regression |
+| Graph / graph engineering | A **composition pattern** (Canon 2) wired for unattended operation, governed by **License Composition** (this Part) |
+| Node | One agent (or deterministic step) in a composition, under its own Agent Contract and — where it runs unattended — its own Loop License |
+| Edge | A handoff between nodes. An **ingestion boundary** (this Part): the upstream node's output is untrusted input downstream |
+| Shared state | The store nodes read and write between steps — **Memory** (Layer 4) at graph scope, carrying **writer provenance** and a verification status |
+| Fan-out / fan-in | Parallel branching and its merge. Fan-out multiplies the **cost cap** question; fan-in is a **verification point** (this Part) |
+| Declared vs. enforced topology | Whether an edge is constrained by code/runtime (**enforced**, countable as a control) or merely instructed (**declared**, never countable) |
+| Weakest-link bound | The rule that a path's autonomy level is the **minimum** licensed level of any node on it (this Part) |
+| Supervisor / router / handoff | Named instances of the **five composition patterns** (Canon 2); the governance is the same regardless of the name |
+| Graph License / license composition | The **Graph License** (this Part) — the six gates re-evaluated at graph scope, plus the weakest-link bound |
 
 ---
 
@@ -649,4 +713,4 @@ The standard is not dogma. It is a **tilt of the field** toward the practices th
 
 ---
 
-*v3.2 · assembled from production practices as of July 2026*
+*v3.3 · assembled from production practices as of July 2026*
