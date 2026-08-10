@@ -158,7 +158,7 @@ Always consult the relevant sub-skill before answering a substantive question in
 
 - `architecture-design/SKILL.md` — autonomy ladder, 5 patterns, single vs multi-agent decision, reference exemplars
 - `context-engineering/SKILL.md` — write/select/compress/isolate, the 40% rule, CLAUDE.md pattern
-- `harness-engineering/SKILL.md` — 8-layer harness model, Cycle of Trust, what 98% of code does
+- `harness-engineering/SKILL.md` — 9-layer harness model, Cycle of Trust, what 98% of code does
 - `tool-design-mcp/SKILL.md` — MCP-first integration, tool description as prompt, RAG-MCP
 - `memory-architecture/SKILL.md` — Mem0 vs Zep vs Letta vs LangMem vs files vs AgenticMind; selection matrix
 - `tenant-isolation/SKILL.md` — pooled/bridge/silo models, the agent leakage paths (retrieval/memory/cache/trace/model-supplied tenant_id), tenant_id as a principal dimension, the cross-tenant leakage eval

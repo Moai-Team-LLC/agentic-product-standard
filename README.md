@@ -33,7 +33,7 @@ Most teams ship agent demos. Few ship agents that survive contact with productio
 - [The AgenticProduct family](#-the-agenticproduct-family)
 - [The Autonomy Ladder](#the-autonomy-ladder)
 - [The five composition patterns](#the-five-composition-patterns)
-- [The 8-layer harness](#the-8-layer-harness)
+- [The 9-layer harness](#the-9-layer-harness)
 - [The 10-question checklist](#-the-10-question-checklist)
 - [The decision tree](templates/decision-tree/README.md)
 - [Score yourself](#-score-yourself)
@@ -84,7 +84,7 @@ agentic-product-standard/
         ├── SKILL.md                      ← master: router + philosophy
         ├── architecture-design/          ← autonomy ladder, 5 patterns, single vs multi
         ├── context-engineering/          ← write/select/compress/isolate, the 40% rule
-        ├── harness-engineering/          ← the 8 layers around the LLM loop
+        ├── harness-engineering/          ← the 9 layers around the LLM loop
         ├── tool-design-mcp/              ← MCP-first, <20 tools, RAG-MCP, sandboxing
         ├── memory-architecture/          ← Mem0 / Zep / Letta / LangMem / files
         ├── tenant-isolation/             ← multi-tenant: pooled/silo, leakage paths, leakage eval
@@ -206,7 +206,7 @@ Compose agentic products from these primitives *like Lego* — before reaching f
 
 **Meta-principle:** first try to solve the task by composing these patterns in deterministic code. A full agent loop is the *last* resort.
 
-## The 8-layer harness
+## The 9-layer harness
 
 In a production agent, the harness — everything *around* the LLM loop — is **98% of the code**.
 

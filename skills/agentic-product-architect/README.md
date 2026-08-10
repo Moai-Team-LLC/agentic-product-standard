@@ -9,7 +9,7 @@ agentic-product-architect/
 ├── SKILL.md                          ← master: router + philosophy
 ├── architecture-design/SKILL.md      ← autonomy ladder, 5 patterns, single vs multi
 ├── context-engineering/SKILL.md      ← write/select/compress/isolate, 40% rule
-├── harness-engineering/SKILL.md      ← the 8 layers around the LLM loop
+├── harness-engineering/SKILL.md      ← the 9 layers around the LLM loop
 ├── tool-design-mcp/SKILL.md          ← MCP-first, <20 tools, RAG-MCP, sandboxing
 ├── memory-architecture/SKILL.md      ← Mem0 / Zep / Letta / LangMem / files decision
 ├── durable-execution/SKILL.md        ← Temporal Workflow + Activity pattern
