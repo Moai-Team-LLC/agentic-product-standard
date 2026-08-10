@@ -30,7 +30,7 @@ Prompt Chaining · Routing · Parallelization · Orchestrator–Workers ·
 Evaluator–Optimizer. Compose these in deterministic code first; a full agent
 loop is the last resort.
 
-## The harness (eight layers)
+## The harness (nine layers)
 
 1. Agent Loop (gather → act → verify) · 2. Context & Memory · 3. Durable
 Execution · 4. Guardrails (input/output) · 5. Human-in-the-Loop · 6. Evaluation

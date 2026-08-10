@@ -1,6 +1,6 @@
 ---
 name: harness-engineering
-description: Design the harness — the 8-layer scaffolding around the LLM loop that makes agents reliable. Covers the agent loop itself (gather/act/verify), context management, durable execution, guardrails, human-in-the-loop, evals, observability, and the cross-cutting security & identity layer. In production agents, the harness is 98% of the code. Use whenever the user is structuring code around an agent loop, asks "how do I make this reliable / production-ready," is implementing verification, retry logic, sub-agent delegation, permission systems, approval gates, or wants to understand what makes Claude Code / Codex / Devin work beyond the model.
+description: Design the harness — the 9-layer scaffolding around the LLM loop that makes agents reliable. Covers the agent loop itself (gather/act/verify), context management, durable execution, guardrails, human-in-the-loop, evals, observability, and the cross-cutting security & identity layer. In production agents, the harness is 98% of the code. Use whenever the user is structuring code around an agent loop, asks "how do I make this reliable / production-ready," is implementing verification, retry logic, sub-agent delegation, permission systems, approval gates, or wants to understand what makes Claude Code / Codex / Devin work beyond the model.
 ---
 
 # Harness Engineering
@@ -9,7 +9,7 @@ OpenAI's "Harness Engineering" post and Liu et al.'s Claude Code analysis (arXiv
 
 LangChain's empirical finding (March 2026): holding model constant at gpt-5.2-codex, their coding agent moved from Top 30 to Top 5 on Terminal Bench 2.0 (52.8% → 66.5%) **only by changing the harness**. As model capability converges, harness quality is the durable competitive advantage.
 
-## The 8-layer harness model
+## The 9-layer harness model
 
 Every production agent has these layers — seven in the stack below, plus a **cross-cutting Security & Identity layer (layer 8)** that constrains all of them. Build the stack in this order; skipping is technical debt:
 
@@ -216,6 +216,26 @@ Full treatment: `../../../STANDARD.md` (Principle 6 / Layer 8), `../../../AGENT_
 
 **Reference implementation (paved road):** red-team this layer with **[AgenticAssurance (AAL)](https://github.com/Moai-Team-LLC/AgenticAssurance)** — an OWASP-Agentic / MITRE-ATLAS attack library plus a toxic-flow graph that finds the lethal-trifecta / RCE composition paths above, emitting SARIF for CI. Framework-neutral, not a runtime guardrail; bring your own red-team process if you have one (Principle 2). See the [`reference-stack`](../reference-stack/SKILL.md) skill.
 
+## Layer 9: Cost & FinOps (cross-cutting)
+
+Agentic systems are expensive in a way chat never was: agents burn roughly 4x the
+tokens of chat, and multi-agent runs an order of magnitude more. Cost is an
+engineering constraint, not a month-end surprise.
+
+- **Per-run token and cost ceilings enforced in code** — a circuit breaker that
+  halts a runaway autonomous session. A ceiling that lives in a dashboard is not a
+  ceiling.
+- **Prompt / KV caching** on stable prefixes (system prompt, tool schemas) — the
+  largest single lever on long-context agents.
+- **Model routing and cascades** — a small model for routing and classification, the
+  flagship only for reasoning.
+- **Measure cost-per-outcome, not total spend** — cost belongs on the same traces as
+  Layer 6, attributed per agent and per run.
+- **Multi-agent economics** — only pay the multi-agent premium when task value
+  justifies it; if one agent clears the bar, one agent is the answer.
+
+Reference implementation: **AgenticGateway** (together with Layer 1).
+
 ## Harness as the durable advantage
 
 When the user is choosing where to invest engineering time, redirect this conversation:
@@ -229,7 +249,7 @@ When the user is choosing where to invest engineering time, redirect this conver
 When the conversation completes, the user should have:
 
 1. The agent loop sketched as `(state, event) → new_state` with explicit termination conditions
-2. Decisions for each of the 8 layers — what's in scope for v1
+2. Decisions for each of the 9 layers — what's in scope for v1
 3. Cycle of Trust enforced for at least the top destructive actions
 4. Sub-agent boundaries defined (if applicable)
 5. A short list of "what could go wrong" mapped to which layer catches it

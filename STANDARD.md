@@ -60,7 +60,7 @@ This is the vocabulary of the industry. Every agentic product is assembled from 
 
 ### Canon 4. Harness architecture
 
-The harness is everything that surrounds the LLM loop. **In a production agent, the harness is 98% of the code.** A minimal harness contains eight layers:
+The harness is everything that surrounds the LLM loop. **In a production agent, the harness is 98% of the code.** A minimal harness contains nine layers:
 
 ```
 ╔═════════════════════════════════════════════╗
@@ -440,7 +440,7 @@ The market narrates its craft as a ladder of five layers. The ladder is a useful
 |---|---|
 | Prompt engineering | The **Agent Contract** and its instructions (`AGENT_STANDARD.md`) |
 | Context engineering | **Layer 3** — context engineering's four operations, and **Layer 4** memory |
-| "Harness" | The **harness** (Canon 4) — eight layers, of which the market's usage covers roughly Layers 1–3 |
+| "Harness" | The **harness** (Canon 4) — nine layers, of which the market's usage covers roughly Layers 1–3 |
 | Loop engineering | The **Agent Loop** at L3–L4, governed by the **Loop License** (this Part) |
 | Graph engineering | The **five composition patterns** (Canon 2), governed by **License Composition** (this Part) |
 
