@@ -75,6 +75,9 @@ def main():
     ap.add_argument("--apply", action="store_true", help="execute accepted requests (default: dry run)")
     args = ap.parse_args()
     policy = json.load(open(args.policy, encoding="utf-8"))
+    if not isinstance(policy, dict):
+        print("policy must be a JSON object", file=sys.stderr)
+        return 2
     requests = []
     for n, line in enumerate(open(args.requests, encoding="utf-8"), 1):
         if line.strip():
@@ -82,13 +85,17 @@ def main():
                 requests.append(json.loads(line))
             except json.JSONDecodeError as exc:
                 requests.append({"_invalid": f"line {n}: {exc}"})
+    # Decide every request before applying any: a malformed line late in the file must not
+    # leave the run half-applied.
     decisions = decide(requests, policy)
     for d in decisions:
-        status = "ACCEPT" if d["accepted"] else "REJECT"
-        req = d["request"]
-        print(json.dumps({"status": status, "type": req.get("type"), "target": req.get("target"), "why": d["reason"]}))
-        if d["accepted"] and args.apply:
-            handle(req)
+        req = d["request"] if isinstance(d["request"], dict) else {}
+        print(json.dumps({"status": "ACCEPT" if d["accepted"] else "REJECT",
+                          "type": req.get("type"), "target": req.get("target"), "why": d["reason"]}))
+    if args.apply:
+        for d in decisions:
+            if d["accepted"]:
+                handle(d["request"])
     return 0 if all(d["accepted"] for d in decisions) else 1
 
 

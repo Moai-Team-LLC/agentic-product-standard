@@ -24,7 +24,14 @@ jobs:
       - name: Tag matches the canon version
         run: |
           set -euo pipefail
-          canon="$(sed -n 's/^version: *\([^ #]*\).*/\1/p' canon/meta.yaml)"
+          # quoted or bare, `version: "4.0.0"` and `version: 4.0.0` both read as 4.0.0
+          canon="$(python3 - <<'PY'
+          import re
+          text = open("canon/meta.yaml", encoding="utf-8").read()
+          m = re.search(r"""^version:[ \t]*["']?([^"'\s#]+)""", text, re.M)
+          print(m.group(1) if m else "")
+          PY
+          )"
           if [ "v$canon" != "$GITHUB_REF_NAME" ]; then
             echo "::error::tag $GITHUB_REF_NAME does not match canon/meta.yaml version $canon"; exit 1
           fi

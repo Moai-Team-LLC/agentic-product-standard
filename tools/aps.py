@@ -23,9 +23,12 @@ from __future__ import annotations
 
 import argparse
 import ast
+import functools
+import itertools
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -85,6 +88,13 @@ class ConditionError(ValueError):
 
 
 def parse_condition(expr: str):
+    if not isinstance(expr, str):  # checked before the cache, which would choke on a list
+        raise ConditionError(f"a condition must be a string, got {expr!r} (quote it in YAML)")
+    return _parse_condition(expr)
+
+
+@functools.lru_cache(maxsize=None)
+def _parse_condition(expr: str):
     try:
         tree = ast.parse(expr, mode="eval")
     except SyntaxError as exc:
@@ -146,6 +156,23 @@ def eval_condition(expr: str | None, profile: dict) -> bool:
         raise ConditionError("unreachable")
 
     return bool(ev(tree.body))
+
+
+def _names(expr: str) -> set[str]:
+    return {n.id for n in ast.walk(parse_condition(expr)) if isinstance(n, ast.Name)}
+
+
+def implies(a: str | None, b: str | None) -> bool:
+    """True when every profile that satisfies `a` also satisfies `b` (exhaustive over the names they use)."""
+    if b is None:
+        return True
+    names = sorted(_names(b) | (_names(a) if a else set()))
+    domains = [range(5) if n == "autonomy" else range(3) if n == "oversight" else (False, True) for n in names]
+    for values in itertools.product(*domains):
+        prof = dict(zip(names, values))
+        if eval_condition(a, prof) and not eval_condition(b, prof):
+            return False
+    return True
 
 
 def condition_label(expr: str | None) -> str | None:
@@ -332,6 +359,7 @@ def validate(c: Canon) -> list[str]:
             if n not in dod_ns:
                 errors.append(f"scorecard item {iid}: references unknown DoD item {n}")
             covered.add(n)
+        conds_ok = True
         for cond in (item.get("applies_if"), sec.get("applies_if")):
             if cond is None:
                 continue
@@ -339,18 +367,34 @@ def validate(c: Canon) -> list[str]:
                 parse_condition(cond)
             except ConditionError as exc:
                 errors.append(f"scorecard item {iid}: {exc}")
+                conds_ok = False
+                continue
             if cond not in CONDITION_LABELS:
                 errors.append(f"scorecard item {iid}: condition {cond!r} has no label in CONDITION_LABELS")
+        # a section's condition is display-only; the item's own condition is what scoring uses,
+        # so it must be at least as narrow — or the item would bind products the section excludes
+        if conds_ok and not implies(item.get("applies_if"), sec.get("applies_if")):
+            errors.append(f"scorecard item {iid}: its applies_if does not imply its section's "
+                          f"({sec.get('applies_if')!r}) — the item would bind products the section excludes")
     for n in sorted(dod_ns - covered):
         errors.append(f"DoD item {n} is not evidenced by any scorecard item — add one to canon/scorecard.yaml")
     for rule in c.scorecard["envelope_rules"]:
-        if rule["when"] != "True":
+        if rule.get("when") != "True":
             try:
-                parse_condition(rule["when"])
+                parse_condition(rule.get("when"))
             except ConditionError as exc:
                 errors.append(f"scorecard.envelope_rules: {exc}")
-        if rule["requires"] not in BANDS:
-            errors.append(f"scorecard.envelope_rules: unknown band {rule['requires']!r}")
+        if rule.get("requires") not in BANDS:
+            errors.append(f"scorecard.envelope_rules: unknown band {rule.get('requires')!r}")
+
+    # SARIF: GitHub keeps 10 tags per rule and rejects a rule with more than 20 — fail here, not there
+    import aps_conformance as K
+    for _, item in c.scorecard_items():
+        if item.get("id") and all(n in dod_ns for n in item.get("dod", [])):
+            tags = K.sarif_tags(c, item)
+            if len(tags) > K.MAX_TAGS:
+                errors.append(f"scorecard item {item['id']}: {len(tags)} SARIF tags (max {K.MAX_TAGS}) — "
+                              f"split the item or trim TAG_FRAMEWORKS")
 
     # links (@/path) resolve — to a file in the repo or one the canon generates
     import aps_render as R
@@ -379,7 +423,10 @@ def _validate_schemas(c: Canon) -> list[str]:
             continue
         schema = json.loads(schema_path.read_text(encoding="utf-8"))
         doc = load_yaml(c.root / "canon" / doc_name)
-        validator = jsonschema.Draft202012Validator(schema)
+        cls = getattr(jsonschema, "Draft202012Validator", None)
+        if cls is None:  # jsonschema < 4: optional dependency, too old to use
+            return []
+        validator = cls(schema)
         for e in sorted(validator.iter_errors(doc), key=lambda e: list(e.path)):
             loc = "/".join(str(p) for p in e.path)
             errs.append(f"canon/{doc_name}: schema: {loc}: {e.message}")
@@ -394,6 +441,24 @@ REGION_RE = re.compile(
     r"(<!-- canon:begin:(?P<name>[a-z0-9.\-]+) -->\n)(?P<body>.*?)(<!-- canon:end:(?P=name) -->)",
     re.S,
 )
+
+
+def marker_problem(path: str, text: str) -> str | None:
+    """A region marker must appear exactly once per name, and no region may swallow another's begin.
+
+    A marker quoted as an example (in a code fence, say) would otherwise become a region, and
+    `render` would silently replace the prose between it and the real end marker.
+    """
+    for kind in ("begin", "end"):
+        names = re.findall(rf"<!-- canon:{kind}:([a-z0-9.\-]+) -->", text)
+        dupes = sorted({n for n in names if names.count(n) > 1})
+        if dupes:
+            return (f"{path} has more than one canon:{kind} marker for {', '.join(dupes)} — alter a marker shown "
+                    f"as an example (e.g. canon:begin:NAME) or it becomes a region")
+    for m in REGION_RE.finditer(text):
+        if "<!-- canon:begin:" in m.group("body"):
+            return f"{path}: region {m.group('name')!r} contains another begin marker — an unterminated region?"
+    return None
 
 
 def relink(text: str, target: str) -> str:
@@ -416,6 +481,9 @@ def render_all(c: Canon) -> dict[str, str]:
     for path, regions in R.REGIONS.items():
         full = c.root / path
         text = full.read_text(encoding="utf-8")
+        problem = marker_problem(path, text)
+        if problem:
+            raise SystemExit(f"aps: {problem}")
         found = {m.group("name") for m in REGION_RE.finditer(text)}
         missing = set(regions) - found
         unknown = found - set(regions)
@@ -463,10 +531,31 @@ def cmd_render(c: Canon, check: bool) -> int:
 
 # Prose lint: counts written in free text must match the canon. History (CHANGELOG, ADRs,
 # advisories, case studies of record) is exempt; a line can opt out with canon:lint-ignore.
-LINT_SKIP = ("CHANGELOG.md", "docs/adr/", "docs/advisories/", "examples/", "node_modules/")
+LINT_SKIP = ("CHANGELOG.md", "docs/adr/", "docs/advisories/", "examples/", "family/")
 WORDS = {w: i for i, w in enumerate(
     "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen "
     "fifteen sixteen seventeen eighteen nineteen twenty".split())}
+_N = r"\b(\d+|" + "|".join(WORDS) + r")\b"
+# (pattern, canon count, noun) — every number group is word-bounded, so "often" is not "ten"
+LINT_RULES = [
+    (_N + r"[- ]layer (?:harness|scaffolding|model|stack)", "layers", "harness layers"),
+    (r"harness (?:has|contains|of) " + _N + r" layers", "layers", "harness layers"),
+    (_N + r" harness layers", "layers", "harness layers"),
+    (r"\bthe " + _N + r" layers around", "layers", "harness layers"),
+    (r"\beach of the " + _N + r" layers", "layers", "harness layers"),
+    (r"\(" + _N + r" layers\)", "layers", "harness layers"),
+    (_N + r" layers, of which", "layers", "harness layers"),
+    (_N + r"-point (?:Definition of Done|DoD)", "dod", "Definition of Done items"),
+    (_N + r"-item (?:Definition of Done|DoD)", "dod", "Definition of Done items"),
+    (_N + r" (?:Definition of Done|DoD) items", "dod", "Definition of Done items"),
+    (_N + r" (?:canonical |known )?anti-?patterns", "antipatterns", "anti-patterns"),
+    (r"through " + _N + r" known failure modes", "antipatterns", "anti-patterns"),
+    (_N + r" principles\b", "principles", "principles"),
+    (r"(?<![–\-\d])" + _N + r" (?:specialized )?sub-skills\b", "sub_skills", "architect sub-skills"),
+]
+LINT_RULES = [(re.compile(rx, re.I), key, what) for rx, key, what in LINT_RULES]
+# "the first two principles", "these three anti-patterns": a subset, not a count of the whole
+_SUBSET_WORDS = {"first", "last", "these", "those", "both", "top", "other", "remaining", "next", "previous"}
 
 
 def _num(tok: str) -> int | None:
@@ -476,32 +565,46 @@ def _num(tok: str) -> int | None:
     return WORDS.get(tok)
 
 
+def lint_text(counts: dict, rel: str, text: str) -> list[str]:
+    """Counts stated in one document that disagree with the canon."""
+    problems = []
+    for lineno, raw in enumerate(text.splitlines(), 1):
+        if "canon:lint-ignore" in raw:
+            continue
+        line = re.sub(r"[*_]", "", raw)  # **eight** harness layers → eight harness layers
+        for rx, key, what in LINT_RULES:
+            for m in rx.finditer(line):
+                n = _num(m.group(1))
+                if n is None or n == counts[key] or n >= 1000:  # 1000+: a year ("the 2026 anti-patterns")
+                    continue
+                before = line[: m.start()].split()
+                if before and before[-1].lower() in _SUBSET_WORDS:
+                    continue
+                problems.append(f"{rel}:{lineno}: says {m.group(0)!r} but the canon has {counts[key]} {what}")
+    return problems
+
+
+def repo_files(root: Path, pattern: str = "*") -> list[Path]:
+    """Files git would commit (tracked + untracked, minus ignored); a plain walk outside a git checkout."""
+    try:
+        out = subprocess.run(["git", "-C", str(root), "ls-files", "-z", "--cached", "--others",
+                              "--exclude-standard", "--", pattern],
+                             capture_output=True, check=True).stdout
+        return sorted(root / p for p in out.decode("utf-8", "replace").split("\0") if p and (root / p).is_file())
+    except (OSError, subprocess.CalledProcessError):
+        walk = root.rglob(pattern) if any(ch in pattern for ch in "*?[") else (root / pattern).rglob("*")
+        return sorted(p for p in walk
+                      if p.is_file() and not ({".git", "node_modules"} & set(p.relative_to(root).parts)))
+
+
 def lint_prose(c: Canon) -> list[str]:
     counts = c.counts()
-    N = r"(\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)"
-    rules = [
-        (re.compile(N + r"[- ]layer harness", re.I), "layers", "harness layers"),
-        (re.compile(r"harness (?:has|contains|of) " + N + r" layers", re.I), "layers", "harness layers"),
-        (re.compile(r"\bthe " + N + r" layers around", re.I), "layers", "harness layers"),
-        (re.compile(N + r"-point (?:Definition of Done|DoD)", re.I), "dod", "Definition of Done items"),
-        (re.compile(N + r" (?:canonical |known )?anti-?patterns", re.I), "antipatterns", "anti-patterns"),
-        (re.compile(r"through " + N + r" known failure modes", re.I), "antipatterns", "anti-patterns"),
-        (re.compile(r"\b" + N + r" principles\b", re.I), "principles", "principles"),
-        (re.compile(r"(?<![–\-\d])\b" + N + r" (?:specialized )?sub-skills\b", re.I), "sub_skills", "architect sub-skills"),
-    ]
     problems = []
-    for path in sorted(c.root.rglob("*.md")):
+    for path in repo_files(c.root, "*.md"):
         rel = path.relative_to(c.root).as_posix()
-        if rel.startswith(".git/") or any(rel.startswith(s) or rel == s for s in LINT_SKIP):
+        if "node_modules/" in rel or any(rel.startswith(s) or rel == s for s in LINT_SKIP):
             continue
-        for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-            if "canon:lint-ignore" in line:
-                continue
-            for rx, key, what in rules:
-                for m in rx.finditer(line):
-                    n = _num(m.group(1))
-                    if n is not None and n != counts[key]:
-                        problems.append(f"{rel}:{lineno}: says {m.group(0)!r} but the canon has {counts[key]} {what}")
+        problems += lint_text(counts, rel, path.read_text(encoding="utf-8", errors="replace"))
     # every architect sub-skill is routed by the master skill and listed in the README tree
     master = (c.root / "skills/agentic-product-architect/SKILL.md").read_text(encoding="utf-8")
     readme = (c.root / "README.md").read_text(encoding="utf-8")
@@ -561,6 +664,8 @@ def main(argv=None) -> int:
                     help="count a `yes` without evidence as yes (default: it counts as no)")
     cf.add_argument("--fail-under", choices=BANDS, default=None,
                     help="exit non-zero if the achieved band is below this (default: the band the declared operating point requires)")
+    cf.add_argument("--require-dod", action="store_true",
+                    help="also exit non-zero while any binding Definition of Done item is open (production-ready gate)")
     sub.add_parser("template", help="print a blank aps-conformance.yaml for this version")
     args = ap.parse_args(argv)
 

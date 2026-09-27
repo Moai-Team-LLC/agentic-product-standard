@@ -164,16 +164,18 @@ def dod_intro(c, style: str = "standard") -> str:
             f"An agentic product is **not production-ready** until every Definition of Done item that binds to it is "
             f"satisfied — **{n} items**, each with a stable number (numbers are identifiers, so a group may list them "
             f"out of order). Items marked with a condition bind only when it holds; the rest bind for every production "
-            f"system. [`SCORECARD.md`](@/SCORECARD.md) sets the maturity band at which each becomes mandatory, and "
-            f"[`CROSSWALK.md`](@/CROSSWALK.md) maps each to the EU AI Act, OWASP, NIST, and IMDA. Full text in "
+            f"system. [`SCORECARD.md`](@/SCORECARD.md) says which items evidence each one and the band at which a "
+            f"system may *ship* before it is production-ready; [`CROSSWALK.md`](@/CROSSWALK.md) maps each to the EU "
+            f"AI Act, OWASP, NIST, and IMDA. Full text in "
             f"[`STANDARD.md`](@/STANDARD.md#part-iii-production-readiness--definition-of-done)."
         )
     return (
         f"An agentic product is **not production-ready** until every item below that binds to it is satisfied. There "
         f"are **{n} items**. Numbers are stable identifiers — never reused or renumbered — so a group may list them out "
         f"of order. An item marked with a condition in italics binds only when that condition holds; every other item "
-        f"binds for every production system. [`SCORECARD.md`](@/SCORECARD.md) sets the maturity band at which each "
-        f"item becomes mandatory; [`CROSSWALK.md`](@/CROSSWALK.md) maps each item to the EU AI Act, the OWASP Top 10 "
+        f"binds for every production system. [`SCORECARD.md`](@/SCORECARD.md) names the items that evidence each one "
+        f"and sets the lower band at which a system may *ship* at its operating point — shippable is not "
+        f"production-ready; [`CROSSWALK.md`](@/CROSSWALK.md) maps each item to the EU AI Act, the OWASP Top 10 "
         f"for Agentic Applications, the NIST AI RMF, and IMDA's agentic framework."
     )
 
@@ -315,7 +317,12 @@ def scorecard_bands(c, path):
     rules = [f"{r['label']} → **{r['requires']}**" for r in c.scorecard["envelope_rules"]]
     return ("\n".join(rows) + "\n\n**Your level is the highest band whose every applicable gate item is satisfied.** One "
             "unmet gate item caps you at the level below — there is no partial credit, and no skipping a band. The "
-            "operating point you run at sets the band you must reach: " + "; ".join(rules) + ".")
+            "operating point you run at sets the band you must reach to ship: " + "; ".join(rules) + ".\n\n"
+            "**Shippable is not production-ready.** The band is the floor for putting a system in front of users at "
+            "its operating point. *Production-ready* is the Definition of Done ([`STANDARD.md`](@/STANDARD.md) Part III): "
+            "every DoD item that binds to the product, each evidenced by the scorecard items mapped to it — for most "
+            "products, that means M2's items. [`aps-conformance`](@/docs/conformance.md) reports both; "
+            "`--require-dod` makes the second one gate CI.")
 
 
 def scorecard_items(c, path):
@@ -364,9 +371,14 @@ def context_harness(c, path):
     cross = [layer for layer in c.harness["layers"] if layer.get("cross_cutting")]
     s = " · ".join(f"{layer['n']}. {layer['name']}" for layer in stacked)
     x = " and ".join(f"{layer['n']}. {layer['name']} ({layer['role']})" for layer in cross)
-    return (f"{s} — over MCP / function calling to Tools. Two cross-cutting layers constrain all "
+    words = "zero one two three four five six seven eight nine ten".split()
+    n_cross = words[len(cross)] if len(cross) < len(words) else str(len(cross))
+    same = [st["n"] for st in c.harness["stack"] if st.get("harness") == [st["n"]]]
+    same_txt = " and ".join(map(str, same)) if same else "no number"
+    return (f"{s} — over MCP / function calling to Tools. {n_cross.capitalize()} cross-cutting "
+            f"layer{'s' if len(cross) != 1 else ''} constrain{'' if len(cross) != 1 else 's'} all "
             f"{len(stacked)}: {x}.\n\n\"Layer N\" always means a harness layer. `STANDARD.md` Part II is the "
-            f"technology stack, numbered **Stack N**; the two coincide only at 8 and 9.")
+            f"technology stack, numbered **Stack N**; the two coincide only at {same_txt}.")
 
 
 def agent_standard_ladder(c, path):

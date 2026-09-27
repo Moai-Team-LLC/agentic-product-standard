@@ -342,7 +342,7 @@ Miss any one and the system stays at O0 — a human approves each consequential 
 ## Production readiness — Definition of Done
 
 <!-- canon:begin:readme.dod -->
-An agentic product is **not production-ready** until every Definition of Done item that binds to it is satisfied — **33 items**, each with a stable number (numbers are identifiers, so a group may list them out of order). Items marked with a condition bind only when it holds; the rest bind for every production system. [`SCORECARD.md`](SCORECARD.md) sets the maturity band at which each becomes mandatory, and [`CROSSWALK.md`](CROSSWALK.md) maps each to the EU AI Act, OWASP, NIST, and IMDA. Full text in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
+An agentic product is **not production-ready** until every Definition of Done item that binds to it is satisfied — **33 items**, each with a stable number (numbers are identifiers, so a group may list them out of order). Items marked with a condition bind only when it holds; the rest bind for every production system. [`SCORECARD.md`](SCORECARD.md) says which items evidence each one and the band at which a system may *ship* before it is production-ready; [`CROSSWALK.md`](CROSSWALK.md) maps each to the EU AI Act, OWASP, NIST, and IMDA. Full text in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
 
 | Group | Items |
 |---|---|

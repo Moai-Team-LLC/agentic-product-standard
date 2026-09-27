@@ -292,7 +292,7 @@ The reference implementation of this stack section (together with Stack 1) is **
 ## Part III. Production readiness — Definition of Done
 
 <!-- canon:begin:standard.dod -->
-An agentic product is **not production-ready** until every item below that binds to it is satisfied. There are **33 items**. Numbers are stable identifiers — never reused or renumbered — so a group may list them out of order. An item marked with a condition in italics binds only when that condition holds; every other item binds for every production system. [`SCORECARD.md`](SCORECARD.md) sets the maturity band at which each item becomes mandatory; [`CROSSWALK.md`](CROSSWALK.md) maps each item to the EU AI Act, the OWASP Top 10 for Agentic Applications, the NIST AI RMF, and IMDA's agentic framework.
+An agentic product is **not production-ready** until every item below that binds to it is satisfied. There are **33 items**. Numbers are stable identifiers — never reused or renumbered — so a group may list them out of order. An item marked with a condition in italics binds only when that condition holds; every other item binds for every production system. [`SCORECARD.md`](SCORECARD.md) names the items that evidence each one and sets the lower band at which a system may *ship* at its operating point — shippable is not production-ready; [`CROSSWALK.md`](CROSSWALK.md) maps each item to the EU AI Act, the OWASP Top 10 for Agentic Applications, the NIST AI RMF, and IMDA's agentic framework.
 
 ### Context and state
 - [ ] **1.** Context stays within a **measured budget** in a typical cycle — the fill level at which your own eval pass rate starts to degrade for the model in use; until you have measured it, the default is **40% of the window**

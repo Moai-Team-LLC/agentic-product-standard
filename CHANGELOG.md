@@ -39,7 +39,7 @@ The **Conformance Contract** release candidate. v3.x added a license, then a sci
 - **`aps-conformance`** ([`docs/conformance.md`](docs/conformance.md), [`action.yml`](action.yml)). A product answers the scorecard in an `aps-conformance.yaml`, where every *yes* carries evidence. The tool, which is also a composite GitHub Action, then reports:
   - the band achieved;
   - the band the declared operating point requires;
-  - DoD coverage;
+  - DoD coverage, and whether the product is **production-ready** — within its band *and* with no binding DoD item open (`--require-dod` gates CI on it; shippable is not production-ready);
   - each open control as SARIF, tagged with the DoD items and crosswalk entries it supports;
   - an optional endpoint badge.
 
@@ -50,7 +50,7 @@ The **Conformance Contract** release candidate. v3.x added a license, then a sci
   - [`telemetry/`](templates/telemetry/README.md) is a stdlib checker for the telemetry contract (DoD 29).
   - [`safe-outputs/`](templates/safe-outputs/README.md) is the typed safe-output pattern and a reference applier (Loop License gate 3).
   - [`conformance/`](templates/conformance/aps-conformance.template.yaml) is the generated `aps-conformance.yaml` template.
-- **Skills supply chain.** Every `SKILL.md` is validated against the open Agent Skills specification. Every file a skill ships is scanned for hidden content (invisible and bidi Unicode, stray HTML comments, piped installers) and hash-locked in `skills-lock.json`, which `aps.py skills verify` checks an installed copy against.
+- **Skills supply chain.** Every `SKILL.md` is validated against the open Agent Skills specification. Every file a skill ships is scanned for hidden content and hash-locked in `skills-lock.json`. The scan covers every Unicode format and control character, variation-selector smuggling, stray HTML comments, and piped installers. `aps.py skills verify` checks an installed copy against the lock: a changed, missing, *or added* file fails.
 - `llms.txt`, and `AGENTS.md` (+ `CLAUDE.md`) for coding agents working on this repository.
 - Scorecard items for DoD 25–33. v3.3 had shipped DoD 25 with no scorecard item. Every scorecard item now has a stable id.
 
@@ -69,7 +69,7 @@ The **Conformance Contract** release candidate. v3.x added a license, then a sci
 - **The instruction supply chain** (Part IV) adds spec validation, hidden-content scanning, and a lockfile.
 - **The Loop and Graph License checklists, the decision tree, `AGENT_STANDARD.md` (doctrines, contract sections 14–17, checklists, rules 23–25, evidence appendix), and the skills** move to the two-axis model.
 - `production-readiness` now keeps its audit points in a generated, bundled `DOD.md`, which keeps `SKILL.md` within the spec's size guidance. `eval-driven-dev` adds consistency (`pass^k`) and legitimacy. `tool-design-mcp` adds a 2026-07-28 section. The `tenant-isolation`, `memory-architecture` and `durable-execution` skills pick up the MCP caching and multi-round-trip changes.
-- `templates/ci/eval-gate.yml` can gate on `pass^k` and the legitimacy rate as well as pass@1.
+- `templates/ci/eval-gate.yml` gates on `pass^k` and the legitimacy rate as well as pass@1. Each metric is checked against its floor and against a committed baseline, so a regression blocks the merge even above the floor (DoD 12).
 - `GOVERNANCE.md` describes releases: the canon owns the version, major releases ship as release candidates with a comment period, and tags are immutable contracts. The release workflow publishes `-rc` tags as pre-releases and refuses a tag that does not match the canon.
 
 ### Fixed
