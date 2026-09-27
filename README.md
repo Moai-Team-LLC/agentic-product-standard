@@ -24,6 +24,8 @@
 
 Most teams ship agent demos. Few ship agents that survive contact with production. The difference is almost never the model — it's the **architecture, the harness, and the eval discipline** around it. This repo is the field-tested standard for that work, plus a set of [Claude Code skills](skills/) that put it into your editor.
 
+> **Not to be confused with** Klarna's *Agentic Product Protocol* (APP — a draft protocol for agent-driven product discovery, archived in August 2026) or *AgentReady* (ora.ai + Vercel's standard for making a product usable **by** outside agents). This standard governs how you **build and operate** an agentic product.
+
 ## Table of contents
 
 - [Why this exists](#why-this-exists)
@@ -54,7 +56,7 @@ Six principles converged *independently* across the production practices of the 
 |---|---|---|
 | 1 | **Determinism by default, agency by necessity** | Every degree of autonomy must be *earned*, not granted upfront. |
 | 2 | **Architecture beats framework** | Patterns outlive libraries. |
-| 3 | **Harness > model** | 98% of reliability lives in the code *around* the LLM. |
+| 3 | **Harness > model** | Reliability lives in the code *around* the LLM — in a production coding agent that harness is ~98% of the code. |
 | 4 | **Context engineering is the core discipline** | What enters the context window determines everything. |
 | 5 | **Eval-driven development is non-negotiable** | No measurement → no improvement. No trace review → no understanding. |
 | 6 | **Security is a structural property, not a guardrail** | Safety comes from architecture — identity, least privilege, isolation, pinned tools — not filters bolted onto the edges. |
@@ -208,10 +210,11 @@ Compose agentic products from these primitives *like Lego* — before reaching f
 
 ## The 9-layer harness
 
-In a production agent, the harness — everything *around* the LLM loop — is **98% of the code**.
+In a production agent, the harness — everything *around* the LLM loop — is **~98% of the code** (a community estimate for Claude Code, cited by Liu et al., *Dive into Claude Code*, arXiv:2604.14228). Seven layers stack around the loop; two more cut across all of them.
 
 ```
 ╔═════════════════════════════════════════════╗
+║  9. Cost & FinOps        (CROSS-CUTTING)    ║ ← per-run ceilings in code · caching · routing · cost per outcome
 ║  8. Security & Identity  (CROSS-CUTTING)    ║ ← threat model · injection defense · agent identity · least-privilege tokens · pinned tool defs
 ╠═════════════════════════════════════════════╣
 ║   7. Observability & Tracing                ║ ← log EVERYTHING
@@ -225,9 +228,9 @@ In a production agent, the harness — everything *around* the LLM loop — is *
               ↕ MCP / function calling
 ```
 
-> **Permission boundaries are enforced by code, never by prompt.** The Replit incident of 2025 — an agent wiped a production database for 1,200+ companies despite an explicit "code freeze" in its prompt — is the canonical proof. The model will ignore prompt-level restrictions under enough pressure. Code won't.
+> **Permission boundaries are enforced by code, never by prompt.** The Replit incident of July 2025 — an agent deleted a production database holding records on 1,200+ companies despite an explicit "code freeze" in its prompt ([Fortune, 23 Jul 2025](https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/)) — is the canonical proof. The model will ignore prompt-level restrictions under enough pressure. Code won't.
 
-> **Layer 8 is cross-cutting (v2.0).** Identity, least privilege, and isolation constrain every layer; injection defense spans input and output. Run the **lethal-trifecta** check (private data × untrusted content × external comms) on every deployment, and **pin MCP tool definitions by hash** so a server can't rug-pull you. A guardrail is one tactic, not the discipline — see [`STANDARD.md` · Layer 8](STANDARD.md) and the [red-team kit](templates/security/README.md).
+> **Layers 8 and 9 are cross-cutting.** Identity, least privilege, and isolation constrain every layer; injection defense spans input and output. Run the **lethal-trifecta** check (private data × untrusted content × external comms) on every deployment, and **pin MCP tool definitions by hash** so a server can't rug-pull you. A guardrail is one tactic, not the discipline — see [`STANDARD.md` · Layer 8](STANDARD.md) and the [red-team kit](templates/security/README.md). Cost is the same kind of property: a per-run ceiling enforced in code, not a dashboard someone reads after the invoice (Layer 9).
 
 ## ✅ The 10-question checklist
 
@@ -273,16 +276,20 @@ Miss any one and the system stays at L2 (human-in-the-loop), no matter how good 
 
 ## Production readiness — Definition of Done
 
-An agentic product is **not production-ready** until all **25** are satisfied (items 16–19 and the L3+ oversight item bind at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists; item 25 binds wherever more than one agent is composed). Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
+An agentic product is **not production-ready** until all **25** numbered items are satisfied, plus the two conditional ones marked ◇ (multi-tenant isolation; the L3+ human-oversight plan). Items 16–19 and the oversight plan bind at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists; item 24 binds wherever a safety-class gate exists; item 25 binds wherever more than one agent is composed. Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
 
-| Context & state | Tools & security | Reliability | Evals & observability |
-|---|---|---|---|
-| Context < 40% | Destructive actions need approval | Durable pause/resume/retry | ≥50 evals per failure mode |
-| State externalized | Permissions in code, not prompt | Schema-validated outputs | Judges calibrated (TPR/TNR) |
-| Compaction tested | Sandboxed tool execution | Input/output guardrails | CI blocks regression; 100% traced |
-| — | **Lethal-trifecta check; MCP tool defs pinned** | **Per-run cost ceiling in code** | Trajectory + online evals |
-
-**Unattended (L3+) — the [Loop License](STANDARD.md#part-iv-the-loop-license--earning-unattended-operation-l3):** stop conditions · independent verification · loop economics, gated by blast radius · cost cap · kill switch · escalation path.
+| Group | Items |
+|---|---|
+| Context & state | **1** Context < 40% · **2** State externalized · **3** Compaction tested |
+| Tools & permissions | **4** Destructive actions need approval · **5** Permissions in code, not prompt · **6** Sandboxed tool execution · **◇** Tenant isolation below the LLM *(if multi-tenant)* |
+| Reliability | **7** Durable pause/resume/retry · **8** Schema-validated outputs · **9** Input/output guardrails |
+| Evals & observability | **10** ≥50 evals per failure mode · **11** Judges calibrated (TPR/TNR) · **12** CI blocks regression; 100% traced |
+| Security & identity | **13** Lethal-trifecta check · **14** MCP tool defs pinned; allow-listed registry; scoped tokens |
+| Cost | **15** Per-run cost ceiling in code |
+| Unattended (L3+) — the [Loop License](STANDARD.md#part-iv-the-loop-license--earning-unattended-operation-l3) | **16** Loop License (six gates) · **17** Stop conditions · **18** Independent verification · **19** Loop economics · **◇** Human-oversight plan |
+| Measurement science | **20** Judge calibration · **21** Retrieval metrics · **22** Ground-truth provenance · **23** Drift monitoring |
+| Gate integrity | **24** No safety gate silenced to pass CI |
+| Composition | **25** Graph License |
 
 ## Anti-patterns
 
@@ -324,6 +331,13 @@ The operational base — not reference docs. Read in order:
 10. OWASP — *Top 10 for Agentic Applications (2026)* + Simon Willison — *The lethal trifecta*
 11. OpenTelemetry — *GenAI semantic conventions* (the observability standard)
 
+**Primary specifications** — the protocols this standard builds on. Pin the revision you conform to:
+
+- [MCP specification **2026-07-28**](https://modelcontextprotocol.io/specification/2026-07-28) (final 28 Jul 2026) and the official [conformance suite](https://github.com/modelcontextprotocol/conformance). What changed: advisory [APS-2026-01](docs/advisories/APS-2026-01-mcp-2026-07-28.md).
+- [A2A specification **v1.0.1**](https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md) — v1.0, the first stable release, shipped 12 Mar 2026; §8.4 defines signed Agent Cards.
+- [OpenTelemetry GenAI semantic conventions](https://github.com/open-telemetry/semantic-conventions-genai) — moved out of the core semantic conventions at v1.42.0 (June 2026); still *Development* status with no tagged release, so pin a commit.
+- [Agent Skills specification](https://agentskills.io/specification) — the open format the skills in this repo follow.
+
 ## Contributing
 
 This standard is meant to evolve — the field moves fast. Corrections, new exemplars, framework updates, and translations are all welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
@@ -340,6 +354,6 @@ The architectural canons (the autonomy ladder, the 5 patterns, single-vs-multi, 
 
 **If this saved you a week of architecture debates, [star the repo](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers) ⭐ so others find it.**
 
-*v3.3 · assembled from production practices as of July 2026*
+*v3.3.1 · assembled from production practices as of September 2026*
 
 </div>

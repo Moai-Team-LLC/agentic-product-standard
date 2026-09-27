@@ -71,9 +71,13 @@ Metaprinciple: solve the task by composing these patterns on deterministic code 
 
 Model choice matters. The harness matters more. In a production coding agent, roughly **98% of the code is harness**, not the model loop — and as model capability converges, harness quality is the durable competitive advantage.
 
-A production agent must be surrounded by **nine** harness layers: the seven in the stack below, plus a **cross-cutting Security & Identity layer** (see Doctrine 7) that constrains all of them.
+A production agent must be surrounded by **nine** harness layers: the seven in the stack below, plus two **cross-cutting** layers that constrain all of them — **Security & Identity** (layer 8, see Doctrine 7) and **Cost & FinOps** (layer 9: per-run token/cost ceilings enforced in code, caching, model routing, cost per outcome).
 
 ```text
+╔═══════════════════════════════════════════════╗
+║ 9. Cost & FinOps        (cross-cutting)       ║
+║ 8. Security & Identity  (cross-cutting)       ║
+╚═══════════════════════════════════════════════╝
 ┌───────────────────────────────────────────────┐
 │ 7. Observability & Tracing      (log everything)│
 ├───────────────────────────────────────────────┤
@@ -1603,6 +1607,8 @@ Agent Loop
 + Human-in-the-Loop
 + Evaluation
 + Observability
+× Security & Identity   (cross-cutting)
+× Cost & FinOps         (cross-cutting)
 ```
 
 ```text
@@ -1636,10 +1642,10 @@ directionally correct, not as audited benchmarks.
 | Single-agent for depth-first / shared-context work; "telephone game" risk | Cognition, *Don't Build Multi-Agents* (Walden Yan, Jun 2025) |
 | Context engineering = write / select / compress / isolate | LangChain, *Context Engineering for Agents* (Lance Martin, Jun 2025) |
 | The ~40% context-window "dumb zone" | HumanLayer (Dex Horthy), empirical context-budget guidance |
-| ~98% of a production coding agent is harness, not model loop; harness as the durable advantage | OpenAI, *Harness Engineering* (Feb 2026); Liu et al., Claude Code analysis (arXiv:2604.14228); LangChain, *Improving Deep Agents with harness engineering* (Mar 2026) |
+| ~98% of a production coding agent is harness, not model loop; harness as the durable advantage | Liu et al., *Dive into Claude Code* (arXiv:2604.14228) — cites a community estimate of ~1.6% AI decision logic vs. ~98.4% operational infrastructure in Claude Code; OpenAI, *Harness Engineering* (Feb 2026); LangChain, *Improving Deep Agents with harness engineering* (Mar 2026) |
 | RAG over tool descriptions ≈3.2× tool-selection accuracy; cuts prompt tokens >50% | *RAG-MCP* (arXiv:2505.03275) |
 | MCP scale (10,000+ servers, 177,000+ tools) and MCP/A2A split | MCP security framework (arXiv:2604.05969); *How are AI agents used?* (arXiv:2603.23802); A2A (Google → Linux Foundation, 2025) |
-| Permissions must be enforced outside the model — Replit deleted a production DB despite a prompt "code freeze" | Fortune, *AI-powered coding tool wiped out a software company's database* (Jul 23, 2025) |
+| Permissions must be enforced outside the model — Replit deleted a production DB despite a prompt "code freeze" | Jason Lemkin (SaaStr) on X, Jul 18, 2025; Replit CEO Amjad Masad's response, Jul 20, 2025; Fortune, *AI-powered coding tool wiped out a software company's database* (Jul 23, 2025) |
 | Durable execution: agent loop = Workflow (replayable), LLM/tool calls = Activities (retried) | Temporal pattern; first-party integrations for OpenAI Agents SDK, Pydantic AI, Vercel AI SDK, mcp-agent |
 | Eval discipline: error analysis first; 3-level pyramid; binary judges; calibrate against ~100 human labels; track TPR/TNR; product-specific failure modes | Hamel Husain, *A Field Guide to Rapidly Improving AI Products* / *Your AI Product Needs Evals*; Shreya Shankar, *Who Validates the Validators?* |
 | HITL patterns notify / ask / review; agent inbox; interrupt between tool selection and invocation | LangChain (Harrison Chase), *Introducing ambient agents* (Jan 14, 2025) |

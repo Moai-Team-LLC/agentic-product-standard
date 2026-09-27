@@ -12,7 +12,7 @@ The standard is built on six principles that converged independently in the prod
 
 1. **Determinism by default, agency by necessity** — every degree of autonomy must be earned, not granted upfront.
 2. **Architecture beats framework** — patterns outlive libraries.
-3. **Harness > model** — 98% of reliability lives in the code around the LLM, not in the LLM itself.
+3. **Harness > model** — reliability lives in the code around the LLM, not in the LLM itself; in a production coding agent that harness is ~98% of the code (Canon 4).
 4. **Context engineering is the core engineering discipline** — what enters the context window determines everything.
 5. **Eval-driven development is non-negotiable** — no measurement, no improvement; no trace review, no understanding.
 6. **Security is a structural property, not a guardrail** — an agent's safety comes from architecture (identity, least privilege, isolation, pinned tool definitions), not from filters bolted onto the edges. Content filters top out near ~97% accuracy, so ~3% of injection attacks succeed by design — a property you mitigate structurally, not a number you tune.
@@ -60,10 +60,11 @@ This is the vocabulary of the industry. Every agentic product is assembled from 
 
 ### Canon 4. Harness architecture
 
-The harness is everything that surrounds the LLM loop. **In a production agent, the harness is 98% of the code.** A minimal harness contains nine layers:
+The harness is everything that surrounds the LLM loop. **In a production agent, the harness is ~98% of the code** (a community estimate for Claude Code — ~1.6% AI decision logic, ~98.4% operational infrastructure — cited by Liu et al., *Dive into Claude Code*, arXiv:2604.14228). A minimal harness contains nine layers — seven stacked around the loop, two cutting across all of them:
 
 ```
 ╔═════════════════════════════════════════════╗
+║  9. Cost & FinOps        (CROSS-CUTTING)    ║ ← per-run ceilings in code · prompt caching · model routing · cost per outcome
 ║  8. Security & Identity  (CROSS-CUTTING)    ║ ← threat model · injection defense · agent identity · least-privilege scoped tokens · pinned tool defs · sandboxing
 ╠═════════════════════════════════════════════╣
 ║ ┌─────────────────────────────────────────┐ ║
@@ -88,7 +89,9 @@ The harness is everything that surrounds the LLM loop. **In a production agent, 
        └──────────────────────────┘
 ```
 
-**Layer 8 is cross-cutting, not a stage you bolt on at the end.** Identity, least privilege, and isolation constrain every layer beneath them; injection defense spans both input and output (layer 4) but cannot live there alone. A guardrail is one tactic inside Security & Identity — not a substitute for it. See Principle 6 and Part II · Layer 8.
+**Layers 8 and 9 are cross-cutting, not stages you bolt on at the end.** Identity, least privilege, and isolation constrain every layer beneath them; injection defense spans both input and output (layer 4) but cannot live there alone. A guardrail is one tactic inside Security & Identity — not a substitute for it. See Principle 6 and Part II · Layer 8. Cost & FinOps cuts across the same way: a runaway loop is stopped by a per-run ceiling enforced in code at every layer that spends, not by a dashboard (Part II · Layer 9).
+
+*Numbering note.* The layer numbers in this diagram are the **harness** layers. Part II numbers its **technology-stack** sections 1–9 as well; the two lists coincide only at 8 (Security & Identity) and 9 (Cost & FinOps). When a cross-reference says "Part II · Layer N", it means the stack section.
 
 ### Canon 5. The Cycle of Trust
 
@@ -100,7 +103,7 @@ verify preconditions → execute → verify outcome →
 log trace → update memory
 ```
 
-**Never let the model bypass a permission boundary.** Permissions are enforced by code, not by prompt. The Replit incident of 2025 (an agent wiped the database of 1,200+ companies, ignoring a "code freeze" instruction in its prompt) is the canonical proof of this principle.
+**Never let the model bypass a permission boundary.** Permissions are enforced by code, not by prompt. The Replit incident of July 2025 (an agent deleted a production database holding records on 1,200+ companies, ignoring a "code freeze" instruction in its prompt — [Fortune, 23 Jul 2025](https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/)) is the canonical proof of this principle.
 
 **Calibration invariant.** The "verify outcome" step is only trust-bearing if the verifier is. A judge whose calibration status is not `calibrated` (Part V, *Judge calibration*) MUST NOT gate autonomous action at L3+, an auto-apply decision, or a release; a low-confidence verdict abstains and escalates rather than passing. A flaky grader in a release gate is the eval-world equivalent of a prompt-enforced permission — it looks like a check and isn't one.
 
@@ -120,7 +123,7 @@ The reference implementation of this layer (together with Layer 9) is **AgenticG
 
 ### Layer 2: Tool integration — **MCP by default**
 
-- **MCP (Model Context Protocol)** — the agent ↔ tool standard, donated to the Linux Foundation's Agentic AI Foundation (Dec 2025). Target the **stable 2025-11-25 spec** today (async tasks, elicitation, extensions) and branch for the **2026-07-28 release candidate** (stateless core, MCP Apps / server-rendered UI, hardened OAuth 2.1 / OIDC). Prefer **remote Streamable HTTP + OAuth 2.1 with Resource Indicators**, externalize session state, and use **elicitation** for human-in-the-loop rather than a side channel.
+- **MCP (Model Context Protocol)** — the agent ↔ tool standard, donated to the Linux Foundation's Agentic AI Foundation (Dec 2025). Target the **stable 2025-11-25 spec** today (async tasks, elicitation, extensions) and branch for the **2026-07-28 release candidate** (stateless core, MCP Apps / server-rendered UI, hardened OAuth 2.1 / OIDC). Prefer **remote Streamable HTTP + OAuth 2.1 with Resource Indicators**, externalize session state, and use **elicitation** for human-in-the-loop rather than a side channel. *Update (v3.3.1): 2026-07-28 was published as final on 28 Jul 2026 — stateless core, Client ID Metadata Documents replacing Dynamic Client Registration, deprecated Roots/Sampling/Logging. See advisory [APS-2026-01](docs/advisories/APS-2026-01-mcp-2026-07-28.md) for its impact on Layer 8, DoD 14, and anti-pattern 15.*
 - **A2A (Agent2Agent)** — the agent ↔ agent standard, now at the **Linux Foundation** (since June 2025): 150+ supporting orgs (AWS, Cisco, Google, IBM, Microsoft, Salesforce, SAP, ServiceNow), 22,000+ stars by April 2026. Reach for A2A **only when crossing a vendor / framework / org boundary** — inside one system, tightly-coupled subagents should share context or call functions directly.
 - **Do not write custom integrations** where an MCP server already exists. Do not write tool-only code where the tool should be reusable — wrap it in MCP. **Treat community MCP servers as untrusted supply chain** — see Layer 8.
 
@@ -581,8 +584,9 @@ A minimal reading list. **These sources are not references — they are the oper
 ### Specs, protocols & security canon (2025–2026)
 - **OWASP — Top 10 for Agentic Applications (2026 edition)** + *Agentic AI Threats and Mitigations* + the **MCP Security Cheat Sheet** — the threat model for Layer 8
 - **Simon Willison — "The lethal trifecta"** (June 2025) — the deployment check every agent must pass
-- **OpenTelemetry — GenAI semantic conventions** — the vendor-neutral observability standard (Layer 6)
-- **MCP specification** (2025-11-25 stable; 2026-07-28 RC) and the **A2A specification** (Linux Foundation) — the interop protocols
+- **OpenTelemetry — GenAI semantic conventions** — the vendor-neutral observability standard (Part II · Layer 6); since semconv v1.42.0 (June 2026) maintained in `open-telemetry/semantic-conventions-genai`, still *Development* status — pin a commit
+- **MCP specification 2026-07-28** (final 28 Jul 2026; 2025-11-25 is the prior revision) with the official conformance suite, and the **A2A specification v1.0.1** (v1.0 stable since 12 Mar 2026; Linux Foundation) — the interop protocols
+- **Agent Skills specification** (agentskills.io) — the open format for skills, the instruction supply chain of Part IV
 - **GEPA** (reflective prompt evolution, ICLR 2026) + **DSPy** — programmatic optimization, the bridge before any weight update
 
 ### Reference exemplars for studying architecture
@@ -664,6 +668,8 @@ A minimal reading list. **These sources are not references — they are the oper
 15. **Token passthrough / over-scoped OAuth.** Forwarding a user's token, or minting broad scopes "to be safe," is a confused-deputy waiting to happen.
 16. **No budget ceiling on autonomous sessions.** Without a per-run cost circuit breaker, one bad loop is an unbounded invoice.
 17. **Peer-to-peer multi-agent buses.** Free-form agent debates multiply context and resist evaluation. Use an orchestrator with isolated subagents.
+18. **Prose topology counted as a control.** A route described in an SOP, a skill, or a system prompt is documentation, not a guardrail — it holds until the moment it matters, and prose cannot fail loudly. Mark every edge class enforced or declared; count only enforced edges (Part IV).
+19. **License inheritance by wiring.** "Every agent is production-ready, so the graph is." A graph of licensed loops is not a licensed graph — hold a Graph License (Part IV, *License Composition*).
 
 ---
 
@@ -713,4 +719,4 @@ The standard is not dogma. It is a **tilt of the field** toward the practices th
 
 ---
 
-*v3.3 · assembled from production practices as of July 2026*
+*v3.3.1 · assembled from production practices as of September 2026*

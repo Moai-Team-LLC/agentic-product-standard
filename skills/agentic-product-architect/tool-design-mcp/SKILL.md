@@ -10,10 +10,11 @@ In 2026 the tool-integration question has a clear answer: **MCP by default**. Th
 ## The two protocols
 
 **MCP (Model Context Protocol)** — agent ↔ tool
-- Anthropic, Nov 2024
+- Anthropic, Nov 2024; now governed at the Linux Foundation's Agentic AI Foundation
 - JSON-RPC 2.0
 - Servers expose tools, resources, prompts
 - One server per integration; any MCP-aware client can use it
+- **Current revision: 2026-07-28** (final 28 Jul 2026) — stateless core, Client ID Metadata Documents instead of Dynamic Client Registration, Roots/Sampling/Logging deprecated. What changed for security and state: advisory `docs/advisories/APS-2026-01-mcp-2026-07-28.md` in the standard repo.
 
 **A2A (Agent2Agent)** — agent ↔ agent
 - Google, April 2025; donated to Linux Foundation June 2025

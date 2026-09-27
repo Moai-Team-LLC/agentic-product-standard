@@ -15,6 +15,6 @@
 ## Checklist
 
 - [ ] Edited the relevant `STANDARD.md` section and/or matching `skills/.../SKILL.md`
-- [ ] Kept the English and Russian standards in sync (or noted what still needs syncing)
-- [ ] No code templates added (the skill set teaches judgment, not boilerplate)
+- [ ] Kept `STANDARD.md`, the matching skills, `CONTEXT.md`, and the counts in `README.md` in sync (items, layers, anti-patterns)
+- [ ] No framework boilerplate added to the skills (framework-neutral gates belong in `templates/`)
 - [ ] Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/)
