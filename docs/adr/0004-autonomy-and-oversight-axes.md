@@ -11,7 +11,7 @@ The v1–v3 Autonomy Ladder had one axis, L0–L4, and v3.0 bound the Loop Licen
 - an L2 pipeline that auto-applies its output every night was "below L3," so the Loop License did not bind — though nothing checks its actions before they land;
 - L3 was named "Orchestrator-Worker," the same name as composition pattern 4, so "L3" was read as a topology rather than a degree of autonomy.
 
-Outside evidence pointed the same way. Singapore IMDA's *Model AI Governance Framework for Agentic AI* (January 2026, updated May 2026) treats human oversight as its own design dimension and asks for measurement of automation bias (override rates, response times). METR's work on time horizons shows autonomy capability is domain-specific and that unwatched long runs produce illegitimate "successes" at material rates — both arguments for governing *oversight* on its own evidence.
+Outside evidence pointed the same way. The EU AI Act already separates the two: it defines AI systems by their "varying levels of autonomy" (Art. 3(1)) and makes human oversight a requirement of its own (Art. 14). Singapore IMDA's *Model AI Governance Framework for Agentic AI* (January 2026, updated May 2026) makes meaningful human accountability one of its four dimensions and asks for measurement of automation bias (override rates, response times). METR's work on time horizons shows autonomy capability is domain-specific, and its *Frontier Risk Report* (May 2026) found at least 16% of successful runs on tasks over eight hours illegitimate on review — both arguments for governing *oversight* on its own evidence.
 
 ## Decision
 

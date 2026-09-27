@@ -36,7 +36,7 @@ frameworks:
       - id: "50"
         title: Transparency obligations for providers and deployers of certain AI systems
       - id: "72"
-        title: Post-market monitoring by providers
+        title: Post-market monitoring by providers and post-market monitoring plan for high-risk AI systems
       - id: "73"
         title: Reporting of serious incidents
     dates:

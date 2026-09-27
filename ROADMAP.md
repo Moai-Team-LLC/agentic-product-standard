@@ -44,8 +44,10 @@ direction. Issues and PRs that move these forward are very welcome; see
   chain once it reaches v1.0.
 - OpenTelemetry `semantic-conventions-genai` tagged releases — when they arrive, DoD 29 pins a
   tag instead of a commit.
-- MCP deprecations — Roots, Sampling, and Logging can be removed no earlier than a revision
-  dated 2027-07-28; the baseline moves with the spec.
+- MCP deprecations — Roots, Sampling, Logging, and Dynamic Client Registration become eligible
+  for removal no earlier than the first revision released on or after 2027-07-28 (sooner only
+  for an active security risk); HTTP+SSE may go in the next revision. The baseline moves with
+  the spec.
 
 ## Later / help wanted
 

@@ -56,8 +56,9 @@ antipatterns:
       before sending email."
     failure_mode: >-
       model under pressure / prompt injection / context loss ignores the instruction. Replit
-      case: a production database holding records on 1,200+ companies deleted despite an
-      explicit "code freeze."
+      case ([Fortune, 23 Jul 2025](https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/)): a production database
+      holding records on 1,206 executives and 1,196+ companies deleted despite an explicit
+      "code freeze."
     fix: >-
       the agent must literally not have credentials that bypass the boundary. Destructive
       actions route through a separate approval service that the LLM cannot call directly.
@@ -151,7 +152,8 @@ antipatterns:
       instrument on the OpenTelemetry GenAI semantic conventions at a pinned revision
       (OpenInference and OpenLLMetry emit them); ship traces to Langfuse, LangSmith,
       Braintrust, or Arize. 100% of production traffic traced. Stable run IDs. Trace retention
-      30–90 days minimum. Content capture off by default (DoD 29).
+      30–90 days minimum — at least six months where the EU AI Act's high-risk logging duties
+      apply. Content capture off by default (DoD 29).
     severity: Critical — blind in production
 
   - n: 11
@@ -249,8 +251,9 @@ antipatterns:
     fix: >-
       mint per-integration OAuth 2.1 scoped tokens for exactly what the task needs; never
       forward the user's token downstream. Treat scope as a security boundary — least
-      privilege, audited, time-bounded where possible. MCP clients register with a Client ID
-      Metadata Document, validate `iss`, and key stored credentials by issuer (DoD 26).
+      privilege, audited, time-bounded where possible. MCP clients use pre-registration or a
+      Client ID Metadata Document, validate `iss`, and bind stored client credentials to their
+      issuer (DoD 26).
     severity: Critical — confused-deputy / privilege-escalation risk
 
   - n: 16

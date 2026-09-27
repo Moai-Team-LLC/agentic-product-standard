@@ -80,7 +80,7 @@ Regulation (EU) 2024/1689, as amended by Regulation (EU) 2026/1744 of 8 July 202
 | Art. 17 | Quality management system | 24 |
 | Art. 26 | Obligations of deployers of high-risk AI systems (incl. log retention, competent oversight) | 29, 31, 33 |
 | Art. 50 | Transparency obligations for providers and deployers of certain AI systems | 31 |
-| Art. 72 | Post-market monitoring by providers | 12, 23, 30 |
+| Art. 72 | Post-market monitoring by providers and post-market monitoring plan for high-risk AI systems | 12, 23, 30 |
 | Art. 73 | Reporting of serious incidents | — *(not covered by the DoD)* |
 
 ### OWASP Top 10 for Agentic Applications (2026)

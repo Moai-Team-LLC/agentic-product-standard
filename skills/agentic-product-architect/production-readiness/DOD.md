@@ -52,7 +52,7 @@ The normative text of each item is in `STANDARD.md` Part III; this file is the a
 - [ ] Each one routes through an approval gate
 - [ ] Approval is logged with who/when/what
 
-**Why:** Replit incident — an agent deleted a production database holding records on 1,200+ companies despite a "code freeze" prompt. Prompts don't enforce.
+**Why:** Replit incident ([Fortune, 23 Jul 2025](https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/)) — an agent deleted a production database holding records on 1,206 executives and 1,196+ companies (the agent's own count) despite a "code freeze" prompt. Prompts don't enforce.
 
 **Common gap:** "the prompt tells the agent not to delete production data" — insufficient.
 
@@ -173,7 +173,7 @@ The normative text of each item is in `STANDARD.md` Part III; this file is the a
 - [ ] Merge blocked on regression vs main branch
 - [ ] 100% of production traffic produces traces
 - [ ] Traces include all required fields (see the telemetry contract, item 29)
-- [ ] Trace retention sufficient for incident investigation (typically 30–90 days)
+- [ ] Trace retention sufficient for incident investigation (typically 30–90 days; at least six months where the EU AI Act's high-risk logging duties apply — Art. 19, Art. 26(6))
 
 **Why:** evals without enforcement are theater; traces are the only way to debug failures after launch.
 
@@ -228,11 +228,11 @@ The normative text of each item is in `STANDARD.md` Part III; this file is the a
 *Binds: Wherever MCP is used.*
 
 - [ ] Inventory: every MCP connection, the side you own (client or server), the revision it speaks, and a sunset date for anything older than 2026-07-28
-- [ ] The official conformance suite (`@modelcontextprotocol/conformance`) runs in CI against each server and client you own, at a pinned version, with its expected-failures file reviewed like code
+- [ ] The official conformance suite (`@modelcontextprotocol/conformance`) runs in CI against each server and client you own, at a pinned version, with `--requirements 2026-07-28`; its expected-failures file is reviewed like code, and every entry is an owned, dated gap — a baselined failure is still a failure
 - [ ] No dependence on `Mcp-Session-Id`; cross-call state uses explicit, server-minted handles or your own store (item 2)
-- [ ] `requestState` handled as attacker-controlled input and integrity-protected (HMAC/AEAD) wherever it influences authorization, resource access, or business logic
-- [ ] Clients register with a Client ID Metadata Document, validate a present `iss` against the recorded issuer, and key persisted credentials by issuer; servers never pass tokens through
-- [ ] Gateways that route on `Mcp-Method` / `Mcp-Name` reject header/body mismatches and protocol versions that predate the headers; `private` cache entries never cross a user or tenant
+- [ ] `requestState` handled as attacker-controlled input and integrity-protected (HMAC/AEAD) wherever it influences authorization, resource access, or business logic; state that fails verification is rejected
+- [ ] Clients use pre-registration or a Client ID Metadata Document (Dynamic Client Registration only as a documented fallback for an authorization server that supports neither), validate a present `iss` against the recorded issuer, and bind pre-registered or dynamically registered client credentials to the authorization server that issued them; servers never pass tokens through
+- [ ] Servers reject header/body mismatches (`HeaderMismatch`); gateways that authorize on `Mcp-Method` / `Mcp-Name` reject requests whose `MCP-Protocol-Version` is absent or predates header validation; a `private` cache entry is never served outside the authorization context it was fetched under
 
 **Why:** the 2026-07-28 revision moved state out of the protocol and hardened authorization. Code written for the 2025 session-and-DCR model now carries state nobody can see and client registrations the ecosystem is retiring. Conformance is testable — so it is tested, not asserted. See advisory [APS-2026-01](../../../docs/advisories/APS-2026-01-mcp-2026-07-28.md).
 
@@ -248,7 +248,7 @@ The normative text of each item is in `STANDARD.md` Part III; this file is the a
 - [ ] Each trace span carries the agent identity and the delegating principal (user or upstream system)
 - [ ] Identity and tenant are derived from authentication, never asserted by the model
 
-**Why:** an agent that shares an identity cannot be scoped, rotated, revoked, or audited on its own; when it misbehaves you cannot tell which agent did what on whose behalf. NIST's NCCoE concept paper on software and AI agent identity and authorization (Feb 2026) builds on OAuth 2.0 and SPIFFE for exactly this.
+**Why:** an agent that shares an identity cannot be scoped, rotated, revoked, or audited on its own; when it misbehaves you cannot tell which agent did what on whose behalf. NIST's NCCoE concept paper on software and AI agent identity and authorization (initial public draft, Feb 2026) frames exactly this problem and references OAuth 2.0 and SPIFFE.
 
 **Common gap:** every agent in the fleet calling tools with one service-account key nobody rotates, so the audit log says "svc-agents" for every action.
 

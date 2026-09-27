@@ -79,7 +79,7 @@ Metaprinciple: solve the task by composing these patterns on deterministic code 
 
 ### 2. Harness Over Model
 
-Model choice matters. The harness matters more. In a production coding agent, roughly **98% of the code is harness**, not the model loop — and as model capability converges, harness quality is the durable competitive advantage.
+Model choice matters. The harness matters more. In Claude Code, by one community estimate, roughly **98% of the code is harness**, not the model loop — and as model capability converges, harness quality is the durable competitive advantage.
 
 A production agent must be surrounded by **nine** harness layers: the seven in the stack below, plus two **cross-cutting** layers that constrain all of them — **Security & Identity** (layer 8, see Doctrine 7) and **Cost & FinOps** (layer 9: per-run token/cost ceilings enforced in code, caching, model routing, cost per outcome).
 
@@ -135,7 +135,7 @@ verify preconditions → execute → verify outcome →
 write trace → update memory
 ```
 
-Permissions are enforced in **code**, never in the prompt. The model will, given the chance, ignore an instruction it was told to obey. The canonical proof is the July 2025 Replit incident, where an agent deleted the production database of 1,200+ companies despite an explicit "code and action freeze" written into its prompt. Treat every tool surface as an RPC endpoint exposed to untrusted input.
+Permissions are enforced in **code**, never in the prompt. The model will, given the chance, ignore an instruction it was told to obey. The canonical proof is the July 2025 Replit incident (reported by Fortune, 23 Jul 2025), where an agent deleted a production database holding records on 1,206 executives and 1,196+ companies, by the agent's own count, despite an explicit "code and action freeze" written into its prompt. Treat every tool surface as an RPC endpoint exposed to untrusted input.
 
 The "verify outcome" step is only trust-bearing if the verifier is. A judge whose calibration status is not `calibrated` (Doctrine 5) MUST NOT gate operation without per-action approval (O1+), an auto-apply, or a release — a low-confidence verdict abstains and escalates. A flaky grader in a release gate is a prompt-enforced permission by another name: it looks like a check and isn't one.
 
@@ -209,10 +209,12 @@ Two protocol baselines turn the checks above into testable contracts:
 
 - **MCP 2026-07-28.** Speak the current revision (or carry a dated sunset); keep no
   state in a protocol session; build nothing new on the deprecated Roots, Sampling,
-  or Logging; treat an echoed `requestState` as untrusted and integrity-protect it
-  where it affects authorization; register clients with a Client ID Metadata
-  Document, validate the issuer (`iss`, RFC 9207), and key stored credentials by
-  issuer; never pass a token through; run the official conformance suite in CI.
+  or Logging; treat an echoed `requestState` as untrusted, and integrity-protect and
+  verify it wherever it influences authorization, resource access, or business
+  logic; register clients by pre-registration or a Client ID Metadata Document
+  (Dynamic Client Registration only as a documented fallback), validate the issuer
+  (`iss`, RFC 9207), and bind stored client credentials to their issuer; never pass
+  a token through; run the official conformance suite in CI.
 - **A2A signed Agent Cards.** Before delegating across an organization or vendor
   boundary, verify the peer's card signature against a trusted keystore; fail
   closed on unsigned or unverifiable cards; delegate no more scope than you hold;
@@ -1327,7 +1329,7 @@ Determine whether an agentic system is safe and reliable enough for production.
 - [ ] MCP tool definitions are pinned by hash with change alerts; servers come from an allow-listed registry, version-pinned and signature-checked.
 - [ ] Tokens are OAuth 2.1 scoped, short-lived, and audience-bound; no token passthrough; no over-scoping.
 - [ ] Each agent has its own least-privilege non-human identity (no shared service account, no human token); identity and tenant are derived from auth, never from the model; every action is attributable to the agent and its delegator.
-- [ ] MCP connections speak revision 2026-07-28 (or carry a dated sunset), pass the official conformance suite in CI, register clients by Client ID Metadata Document, validate `iss`, and key stored credentials by issuer.
+- [ ] MCP connections speak revision 2026-07-28 (or carry a dated sunset), run the official conformance suite in CI (every baselined failure an owned, dated gap), register clients by pre-registration or Client ID Metadata Document, validate `iss`, and bind stored client credentials to their issuer.
 - [ ] Cross-boundary delegation verifies the peer's signed Agent Card before handing over work; unsigned or unverifiable peers fail closed.
 - [ ] Indirect prompt injection (poisoned documents / tool output) is in the threat model, not just user-turn injection.
 
@@ -1684,14 +1686,15 @@ directionally correct, not as audited benchmarks.
 | Single-agent for depth-first / shared-context work; "telephone game" risk | Cognition, *Don't Build Multi-Agents* (Walden Yan, Jun 2025) |
 | Context engineering = write / select / compress / isolate | LangChain, *Context Engineering for Agents* (Lance Martin, Jun 2025) |
 | The ~40% context-window "dumb zone" | HumanLayer (Dex Horthy), empirical context-budget guidance |
-| Autonomy and oversight are separate axes; automation bias makes rubber-stamped approval a non-control | IMDA, *Model AI Governance Framework for Agentic AI* (Jan 2026, updated May 2026) — measure human override rates and response times; EU AI Act Art. 14 |
-| Benchmark time horizons do not transfer to a product; at least 16% of long-task "successes" were illegitimate on review | METR, *Clarifying limitations of time horizon* (Jan 2026); METR, *Frontier Risk Report* (May 2026) |
+| Autonomy and oversight are separate axes | EU AI Act — AI systems operate "with varying levels of autonomy" (Art. 3(1)); human oversight is a requirement of its own (Art. 14) |
+| Automation bias makes rubber-stamped approval a non-control; measure override rates and response times | IMDA, *Model AI Governance Framework for Agentic AI* (Jan 2026, updated May 2026); EU AI Act Art. 14(4)(b) |
+| Benchmark time horizons do not transfer to a product; on tasks over eight hours, at least 16% of successful runs were illegitimate on review | METR, note on time-horizon limitations (22 Jan 2026); METR, *Frontier Risk Report* (May 2026) |
 | MCP 2026-07-28: stateless core, Client ID Metadata Documents, RFC 9207 issuer validation, issuer-bound credentials, deprecated Roots/Sampling/Logging | MCP specification 2026-07-28 and its changelog (28 Jul 2026); official conformance suite (modelcontextprotocol/conformance) |
 | Signed Agent Cards (JWS over JCS-canonicalized cards); verification only a SHOULD in the spec | A2A specification v1.0.1, §8.4 (v1.0 released 12 Mar 2026) |
 | GenAI conventions moved to their own repository, still Development status; content capture opt-in | OpenTelemetry semantic conventions v1.42.0 (Jun 2026); `semantic-conventions-genai` |
-| Distinct, attributable identity per agent | NIST NCCoE concept paper, *Accelerating the Adoption of Software and Artificial Intelligence Agent Identity and Authorization* (Feb 2026) |
+| Distinct, attributable identity per agent | NIST NCCoE concept paper, *Accelerating the Adoption of Software and Artificial Intelligence Agent Identity and Authorization* (initial public draft, Feb 2026) |
 | Skills are a supply chain: 13.4% of 3,984 public skills had critical-level issues; 76 confirmed malicious payloads | Snyk, *ToxicSkills* (Feb 2026); Agent Skills specification (agentskills.io) |
-| ~98% of a production coding agent is harness, not model loop; harness as the durable advantage | Liu et al., *Dive into Claude Code* (arXiv:2604.14228) — cites a community estimate of ~1.6% AI decision logic vs. ~98.4% operational infrastructure in Claude Code; OpenAI, *Harness Engineering* (Feb 2026); LangChain, *Improving Deep Agents with harness engineering* (Mar 2026) |
+| ~98% of Claude Code is harness, not model loop (a community estimate); harness as the durable advantage | Liu et al., *Dive into Claude Code* (arXiv:2604.14228) — cites a community estimate of ~1.6% AI decision logic vs. ~98.4% operational infrastructure in Claude Code; OpenAI, *Harness Engineering* (Feb 2026); LangChain, *Improving Deep Agents with harness engineering* (Mar 2026) |
 | RAG over tool descriptions ≈3.2× tool-selection accuracy; cuts prompt tokens >50% | *RAG-MCP* (arXiv:2505.03275) |
 | MCP scale (10,000+ servers, 177,000+ tools) and MCP/A2A split | MCP security framework (arXiv:2604.05969); *How are AI agents used?* (arXiv:2603.23802); A2A (Google → Linux Foundation, 2025) |
 | Permissions must be enforced outside the model — Replit deleted a production DB despite a prompt "code freeze" | Jason Lemkin (SaaStr) on X, Jul 18, 2025; Replit CEO Amjad Masad's response, Jul 20, 2025; Fortune, *AI-powered coding tool wiped out a software company's database* (Jul 23, 2025) |

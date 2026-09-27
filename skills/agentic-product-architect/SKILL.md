@@ -16,7 +16,7 @@ Six principles govern every decision:
 <!-- canon:begin:skill.master.principles -->
 1. **Determinism by default, agency by necessity.** Every degree of autonomy must be earned, not granted upfront.
 2. **Architecture beats framework.** Patterns outlive libraries.
-3. **Harness > model.** Reliability lives in the code around the LLM, not in the LLM itself; in a production coding agent that harness is ~98% of the code (Canon 4).
+3. **Harness > model.** Reliability lives in the code around the LLM, not in the LLM itself; in Claude Code, by one community estimate, that harness is ~98% of the code (Canon 4).
 4. **Context engineering is the core discipline.** What enters the context window determines everything.
 5. **Eval-driven development is non-negotiable.** No measurement, no improvement; no trace review, no understanding.
 6. **Security is a structural property, not a guardrail.** An agent's safety comes from architecture (identity, least privilege, isolation, pinned tool definitions), not from filters bolted onto the edges. Content filters top out near ~97% accuracy, so ~3% of injection attacks succeed by design — a property you mitigate structurally, not a number you tune.
@@ -199,7 +199,7 @@ Always consult the relevant sub-skill before answering a substantive question in
 
 - `architecture-design/SKILL.md` — autonomy ladder, 5 patterns, single vs multi-agent decision, reference exemplars
 - `context-engineering/SKILL.md` — write/select/compress/isolate, the 40% rule, CLAUDE.md pattern
-- `harness-engineering/SKILL.md` — 9-layer harness model, Cycle of Trust, what 98% of code does
+- `harness-engineering/SKILL.md` — 9-layer harness model, Cycle of Trust, what the code around the model loop does
 - `tool-design-mcp/SKILL.md` — MCP-first integration, tool description as prompt, RAG-MCP
 - `memory-architecture/SKILL.md` — Mem0 vs Zep vs Letta vs LangMem vs files vs AgenticMind; selection matrix
 - `tenant-isolation/SKILL.md` — pooled/bridge/silo models, the agent leakage paths (retrieval/memory/cache/trace/model-supplied tenant_id), tenant_id as a principal dimension, the cross-tenant leakage eval
