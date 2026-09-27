@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- **AITM-SMB 1.1.0** in [`aitm-smb/`](aitm-smb/README.md) — the business-level AI transformation methodology that sits upstream of this standard (which capability changes, whether AI belongs, how much authority it gets). Self-contained and split-ready with its own semver, MIT license, 40 agent skills plus a root `SKILL.md` adapter, artifact contracts, a fictional worked example, and a stdlib-only validator. See its [changelog](aitm-smb/CHANGELOG.md).
+- [`.github/workflows/aitm-smb.yml`](.github/workflows/aitm-smb.yml) — validates the methodology and its worked example on every change under `aitm-smb/`, and on an `aitm-smb-vX.Y.Z` tag publishes a GitHub Release with the Core and Full distributions attached.
+- [ADR-0003](docs/adr/0003-host-aitm-smb-as-split-ready-subfolder.md) — why AITM-SMB is hosted here as a split-ready folder, and how the two ladders relate.
+
+### Changed
+- `CONTEXT.md` scopes its vocabulary to the standard's own skills and disambiguates **APS-L<n>** (architecture) from **AITM-L<n>** (business authority); README and ECOSYSTEM link the [crosswalk](aitm-smb/docs/crosswalk-agentic-product-standard.md).
+- The `validate` workflow's skill-frontmatter check also covers `aitm-smb/SKILL.md` and `aitm-smb/skills/`.
+
 ## [3.3.0] — 2026-08-05
 
 The **License Composition** release. v3.0 gave a *loop* a license; a graph of licensed loops multiplies that question rather than answering it. The vocabulary for wiring agents together — nodes, edges, shared state, fan-out — crystallized in the market as *graph engineering* one rung above loop engineering, and arrived with no governance attached. This release supplies it: Part IV now binds the **topology**, not the runtime, and takes no position on which framework draws the graph.

@@ -31,6 +31,7 @@ Most teams ship agent demos. Few ship agents that survive contact with productio
 - [What's in this repo](#whats-in-this-repo)
 - [Install the skills](#-install-the-skills)
 - [The AgenticProduct family](#-the-agenticproduct-family)
+- [Upstream: AITM-SMB](#-upstream-aitm-smb--deciding-where-ai-belongs)
 - [The Autonomy Ladder](#the-autonomy-ladder)
 - [The five composition patterns](#the-five-composition-patterns)
 - [The 9-layer harness](#the-9-layer-harness)
@@ -78,6 +79,7 @@ agentic-product-standard/
 ├── templates/decision-tree/             ← which architecture to build, and the license it owes
 ├── examples/agenticmind-case-study.md   ← reference implementation, audited against the canon
 ├── docs/adr/                            ← architecture decision records (why the repo is shaped this way)
+├── aitm-smb/                            ← AITM-SMB: business-level AI transformation methodology (own semver, split-ready)
 └── skills/                              ← Claude Code skill set (operationalizes the standard)
     ├── agent-builder/                    ← single-agent track (bundles AGENT_STANDARD.md + templates/)
     └── agentic-product-architect/        ← multi-agent track: master router + sub-skills
@@ -180,6 +182,14 @@ The standard tells you *how*; five reference implementations are repos you can *
 
 Generated secrets are written into each member's local `.env` and never printed. Paved road, not a mandate — swap any member for your own (Principle 2).
 
+## 🧭 Upstream: AITM-SMB — deciding *where* AI belongs
+
+This standard answers *how to build* an agentic product. **[AITM-SMB](aitm-smb/README.md)** (AI Transformation Methodology for Small and Medium-Sized Businesses) answers the question that comes before it: *which business capability should change, whether AI belongs in that change at all, and how much authority it may have*. It starts from a measurable business Outcome and a Business Capability, not from an AI use case. It treats AI as one intervention family among eighteen and requires evidence and human decision gates before authority or scale increases.
+
+AITM-SMB lives in [`aitm-smb/`](aitm-smb/) as a self-contained, split-ready methodology with its own versioning (currently 1.1.0), [skills](aitm-smb/skills/INDEX.md), [artifact contracts](aitm-smb/artifacts/INDEX.md), [worked example](aitm-smb/examples/compact-scenario-b/README.md), and [validator](aitm-smb/tools/validate.py). Start with its [quickstart](aitm-smb/QUICKSTART.md).
+
+> **Two ladders, two questions.** AITM-SMB's **L0–L5** is an *authority* ladder (what the AI may do in the business: suggest, draft, execute with approval, …). This standard's **L0–L4** is an *architecture* ladder (how the AI component is built: single call, workflow, orchestrator-worker, agent loop). They are independent; write **AITM-L3** / **APS-L3** in mixed contexts. The [crosswalk](aitm-smb/docs/crosswalk-agentic-product-standard.md) maps one onto the other and shows where an AITM-SMB decision hands off to this standard.
+
 ## The Autonomy Ladder
 
 Never start with "build an agent." Start with *"what is the minimum autonomy this task requires?"* The cost of getting this wrong is asymmetric.
@@ -193,6 +203,8 @@ Never start with "build an agent." Start with *"what is the minimum autonomy thi
 | **L4** · Autonomous Agent Loop | LLM chooses the next step until termination | Path cannot be enumerated; cost is acceptable |
 
 > **Escalation rule:** do not climb to L+1 until L delivers **≥90% pass rate** on a curated eval set.
+
+*These are architecture levels (APS-L0…L4). They are not the business-authority levels of [AITM-SMB](aitm-smb/docs/crosswalk-agentic-product-standard.md).*
 
 ## The five composition patterns
 

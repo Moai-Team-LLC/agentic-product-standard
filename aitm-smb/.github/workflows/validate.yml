@@ -1,0 +1,56 @@
+name: validate
+
+# Standalone copy for after a split (git subtree split --prefix=aitm-smb).
+# While AITM-SMB lives inside the Agentic Product Standard repository this
+# file is inert; the active workflow is .github/workflows/aitm-smb.yml at the
+# host root. Keep the two in step. Standalone release tags are vX.Y.Z.
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Integrity, worked example, distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/validate.py
+      - run: python3 tools/validate.py --engagement examples/compact-scenario-b
+      - run: python3 tools/build_dist.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aitm-smb-dist
+          path: dist/*.zip
+
+  release:
+    needs: validate
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Release with CHANGELOG notes and distributions
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          MANIFEST_VERSION=$(python3 -c 'import sys; sys.path.insert(0, "tools"); from validate import manifest; print(manifest()["version"])')
+          [ "$VERSION" = "$MANIFEST_VERSION" ] || { echo "::error::tag does not match MANIFEST.md ($MANIFEST_VERSION)"; exit 1; }
+          awk -v v="$VERSION" '
+            $0 ~ ("^## \\[" v "\\]") { f=1; next }
+            f && /^## \[/ { exit }
+            f { print }
+          ' CHANGELOG.md > notes.md
+          [ -s notes.md ] || { echo "::error::no CHANGELOG.md section for $VERSION"; exit 1; }
+          python3 tools/build_dist.py
+          gh release create "$GITHUB_REF_NAME" --title "AITM-SMB $VERSION" \
+            --notes-file notes.md --verify-tag \
+            dist/aitm-smb-core-"$VERSION".zip dist/aitm-smb-full-"$VERSION".zip

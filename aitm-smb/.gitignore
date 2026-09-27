@@ -1,0 +1,4 @@
+# Build output of tools/build_dist.py
+dist/
+__pycache__/
+*.pyc

@@ -4,6 +4,12 @@ The vocabulary every skill in this repo speaks. When a skill says "the harness"
 or "L3," it means exactly what is defined here. Keep this file authoritative;
 when a term's meaning shifts, change it here and the skills inherit it.
 
+Scope: the Agentic Product Standard and its skills under `skills/`. The
+`aitm-smb/` methodology keeps its own vocabulary (`aitm-smb/CANONICAL_CONCEPTS.md`);
+notably its **L0–L5** ladder is a business *authority* ladder, not the
+architecture ladder below. In mixed contexts write **AITM-L<n>** / **APS-L<n>**
+(see `aitm-smb/docs/crosswalk-agentic-product-standard.md`).
+
 ## Core stance
 
 - **Agentic product** — a product where part of the process is dynamically

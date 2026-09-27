@@ -16,3 +16,4 @@ ADR to one decision and one page.
 | --- | --- | --- |
 | [0001](0001-master-skill-with-sub-skill-routing.md) | Master skill with sub-skill routing | Accepted |
 | [0002](0002-standard-as-prose-skills-as-operators.md) | Standard as prose, skills as operators | Accepted |
+| [0003](0003-host-aitm-smb-as-split-ready-subfolder.md) | Host AITM-SMB as a split-ready subfolder | Accepted |

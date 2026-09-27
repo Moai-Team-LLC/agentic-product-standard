@@ -20,6 +20,23 @@ a migration guide.
 All members are public and open-source: AgenticAssurance and the standard are MIT;
 the other implementations are Apache-2.0 (some with a separate enterprise edition).
 
+## Related methodology: AITM-SMB
+
+AITM-SMB (AI Transformation Methodology for Small and Medium-Sized Businesses) is
+not a reference implementation of a surface; it sits *upstream* of the standard.
+It decides which business capability should change, whether AI belongs in that
+change, and how much authority AI may hold (its own L0–L5 *authority* ladder),
+with evidence and human decision gates before authority or scale increases. When
+an AITM-SMB intervention calls for an AI component, the Agentic Product Standard
+governs how that component is built and licensed.
+
+| Methodology | Location | Status | License |
+|---|---|---|---|
+| AITM-SMB | [`aitm-smb/`](aitm-smb/README.md) in this repository (split-ready; tags `aitm-smb-vX.Y.Z`) | 1.1.0 — first public release; Public Methodology API stable for 1.x | MIT |
+
+The ladders are independent — see the
+[crosswalk](aitm-smb/docs/crosswalk-agentic-product-standard.md).
+
 ## How they compose
 
 The standard sets the contract every member is measured against — the agent loop,
