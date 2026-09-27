@@ -42,7 +42,7 @@ envelope_rules:
     label: L3, or any system at O1/O2
     requires: M2
   - when: "True"
-    label: everything else in production
+    label: everything else that ships
     requires: M1
 
 sections:
@@ -245,8 +245,8 @@ sections:
 
   - key: loop
     title: Operating without per-action approval — the Loop License
-    condition: if the system runs at O1 or O2
-    applies_if: oversight >= 1
+    condition: if the system runs at O1 or O2 — stop conditions also at L3+
+    applies_if: autonomy >= 3 or oversight >= 1
     items:
       - id: loop.license
         band: M2

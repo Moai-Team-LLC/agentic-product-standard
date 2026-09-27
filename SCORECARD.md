@@ -20,7 +20,9 @@ Most standards ship principles but no way to ask *"where do we actually stand?"*
 | **M2 — Production** | up to L3; O1/O2 only with a Loop License | Durable, observable, tenant-isolated, security-checked, identity-scoped, cost-bounded, CI-gated on evals, on the current protocol baselines. |
 | **M3 — Autonomous-ready** | L4 at any oversight mode | Online evals, `pass^k` reliability, red-team kit run, full OTel trajectory observability. Earns the right to an open-ended loop. |
 
-**Your level is the highest band whose every applicable gate item is satisfied.** One unmet gate item caps you at the level below — there is no partial credit, and no skipping a band. The operating point you run at sets the band you must reach: L4 at any oversight mode → **M3**; L3, or any system at O1/O2 → **M2**; everything else in production → **M1**.
+**Your level is the highest band whose every applicable gate item is satisfied.** One unmet gate item caps you at the level below — there is no partial credit, and no skipping a band. The operating point you run at sets the band you must reach to ship: L4 at any oversight mode → **M3**; L3, or any system at O1/O2 → **M2**; everything else that ships → **M1**.
+
+**Shippable is not production-ready.** The band is the floor for putting a system in front of users at its operating point. *Production-ready* is the Definition of Done ([`STANDARD.md`](STANDARD.md) Part III): every DoD item that binds to the product, each evidenced by the scorecard items mapped to it — for most products, that means M2's items. [`aps-conformance`](docs/conformance.md) reports both; `--require-dod` makes the second one gate CI.
 
 <!-- canon:end:scorecard.bands -->
 
@@ -90,15 +92,15 @@ Each item lists the **gate level** at which it becomes mandatory and, where it a
 - [ ] **(M3)** Online evals run on completed production threads; failing traces feed the offline set. <sub>`eval.online`</sub>
 - [ ] **(M3)** Reliability tracked with `pass^k`, not only `pass@1`. <sub>`eval.pass-k`</sub>
 
-### Operating without per-action approval — the Loop License *(if the system runs at O1 or O2)*
-- [ ] **(M2)** **Loop License** held: eval threshold (pass@1 **and** pass^5), regression gate, declared blast radius, cost cap, kill switch, and escalation path — all six declared, enforced in code, tested ([`templates/loop-license/CHECKLIST.md`](templates/loop-license/CHECKLIST.md)). <sub>`loop.license` · DoD 16</sub>
-- [ ] **(M2, L3+ or O1+)** Stop conditions declared in the Agent Contract and enforced by the runner: max iterations, token/time/spend budgets, timeout, escalation after N consecutive failures (also binds at L3+ under O0). <sub>`loop.stop-conditions` · DoD 17</sub>
-- [ ] **(M2)** Independent verification: the producing model does not grade its own work; deterministic checks first; the LLM judge is calibrated and decorrelated from the writer. <sub>`loop.verification` · DoD 18</sub>
-- [ ] **(M2)** The agent cannot modify its own tests, graders, eval sets, or thresholds — they sit outside its write scope. <sub>`loop.checks-out-of-reach` · DoD 18, 30</sub>
-- [ ] **(M2)** "Find work" treated as untrusted input — indirect-injection cases in the eval suite, instruction/data channel separation, least-privilege triggers (OWASP LLM01). <sub>`loop.ingestion` · DoD 16</sub>
-- [ ] **(M2)** Instruction supply chain governed: skills/prompts/instructions versioned, provenanced, eval-gated before deploy, regression-tested on update, trigger-collisions audited; skills validated against the Agent Skills specification and hash-locked (OWASP LLM03). <sub>`loop.supply-chain` · DoD 16</sub>
-- [ ] **(M2)** Loop economics: cost per run **and** cost per *verified* outcome tracked in traces; per-run/per-window caps declared. <sub>`loop.economics` · DoD 19</sub>
-- [ ] **(M2)** Memory model and determinism map were declared at architecture time (what is persisted, retention, provenance, replayability; which steps are deterministic vs. model-driven). <sub>`loop.declarations` · DoD 16</sub>
+### Operating without per-action approval — the Loop License *(if the system runs at O1 or O2 — stop conditions also at L3+)*
+- [ ] **(M2, O1+)** **Loop License** held: eval threshold (pass@1 **and** pass^5), regression gate, declared blast radius, cost cap, kill switch, and escalation path — all six declared, enforced in code, tested ([`templates/loop-license/CHECKLIST.md`](templates/loop-license/CHECKLIST.md)). <sub>`loop.license` · DoD 16</sub>
+- [ ] **(M2)** Stop conditions declared in the Agent Contract and enforced by the runner: max iterations, token/time/spend budgets, timeout, escalation after N consecutive failures (also binds at L3+ under O0). <sub>`loop.stop-conditions` · DoD 17</sub>
+- [ ] **(M2, O1+)** Independent verification: the producing model does not grade its own work; deterministic checks first; the LLM judge is calibrated and decorrelated from the writer. <sub>`loop.verification` · DoD 18</sub>
+- [ ] **(M2, O1+)** The agent cannot modify its own tests, graders, eval sets, or thresholds — they sit outside its write scope. <sub>`loop.checks-out-of-reach` · DoD 18, 30</sub>
+- [ ] **(M2, O1+)** "Find work" treated as untrusted input — indirect-injection cases in the eval suite, instruction/data channel separation, least-privilege triggers (OWASP LLM01). <sub>`loop.ingestion` · DoD 16</sub>
+- [ ] **(M2, O1+)** Instruction supply chain governed: skills/prompts/instructions versioned, provenanced, eval-gated before deploy, regression-tested on update, trigger-collisions audited; skills validated against the Agent Skills specification and hash-locked (OWASP LLM03). <sub>`loop.supply-chain` · DoD 16</sub>
+- [ ] **(M2, O1+)** Loop economics: cost per run **and** cost per *verified* outcome tracked in traces; per-run/per-window caps declared. <sub>`loop.economics` · DoD 19</sub>
+- [ ] **(M2, O1+)** Memory model and determinism map were declared at architecture time (what is persisted, retention, provenance, replayability; which steps are deterministic vs. model-driven). <sub>`loop.declarations` · DoD 16</sub>
 - [ ] **(M2, O2)** At O2, a sample of successful runs is reviewed each release for illegitimate success; the legitimacy rate is published and gates promotion. <sub>`loop.legitimacy` · DoD 30</sub>
 
 ### Measurement science & oversight *(deepens Evals & observability)*

@@ -144,7 +144,7 @@ items:
   # (M3) Reliability tracked with pass^k, not only pass@1.
   eval.pass-k: {status: no, evidence: ""}
 
-  # ── Operating without per-action approval — the Loop License (if the system runs at O1 or O2) ──
+  # ── Operating without per-action approval — the Loop License (if the system runs at O1 or O2 — stop conditions also at L3+) ──
   # (M2, O1+ · DoD 16) Loop License held: eval threshold (pass@1 and pass^5), regression gate, declared blast radius, cost cap, kill switch, and escalation path — all six declared, enforced in code, tested (templates/loop-license/CHECKLIST.md).
   loop.license: {status: no, evidence: ""}
   # (M2, L3+ or O1+ · DoD 17) Stop conditions declared in the Agent Contract and enforced by the runner: max iterations, token/time/spend budgets, timeout, escalation after N consecutive failures (also binds at L3+ under O0).
