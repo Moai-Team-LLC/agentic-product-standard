@@ -1,0 +1,45 @@
+# The standard's identity and the external specifications this version is written against.
+# Edit here, then run `python3 tools/aps.py render` — every badge, title and footer follows.
+standard: The Agentic Product Standard
+short_name: APS
+version: 4.0.0-rc.1        # SemVer of this canon; tags are v<version>
+version_label: v4.0        # shown in badges, titles and footers
+release_name: Conformance Contract
+date: 2026-09-27
+as_of: September 2026
+repo: https://github.com/Moai-Team-LLC/agentic-product-standard
+
+# Pinned baselines. A normative clause that names a protocol names the revision below;
+# a product declares the revisions it actually speaks in its aps-conformance.yaml.
+baselines:
+  mcp:
+    name: Model Context Protocol
+    revision: "2026-07-28"
+    status: Final (published 2026-07-28)
+    url: https://modelcontextprotocol.io/specification/2026-07-28
+    conformance: https://github.com/modelcontextprotocol/conformance
+  a2a:
+    name: Agent2Agent (A2A)
+    revision: "1.0.1"
+    status: Stable (v1.0.0 released 2026-03-12)
+    url: https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md
+  otel_genai:
+    name: OpenTelemetry GenAI semantic conventions
+    revision: commit-pinned
+    status: Development (moved to semantic-conventions-genai at semconv v1.42.0, 2026-06-12; no tagged releases yet)
+    url: https://github.com/open-telemetry/semantic-conventions-genai
+  agent_skills:
+    name: Agent Skills specification
+    revision: current
+    status: Published open specification
+    url: https://agentskills.io/specification
+  owasp_asi:
+    name: OWASP Top 10 for Agentic Applications
+    revision: "2026"
+    status: Released 2025-12-09
+    url: https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/
+  eu_ai_act:
+    name: EU AI Act — Regulation (EU) 2024/1689, as amended by Regulation (EU) 2026/1744 (Digital Omnibus on AI)
+    revision: consolidated 2026-07-27
+    status: In force; staged application dates in canon/regulatory.yaml
+    url: https://eur-lex.europa.eu/eli/reg/2024/1689/2026-07-27/eng

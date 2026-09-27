@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Moai-Team-LLC/agentic-product-standard/canon/schema/aps-conformance.schema.json",
+  "title": "aps-conformance.yaml",
+  "description": "A product's self-assessment against The Agentic Product Standard, scored by tools/aps.py conformance (and the aps-conformance GitHub Action). Item ids come from canon/scorecard.yaml.",
+  "type": "object",
+  "required": ["standard", "profile", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "standard": {
+      "description": "The standard version this file answers (SemVer). The tool refuses a different major version.",
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.]+)?$"
+    },
+    "product": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "owner": { "type": "string" },
+        "stage": { "enum": ["prototype", "production"] }
+      }
+    },
+    "profile": {
+      "description": "The operating point and what the product contains. Every flag is required: absent is not false.",
+      "type": "object",
+      "required": ["autonomy", "oversight", "multi_tenant", "mcp", "multi_agent", "cross_boundary",
+                   "llm_judge", "retrieval", "regulated", "fleet", "multi_provider"],
+      "additionalProperties": false,
+      "properties": {
+        "autonomy": { "enum": ["L0", "L1", "L2", "L3", "L4"] },
+        "oversight": { "enum": ["O0", "O1", "O2"] },
+        "multi_tenant": { "type": "boolean" },
+        "mcp": { "type": "boolean" },
+        "multi_agent": { "type": "boolean" },
+        "cross_boundary": { "type": "boolean" },
+        "llm_judge": { "type": "boolean" },
+        "retrieval": { "type": "boolean" },
+        "regulated": { "type": "boolean" },
+        "fleet": { "type": "boolean" },
+        "multi_provider": { "type": "boolean" }
+      }
+    },
+    "baselines": {
+      "description": "The protocol revisions the product actually speaks (DoD 26, 29).",
+      "type": "object",
+      "properties": {
+        "mcp": { "type": "string" },
+        "otel_genai": { "type": "string" }
+      }
+    },
+    "regulatory": {
+      "description": "DoD 31 — the regulatory classification record.",
+      "type": "object",
+      "properties": {
+        "jurisdictions": { "type": "array", "items": { "type": "string" } },
+        "eu_ai_act": {
+          "type": "object",
+          "properties": {
+            "role": { "enum": ["", "provider", "deployer", "both"] },
+            "risk_class": { "enum": ["", "prohibited", "high-risk-annex-iii", "high-risk-annex-i", "transparency", "minimal"] },
+            "art50": { "type": "array", "items": { "type": "string" } },
+            "owner": { "type": "string" },
+            "reviewed": { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+    "items": {
+      "description": "One entry per scorecard item id (canon/scorecard.yaml). Unanswered items count as no.",
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z]+\\.[a-z0-9]+(-[a-z0-9]+)*$" },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status"],
+        "additionalProperties": false,
+        "properties": {
+          "status": { "enum": ["yes", "no", "na", true, false], "description": "yes | no | na. YAML 1.1 parsers read unquoted yes/no as booleans; both spellings are accepted." },
+          "evidence": { "type": "string", "description": "Repo-relative path (optionally #anchor) or URL. Required for yes." },
+          "reason": { "type": "string", "description": "Required for na." },
+          "note": { "type": "string" }
+        }
+      }
+    }
+  }
+}

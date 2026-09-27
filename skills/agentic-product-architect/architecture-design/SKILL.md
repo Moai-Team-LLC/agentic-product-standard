@@ -7,21 +7,42 @@ description: Design the architecture of an agentic product — choose the autono
 
 The architectural decisions made in the first hour of a project determine whether it ships. This skill walks the user through them deliberately.
 
-## Step 1: Determine the autonomy level (Autonomy Ladder)
+## Step 1: Determine the operating point (autonomy × oversight)
 
-Never start with "build an agent." Start with "what is the minimum autonomy this task requires?" The cost of getting this wrong is asymmetric: too much autonomy = unreliable, expensive, slow, hard to debug. Too little = doesn't capture value.
+Never start with "build an agent." Start with "what is the minimum autonomy this task requires — and must a human still approve each consequential action?" The two are separate axes: **autonomy** (L0–L4) is who chooses the next step; **oversight** (O0–O2) is whether a human approves each consequential (P3+) action. The cost of getting either wrong is asymmetric: too much autonomy = unreliable, expensive, slow, hard to debug; too little oversight = a factory with no quality control. Too little of either = doesn't capture value.
 
-| Level | What it is | Cost / latency | Use when |
+<!-- canon:begin:skill.architecture.ladder -->
+**Autonomy — who chooses the next step.**
+
+| Level | What it is | Use when | Cost / latency |
 |---|---|---|---|
-| **L0. Single LLM call** | One prompt → one response | Lowest | Classification, extraction, summarization, generation with known structure |
-| **L1. Augmented LLM** | LLM + retrieval / tools / memory, but single-shot | Low | Q&A over docs, simple structured tasks, lookup + reformat |
-| **L2. Workflow** | Deterministic code orchestrates LLM steps; path is predefined | Low–medium | The execution path is knowable in advance; predictability matters |
-| **L3. Orchestrator-Worker** | LLM plans dynamically, dispatches to bounded sub-agents | Medium–high | Parallelizable subtasks (research, multi-source synthesis); breadth-first work |
-| **L4. Autonomous Agent Loop** | LLM chooses next step iteratively until termination | Highest | Path cannot be enumerated; emergent behavior is the value; cost compounding is acceptable |
+| **L0** · Single LLM call | One prompt → one response | Classification, extraction, summarization | Lowest |
+| **L1** · Augmented LLM | One call + retrieval, tools, memory | Q&A over docs, simple assistants, lookup + reformat | Low |
+| **L2** · Workflow | Deterministic code orchestrates LLM steps | The path is known; predictability matters | Low–medium |
+| **L3** · Bounded decomposition *(formerly Orchestrator-Worker)* | The LLM decomposes the task dynamically, within a bounded graph | Parallelizable, breadth-first work — typically built with the Orchestrator-Workers pattern | Medium–high |
+| **L4** · Autonomous agent loop | The LLM chooses the next step until termination | The path cannot be enumerated; cost and compounding errors are tolerable | Highest |
 
-### Escalation rule (non-negotiable)
+**Oversight — whether a human approves each consequential action.** A consequential action is any action at permission tier P3 or above — external write, financial, communication, destructive ([`AGENT_STANDARD.md`](../../../AGENT_STANDARD.md) · Permission Tiers). Destructive (P6) actions require explicit human approval at every oversight mode (DoD 4).
 
-Do not climb to level N+1 until level N delivers **≥90% pass rate on a curated eval set** of 20–50 examples representing real use.
+| Mode | What it means | Requires |
+|---|---|---|
+| **O0** · Human in the loop | A human approves each consequential action before it executes | Per-action approval is the control (DoD 4) |
+| **O1** · Human on the loop | Actions inside the declared blast radius execute without per-action approval; a human supervises live and can veto, pause, or take over | Loop License (DoD 16–19) |
+| **O2** · Unattended | No human watches in real time; people are reached through the escalation path and sampled review | Loop License + success-legitimacy audit (DoD 16–19, 30) |
+
+> **Escalation rules — each axis is earned separately:**
+>
+> - **Climb autonomy** (L → L+1) only when L delivers **pass@1 ≥ 90%** on a curated eval set.
+> - **Relax oversight** (O0 → O1 → O2) only under a **Loop License**, whose eval gate adds consistency: **pass^5 ≥ a declared threshold** on the same set. O2 also requires a published **legitimacy rate** (DoD 30).
+> - Measure your reliability horizon on your own eval set. Benchmark time horizons do not transfer — they differ between domains by orders of magnitude (METR) — so this standard sets no hour thresholds.
+
+An **operating point** is one of each:
+
+- `L3 · O0` — an orchestrator whose every external action waits for approval: no Loop License required.
+- `L2 · O2` — a nightly pipeline that auto-applies its output: Loop License and legitimacy audit, despite its low autonomy.
+- `L4 · O1` — an autonomous loop a human supervises live: Loop License required.
+
+<!-- canon:end:skill.architecture.ladder -->
 
 ### Heuristics for choosing the level
 
@@ -37,6 +58,15 @@ Push UP one level if any of these apply:
 - Users explicitly want exploratory or open-ended behavior
 - The value is the agent's adaptation, not its output
 - You have eval infrastructure ready to catch regressions
+
+### Heuristics for choosing the oversight mode
+
+Default to **O0** — a human approves each consequential action. Move to **O1** (on the loop) or **O2** (unattended) only when all of these hold:
+- Per-action approval has become the bottleneck, *and* the approval data shows reviewers are not rubber-stamping (override rate and latency are real)
+- The six gates of the Loop License are in place — including a `pass^5` threshold, a declared blast radius enforced below the model, and a kill switch someone has actually pulled
+- The checks that grade the agent sit outside its write scope; at O2, you can afford a sampled legitimacy review of its successes every release
+
+A high autonomy level does not imply low oversight: an L3 orchestrator can run at O0, and an L2 pipeline that auto-applies its output is already at O2.
 
 ## Step 2: Compose from the 5 patterns before reaching for a loop
 
@@ -178,7 +208,7 @@ If the diagram has more than ~12 boxes, the design is too complex; simplify befo
 
 When you complete an architecture-design conversation, the user should have:
 
-1. A named autonomy level (L0–L4) with justification
+1. A named operating point — autonomy level (L0–L4) and oversight mode (O0–O2) — with justification, and the license it owes (none at O0; the Loop License at O1+)
 2. A composition expressed in the 5-pattern vocabulary
 3. A single-vs-multi-agent decision with the deciding heuristic
 4. A reference exemplar to study

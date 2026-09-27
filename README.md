@@ -6,12 +6,16 @@
 
 *Distilled from the production practices of Anthropic, OpenAI, Cognition, Sierra, LangChain, and leading practitioners — 2024–2026.*
 
+<!-- canon:begin:readme.badges -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Claude Code Skills](https://img.shields.io/badge/Claude%20Code-Skills-d97757.svg)](skills/agentic-product-architect)
-[![Standard v3.3](https://img.shields.io/badge/Standard-v3.3-blue.svg)](STANDARD.md)
+[![Standard v4.0.0-rc.1](https://img.shields.io/badge/Standard-v4.0.0--rc.1-orange.svg)](STANDARD.md)
 [![Self-assessment scorecard](https://img.shields.io/badge/scorecard-M0–M3-success.svg)](SCORECARD.md)
+[![Conformance: aps-conformance](https://img.shields.io/badge/conformance-aps--conformance-informational.svg)](docs/conformance.md)
 [![Stars](https://img.shields.io/github/stars/Moai-Team-LLC/agentic-product-standard?style=social)](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers)
+
+<!-- canon:end:readme.badges -->
 
 **[Product Standard →](STANDARD.md)**  ·  **[Agent Standard →](AGENT_STANDARD.md)**  ·  **[Install the Skills →](#-install-the-skills)**  ·  **[Decision Checklist →](#-the-10-question-checklist)**
 
@@ -38,10 +42,11 @@ Most teams ship agent demos. Few ship agents that survive contact with productio
 - [The 9-layer harness](#the-9-layer-harness)
 - [The 10-question checklist](#-the-10-question-checklist)
 - [The decision tree](templates/decision-tree/README.md)
-- [Score yourself](#-score-yourself)
+- [Score yourself — and prove it in CI](#-score-yourself)
 - [The Loop License](#-the-loop-license)
 - [Production readiness — Definition of Done](#production-readiness--definition-of-done)
 - [Anti-patterns](#anti-patterns)
+- [Regulation & frameworks](#-regulation--frameworks)
 - [Reading list](#reading-list)
 - [Contributing](#contributing)
 - [License](#license)
@@ -52,6 +57,7 @@ Six principles converged *independently* across the production practices of the 
 
 ## The six principles
 
+<!-- canon:begin:readme.principles -->
 | # | Principle | What it means |
 |---|---|---|
 | 1 | **Determinism by default, agency by necessity** | Every degree of autonomy must be *earned*, not granted upfront. |
@@ -61,6 +67,8 @@ Six principles converged *independently* across the production practices of the 
 | 5 | **Eval-driven development is non-negotiable** | No measurement → no improvement. No trace review → no understanding. |
 | 6 | **Security is a structural property, not a guardrail** | Safety comes from architecture — identity, least privilege, isolation, pinned tools — not filters bolted onto the edges. |
 
+<!-- canon:end:readme.principles -->
+
 > **The single most important rule:** *Architecture is what remains when the model improves. The model is the variable, the harness is the constant. Invest proportionally.*
 
 ## What's in this repo
@@ -69,18 +77,25 @@ Six principles converged *independently* across the production practices of the 
 agentic-product-standard/
 ├── STANDARD.md                          ← the canonical standard (product level)
 ├── AGENT_STANDARD.md                    ← the single-agent operational standard (mirrored in agent-builder)
-├── SCORECARD.md                         ← M0–M3 self-assessment, mapped to the Autonomy Ladder
+├── SCORECARD.md                         ← M0–M3 self-assessment, mapped to the operating envelope
+├── CROSSWALK.md                         ← DoD ↔ EU AI Act · OWASP Agentic Top 10 · NIST AI RMF · IMDA
 ├── CONTEXT.md                           ← shared vocabulary every skill speaks
+├── canon/                               ← the machine-readable canon: principles, ladder, harness, DoD, scorecard
+├── tools/aps.py                         ← renders the docs from the canon; validates skills; scores conformance
+├── action.yml                           ← the aps-conformance GitHub Action (M-level + SARIF for your product)
 ├── setup.sh                             ← quick setup: skills + (optional) AgenticMind, one run
 ├── family.sh                            ← stand up the whole reference stack locally, one command
+├── templates/conformance/               ← aps-conformance.yaml template, generated from the canon
 ├── templates/security/                  ← red-team kit: lethal-trifecta gate, injection suite, MCP pin
-├── templates/ci/eval-gate.yml           ← CI workflow that blocks merges on eval regression
-├── templates/loop-license/CHECKLIST.md  ← one-page Loop License gate (six gates, L3+)
-├── templates/graph-license/CHECKLIST.md ← one-page Graph License gate (composition, L3+)
+├── templates/ci/                        ← CI gates: eval regression (pass@1 · pass^k · legitimacy), MCP conformance
+├── templates/telemetry/                 ← OTel GenAI trace checker for the telemetry contract (DoD 29)
+├── templates/safe-outputs/              ← typed safe-output pattern: the agent proposes, a deterministic applier writes
+├── templates/loop-license/CHECKLIST.md  ← one-page Loop License gate (six gates, O1+)
+├── templates/graph-license/CHECKLIST.md ← one-page Graph License gate (composition, O1+)
 ├── templates/decision-tree/             ← which architecture to build, and the license it owes
-├── examples/agenticmind-case-study.md   ← reference implementation, audited against the canon
-├── docs/adr/                            ← architecture decision records (why the repo is shaped this way)
-└── skills/                              ← Claude Code skill set (operationalizes the standard)
+├── examples/                            ← reference implementations, audited against the canon
+├── docs/                                ← conformance guide, advisories, architecture decision records
+└── skills/                              ← Claude Code skill set (operationalizes the standard; hash-locked)
     ├── agent-builder/                    ← single-agent track (bundles AGENT_STANDARD.md + templates/)
     └── agentic-product-architect/        ← multi-agent track: master router + sub-skills
         ├── SKILL.md                      ← master: router + philosophy
@@ -93,8 +108,8 @@ agentic-product-standard/
         ├── durable-execution/            ← Temporal Workflow + Activity pattern
         ├── eval-driven-dev/              ← Husain/Shankar pyramid + judge calibration
         ├── framework-selection/          ← LangGraph / Claude SDK / OpenAI SDK / others
-        ├── production-readiness/         ← 25-point Definition of Done audit (+ Loop License + measurement science, L3+)
-        ├── antipatterns-review/          ← code review through 19 known failure modes
+        ├── production-readiness/         ← 33-point Definition of Done audit (DOD.md generated from the canon)
+        ├── antipatterns-review/          ← code review through 20 known failure modes
         └── reference-stack/              ← the paved road: install & wire the AgenticProduct family
 ```
 
@@ -184,60 +199,93 @@ Generated secrets are written into each member's local `.env` and never printed.
 
 ## The Autonomy Ladder
 
-Never start with "build an agent." Start with *"what is the minimum autonomy this task requires?"* The cost of getting this wrong is asymmetric.
+Never start with "build an agent." Start with *"what is the minimum autonomy this task requires — and must a human still approve each action?"* Since v4.0 those are two axes, earned separately; together they are the system's **operating point**. The cost of getting either wrong is asymmetric.
+
+<!-- canon:begin:readme.ladder -->
+**Autonomy — who chooses the next step.**
 
 | Level | What it is | Use when |
 |---|---|---|
 | **L0** · Single LLM call | One prompt → one response | Classification, extraction, summarization |
-| **L1** · Augmented LLM | + retrieval, + tools, + memory | Q&A over docs, simple assistants |
-| **L2** · Workflow | Deterministic code orchestrates LLM steps | Path is known; predictability matters |
-| **L3** · Orchestrator-Worker | LLM decomposes within a bounded graph | Parallelizable, breadth-first work |
-| **L4** · Autonomous Agent Loop | LLM chooses the next step until termination | Path cannot be enumerated; cost is acceptable |
+| **L1** · Augmented LLM | One call + retrieval, tools, memory | Q&A over docs, simple assistants, lookup + reformat |
+| **L2** · Workflow | Deterministic code orchestrates LLM steps | The path is known; predictability matters |
+| **L3** · Bounded decomposition *(formerly Orchestrator-Worker)* | The LLM decomposes the task dynamically, within a bounded graph | Parallelizable, breadth-first work — typically built with the Orchestrator-Workers pattern |
+| **L4** · Autonomous agent loop | The LLM chooses the next step until termination | The path cannot be enumerated; cost and compounding errors are tolerable |
 
-> **Escalation rule:** do not climb to L+1 until L delivers **≥90% pass rate** on a curated eval set.
+**Oversight — whether a human approves each consequential action.** A consequential action is any action at permission tier P3 or above — external write, financial, communication, destructive ([`AGENT_STANDARD.md`](AGENT_STANDARD.md) · Permission Tiers). Destructive (P6) actions require explicit human approval at every oversight mode (DoD 4).
+
+| Mode | What it means | Requires |
+|---|---|---|
+| **O0** · Human in the loop | A human approves each consequential action before it executes | Per-action approval is the control (DoD 4) |
+| **O1** · Human on the loop | Actions inside the declared blast radius execute without per-action approval; a human supervises live and can veto, pause, or take over | Loop License (DoD 16–19) |
+| **O2** · Unattended | No human watches in real time; people are reached through the escalation path and sampled review | Loop License + success-legitimacy audit (DoD 16–19, 30) |
+
+> **Escalation rules — each axis is earned separately:**
+>
+> - **Climb autonomy** (L → L+1) only when L delivers **pass@1 ≥ 90%** on a curated eval set.
+> - **Relax oversight** (O0 → O1 → O2) only under a **Loop License**, whose eval gate adds consistency: **pass^5 ≥ a declared threshold** on the same set. O2 also requires a published **legitimacy rate** (DoD 30).
+> - Measure your reliability horizon on your own eval set. Benchmark time horizons do not transfer — they differ between domains by orders of magnitude (METR) — so this standard sets no hour thresholds.
+
+An **operating point** is one of each:
+
+- `L3 · O0` — an orchestrator whose every external action waits for approval: no Loop License required.
+- `L2 · O2` — a nightly pipeline that auto-applies its output: Loop License and legitimacy audit, despite its low autonomy.
+- `L4 · O1` — an autonomous loop a human supervises live: Loop License required.
+
+<!-- canon:end:readme.ladder -->
 
 ## The five composition patterns
 
 Compose agentic products from these primitives *like Lego* — before reaching for a framework.
 
+<!-- canon:begin:readme.patterns -->
 1. **Prompt Chaining** — sequential decomposition (outline → draft → polish)
 2. **Routing** — classifier + dispatcher to a specialist
 3. **Parallelization** — fan-out of independent subtasks + aggregation
 4. **Orchestrator-Workers** — central planner + dynamic workers
 5. **Evaluator-Optimizer** — generator + critic in a loop until acceptance
 
-**Meta-principle:** first try to solve the task by composing these patterns in deterministic code. A full agent loop is the *last* resort.
+**Meta-principle:** First try to solve the task by composing these patterns in deterministic code. A full agent loop is the *last* resort.
+
+<!-- canon:end:readme.patterns -->
 
 ## The 9-layer harness
 
 In a production agent, the harness — everything *around* the LLM loop — is **~98% of the code** (a community estimate for Claude Code, cited by Liu et al., *Dive into Claude Code*, arXiv:2604.14228). Seven layers stack around the loop; two more cut across all of them.
 
+<!-- canon:begin:readme.harness -->
 ```
-╔═════════════════════════════════════════════╗
-║  9. Cost & FinOps        (CROSS-CUTTING)    ║ ← per-run ceilings in code · caching · routing · cost per outcome
-║  8. Security & Identity  (CROSS-CUTTING)    ║ ← threat model · injection defense · agent identity · least-privilege tokens · pinned tool defs
-╠═════════════════════════════════════════════╣
-║   7. Observability & Tracing                ║ ← log EVERYTHING
-║   6. Evaluation Layer (CI gates)            ║ ← block regressions
-║   5. Human-in-the-Loop (notify/ask/review)  ║ ← approval gates
-║   4. Guardrails (input/output validation)   ║ ← defense in depth
-║   3. Durable Execution (Workflow + Activity)║ ← pause/resume/retry
-║   2. Context & Memory Management            ║ ← write/select/compress/isolate
-║   1. Agent Loop (gather → act → verify)     ║ ← the "agent" proper
-╚═════════════════════════════════════════════╝
+╔══════════════════════════════════════════════╗
+║  9. Cost & FinOps           (CROSS-CUTTING)  ║ ← per-run ceilings in code · caching · routing · cost per verified outcome
+║  8. Security & Identity     (CROSS-CUTTING)  ║ ← threat model · injection defense · per-agent identity · least-privilege tokens · pinned tool defs · protocol auth baseline
+╠══════════════════════════════════════════════╣
+║   7. Observability & Tracing                 ║ ← log EVERYTHING — on pinned OTel GenAI conventions
+║   6. Evaluation (CI gates)                   ║ ← block regressions
+║   5. Human-in-the-Loop (notify/ask/review)   ║ ← approval gates
+║   4. Guardrails (input/output validation)    ║ ← defense in depth
+║   3. Durable Execution (Workflow + Activity) ║ ← pause/resume/retry
+║   2. Context & Memory Management             ║ ← write/select/compress/isolate
+║   1. Agent Loop (gather → act → verify)      ║ ← the "agent" proper
+╚══════════════════════════════════════════════╝
               ↕ MCP / function calling
+       ┌──────────────────────────┐
+       │   Tools & Resources      │
+       └──────────────────────────┘
 ```
+
+<!-- canon:end:readme.harness -->
 
 > **Permission boundaries are enforced by code, never by prompt.** The Replit incident of July 2025 — an agent deleted a production database holding records on 1,200+ companies despite an explicit "code freeze" in its prompt ([Fortune, 23 Jul 2025](https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/)) — is the canonical proof. The model will ignore prompt-level restrictions under enough pressure. Code won't.
 
-> **Layers 8 and 9 are cross-cutting.** Identity, least privilege, and isolation constrain every layer; injection defense spans input and output. Run the **lethal-trifecta** check (private data × untrusted content × external comms) on every deployment, and **pin MCP tool definitions by hash** so a server can't rug-pull you. A guardrail is one tactic, not the discipline — see [`STANDARD.md` · Layer 8](STANDARD.md) and the [red-team kit](templates/security/README.md). Cost is the same kind of property: a per-run ceiling enforced in code, not a dashboard someone reads after the invoice (Layer 9).
+> **Layers 8 and 9 are cross-cutting.** Identity, least privilege, and isolation constrain every layer; injection defense spans input and output. Run the **lethal-trifecta** check (private data × untrusted content × external comms) on every deployment, **pin MCP tool definitions by hash** so a server can't rug-pull you, speak **MCP 2026-07-28** with its hardened auth, and give **every agent its own identity**. A guardrail is one tactic, not the discipline — see [`STANDARD.md` · Stack 8](STANDARD.md#stack-8-security--identity--cross-cutting) and the [red-team kit](templates/security/README.md). Cost is the same kind of property: a per-run ceiling enforced in code and re-derived on every model change, not a dashboard someone reads after the invoice (Layer 9).
 
 ## ✅ The 10-question checklist
 
 Run this before drafting any architecture. It unblocks 80% of design debates.
 
+<!-- canon:begin:readme.checklist -->
 ```
-□ What is the minimum autonomy level (L0–L4) that solves this?
+□ What is the minimum autonomy level (L0–L4) that solves this, and under which oversight mode (O0–O2)?
 □ Can it be solved by composing the 5 patterns without a full agent loop?
 □ Is the task breadth-first (parallelizable) or depth-first (coherent)?
 □ What are the 3 failure modes that would lose user trust first?
@@ -249,52 +297,74 @@ Run this before drafting any architecture. It unblocks 80% of design debates.
 □ Eval set: how many examples, who labels, how does it grow?
 ```
 
+<!-- canon:end:readme.checklist -->
+
 If you can't answer half of these, **slow down and answer them together — don't write code yet.**
 
 Once you can, [**the decision tree**](templates/decision-tree/README.md) turns these answers into a named architecture **and the license it owes** — every leaf lands on both, because the shape is the easy half.
 
 ## 📊 Score yourself
 
-Principles are easy to nod along to; **[`SCORECARD.md`](SCORECARD.md)** makes you prove it. It turns the Definition of Done into a binary Yes/No maturity self-assessment with four bands mapped to the Autonomy Ladder:
+Principles are easy to nod along to; **[`SCORECARD.md`](SCORECARD.md)** makes you prove it. It turns the Definition of Done into a binary Yes/No maturity self-assessment with four bands. Your **operating point** decides the band you must reach — autonomy *and* oversight:
 
-| Band | Autonomy | Means |
+<!-- canon:begin:readme.bands -->
+| Band | Operating envelope | Means |
 |---|---|---|
-| **M0 · Prototype** | L0–L1 | Works on a demo. No production claim. |
-| **M1 · Shippable** | L2 | Contracts, schemas, guardrails, an eval set, permissions in code. |
-| **M2 · Production** | L3 | Durable, observable, tenant-isolated, **security-checked, cost-bounded**, CI-gated. |
-| **M3 · Autonomous-ready** | L4 | Online evals, `pass^k` reliability, red-team kit run, full OTel trajectory traces. |
+| **M0 · Prototype** | any autonomy at O0 — no production claim | Works on a demo. No production claim. |
+| **M1 · Shippable** | L0–L2 at O0 | Contracts, schemas, guardrails, an eval set, permissions in code, a declared operating point. Every consequential action is human-approved. Safe to put in front of users behind a workflow. |
+| **M2 · Production** | up to L3; O1/O2 only with a Loop License | Durable, observable, tenant-isolated, security-checked, identity-scoped, cost-bounded, CI-gated on evals, on the current protocol baselines. |
+| **M3 · Autonomous-ready** | L4 at any oversight mode | Online evals, `pass^k` reliability, red-team kit run, full OTel trajectory observability. Earns the right to an open-ended loop. |
+
+<!-- canon:end:readme.bands -->
 
 Run it with the team against a real deployment each release — the first **No** you hit is your next piece of work.
 
+**Then make CI hold you to it.** Answer the scorecard in an `aps-conformance.yaml` — every Yes with evidence (a path in your repo or a URL) — and the **aps-conformance** Action scores it on every PR: the band you reached, the band your operating point requires, and each open control as a SARIF finding tagged with the DoD items and regulatory obligations it supports.
+
+```yaml
+# .github/workflows/aps-conformance.yml
+- uses: actions/checkout@v4
+- uses: Moai-Team-LLC/agentic-product-standard@v4.0.0-rc.1
+  with:
+    file: aps-conformance.yaml      # start from templates/conformance/aps-conformance.template.yaml
+```
+
+Details: [`docs/conformance.md`](docs/conformance.md). The canon behind the scorecard is machine-readable too — [`canon/`](canon/) holds the principles, the ladder, the harness, the DoD, and the scorecard as YAML with JSON Schemas, and every count in these documents is generated from it.
+
 ## 🔒 The Loop License
 
-Autonomy is earned, not granted. Before an agent runs **unattended** — finding its own work and looping without a human in each turn (Autonomy Ladder **L3+**) — it must hold a **Loop License**: six gates, all required, each enforced in code and tested.
+Autonomy is earned, not granted. Before a system acts **without a human approving each action** — oversight **O1** (a human on the loop) or **O2** (unattended), at any autonomy level — it must hold a **Loop License**: six gates, all required, each enforced in code and tested.
 
-> **Eval pass-rate threshold · regression gate · declared blast radius · cost cap · kill switch · escalation path.**
+> **Eval threshold (pass@1 *and* pass^5) · regression gate · declared blast radius · cost cap · kill switch · escalation path.**
 
-Miss any one and the system stays at L2 (human-in-the-loop), no matter how good the model is. Backing the gates: **independent verification** (the producing model never grades its own work — deterministic checks first, a decorrelated calibrated judge second), a governed **instruction supply chain** (skills and prompts are versioned, provenanced, eval-gated artifacts), and a hard **ingestion boundary** ("find work" is untrusted input). Full treatment in [`STANDARD.md` Part IV](STANDARD.md#part-iv-the-loop-license--earning-unattended-operation-l3); the one-page gate is [`templates/loop-license/CHECKLIST.md`](templates/loop-license/CHECKLIST.md).
+Miss any one and the system stays at O0 — a human approves each consequential action — no matter how good the model is. Backing the gates: **independent verification** (the producing model never grades its own work, and the checks sit outside its reach — deterministic checks first, a decorrelated calibrated judge second), a **success-legitimacy audit** at O2 (a sample of "successes" is reviewed for gamed checks, and the legitimacy rate gates promotion), a governed **instruction supply chain** (skills and prompts are versioned, spec-valid, hash-locked, eval-gated artifacts), and a hard **ingestion boundary** ("find work" is untrusted input). Full treatment in [`STANDARD.md` Part IV](STANDARD.md#part-iv-the-loop-license--acting-without-per-action-approval-o1); the one-page gate is [`templates/loop-license/CHECKLIST.md`](templates/loop-license/CHECKLIST.md).
 
 ## Production readiness — Definition of Done
 
-An agentic product is **not production-ready** until all **25** numbered items are satisfied, plus the two conditional ones marked ◇ (multi-tenant isolation; the L3+ human-oversight plan). Items 16–19 and the oversight plan bind at L3+ unattended operation; items 20–23 deepen the eval bar wherever the relevant component exists; item 24 binds wherever a safety-class gate exists; item 25 binds wherever more than one agent is composed. Full detail in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
+<!-- canon:begin:readme.dod -->
+An agentic product is **not production-ready** until every Definition of Done item that binds to it is satisfied — **33 items**, each with a stable number (numbers are identifiers, so a group may list them out of order). Items marked with a condition bind only when it holds; the rest bind for every production system. [`SCORECARD.md`](SCORECARD.md) sets the maturity band at which each becomes mandatory, and [`CROSSWALK.md`](CROSSWALK.md) maps each to the EU AI Act, OWASP, NIST, and IMDA. Full text in [`STANDARD.md`](STANDARD.md#part-iii-production-readiness--definition-of-done).
 
 | Group | Items |
 |---|---|
-| Context & state | **1** Context < 40% · **2** State externalized · **3** Compaction tested |
-| Tools & permissions | **4** Destructive actions need approval · **5** Permissions in code, not prompt · **6** Sandboxed tool execution · **◇** Tenant isolation below the LLM *(if multi-tenant)* |
+| Context and state | **1** Context budget held · **2** State externalized · **3** Compaction tested |
+| Tools and permissions | **4** Destructive actions need approval · **5** Permissions in code, not prompt · **6** Sandboxed tool execution · **32** Tenant isolation below the LLM *(multi-tenant)* |
 | Reliability | **7** Durable pause/resume/retry · **8** Schema-validated outputs · **9** Input/output guardrails |
-| Evals & observability | **10** ≥50 evals per failure mode · **11** Judges calibrated (TPR/TNR) · **12** CI blocks regression; 100% traced |
-| Security & identity | **13** Lethal-trifecta check · **14** MCP tool defs pinned; allow-listed registry; scoped tokens |
+| Evals and observability | **10** ≥50 evals per failure mode · **11** Judges calibrated (TPR/TNR) *(LLM judges)* · **12** CI blocks regression; 100% traced · **29** Telemetry contract |
+| Security and identity | **13** Lethal-trifecta check · **14** MCP tool defs pinned; allow-listed registry *(MCP)* · **26** MCP protocol & auth baseline *(MCP)* · **27** Per-agent identity |
 | Cost | **15** Per-run cost ceiling in code |
-| Unattended (L3+) — the [Loop License](STANDARD.md#part-iv-the-loop-license--earning-unattended-operation-l3) | **16** Loop License (six gates) · **17** Stop conditions · **18** Independent verification · **19** Loop economics · **◇** Human-oversight plan |
-| Measurement science | **20** Judge calibration · **21** Retrieval metrics · **22** Ground-truth provenance · **23** Drift monitoring |
+| Operating without per-action approval (O1+) — the Loop License | **16** Loop License (six gates) *(O1+)* · **17** Stop conditions *(L3+ or O1+)* · **18** Independent verification *(O1+)* · **19** Loop economics *(O1+)* · **30** Success-legitimacy audit *(O2)* |
+| Measurement science and human oversight | **20** Judge calibration (ECE/Brier) *(gating judges)* · **21** Retrieval metrics *(retrieval)* · **22** Ground-truth provenance · **23** Drift monitoring · **33** Human oversight as a program *(approval gates)* |
 | Gate integrity | **24** No safety gate silenced to pass CI |
-| Composition | **25** Graph License |
+| Composition (multi-agent) | **25** Graph License *(multi-agent, O1+)* · **28** Inter-agent trust *(cross-boundary)* |
+| Governance and regulation | **31** Regulatory classification record *(regulated)* |
+
+<!-- canon:end:readme.dod -->
 
 ## Anti-patterns
 
 The fastest way to recognize a doomed agent project — the skill set's `antipatterns-review` flags each with a diagnostic and a fix.
 
+<!-- canon:begin:readme.antipatterns -->
 1. Multi-agent before a single-agent baseline
 2. Framework abstractions before understanding the raw API
 3. LLM judges without calibration against human labels
@@ -314,6 +384,13 @@ The fastest way to recognize a doomed agent project — the skill set's `antipat
 17. Peer-to-peer multi-agent buses instead of an orchestrator
 18. Prose topology counted as a control (an SOP-defined route is not a guardrail)
 19. License inheritance by wiring (a graph of licensed loops is not a licensed graph)
+20. Counting a pass as a success without legitimacy review
+
+<!-- canon:end:readme.antipatterns -->
+
+## ⚖️ Regulation & frameworks
+
+Every Definition of Done item produces evidence — a test, a trace, a record, a gate. **[`CROSSWALK.md`](CROSSWALK.md)** maps that evidence onto the frameworks teams get asked about: the **EU AI Act** (with the dates fixed by the Digital Omnibus, Regulation (EU) 2026/1744 — Art. 50 transparency from 2 Aug 2026, high-risk obligations from 2 Dec 2027 for Annex III and 2 Aug 2028 for Annex I), the **OWASP Top 10 for Agentic Applications**, the **NIST AI RMF**, and Singapore **IMDA**'s agentic governance framework. DoD 31 asks for the input all of it depends on: a written **regulatory classification record** — your role and risk class — kept in version control. A crosswalk is not a compliance claim, and none of this is legal advice.
 
 ## Reading list
 
@@ -338,11 +415,15 @@ The operational base — not reference docs. Read in order:
 - [OpenTelemetry GenAI semantic conventions](https://github.com/open-telemetry/semantic-conventions-genai) — moved out of the core semantic conventions at v1.42.0 (June 2026); still *Development* status with no tagged release, so pin a commit.
 - [Agent Skills specification](https://agentskills.io/specification) — the open format the skills in this repo follow.
 
+**Governance frameworks** — mapped item by item in [`CROSSWALK.md`](CROSSWALK.md): the [EU AI Act, consolidated with the Digital Omnibus](https://eur-lex.europa.eu/eli/reg/2024/1689/2026-07-27/eng); [OWASP Top 10 for Agentic Applications 2026](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/); [NIST AI RMF 1.0](https://nvlpubs.nist.gov/nistpubs/ai/nist.ai.100-1.pdf); [IMDA Model AI Governance Framework for Agentic AI](https://www.imda.gov.sg/resources/press-releases-factsheets-and-speeches/factsheets/2026/updated-model-ai-governance-framework-for-agentic-ai).
+
 ## Contributing
 
 This standard is meant to evolve — the field moves fast. Corrections, new exemplars, framework updates, and translations are all welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 The architectural canons (the autonomy ladder, the 5 patterns, single-vs-multi, the harness) are stable. Specific vendors and framework rankings will shift — those are exactly the kind of PRs we want.
+
+Anything enumerable — a principle, a ladder level, a harness layer, a DoD item, an anti-pattern, a scorecard item — lives in [`canon/`](canon/). Edit it there, run `python3 tools/aps.py render`, and commit the regenerated documents with it; CI (`python3 tools/aps.py check`) fails on any drift. [`AGENTS.md`](AGENTS.md) has the full loop for humans and coding agents alike.
 
 ## License
 
@@ -354,6 +435,9 @@ The architectural canons (the autonomy ladder, the 5 patterns, single-vs-multi, 
 
 **If this saved you a week of architecture debates, [star the repo](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers) ⭐ so others find it.**
 
-*v3.3.1 · assembled from production practices as of September 2026*
+<!-- canon:begin:readme.footer -->
+*v4.0.0-rc.1 · assembled from production practices as of September 2026*
+
+<!-- canon:end:readme.footer -->
 
 </div>

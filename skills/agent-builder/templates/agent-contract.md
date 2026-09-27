@@ -41,6 +41,18 @@ When the agent must stop, ask, hand off, or request human approval (notify / ask
 ## 13. Logging Requirements
 What must be written to trace (see `trace-event.json`).
 
+## 14. Stop Conditions *(required at L3+ or O1+)*
+Max iterations; token / time / spend budgets; timeout; escalation after N consecutive failures.
+
+## 15. Memory Model *(required at L3+ or O1+)*
+What is persisted, for how long, from where (provenance), and whether a past run can be replayed.
+
+## 16. Determinism Map & Operating Point *(required at L3+ or O1+)*
+Which steps are deterministic and which are model-driven. The operating point — autonomy `L0–L4` · oversight `O0–O2` — and which consequential (P3+) actions, if any, run without per-action approval. Anything at `O1+` needs a Loop License.
+
+## 17. Identity
+The agent's own non-human identity, its credential lifetime and scopes, and who can delegate work to it. Never a shared service account or a person's token.
+
 ---
 
 ### Design rules (delete before shipping)

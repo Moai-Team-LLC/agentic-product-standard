@@ -1,28 +1,31 @@
 ---
 name: antipatterns-review
-description: Review existing agentic code, designs, or plans through the lens of the 19 canonical antipatterns. Diagnose what's likely to fail in production. Use whenever the user asks you to review their agent code, asks "what's wrong with this design," is debugging mysterious failures, or wants a second opinion on an architecture. Also use proactively when you notice any of the 19 antipatterns in a conversation, even if the user didn't ask for review.
+description: Review existing agentic code, designs, or plans through the lens of the canonical antipatterns of the Agentic Product Standard. Diagnose what's likely to fail in production. Use whenever the user asks you to review their agent code, asks "what's wrong with this design," is debugging mysterious failures, or wants a second opinion on an architecture. Also use proactively when you notice one of the antipatterns in a conversation, even if the user didn't ask for review.
 ---
 
 # Antipatterns Review
 
-This skill is your code-review mode. Walk through the user's design, code, or plan and check for each of the 19 canonical antipatterns. For each found, name it, explain the failure mode it produces, and propose the fix.
+This skill is your code-review mode. Walk through the user's design, code, or plan and check for each of the 20 canonical antipatterns. For each found, name it, explain the failure mode it produces, and propose the fix.
 
-This is not a generic "review my code." It's a targeted scan against the 19 known failure patterns that have hit real production agentic products.
+This is not a generic "review my code." It's a targeted scan against the 20 known failure patterns that have hit real production agentic products.
 
 ## How to apply this skill
 
 When invoked, do this:
 
 1. Ask the user to share what you're reviewing (code, design doc, screenshot, description)
-2. Walk through the 19 antipatterns in order
+2. Walk through the 20 antipatterns in order
 3. For each: pass / present / unclear, with evidence
 4. For each "present": name it, explain the failure, propose the fix
 5. Prioritize by severity (critical > high > medium > low)
 6. Summarize the top 3 to fix first
 
-## The 19 antipatterns
+## The 20 antipatterns
 
-### 1. Multi-agent before single-agent baseline
+*Generated from `canon/antipatterns.yaml` in the standard repo — the same list `STANDARD.md` Part VIII and the README carry.*
+
+<!-- canon:begin:skill.antipatterns.items -->
+### 1. Multi-agent before a single-agent baseline
 
 **Signal:** the design has 3+ agents from day one; no single-agent version was tried.
 
@@ -34,7 +37,7 @@ When invoked, do this:
 
 ---
 
-### 2. Framework abstractions before understanding raw API
+### 2. Framework abstractions before understanding the raw API
 
 **Signal:** code uses LangGraph / CrewAI / etc. but the engineer can't explain what the underlying LLM calls look like or what gets sent over the wire.
 
@@ -46,7 +49,7 @@ When invoked, do this:
 
 ---
 
-### 3. LLM-judges without human-label calibration
+### 3. LLM judges without calibration against human labels
 
 **Signal:** team has LLM judges in evals; no one has measured TPR/TNR against a human-labeled set.
 
@@ -62,7 +65,7 @@ When invoked, do this:
 
 **Signal:** system prompt has instructions like "do not delete production data" or "always ask before sending email."
 
-**Failure mode:** model under pressure / prompt injection / context loss ignores the instruction. Replit case: 1,200+ companies' data wiped despite explicit "code freeze."
+**Failure mode:** model under pressure / prompt injection / context loss ignores the instruction. Replit case: a production database holding records on 1,200+ companies deleted despite an explicit "code freeze."
 
 **Fix:** the agent must literally not have credentials that bypass the boundary. Destructive actions route through a separate approval service that the LLM cannot call directly. OAuth scopes constrain what's even possible.
 
@@ -70,7 +73,7 @@ When invoked, do this:
 
 ---
 
-### 5. Memory as afterthought
+### 5. Memory as an afterthought
 
 **Signal:** memory was added late; it's bolted on to an existing agent loop; no policy for what gets written or evicted.
 
@@ -82,7 +85,7 @@ When invoked, do this:
 
 ---
 
-### 6. Generic evals ("helpfulness", "correctness")
+### 6. Generic evals ("helpfulness," "correctness")
 
 **Signal:** eval suite has "is this response good?" or "is this correct?" as the primary metric.
 
@@ -94,7 +97,7 @@ When invoked, do this:
 
 ---
 
-### 7. Likert scales in LLM-judge
+### 7. Likert scales in an LLM judge (binary only)
 
 **Signal:** LLM judges output scores 1–5 or "rate the quality."
 
@@ -106,7 +109,7 @@ When invoked, do this:
 
 ---
 
-### 8. > 100 tools per agent
+### 8. >100 tools per agent
 
 **Signal:** tool count is in the high tens or hundreds; agent often picks the wrong tool.
 
@@ -121,7 +124,7 @@ When invoked, do this:
 
 ---
 
-### 9. One agent for both breadth and depth tasks
+### 9. One agent for both breadth and depth
 
 **Signal:** the same agent handles both "research X across many sources" and "write coherent long document about X."
 
@@ -139,7 +142,7 @@ When invoked, do this:
 
 **Failure mode:** most agent failures (routing errors, tool selection errors, retrieval misses) are invisible in app logs. Visible only in step-by-step traces. You debug by guesswork.
 
-**Fix:** instrument with OpenInference / OpenLLMetry; ship traces to Langfuse, LangSmith, Braintrust, or Arize. 100% of production traffic traced. Stable run IDs. Trace retention 30–90 days minimum.
+**Fix:** instrument on the OpenTelemetry GenAI semantic conventions at a pinned revision (OpenInference and OpenLLMetry emit them); ship traces to Langfuse, LangSmith, Braintrust, or Arize. 100% of production traffic traced. Stable run IDs. Trace retention 30–90 days minimum. Content capture off by default (DoD 29).
 
 **Severity:** Critical — blind in production
 
@@ -169,13 +172,13 @@ When invoked, do this:
 
 ---
 
-### 13. Trusting community MCP servers without pinning or scanning
+### 13. Trusting community MCP servers without pinning or scanning (rug pulls)
 
 **Signal:** MCP servers are installed straight from a URL or a community list; tool definitions are approved once and never re-checked; no hash pin, no change alert.
 
 **Failure mode:** the tool description you approved is not the one running next week. A server can mutate its tool definitions after you trust it (rug pull) — the model now follows instructions you never reviewed. The supply chain is the attack surface.
 
-**Fix:** install only from an allow-listed registry. Pin tool definitions by hash and alert on any change. Scan tool descriptions for injected instructions before first use and after each version bump.
+**Fix:** install only from an allow-listed registry. Pin tool definitions by hash and alert on any change — including on every refetch after a cached tool list expires. Scan tool descriptions for injected instructions before first use and after each version bump.
 
 **Severity:** Critical — silent compromise through a trusted dependency
 
@@ -193,13 +196,13 @@ When invoked, do this:
 
 ---
 
-### 15. Token passthrough / over-scoped OAuth
+### 15. Token passthrough / over-scoped OAuth (confused deputy)
 
-**Signal:** the agent forwards the user's token to downstream services, or holds OAuth scopes far broader than the task needs ("full access, to be safe").
+**Signal:** the agent forwards the user's token to downstream services, or holds OAuth scopes far broader than the task needs ("full access, to be safe") — or an MCP client can only register through Dynamic Client Registration and never validates the issuer.
 
 **Failure mode:** confused deputy. A coerced or injected agent acts with the user's full authority across systems; one over-scoped token turns a small compromise into a large one. Blast radius is set by the scope, not by the bug.
 
-**Fix:** mint per-integration OAuth 2.1 scoped tokens for exactly what the task needs; never forward the user's token downstream. Treat scope as a security boundary — least privilege, audited, time-bounded where possible.
+**Fix:** mint per-integration OAuth 2.1 scoped tokens for exactly what the task needs; never forward the user's token downstream. Treat scope as a security boundary — least privilege, audited, time-bounded where possible. MCP clients register with a Client ID Metadata Document, validate `iss`, and key stored credentials by issuer (DoD 26).
 
 **Severity:** Critical — confused-deputy / privilege-escalation risk
 
@@ -211,7 +214,7 @@ When invoked, do this:
 
 **Failure mode:** one bad loop is an unbounded invoice. A retry storm or a self-prompting cycle runs until someone notices the bill — the dashboard reports the damage, it doesn't stop it.
 
-**Fix:** enforce a hard per-run token/cost ceiling in code (a circuit breaker) that halts a runaway or looping session. Record cost-per-task in traces so the ceiling is tuned from real data.
+**Fix:** enforce a hard per-run token/cost ceiling in code (a circuit breaker) that halts a runaway or looping session. Record cost-per-task in traces so the ceiling is tuned from real data — and re-derive it when the model changes.
 
 **Severity:** High — unbounded cost exposure
 
@@ -229,28 +232,41 @@ When invoked, do this:
 
 ---
 
-### 18. Prose topology counted as a control
+### 18. Prose topology counted as a control (an SOP-defined route is not a guardrail)
 
 **Signal:** the graph's routing is described in an SOP, a skill, or a system prompt — "the researcher hands off to the reviewer, who never writes to production" — and that description is cited in a design review or a license as though it constrained anything. Nothing in the runtime or the code prevents a different route.
 
 **Failure mode:** the topology holds right up until the moment it matters. Under an ambiguous state, a novel input, or an injected instruction, the agent takes an edge the diagram does not have, and every control that assumed the diagram silently no longer applies. The architecture diagram and the running system diverge with no error, because prose cannot fail loudly.
 
-**Fix:** mark every edge class **enforced** or **declared** at architecture time. Enforced means the runtime or the code makes the other routes unavailable. Count only enforced edges as controls in any license; declared edges are documentation. This is the graph-scale form of "permissions enforced by code, not by prompt" (antipattern 4) — an instruction-defined route binds exactly as well as an instruction-defined permission.
+**Fix:** mark every edge class **enforced** or **declared** at architecture time. Enforced means the runtime or the code makes the other routes unavailable. Count only enforced edges as controls in any license; declared edges are documentation. This is the graph-scale form of "permissions enforced by code, not by prompt" (anti-pattern 4) — an instruction-defined route binds exactly as well as an instruction-defined permission.
 
 **Severity:** High — controls that are believed but not enforced
 
 ---
 
-### 19. License inheritance by wiring
+### 19. License inheritance by wiring (a graph of licensed loops is not a licensed graph)
 
 **Signal:** "every agent in the graph is production-ready, so the graph is production-ready." Per-node evals exist; there is no end-to-end eval on the composition. Cost caps are per-node with no aggregate ceiling. The kill switch was tested against idle nodes, never against branches in flight. Each node escalates to its own owner.
 
-**Failure mode:** the graph's risks are the ones no node owns. Nodes that pass in isolation fail in composition; fan-out multiplies spend past every per-node cap while each cap reads green; an unlicensed or uncalibrated node on an action path lends the whole path an autonomy it never earned; and when something goes wrong, the escalation path forks and no human is on the hook for the system.
+**Failure mode:** the graph's risks are the ones no node owns. Nodes that pass in isolation fail in composition; fan-out multiplies spend past every per-node cap while each cap reads green; an unlicensed or uncalibrated node on an action path lends the whole path a freedom from oversight it never earned; and when something goes wrong, the escalation path forks and no human is on the hook for the system.
 
-**Fix:** give the graph its own **Graph License** — the six gates re-evaluated at graph scope, plus the weakest-link bound (a path's autonomy level is the minimum licensed level of any node on it), shared-state provenance, fan-in as a declared verification point, and one named escalation owner. Run [`templates/graph-license/CHECKLIST.md`](../../../templates/graph-license/CHECKLIST.md).
+**Fix:** give the graph its own **Graph License** — the six gates re-evaluated at graph scope, plus the weakest-link bound (a path runs under no less oversight than its least-licensed node allows), shared-state provenance, fan-in as a declared verification point, and one named escalation owner. Run [`templates/graph-license/CHECKLIST.md`](../../../templates/graph-license/CHECKLIST.md).
 
 **Severity:** Critical — unearned autonomy on paths that reach production
 
+---
+
+### 20. Counting a pass as a success without legitimacy review
+
+**Signal:** the success rate comes only from automated checks; nobody reviews the path of runs that passed; the agent can write to the tests, graders, or eval sets that score it; the pass rate climbs faster than the product gets better.
+
+**Failure mode:** the agent learns to satisfy the checker instead of the task — editing or skipping tests, special-casing the grader's inputs, hard-coding expected outputs. METR found that on tasks longer than eight hours at least 16% of runs scored as successful were illegitimate on review. The metric rises while real capability does not, and the Loop License is issued on a number that measures gaming.
+
+**Fix:** put checks, graders, eval sets, and thresholds outside the agent's write scope. Each release, review a stratified sample of successful runs — the path, not just the outcome; publish the legitimacy rate next to pass@1 and pass^5 and gate promotion on a declared floor (DoD 30). Turn every illegitimate success into a regression case and, where possible, a deterministic tripwire.
+
+**Severity:** High — Critical at O2, where licenses are issued on the gamed metric
+
+<!-- canon:end:skill.antipatterns.items -->
 ---
 
 ## Severity scale (when reporting)
@@ -294,22 +310,22 @@ Be specific. Quote the user's code or design when pointing to a problem.
 
 - **Be direct, not harsh.** Name the antipattern, explain the failure mode, propose the fix. No softening.
 - **Acknowledge what's good.** If they've done #5, #7, #10 well, say so. Calibration matters.
-- **Don't pad.** If only 2 antipatterns are present, the review is short.
+- **Don't pad.** If only a couple of antipatterns are present, the review is short.
 - **Propose the smallest viable fix.** Don't recommend rewriting everything when a targeted change closes the issue.
 
 ## What this skill is NOT
 
 - It is not a generic code review (style, performance, testing patterns)
 - It is not a security audit (use a security review for that)
-- It is not a complete production-readiness check (use `production-readiness/` for the full 25-point DoD)
+- It is not a complete production-readiness check (use `production-readiness/` for the full 33-point DoD)
 
-Focus on the 19 antipatterns; route the user to the right place for other concerns.
+Focus on the 20 antipatterns; route the user to the right place for other concerns.
 
 ## Output of this skill
 
 When the review completes, the user should have:
 
-1. A pass/present/unclear scorecard for all 19 antipatterns
+1. A pass/present/unclear scorecard for all 20 antipatterns
 2. For each "present": named issue, failure mode, proposed fix
 3. Severity ranking
 4. Top 3 to fix this week, with concrete next steps

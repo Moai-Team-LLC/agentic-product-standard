@@ -1,5 +1,7 @@
 # Case study: AgenticGateway — a reference implementation of *Model & provider* + *Cost & FinOps*
 
+> **Terminology note (Standard v4.0).** This study predates v4.0. Its "Layer N" references follow `STANDARD.md` Part II, the technology stack, which v4.0 labels **Stack N**; in v4.0 "Layer N" means a harness layer (ADR-0005). DoD numbers and scorecard items refer to the version audited. A v4.0 re-audit is on the [roadmap](../ROADMAP.md).
+
 [AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway) (Apache-2.0)
 is the family's model plane: one OpenAI-compatible key on a
 [Bifrost](https://github.com/maximhq/bifrost) data plane, implementing the

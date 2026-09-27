@@ -1,6 +1,6 @@
 ---
 name: durable-execution
-description: Make agents survive crashes, timeouts, restarts, and human waits — using Temporal, Inngest, Restate, or LangGraph's checkpointer. Cover the Workflow + Activity pattern, pause/resume semantics, retry policies, and when to retrofit (answer: before your first long-running agent goes to production). Use whenever the user mentions long-running agents, multi-hour tasks, pause/resume, retry on failure, agent crashing mid-flight, state persistence, Temporal, Inngest, Restate, or asks how to handle reliability over hours/days.
+description: Make agents survive crashes, timeouts, restarts, and human waits — using Temporal, Inngest, Restate, or LangGraph's checkpointer. Cover the Workflow + Activity pattern, pause/resume semantics, retry policies, and when to retrofit (answer — before your first long-running agent goes to production). Use whenever the user mentions long-running agents, multi-hour tasks, pause/resume, retry on failure, agent crashing mid-flight, state persistence, Temporal, Inngest, Restate, or asks how to handle reliability over hours/days.
 ---
 
 # Durable Execution for Agents
@@ -114,6 +114,8 @@ def agent_with_approval(input):
 The workflow can sleep for 24 hours waiting for approval without consuming resources. When the user clicks approve, the signal wakes the workflow exactly where it left off.
 
 This is impossible without durable execution. With it, it's a few lines of code.
+
+**Over MCP, the same pattern is now the protocol's own shape.** Since revision 2026-07-28 a server no longer pushes an `elicitation/create` request at the client mid-call; it returns an `input_required` result carrying the questions and an opaque `requestState`, and the client retries with the answers (multi round-trip requests). That maps one-to-one onto a durable signal: persist the pending request, suspend, resume on the human's reply. Two rules come with it — the echoed `requestState` is attacker-controlled input (integrity-protect it if it affects authorization or business logic), and no state may ride on a protocol session, because there isn't one any more.
 
 ## Retry policies
 

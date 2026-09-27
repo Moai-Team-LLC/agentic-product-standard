@@ -4,10 +4,11 @@ name: release
 # CHANGELOG.md section. This is the project's automatic "news of an update":
 # it lands on the Releases page, notifies watchers, and feeds /releases.atom.
 # Push a tag to trigger it, e.g.:  git tag v2.0.0 && git push origin v2.0.0
+# Release candidates (v4.0.0-rc.1) publish as GitHub pre-releases.
 
 on:
   push:
-    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+    tags: ["v[0-9]+.[0-9]+.[0-9]+", "v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+"]
 
 permissions:
   contents: write   # create the release
@@ -19,6 +20,14 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Tag matches the canon version
+        run: |
+          set -euo pipefail
+          canon="$(sed -n 's/^version: *\([^ #]*\).*/\1/p' canon/meta.yaml)"
+          if [ "v$canon" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match canon/meta.yaml version $canon"; exit 1
+          fi
 
       - name: Extract this version's CHANGELOG section
         run: |
@@ -38,10 +47,12 @@ jobs:
       - name: Create the GitHub Release
         run: |
           set -euo pipefail
+          pre=()
+          case "$GITHUB_REF_NAME" in *-*) pre=(--prerelease) ;; esac
           if [ "${FALLBACK:-0}" = "1" ]; then
-            gh release create "$GITHUB_REF_NAME" \
+            gh release create "$GITHUB_REF_NAME" "${pre[@]}" \
               --title "$GITHUB_REF_NAME" --generate-notes --verify-tag
           else
-            gh release create "$GITHUB_REF_NAME" \
+            gh release create "$GITHUB_REF_NAME" "${pre[@]}" \
               --title "$GITHUB_REF_NAME" --notes-file notes.md --verify-tag
           fi

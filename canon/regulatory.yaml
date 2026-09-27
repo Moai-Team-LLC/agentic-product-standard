@@ -1,0 +1,139 @@
+# The external frameworks the Definition of Done is cross-walked to (CROSSWALK.md).
+# A crosswalk entry says: evidence produced to satisfy this DoD item supports this
+# obligation or practice. It is not a claim of legal compliance and not legal advice.
+
+frameworks:
+  eu_ai_act:
+    name: EU AI Act
+    citation: >-
+      Regulation (EU) 2024/1689, as amended by Regulation (EU) 2026/1744 of 8 July 2026
+      (Digital Omnibus on AI; in force 27 July 2026)
+    url: https://eur-lex.europa.eu/eli/reg/2024/1689/2026-07-27/eng
+    amendment_url: https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng
+    note: >-
+      Articles 9–15, 17 and 72–73 are obligations of providers of high-risk AI systems;
+      Article 26 binds deployers of high-risk systems; Article 50 binds certain systems
+      whatever their risk class. For a product that is not high-risk, the mapping shows which
+      evidence would carry over if its classification changed — and which practices the Act
+      treats as the benchmark.
+    entries:
+      - id: "6"
+        title: Classification rules for high-risk AI systems
+      - id: "9"
+        title: Risk management system
+      - id: "10"
+        title: Data and data governance
+      - id: "12"
+        title: Record-keeping (automatic logging over the system's lifetime)
+      - id: "14"
+        title: Human oversight (incl. awareness of automation bias; ability to override or stop)
+      - id: "15"
+        title: Accuracy, robustness and cybersecurity
+      - id: "17"
+        title: Quality management system
+      - id: "26"
+        title: Obligations of deployers of high-risk AI systems (incl. log retention, competent oversight)
+      - id: "50"
+        title: Transparency obligations for providers and deployers of certain AI systems
+      - id: "72"
+        title: Post-market monitoring by providers
+      - id: "73"
+        title: Reporting of serious incidents
+    dates:
+      - date: 2025-08-02
+        what: Obligations for general-purpose AI models apply (models placed on the market before that date comply by 2 Aug 2027)
+      - date: 2026-08-02
+        what: Art. 50 transparency obligations apply; Commission enforcement powers over general-purpose AI models begin
+      - date: 2026-12-02
+        what: >-
+          Art. 50(2) marking of synthetic content applies to systems placed on the market before
+          2 Aug 2026 (a grace period for that obligation only); prohibition of nudification apps
+          (non-consensual intimate imagery and CSAM) applies
+      - date: 2027-08-02
+        what: Deadline for national AI regulatory sandboxes
+      - date: 2027-12-02
+        what: High-risk obligations apply to Annex III systems (e.g. employment, education, essential services, law enforcement)
+      - date: 2028-08-02
+        what: High-risk obligations apply to Annex I systems (AI in products under EU product-safety legislation, e.g. machinery, toys, lifts)
+    date_sources:
+      - https://digital-strategy.ec.europa.eu/en/news/ai-omnibus-enters-force
+      - https://digital-strategy.ec.europa.eu/en/faqs/transparency-obligations-under-article-50-ai-act
+      - https://www.consilium.europa.eu/en/press/press-releases/2026/05/07/artificial-intelligence-council-and-parliament-agree-to-simplify-and-streamline-rules/
+
+  owasp_asi:
+    name: OWASP Top 10 for Agentic Applications (2026)
+    citation: OWASP GenAI Security Project, released 9 December 2025
+    url: https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/
+    entries:
+      - id: ASI01
+        title: Agent Goal Hijack
+      - id: ASI02
+        title: Tool Misuse & Exploitation
+      - id: ASI03
+        title: Identity & Privilege Abuse
+      - id: ASI04
+        title: Agentic Supply Chain Vulnerabilities
+      - id: ASI05
+        title: Unexpected Code Execution (RCE)
+      - id: ASI06
+        title: Memory & Context Poisoning
+      - id: ASI07
+        title: Insecure Inter-Agent Communication
+      - id: ASI08
+        title: Cascading Failures
+      - id: ASI09
+        title: Human-Agent Trust Exploitation
+      - id: ASI10
+        title: Rogue Agents
+
+  nist_ai_rmf:
+    name: NIST AI Risk Management Framework 1.0
+    citation: NIST AI 100-1 (26 January 2023) — mapped at category level
+    url: https://nvlpubs.nist.gov/nistpubs/ai/nist.ai.100-1.pdf
+    note: >-
+      NIST has not published an agent-specific profile of the AI RMF. Its AI Agent Standards
+      Initiative (CAISI, February 2026) and the NCCoE concept paper on software and AI agent
+      identity and authorization (February 2026) are tracked as signals, not mapped.
+    entries:
+      - id: GOVERN 1
+        title: Policies, processes, procedures and practices for AI risk are in place and implemented
+      - id: GOVERN 2
+        title: Accountability structures empower and train the right people
+      - id: GOVERN 6
+        title: Third-party software, data and supply-chain risks are addressed
+      - id: MAP 1
+        title: Context is established and understood
+      - id: MAP 2
+        title: The AI system is categorized
+      - id: MAP 4
+        title: Risks and benefits are mapped for all components, including third-party ones
+      - id: MEASURE 1
+        title: Appropriate methods and metrics are identified and applied
+      - id: MEASURE 2
+        title: AI systems are evaluated for trustworthy characteristics
+      - id: MEASURE 3
+        title: Mechanisms track identified AI risks over time
+      - id: MEASURE 4
+        title: Feedback about the efficacy of measurement is gathered and assessed
+      - id: MANAGE 1
+        title: AI risks are prioritized, responded to, and managed
+      - id: MANAGE 2
+        title: Strategies to maximize benefits and minimize negative impacts are planned and documented
+      - id: MANAGE 3
+        title: Risks and benefits from third-party entities are managed
+      - id: MANAGE 4
+        title: Risk treatments, response and recovery, and communication plans are documented and monitored
+
+  imda:
+    name: IMDA Model AI Governance Framework for Agentic AI (Singapore)
+    citation: Launched 22 January 2026; updated 20 May 2026
+    url: https://www.imda.gov.sg/resources/press-releases-factsheets-and-speeches/factsheets/2026/updated-model-ai-governance-framework-for-agentic-ai
+    entries:
+      - id: 1
+        title: Assess and bound the risks upfront
+      - id: 2
+        title: Make humans meaningfully accountable
+      - id: 3
+        title: Implement technical controls and processes
+      - id: 4
+        title: Enable end-user responsibility

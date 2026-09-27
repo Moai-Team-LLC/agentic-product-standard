@@ -1,0 +1,68 @@
+# Canon 4 — the harness: everything around the LLM loop.
+# "Layer N" always means a harness layer below. STANDARD.md Part II is the technology stack,
+# numbered "Stack N"; it coincides with the harness only at 8 and 9 (ADR-0005).
+layers:
+  - n: 1
+    name: Agent Loop
+    detail: gather → act → verify
+    role: the "agent" proper
+  - n: 2
+    name: Context & Memory Management
+    role: write/select/compress/isolate
+  - n: 3
+    name: Durable Execution
+    detail: Workflow + Activity
+    role: pause/resume/retry
+  - n: 4
+    name: Guardrails
+    detail: input/output validation
+    role: defense in depth
+  - n: 5
+    name: Human-in-the-Loop
+    detail: notify/ask/review
+    role: approval gates
+  - n: 6
+    name: Evaluation
+    detail: CI gates
+    role: block regressions
+  - n: 7
+    name: Observability & Tracing
+    role: log EVERYTHING — on pinned OTel GenAI conventions
+  - n: 8
+    name: Security & Identity
+    cross_cutting: true
+    role: threat model · injection defense · per-agent identity · least-privilege tokens · pinned tool defs · protocol auth baseline
+  - n: 9
+    name: Cost & FinOps
+    cross_cutting: true
+    role: per-run ceilings in code · caching · routing · cost per verified outcome
+
+# STANDARD.md Part II — the technology stack: which technology to choose for each concern.
+stack:
+  - n: 1
+    name: Model and provider
+    harness: [9]
+  - n: 2
+    name: Tool integration — MCP by default
+    harness: [1, 8]
+  - n: 3
+    name: Context engineering — four operations
+    harness: [2]
+  - n: 4
+    name: Memory
+    harness: [2]
+  - n: 5
+    name: Durable execution
+    harness: [3, 5]
+  - n: 6
+    name: Observability & evals
+    harness: [6, 7]
+  - n: 7
+    name: Framework selection
+    harness: []
+  - n: 8
+    name: Security & Identity
+    harness: [8]
+  - n: 9
+    name: Cost & FinOps
+    harness: [9]

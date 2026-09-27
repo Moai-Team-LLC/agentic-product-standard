@@ -1,0 +1,73 @@
+# MCP conformance workflow — TEMPLATE (DoD 26).
+#
+# DoD 26 asks every MCP server and client you own to pass the official conformance
+# suite (https://github.com/modelcontextprotocol/conformance) in CI, at a pinned
+# version, against revision 2026-07-28. Copy this to .github/workflows/ in the repo
+# that owns the server or client, and wire the TODO points.
+#
+# Pin the suite. As of Standard v4.0.0-rc.1 the npm `latest` tag (0.1.16) predates
+# 2026-07-28 support; the pre-release below provides `--requirements 2026-07-28`.
+# Move the pin deliberately, like any other test dependency.
+#
+# Known gaps go in a reviewed expected-failures file (--expected-failures), never in
+# a disabled job — silencing a gate to pass CI is DoD 24's anti-case. If you have
+# no known failures, drop the --expected-failures flag.
+
+name: mcp-conformance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+env:
+  CONFORMANCE: "@modelcontextprotocol/conformance@0.2.0-alpha.11"
+  MCP_REVISION: "2026-07-28"
+
+jobs:
+  server:
+    name: MCP server conformance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # TODO: install and start YOUR MCP server in the background, listening on
+      # the URL below, and wait until it answers.
+      - name: Start the server under test
+        run: |
+          npm ci
+          (npm run start:mcp > server.log 2>&1 &)
+          for i in $(seq 1 30); do curl -sf -o /dev/null http://localhost:3000/mcp && break; sleep 1; done
+
+      - name: Run the conformance suite
+        run: |
+          npx -y "$CONFORMANCE" server \
+            --url http://localhost:3000/mcp \
+            --requirements "$MCP_REVISION" \
+            --expected-failures .mcp-conformance/expected-failures.yaml
+
+      - name: Upload server log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcp-server-log
+          path: server.log
+
+  client:
+    name: MCP client conformance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm ci
+      # TODO: the command that launches YOUR MCP client against the suite's test server.
+      - name: Run the conformance suite
+        run: |
+          npx -y "$CONFORMANCE" client \
+            --command "npm run mcp-client" \
+            --expected-failures .mcp-conformance/expected-failures.yaml

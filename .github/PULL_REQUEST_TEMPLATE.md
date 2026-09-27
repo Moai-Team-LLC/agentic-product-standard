@@ -15,6 +15,7 @@
 ## Checklist
 
 - [ ] Edited the relevant `STANDARD.md` section and/or matching `skills/.../SKILL.md`
-- [ ] Kept `STANDARD.md`, the matching skills, `CONTEXT.md`, and the counts in `README.md` in sync (items, layers, anti-patterns)
+- [ ] Enumerable changes made in `canon/`, rendered with `python3 tools/aps.py render`; `python3 tools/aps.py check` passes
+- [ ] Hand-written guidance updated in both `STANDARD.md` and the matching `skills/.../SKILL.md`
 - [ ] No framework boilerplate added to the skills (framework-neutral gates belong in `templates/`)
 - [ ] Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/)
