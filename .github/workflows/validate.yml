@@ -6,6 +6,30 @@ on:
   pull_request:
 
 jobs:
+  canon:
+    name: Canon, generated docs, skills & conformance tool
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --quiet pyyaml jsonschema
+
+      # canon/*.yaml is the single source for everything enumerable. This fails when
+      # the canon is inconsistent, when any generated region or file (README, STANDARD,
+      # SCORECARD, CROSSWALK, the skills, skills-lock.json) drifts from it, when a count
+      # written in prose disagrees with it, or when a skill breaks the Agent Skills spec
+      # or ships hidden content. Fix: edit canon/, run `python3 tools/aps.py render`.
+      - name: Canon check
+        run: python3 tools/aps.py check
+
+      - name: Skills (warnings included)
+        run: python3 tools/aps.py skills validate
+
+      - name: Tool and template tests
+        run: python3 -m unittest discover -s tools/tests -v
+
   links:
     name: Internal links & skill frontmatter
     runs-on: ubuntu-latest

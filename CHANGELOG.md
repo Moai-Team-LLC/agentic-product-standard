@@ -5,6 +5,94 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [4.0.0-rc.1] — 2026-09-27
+
+The **Conformance Contract** release candidate. v3.x added a license, then a science, then a gate, then a graph — each release grew the Definition of Done and the copies of it drifted. v4.0 stabilizes the contract instead of growing it again. The standard gets one machine-readable source that every document is generated from. It gets a conformance tool that checks a product against that source in CI. The ladder is redrawn on the two axes the market and the regulators actually use. And the protocol baselines the standard leans on — MCP, A2A, OpenTelemetry, the EU AI Act — are brought up to their state as of September 2026. This is a **major** release: some v3.3-conformant products will not be v4.0-conformant (see *Migration*). It is published as a release candidate for a two-week comment period before 4.0.0.
+
+### Breaking
+- **Autonomy × Oversight** (Canon 1, [ADR-0004](docs/adr/0004-autonomy-and-oversight-axes.md)). The single L0–L4 ladder becomes two axes:
+  - **autonomy** L0–L4 — who chooses the next step. L3 is renamed *Bounded decomposition* (formerly *Orchestrator-Worker*), so the level is no longer confused with composition pattern 4.
+  - **oversight** O0 / O1 / O2 — whether a human approves each consequential (P3+) action: in the loop, on the loop, or unattended.
+
+  A system declares its **operating point** (e.g. `L3 · O0`).
+- **The Loop License binds at O1+, at any autonomy level** — not at "L3+ unattended." An L2 pipeline that auto-applies its output now owes the license. An L3 orchestrator whose every action is approved no longer does. O2 additionally requires the success-legitimacy audit. Stop conditions bind at L3+ **or** O1+. Missing a gate caps a system at O0 (formerly "L2"). The weakest-link bound caps an unlicensed path at O0.
+- **Escalation rules per axis.** Climbing autonomy still requires pass@1 ≥ 90%. Relaxing oversight now requires a Loop License whose eval gate adds a declared **pass^5** threshold, plus a published **legitimacy rate** at O2. The standard sets no hour thresholds: benchmark time horizons do not transfer to a product.
+- **Definition of Done 25 → 33.** New items:
+  - 26 *MCP protocol & auth baseline* — MCP 2026-07-28, conformance suite in CI, no session-bound state, Client ID Metadata Documents, RFC 9207 issuer validation, issuer-bound credentials.
+  - 27 *Per-agent identity*.
+  - 28 *Inter-agent trust* — A2A signed Agent Cards verified before cross-boundary delegation.
+  - 29 *Telemetry contract* — OTel GenAI conventions at a pinned revision, content capture off by default.
+  - 30 *Success-legitimacy audit* at O2.
+  - 31 *Regulatory classification record*.
+
+  The two items that were unnumbered since v1.4/v3.1 get numbers and change no obligation: **32** tenant isolation and **33** human oversight as a program. Item 33 gains automation-bias measurement: override rate, approval latency, and a rubber-stamp alarm.
+- **Numbering.** "Layer N" now always means a harness layer; `STANDARD.md` Part II sections become **Stack 1–9** ([ADR-0005](docs/adr/0005-layer-and-stack-numbering.md)). Part II anchors changed from `#layer-…` to `#stack-…`.
+- **Anti-patterns 19 → 20.** New: **20. Counting a pass as a success without legitimacy review.** Anti-pattern 15 gains its 2026 variant: an MCP client that can only register through the deprecated Dynamic Client Registration.
+
+### Added
+- **The machine-readable canon** ([`canon/`](canon/), [ADR-0003](docs/adr/0003-machine-readable-canon.md)). It holds the principles, the ladder, the patterns, the harness and stack, the checklist, the Definition of Done (normative text, binding conditions, audit points, crosswalk), the anti-patterns, the scorecard, and the regulatory frameworks as YAML, with JSON Schemas. The README, `STANDARD.md`, `SCORECARD.md`, `CONTEXT.md`, `AGENT_STANDARD.md` (both copies), and five skills now carry generated regions. `CROSSWALK.md`, `production-readiness/DOD.md`, the conformance template, and `skills-lock.json` are generated whole.
+- **`tools/aps.py`**:
+  - `validate`, `render` and `check` keep the canon and the documents in step. `check` also fails on a count written in prose that disagrees with the canon.
+  - `skills validate | lock | verify` checks the instruction supply chain.
+  - `conformance` scores a product.
+  - Unit tests live in `tools/tests/`, and CI runs all of it.
+- **`aps-conformance`** ([`docs/conformance.md`](docs/conformance.md), [`action.yml`](action.yml)). A product answers the scorecard in an `aps-conformance.yaml`, where every *yes* carries evidence. The tool, which is also a composite GitHub Action, then reports:
+  - the band achieved;
+  - the band the declared operating point requires;
+  - DoD coverage;
+  - each open control as SARIF, tagged with the DoD items and crosswalk entries it supports;
+  - an optional endpoint badge.
+
+  This closes the "conformance linter" ask that has been open since v2.0.
+- **[`CROSSWALK.md`](CROSSWALK.md)** maps every DoD item to the EU AI Act, OWASP ASI01–ASI10, NIST AI RMF categories, and IMDA's four dimensions, with reverse indexes. It includes the dates fixed by the Digital Omnibus (Regulation (EU) 2026/1744): Art. 50 from 2 Aug 2026, Annex III high-risk from 2 Dec 2027, Annex I from 2 Aug 2028. It is a crosswalk, not a compliance claim.
+- **Templates:**
+  - [`ci/mcp-conformance.yml`](templates/ci/mcp-conformance.yml) runs the official MCP conformance suite, pinned (DoD 26).
+  - [`telemetry/`](templates/telemetry/README.md) is a stdlib checker for the telemetry contract (DoD 29).
+  - [`safe-outputs/`](templates/safe-outputs/README.md) is the typed safe-output pattern and a reference applier (Loop License gate 3).
+  - [`conformance/`](templates/conformance/aps-conformance.template.yaml) is the generated `aps-conformance.yaml` template.
+- **Skills supply chain.** Every `SKILL.md` is validated against the open Agent Skills specification. Every file a skill ships is scanned for hidden content (invisible and bidi Unicode, stray HTML comments, piped installers) and hash-locked in `skills-lock.json`, which `aps.py skills verify` checks an installed copy against.
+- `llms.txt`, and `AGENTS.md` (+ `CLAUDE.md`) for coding agents working on this repository.
+- Scorecard items for DoD 25–33. v3.3 had shipped DoD 25 with no scorecard item. Every scorecard item now has a stable id.
+
+### Changed
+- **Stack 2 / Layer 8** now set the MCP 2026-07-28 baseline:
+  - a stateless core;
+  - multi-round-trip `input_required` in place of server-initiated elicitation;
+  - `Mcp-Method` / `Mcp-Name` routing headers as a policy enforcement point outside the model;
+  - `ttlMs` / `cacheScope` caching, with the tool-definition pin re-verified on every refetch and `private` entries treated as a tenant boundary;
+  - Roots, Sampling, and Logging deprecated.
+
+  Layer 8 also adds sections on per-agent identity (NIST NCCoE concept paper, Feb 2026) and inter-agent trust (A2A v1.0 signed Agent Cards).
+- **Stack 6** pins the OpenTelemetry GenAI conventions. They moved to `semantic-conventions-genai` at semconv v1.42.0 (June 2026), are still *Development*, and have no tags yet, so the pin is a commit. The stack now records `invoke_agent` → `chat` / `execute_tool` spans and token usage, and makes content capture opt-in by policy.
+- **The context budget is measured, not assumed** (DoD 1). It is the fill level at which your own evals degrade, with 40% of the window as the default until you have measured it.
+- **Cost ceilings are re-derived on every model change** (DoD 15, Stack 1, Stack 9). A model swap is a release, not a config change.
+- **The instruction supply chain** (Part IV) adds spec validation, hidden-content scanning, and a lockfile.
+- **The Loop and Graph License checklists, the decision tree, `AGENT_STANDARD.md` (doctrines, contract sections 14–17, checklists, rules 23–25, evidence appendix), and the skills** move to the two-axis model.
+- `production-readiness` now keeps its audit points in a generated, bundled `DOD.md`, which keeps `SKILL.md` within the spec's size guidance. `eval-driven-dev` adds consistency (`pass^k`) and legitimacy. `tool-design-mcp` adds a 2026-07-28 section. The `tenant-isolation`, `memory-architecture` and `durable-execution` skills pick up the MCP caching and multi-round-trip changes.
+- `templates/ci/eval-gate.yml` can gate on `pass^k` and the legitimacy rate as well as pass@1.
+- `GOVERNANCE.md` describes releases: the canon owns the version, major releases ship as release candidates with a comment period, and tags are immutable contracts. The release workflow publishes `-rc` tags as pre-releases and refuses a tag that does not match the canon.
+
+### Fixed
+- The durable-execution skill's frontmatter was not valid YAML: an unquoted `answer:` inside the description broke strict parsers.
+- The `agent-builder` contract template lacked the sections the standard makes mandatory at L3+/O1+.
+
+### Migration from 3.3
+1. **Declare your operating point.** If your system executes consequential actions without per-action approval, it is at O1 or O2 and owes the Loop License, whatever its autonomy level. If it is L3+ with every action approved, it is at O0 and owes stop conditions but no license.
+2. **Add pass^5 to your Loop License eval gate.** At O2, also start the legitimacy audit and move tests, graders, and eval sets out of the agent's write scope.
+3. **Renumber your references.** The two formerly unnumbered DoD items are now **32** and **33**. "Part II · Layer N" references become **Stack N**.
+4. **Close the new items that bind to you:**
+   - MCP 2026-07-28 and its conformance suite (26), if you use MCP;
+   - one identity per agent (27);
+   - signed-card verification (28), if you delegate across a trust boundary;
+   - a pinned telemetry contract with content capture off (29);
+   - the classification record (31), if you serve a regulated market;
+   - automation-bias metrics on your approval queues (33).
+5. **Optionally, adopt `aps-conformance`.** Start from `templates/conformance/aps-conformance.template.yaml`.
+
+*Sources are cited inline in `STANDARD.md`, `CROSSWALK.md`, and `AGENT_STANDARD.md`'s evidence appendix. Facts were checked against primary sources where they were reachable: the MCP specification sources, the A2A and OpenTelemetry repositories, EUR-Lex / Commission / Council pages, NIST, IMDA, OWASP, METR, and the Agent Skills specification. Where only a search-index excerpt was available, the claim is stated conservatively.*
+
+[4.0.0-rc.1]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v4.0.0-rc.1
+
 ## [3.3.1] — 2026-09-27
 
 A **consistency** patch. Nothing normative changes. The canon had drifted across its own copies, and this release puts the counts, lists and diagrams back in agreement. It also records where the protocol landscape moved underneath the standard: MCP 2026-07-28 is now final.

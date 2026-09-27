@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Moai-Team-LLC/agentic-product-standard/canon/schema/scorecard.schema.json",
+  "title": "Scorecard (canon/scorecard.yaml)",
+  "type": "object",
+  "required": ["bands", "envelope_rules", "sections"],
+  "additionalProperties": false,
+  "properties": {
+    "bands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "envelope", "meaning"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "enum": ["M0", "M1", "M2", "M3"] },
+          "name": { "type": "string" },
+          "envelope": { "type": "string" },
+          "meaning": { "type": "string" }
+        }
+      }
+    },
+    "envelope_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["when", "label", "requires"],
+        "additionalProperties": false,
+        "properties": {
+          "when": { "type": "string" },
+          "label": { "type": "string" },
+          "requires": { "enum": ["M0", "M1", "M2", "M3"] }
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "title", "items"],
+        "additionalProperties": false,
+        "properties": {
+          "key": { "type": "string", "pattern": "^[a-z]+$" },
+          "title": { "type": "string" },
+          "condition": { "type": "string" },
+          "note": { "type": "string" },
+          "applies_if": { "type": "string" },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "band", "text"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string", "pattern": "^[a-z]+\\.[a-z0-9]+(-[a-z0-9]+)*$" },
+                "band": { "enum": ["M1", "M2", "M3"] },
+                "dod": { "type": "array", "items": { "type": "integer", "minimum": 1 } },
+                "applies_if": { "type": "string" },
+                "text": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

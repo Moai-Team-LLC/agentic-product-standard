@@ -18,3 +18,7 @@ Thumbs.db
 
 # Local reference-stack clones stood up by family.sh
 family/
+
+# Python bytecode (tools/, templates/)
+__pycache__/
+*.pyc

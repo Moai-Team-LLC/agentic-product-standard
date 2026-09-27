@@ -1,0 +1,21 @@
+# Canon 2 — the five composition patterns (Anthropic, "Building Effective Agents").
+patterns:
+  - n: 1
+    name: Prompt Chaining
+    summary: sequential decomposition (outline → draft → polish)
+  - n: 2
+    name: Routing
+    summary: classifier + dispatcher to a specialist
+  - n: 3
+    name: Parallelization
+    summary: fan-out of independent subtasks + aggregation
+  - n: 4
+    name: Orchestrator-Workers
+    summary: central planner + dynamic workers
+    example: Anthropic Research, Claude Code Task tool
+  - n: 5
+    name: Evaluator-Optimizer
+    summary: generator + critic in a loop until acceptance
+meta_principle: >-
+  First try to solve the task by composing these patterns in deterministic code. A full agent
+  loop is the last resort.

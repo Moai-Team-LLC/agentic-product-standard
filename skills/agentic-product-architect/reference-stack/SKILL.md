@@ -23,10 +23,10 @@ Prefer to wire members one at a time? The per-member install sections below do e
 
 | Standard surface | Reference tool | One line | Runtime |
 |---|---|---|---|
-| Knowledge & memory (Layer 2) | **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** | Auditable, citation-enforced knowledge & memory over MCP | Node or Bun + Postgres/pgvector |
+| Knowledge & memory (Layer 2 · Stack 4) | **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** | Auditable, citation-enforced knowledge & memory over MCP | Node or Bun + Postgres/pgvector |
 | Runtime & fleet operations | **[AgenticOps](https://github.com/Moai-Team-LLC/AgenticOps)** | Day-2 operation of many long-lived agents | Bun |
-| Evals & observability (Layers 6–7) | **[AgenticPerformance (APL)](https://github.com/Moai-Team-LLC/AgenticPerformance)** | OTel traces → golden-set evals + failure taxonomy + improvement loop | Bun + Postgres/Timescale |
-| Model & provider + Cost & FinOps (Layers 1 + 9) | **[AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway)** | One OpenAI-compatible key → Bifrost data plane; eval-sourced routing, cost circuit breakers, evidence per call | Bun + SQLite (+ Docker for Bifrost) |
+| Evals & observability (Layers 6–7 · Stack 6) | **[AgenticPerformance (APL)](https://github.com/Moai-Team-LLC/AgenticPerformance)** | OTel traces → golden-set evals + failure taxonomy + improvement loop | Bun + Postgres/Timescale |
+| Model & provider + Cost & FinOps (Stack 1 + Layer 9) | **[AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway)** | One OpenAI-compatible key → Bifrost data plane; eval-sourced routing, cost circuit breakers, evidence per call | Bun + SQLite (+ Docker for Bifrost) |
 | Security & assurance (Layer 8) | **[AgenticAssurance (AAL)](https://github.com/Moai-Team-LLC/AgenticAssurance)** | Red-team any agent (OWASP Agentic + MITRE ATLAS) → SARIF | Node ≥22 (`npx`) |
 
 ## AgenticMind — the memory surface
@@ -38,10 +38,10 @@ git clone https://github.com/Moai-Team-LLC/AgenticMind.git && cd AgenticMind
 cp .env.example .env.local          # set AUTH_SECRET (+ a chat key or local Ollama)
 ./setup.sh                          # picks npm/bun, starts Postgres, runs migrations
 npm run dev                         # headless MCP server on :3000  (or: bun run dev)
-npm run issue-token -- --label app --ttl-days 365   # mint a scoped bearer
+npm run issue-token -- --label app --ttl-days 365   # mint a scoped bearer (local development)
 ```
 
-Then point any MCP client at `http://localhost:3000/mcp` with that bearer. See [`memory-architecture/`](../memory-architecture/SKILL.md) for when memory is even needed and the bring-your-own alternatives (Mem0 / Zep / Letta / files).
+Then point any MCP client at `http://localhost:3000/mcp` with that bearer. **The long-lived static bearer is for localhost only.** In production the agent authenticates as its own identity with short-lived, audience-bound credentials from your identity provider (DoD 27), over an MCP 2026-07-28 client registered by Client ID Metadata Document (DoD 26). See [`memory-architecture/`](../memory-architecture/SKILL.md) for when memory is even needed and the bring-your-own alternatives (Mem0 / Zep / Letta / files).
 
 **Bring your own if:** you're already committed to a hosted memory vendor, or you don't need auditability/self-improvement.
 
@@ -112,3 +112,5 @@ It operationalizes the lethal-trifecta check and Layer 8 (Security & Identity) �
 The Standard sets the contract; the family divides the operational surface: **AgenticOps runs** the fleet, **AgenticMind judges and grounds** its answers, **AgenticPerformance measures and improves** what runs, and **AgenticAssurance red-teams** it before you ship. They connect through **optional adapters, never hard dependencies** — each also runs on its own. Full map, status, and licenses: [`ECOSYSTEM.md`](../../../ECOSYSTEM.md).
 
 **The paved road in one line:** start from the standard's design, drop in the family for the surfaces you don't want to build, and keep the escape hatch open for the ones where you have a better answer.
+
+**Then prove it.** Whatever you run — the family or your own stack — answer the scorecard in an `aps-conformance.yaml` and let the standard's `aps-conformance` GitHub Action score it on every PR (`docs/conformance.md` in the standard repo).

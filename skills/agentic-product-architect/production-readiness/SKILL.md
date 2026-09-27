@@ -1,341 +1,80 @@
 ---
 name: production-readiness
-description: Audit an agentic product against the 25-point Definition of Done before launch. Covers context, tools, permissions, reliability, evals, observability, security, cost, the Loop License, and measurement science (judge calibration, retrieval metrics, ground-truth provenance, drift, human oversight) — the minimum bar for production. Use whenever the user is preparing to launch / ship / deploy an agentic product, asks "is this production-ready," wants a pre-launch checklist, or is doing a code review before going live.
+description: Audit an agentic product against the Definition of Done before launch — context, tools, permissions, reliability, evals, observability, security and identity (MCP 2026-07-28 auth baseline, per-agent identity, inter-agent trust), cost, the Loop License for operation without per-action approval, success-legitimacy audits, measurement science, human oversight, and the regulatory classification record. Also turns the audit into an aps-conformance.yaml the standard's CI Action can score. Use whenever the user is preparing to launch / ship / deploy an agentic product, asks "is this production-ready," wants a pre-launch checklist or a conformance score, or is doing a code review before going live.
 ---
 
-# Production Readiness — 25-Point Definition of Done
+# Production Readiness — the Definition of Done
 
-An agentic product is not production-ready until all 25 points pass. Each point catches a class of failures that has hit real products.
+An agentic product is not production-ready until every Definition of Done item that binds to it passes. Each item catches a class of failures that has hit real products. Which items bind depends on the product's **operating point** — autonomy (L0–L4) × oversight (O0–O2) — and on what it contains (MCP, multiple agents, tenants, a regulated market). Establish those first.
 
 This is an audit checklist, not a feature list. Walk through it with the user; mark each as pass, gap, or N/A with explicit reasoning. Gaps must be closed or accepted with eyes open.
 
 > **The paved road.** Many of these points come satisfied out of the box if you run the **[AgenticProduct family](../../../ECOSYSTEM.md)** reference stack — memory (AgenticMind), runtime & fleet ops (AgenticOps), evals & observability (AgenticPerformance), the model & cost plane (AgenticGateway), and Layer-8 red-teaming (AgenticAssurance). It's the fastest way to green, not a requirement — satisfy any point your own way (Principle 2). See the [`reference-stack`](../reference-stack/SKILL.md) skill.
 
-## The 25 points
-
-### Context and state
-
-#### 1. Context utilization < 40% in typical turn
-- [ ] Measure context utilization on representative production traces
-- [ ] Median below 40%; p95 below 60%
-- [ ] If higher: compaction strategy in place that triggers at threshold
-
-**Why:** past 40% utilization, model recall degrades nonlinearly. The "dumb zone" begins.
-
-**Common gap:** dumping conversation history into every turn instead of using selection / compaction.
-
----
-
-#### 2. State externalized (not living only in context window)
-- [ ] State has a defined home (file, DB, memory layer) — not "the conversation"
-- [ ] Can recover full agent state from external storage on crash
-- [ ] State writes are explicit and traceable
-
-**Why:** in-context state evaporates on session boundary, restart, or compaction.
-
-**Common gap:** "the agent will remember from the conversation" — it won't, reliably.
-
----
-
-#### 3. Compaction pipeline tested on long sessions
-- [ ] Compaction has been exercised on real long sessions (>50 turns or > 30 min)
-- [ ] No critical info lost during compaction (verified by eval cases)
-- [ ] Compaction trigger is metric-driven, not turn-count-driven
-
-**Why:** compaction that drops critical state silently is worse than no compaction.
-
-**Common gap:** built compaction, never tested on a session long enough to need it.
-
----
-
-### Tools and permissions
-
-#### 4. Destructive actions require explicit human approval
-- [ ] List of destructive actions enumerated (deletes, writes, sends, charges, etc.)
-- [ ] Each one routes through an approval gate
-- [ ] Approval is logged with who/when/what
-
-**Why:** Replit incident — agent wiped 1,200+ companies' data despite a "code freeze" prompt. Prompts don't enforce.
-
-**Common gap:** "the prompt tells the agent not to delete production data" — insufficient.
-
----
-
-#### 5. Permissions enforced by code, not by prompt
-- [ ] Agent does not hold credentials that bypass permission boundaries
-- [ ] Permission gate is a separate code path the LLM cannot override
-- [ ] Even with prompt injection, agent cannot perform forbidden actions
-
-**Why:** prompt injection is a real threat; LLM can be coerced; code cannot.
-
-**Common gap:** OAuth scopes too broad; agent runs as superuser internally.
-
----
-
-#### 6. Tool execution sandboxed
-- [ ] Code execution in containers / VMs, not host environment
-- [ ] File operations in scoped working directories
-- [ ] Network access through allow-listed domains
-- [ ] Secrets never in context window; injected at tool boundary
-
-**Why:** tool execution is an attack surface; treat it like any RPC exposed to untrusted input.
-
-**Common gap:** agent has shell access with no sandbox.
-
----
-
-### Tenant isolation (if multi-tenant)
-
-Skip this whole section if the product is single-tenant or deployed per customer. Otherwise every box must be checked — there is no partial cross-tenant isolation.
-
-- [ ] Isolation model chosen per data store (pooled + RLS / schema-per-tenant / DB-per-tenant) and recorded in the Agent Contract
-- [ ] `tenant_id` is part of the authenticated principal; a request with no resolvable tenant fails closed (no default tenant)
-- [ ] Isolation enforced below the LLM (row-level security or repository layer); verified to hold under prompt injection
-- [ ] Retrieval filtered inside the index (not post-top-k), memory namespaced, cache key includes `tenant_id`, traces tagged, sub-agent messages and background jobs carry the tenant
-- [ ] Tools ignore any model-supplied tenant; a mismatch is audited and rejected
-- [ ] A code-asserted cross-tenant leakage eval (canary seeded as A, queried as B incl. an injection variant) runs in CI
-
-**Why:** an agent is a confused deputy — prompt-level isolation leaks. The first cross-tenant leak is a churn-and-lawsuit event, and retrofitting isolation is the migration nobody budgets for. See the `tenant-isolation` skill.
-
-**Common gap:** a tenant-agnostic answer cache serving tenant A's response to tenant B; `tenant_id` passed as a tool argument the model can be talked into changing.
-
----
-
-### Reliability
-
-#### 7. Durable execution: pause/resume/retry works on killed process
-- [ ] Kill the agent process mid-execution; restart; verify it resumes
-- [ ] Retry policies defined per activity type
-- [ ] Human-wait signals work (agent can wait hours/days for approval)
-
-**Why:** any agent running > 60s will hit a crash, restart, or wait — without durability, work is lost.
-
-**Common gap:** "we tested the happy path" — production isn't the happy path.
-
----
-
-#### 8. Structured outputs validated by schema; assertions on critical path
-- [ ] Every LLM call returning structured data validates against schema
-- [ ] Code assertions on critical state transitions
-- [ ] No "parse this text output and hope" anywhere on the critical path
-
-**Why:** unvalidated outputs cause silent corruption; assertions catch it early.
-
-**Common gap:** regex-parsing LLM responses; works in dev, fails in production edge cases.
-
----
-
-#### 9. Guardrails on input and output (minimum: PII, jailbreak, schema validation)
-- [ ] Input guardrails: PII detection, jailbreak / prompt injection classifier
-- [ ] Output guardrails: schema validation, content policy, citation check
-- [ ] Guardrails run on real traffic, with metrics on hit rates
-
-**Why:** defense in depth; multiple cheap guardrails beat one perfect one.
-
-**Common gap:** no input guardrails; trusting the model to refuse.
-
----
-
-### Evals and observability
-
-#### 10. Eval set ≥ 50 examples per top-priority failure mode
-- [ ] At least 5 named failure modes (product-specific, not generic)
-- [ ] Each has ≥ 50 cases in the eval set
-- [ ] Cases sampled from real or representative traces
-
-**Why:** generic evals don't catch product-specific failures; 50 cases give enough signal to detect regression.
-
-**Common gap:** 20 cases of "helpfulness" — not enough, not the right thing to measure.
-
----
-
-#### 11. LLM-judges calibrated against human labels (TPR/TNR tracked)
-- [ ] Each LLM judge has ≥ 100 human-labeled examples for calibration
-- [ ] TPR and TNR both > 80%
-- [ ] Calibration re-run when judge prompt changes
-- [ ] TPR/TNR reported with every release
-
-**Why:** uncalibrated judges produce meaningless scores; teams stop trusting evals and revert to vibe.
-
-**Common gap:** built a judge; never measured if it agrees with humans.
-
----
-
-#### 12. CI blocks deploys on eval regression; 100% production traces logged
-- [ ] CI runs full eval suite on every PR
-- [ ] Merge blocked on regression vs main branch
-- [ ] 100% of production traffic produces traces
-- [ ] Traces include all required fields (see harness-engineering layer 7)
-- [ ] Trace retention sufficient for incident investigation (typically 30–90 days)
-
-**Why:** evals without enforcement are theater; traces are the only way to debug failures after launch.
-
-**Common gap:** evals exist but don't gate merges; tracing is sampled, missing the failures.
-
----
-
-### Security and identity
-
-#### 13. Lethal-trifecta check performed and documented
-- [ ] Three legs assessed: access to private data, exposure to untrusted content, ability to communicate externally
-- [ ] If all three are present, at least one leg is broken in design (not by a prompt instruction)
-- [ ] The check and its outcome are written down (in the Agent Contract / threat model), not assumed
-
-**Why:** private data × untrusted content × external comms is an exfiltration channel — injected content reads a secret and ships it out. Simon Willison's lethal trifecta: the deployment check every agent must pass.
-
-**Common gap:** all three legs live and unmitigated because no one drew the diagram; "the model won't do that" stands in for a mitigation.
-
----
-
-#### 14. MCP tool definitions pinned; servers allow-listed; OAuth 2.1 scoped tokens
-- [ ] Tool definitions pinned by hash, with a change alert (rug-pull detection)
-- [ ] MCP servers installed only from an allow-listed registry — never an arbitrary URL
-- [ ] OAuth 2.1 scoped tokens per integration; no token passthrough (the user's token is never forwarded)
-
-**Why:** an approved tool description can mutate after you approve it; a forwarded or over-scoped token turns the agent into a confused deputy. The supply chain is part of the attack surface.
-
-**Common gap:** installing a community MCP server by URL and trusting its description forever; minting broad OAuth scopes "to be safe."
-
----
-
-### Cost
-
-#### 15. Per-run token / cost ceiling enforced in code
-- [ ] A hard per-run token / cost ceiling, enforced in code (circuit breaker) — not a guideline or a dashboard
-- [ ] A runaway or looping session trips the breaker and halts
-- [ ] Cost-per-task is recorded in traces
-
-**Why:** without a code-level ceiling, one bad loop is an unbounded invoice. Cost is a reliability property, not just a finance report.
-
-**Common gap:** watching cost in a dashboard after the fact instead of capping it in the request path.
-
-### Unattended operation (L3+) — the Loop License
-
-*These four bind only when the agent runs unattended at L3+ (finds its own work, loops without a human in each turn). Full treatment: `STANDARD.md` Part IV + [`templates/loop-license/CHECKLIST.md`](../../../templates/loop-license/CHECKLIST.md).*
-
-#### 16. Loop License held (all six gates)
-- [ ] Eval pass-rate threshold, regression gate, declared blast radius, cost cap, kill switch, escalation path — all six declared, enforced in code, and tested
-- [ ] Missing any one gate → the system is capped at L2 (human-in-the-loop)
-
-**Why:** an unattended loop with no license is a factory with no quality control — it ships whatever it produces at machine speed.
-
-**Common gap:** having evals and a cost cap but no kill switch or declared blast radius, so nothing can stop or bound a run in flight.
-
-#### 17. Stop conditions & fail paths declared and enforced
-- [ ] Max iterations, token/time/spend budgets, and a timeout are in the Agent Contract and enforced by the runner
-- [ ] After N consecutive failures the loop escalates, it does not retry forever
-
-**Why:** "no declared way to stop" is the defining L4 failure.
-
-**Common gap:** budgets exist but there is no escalation-after-N — the loop burns the whole budget retrying a doomed step.
-
-#### 18. Independent verification
-- [ ] The producing model does not grade its own work
-- [ ] Deterministic checks (tests, schema, assertions) run before any LLM judge; the judge is calibrated (see #11) and decorrelated from the writer
-
-**Why:** self-verification shares the writer's blind spots — a pass tells you nothing new.
-
-**Common gap:** a single agent that writes and then "reviews" its own output in the same context.
-
-#### 19. Loop economics
-- [ ] Cost per run **and** cost per *verified* outcome are tracked in traces
-- [ ] Per-run and per-window cost caps are declared
-
-**Why:** a loop that is cheap per call but rarely produces a verified result is expensive — only cost-per-verified-outcome shows it.
-
-**Common gap:** measuring raw spend but never dividing by outcomes that actually passed verification.
-
-### Measurement science & human oversight
-
-*Items 20–23 deepen the eval bar wherever the relevant component exists; the oversight item binds at L3+. Full treatment: `STANDARD.md` Part V (measurement science).*
-
-#### 20. Judge calibration for gating verdicts
-- [ ] Any judge that gates L3+/auto-apply/release has documented calibration — accuracy + calibration error (ECE/Brier) vs. an anchored ground-truth sample within a declared recency window
-- [ ] The gating confidence signal is validated self-consistency or swap-consistency, never raw verbalized confidence; pairwise judging randomizes order
-
-**Why:** verbalized LLM confidence is systematically overconfident; an uncalibrated judge in a gate is a check that isn't one — it invalidates the Loop License for the levels it gates.
-
-**Common gap:** trusting a judge's "95% confident" verbatim, with no anchored accuracy behind it.
-
-#### 21. Retrieval evaluated on its own terms
-- [ ] Memory/retrieval scored with Recall@k and MRR on a labeled retrieval set, separately from end-to-end task evals
-- [ ] Embedding-model / chunking / index changes pass a retrieval regression gate before deploy
-
-**Why:** retrieval and reasoning fail differently; an end-to-end number that conflates them cannot direct a fix.
-
-**Common gap:** shipping an embedding-model swap because task evals "looked fine," silently dropping Recall@5.
-
-#### 22. Ground-truth provenance
-- [ ] Golden sets declare labeling provenance (rubric version, labeler type, date, agreement); unanchored sets do not back a license or release gate
-- [ ] Rubrics are versioned instruction artifacts; a rubric change re-baselines every judge that uses it
-
-**Why:** a golden set without provenance is unanchored — you don't know what its pass rate means.
-
-**Common gap:** a "golden" set nobody can trace to a rubric version or a labeler.
-
-#### 23. Drift monitoring
-- [ ] Input drift monitored vs. the eval distribution, with a declared refresh policy (thresholds + triggered action)
-- [ ] Provider-hosted models canaried; a detected silent change triggers the regression gate; behavior drift watched at ≥ L2
-
-**Why:** drift answers "when did my evals stop representing production?" — without it a green suite can be measuring the past.
-
-**Common gap:** a golden set refreshed on a calendar, not when production actually moved.
-
-#### (L3+) Human oversight as a program
-- [ ] The Loop License declares a sampling schedule per autonomy level, reviewer SLA, and automatic re-escalation triggers (regression or override-rate spike → previous tier)
-- [ ] Human reviews/overrides are captured as stratified labeled data (escalations **plus** a random routine sample)
-
-**Why:** oversight is an operated program, not a checkbox; graduation must be reversible on regression.
-
-**Common gap:** "human review" that only sees escalated hard cases, skewing the review-derived golden data.
-
-### Gate integrity
-
-#### 24. No safety gate silenced to pass CI
-- [ ] No safety-class gate is disabled repo-wide to make CI green — a correctness test, type-safety (`no-unsafe-*` / `no-explicit-any`), security lint, or a coverage/mutation floor
-- [ ] Any false positive is scoped to a file/glob with a named reason (not a repo-wide `off`, blanket `@ts-ignore`/`eslint-disable`, `.skip`, or a lowered threshold)
-- [ ] After scoping, the gate is re-proven to still fire — plant the thing it must catch and confirm it's caught
-
-**Why:** a gate is trust-bearing only if green means the property holds, not that the check was silenced; disabling it removes the exact protection at the moment it fired. `tsc` passing is not a substitute for the `no-unsafe-*` family — `any` is assignable to everything by design, so the compiler waves it through (Canon 5, *gate-integrity invariant*).
-
-**Common gap:** a flaky lint rule disabled repo-wide to unblock CI, silently blinding every file instead of the one that misfired.
-
----
-
-### Composition (multi-agent)
-
-#### 25. Graph License for any unattended graph of agents
-- [ ] The six gates re-evaluated at **graph** scope: graph-level golden tasks (end-to-end, not the union of per-node suites) · regression gate on that set · blast radius as the **union** of node radii **plus the shared state store** · cost caps **per-node and aggregate** · a kill switch tested against **in-flight parallel branches** · **one** named escalation owner for the graph
-- [ ] **Weakest-link bound** holds: no path to an external action declares an autonomy level above the minimum licensed level of any node on it
-- [ ] Shared state carries **writer provenance** (producing node, timestamp, `verified_by` / `unverified`); consumers can filter on it; no external action fires from an unverified field
-- [ ] Every **fan-in** is a declared verification point or an explicit pass-through with rationale
-- [ ] Every **edge class** is marked **enforced** or **declared**; declared-only edges are not counted as controls
-- [ ] Graph eval suite includes **poisoned-state** scenarios (a hijacked or hallucinating node writing to shared state)
-
-**Why:** a graph of licensed loops is not a licensed graph. The failures that hurt are exactly the ones no single node owns — nodes that pass in isolation failing in composition, fan-out multiplying spend past every per-node cap while each reads green, an uncalibrated node lending a path autonomy it never earned, and an escalation path that forks so no human is on the hook (Part IV, *License Composition*; [`CHECKLIST`](../../../templates/graph-license/CHECKLIST.md)).
-
-**Common gap:** the topology is drawn in an SOP or a system prompt and then cited as a control, though nothing in the runtime prevents a different route (antipattern 18).
-
+## The items
+
+<!-- canon:begin:skill.readiness.summary -->
+**33 items.** Walk them with the checks, the *why*, and the common gap for each in [`DOD.md`](DOD.md) (generated from the canon, bundled with this skill).
+
+| # | Item | Group | Binds | Band |
+|---|---|---|---|---|
+| 1 | Context budget held | Context and state | always | M1 |
+| 2 | State externalized | Context and state | always | M1 |
+| 3 | Compaction tested | Context and state | always | M2 |
+| 4 | Destructive actions need approval | Tools and permissions | always | M1 |
+| 5 | Permissions in code, not prompt | Tools and permissions | always | M1 |
+| 6 | Sandboxed tool execution | Tools and permissions | always | M2 |
+| 32 | Tenant isolation below the LLM | Tools and permissions | If multi-tenant | M2 |
+| 7 | Durable pause/resume/retry | Reliability | always | M2 |
+| 8 | Schema-validated outputs | Reliability | always | M1 |
+| 9 | Input/output guardrails | Reliability | always | M1 |
+| 10 | ≥50 evals per failure mode | Evals and observability | always | M1 |
+| 11 | Judges calibrated (TPR/TNR) | Evals and observability | Wherever an LLM judge is used | M2 |
+| 12 | CI blocks regression; 100% traced | Evals and observability | always | M2 |
+| 29 | Telemetry contract | Evals and observability | always | M2 |
+| 13 | Lethal-trifecta check | Security and identity | always | M2 |
+| 14 | MCP tool defs pinned; allow-listed registry | Security and identity | Wherever MCP is used | M2 |
+| 26 | MCP protocol & auth baseline | Security and identity | Wherever MCP is used | M2 |
+| 27 | Per-agent identity | Security and identity | always | M2 |
+| 15 | Per-run cost ceiling in code | Cost | always | M2 |
+| 16 | Loop License (six gates) | Operating without per-action approval (O1+) — the Loop License | At oversight O1 or O2 | M2 |
+| 17 | Stop conditions | Operating without per-action approval (O1+) — the Loop License | At autonomy L3+ or oversight O1+ | M2 |
+| 18 | Independent verification | Operating without per-action approval (O1+) — the Loop License | At oversight O1 or O2 | M2 |
+| 19 | Loop economics | Operating without per-action approval (O1+) — the Loop License | At oversight O1 or O2 | M2 |
+| 30 | Success-legitimacy audit | Operating without per-action approval (O1+) — the Loop License | At oversight O2 | M2 |
+| 20 | Judge calibration (ECE/Brier) | Measurement science and human oversight | Wherever an LLM judge gates O1+ operation, auto-apply, or release | M2 |
+| 21 | Retrieval metrics | Measurement science and human oversight | Wherever memory or retrieval is used | M2 |
+| 22 | Ground-truth provenance | Measurement science and human oversight | always | M2 |
+| 23 | Drift monitoring | Measurement science and human oversight | always | M2 |
+| 33 | Human oversight as a program | Measurement science and human oversight | Wherever a human approval counts as a control; the oversight plan at O1+ | M2 |
+| 24 | No safety gate silenced to pass CI | Gate integrity | always | M1 |
+| 25 | Graph License | Composition (multi-agent) | Any graph of agents operating at O1+ | M2 |
+| 28 | Inter-agent trust | Composition (multi-agent) | Wherever work is delegated across a trust boundary | M2 |
+| 31 | Regulatory classification record | Governance and regulation | Wherever the product is exposed to a regulated jurisdiction, e.g. EU users | M1 |
+
+<!-- canon:end:skill.readiness.summary -->
 ---
 
 ## Audit posture
 
 When running this audit with the user:
 
-- **Walk through each point sequentially.** Don't jump around.
+- **Pin down the operating point first.** Autonomy L0–L4, oversight O0–O2, and the profile flags (multi-tenant, MCP, multi-agent, cross-boundary delegation, LLM judges, retrieval, regulated market). They decide which items bind — the table above says when each one does.
+- **Walk through each point sequentially** (read `DOD.md` for the checks, the *why*, and the common gap). Don't jump around.
 - **For each: pass / gap / N/A with reason.** "N/A because we don't have destructive actions" is fine; "N/A because we don't think it matters" is not.
 - **Estimate effort to close each gap.** Rank them by risk-adjusted cost.
 - **Make the explicit launch decision.** "Launch with these N gaps accepted, address in week 1" is a valid choice. "Launch and hope" is not.
+- **Leave a machine-checkable record.** Offer to write the result as an `aps-conformance.yaml` — the scorecard ids, each with `status` and the evidence path — so the standard's `aps-conformance` Action can re-score it on every PR (`docs/conformance.md` in the standard repo). The template is `templates/conformance/aps-conformance.template.yaml`.
 
-## Post-launch hardening (after the 25 points)
+## Post-launch hardening (after the Definition of Done)
 
-Once the 25 are met, the next tier of investments:
+Once every binding item is met, the next tier of investments:
 
 - **A/B testing infrastructure** — compare new prompts/models/tools against current production
 - **Cost telemetry per request, per user, per agent type** — find the expensive calls
 - **Failure runbooks** — what to do when each named failure mode fires in production
 - **Eval set growth from production** — sample weekly, label, add to eval set
-- **Model swap exercise** — verify you can swap the model without breaking; trains the muscle
+- **Model swap exercise** — verify you can swap the model without breaking: re-run evals, re-measure the context budget, re-derive cost ceilings (items 1, 15); trains the muscle
 - **Multi-region deployment** — if availability matters
 - **Privacy controls and audit log** — GDPR/CCPA compliance if you serve regulated users
 
@@ -350,6 +89,8 @@ Teams are usually only a few points short. The common gaps are:
 | #2 (state externalized) | Common | High — first restart loses work |
 | #7 (durable execution tested) | Common | High — failure on first real crash |
 | #12 (CI gating) | Common | Medium — slow degradation over time |
+| #27 (per-agent identity) | Common | High — one shared key means no scoping, no revocation, no attribution |
+| #26 (MCP baseline) | Common in 2026 | High — session-bound state and DCR-only clients break on the new revision |
 
 If the user is short on time, prioritize closing these.
 
@@ -357,7 +98,7 @@ If the user is short on time, prioritize closing these.
 
 When the audit completes, the user should have:
 
-1. A pass/gap/N/A scorecard across all 25 points
+1. A pass/gap/N/A result for every binding item — ideally as an `aps-conformance.yaml`
 2. Effort estimate to close each gap
 3. A risk-adjusted prioritization
 4. An explicit launch decision with accepted risks documented

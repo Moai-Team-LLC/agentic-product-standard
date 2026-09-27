@@ -6,9 +6,9 @@ Runnable starting points for the controls in **Principle 6 / Harness Layer 8 / D
 |---|---|---|
 | `lethal_trifecta_check.py` | Fails CI if an agent has private-data access **and** untrusted-content exposure **and** external egress, with no mitigation declared. | Lethal trifecta · DoD 13 · Rule 21 |
 | `injection_cases.yaml` | Indirect-prompt-injection test cases (poisoned document / tool output), Promptfoo-style. | Guardrails · indirect injection |
-| `pin_mcp_tools.sh` | Hash-pins MCP tool definitions and detects rug pulls (a server mutating tool descriptions after approval). | MCP supply chain · DoD 14 · Rule 22 |
+| `pin_mcp_tools.sh` | Hash-pins MCP tool definitions and detects rug pulls (a server mutating tool descriptions after approval). Re-run it on every refetch of a cached `tools/list` — MCP 2026-07-28 lets servers mark lists cacheable. | MCP supply chain · DoD 14 · Rule 22 |
 
-See also `../ci/eval-gate.yml` — a CI workflow that blocks merges on eval pass-rate (DoD 12).
+See also `../ci/eval-gate.yml` — blocks merges on eval pass-rate, `pass^k`, and the legitimacy rate (DoD 12, 16, 30); `../ci/mcp-conformance.yml` — runs the official MCP conformance suite against 2026-07-28 (DoD 26); `../telemetry/` — checks exported traces against the telemetry contract (DoD 29); and `../safe-outputs/` — keeps the write credential away from the model (Loop License gate 3).
 
 ## Quick start
 

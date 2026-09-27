@@ -1,5 +1,7 @@
 # Case study — AgenticMind vs. the Agentic Product Standard
 
+> **Terminology note (Standard v4.0).** This study predates v4.0. Its "Layer N" references follow `STANDARD.md` Part II, the technology stack, which v4.0 labels **Stack N**; in v4.0 "Layer N" means a harness layer (ADR-0005). DoD numbers and scorecard items refer to the version audited. A v4.0 re-audit is on the [roadmap](../ROADMAP.md).
+
 *A layer-by-layer compliance audit of [AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind),
 the reference implementation of [the Agentic Product Standard](../STANDARD.md) (v2.0).*
 

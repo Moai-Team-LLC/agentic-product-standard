@@ -1,6 +1,6 @@
 ---
 name: tool-design-mcp
-description: Design tools for agents — function/tool definitions, MCP (Model Context Protocol) servers, tool routing when there are many tools, structured outputs, and the rules of thumb that prevent tool selection failures. Use whenever the user is adding tools/functions to an agent, integrating external systems, building or consuming MCP servers, hitting "the agent picks the wrong tool" failures, designing function signatures, choosing between MCP and direct function calling, or wondering how many tools is too many.
+description: Design tools for agents — function/tool definitions, MCP (Model Context Protocol) servers and clients on the 2026-07-28 revision (stateless core, Client ID Metadata Documents, conformance testing), tool routing when there are many tools, structured outputs, and the rules of thumb that prevent tool selection failures. Use whenever the user is adding tools/functions to an agent, integrating external systems, building or consuming MCP servers, hitting "the agent picks the wrong tool" failures, designing function signatures, choosing between MCP and direct function calling, or wondering how many tools is too many.
 ---
 
 # Tool Design and MCP
@@ -17,11 +17,28 @@ In 2026 the tool-integration question has a clear answer: **MCP by default**. Th
 - **Current revision: 2026-07-28** (final 28 Jul 2026) — stateless core, Client ID Metadata Documents instead of Dynamic Client Registration, Roots/Sampling/Logging deprecated. What changed for security and state: advisory `docs/advisories/APS-2026-01-mcp-2026-07-28.md` in the standard repo.
 
 **A2A (Agent2Agent)** — agent ↔ agent
-- Google, April 2025; donated to Linux Foundation June 2025
-- Agents publish "Agent Cards" (capability metadata)
+- Google, April 2025; donated to Linux Foundation June 2025; **v1.0** (first stable) March 2026, current v1.0.1
+- Agents publish "Agent Cards" (capability metadata) — **signed** since v1.0 (JWS over the JCS-canonicalized card)
 - Tasks exchanged via HTTP/JSON
+- Crossing an org or vendor boundary? Verify the card's signature against a trusted keystore before delegating, and treat the peer's output as untrusted input (DoD 28)
 
 They're **complementary, not competing.** MCP gives an agent its tools; A2A lets specialized agents delegate to each other across vendor boundaries.
+
+## MCP 2026-07-28 — what changed for tool builders
+
+The 2026-07-28 revision is a breaking one, and the standard's baseline since v4.0 (DoD 26). What it means for a server or client you own:
+
+| Change | Build it like this |
+|---|---|
+| **Stateless core** — no protocol sessions (`Mcp-Session-Id` removed), no `initialize`; version and capabilities ride in each request's `_meta`; servers implement `server/discover` | Cross-call state lives in explicit, server-minted handles passed as arguments, or in your own store — never in a transport session. A server behind a load balancer needs no sticky routing. |
+| **Multi round-trip requests** replace server-initiated requests (`elicitation/create`, `sampling/createMessage`, `roots/list`) | Ask the human by returning `input_required`; the client retries with the answers and echoes `requestState`. Treat the echoed `requestState` as attacker-controlled; integrity-protect it (HMAC/AEAD) wherever it touches authorization or business logic. |
+| **Routing headers** — `Mcp-Method` on every request, `Mcp-Name` on `tools/call`, `resources/read`, `prompts/get`; mismatches rejected | Let a gateway authorize per tool at the edge without parsing bodies; reject header/body mismatches and pre-header protocol versions. |
+| **Caching hints** — `ttlMs` + `cacheScope` (`public` / `private`) on list and read results | Cache `tools/list` for the TTL — but re-verify your tool-definition hash pin on every refetch. A `private` entry never crosses a user or tenant. |
+| **Auth hardening** — Dynamic Client Registration deprecated for **Client ID Metadata Documents**; clients validate `iss` (RFC 9207); persisted credentials keyed by issuer; an enterprise-managed authorization extension | New clients register by metadata document, validate the issuer before redeeming a code, and never reuse a credential with a different authorization server. Servers still never pass tokens through. |
+| **Deprecations** — Roots, Sampling, Logging (earliest removal: a revision dated on or after 2027-07-28); Tasks and MCP Apps moved to extensions; the legacy HTTP+SSE transport deprecated | Take no new dependencies on deprecated features; put a sunset date on existing ones. |
+| **Official conformance suite** — `modelcontextprotocol/conformance` | Run it in CI against every server and client you own, pinned to a version that supports `--requirements 2026-07-28`; keep the expected-failures file under review like code. Template: `templates/ci/mcp-conformance.yml` in the standard repo. |
+
+Full migration notes: advisory `docs/advisories/APS-2026-01-mcp-2026-07-28.md` in the standard repo.
 
 ## The NxM collapse
 
@@ -131,6 +148,7 @@ Principles:
 
 - **One concern per server.** A "Stripe MCP server" exposes Stripe operations. Don't combine Stripe + Slack + email into one mega-server.
 - **OAuth scopes mapped to tool exposure.** A user with read-only credentials sees read-only tools. Don't expose tools the credentials can't execute.
+- **Stateless by construction.** No per-user state behind a session; anything that must survive between calls is a handle the client passes back or a record in your store. The 2026-07-28 revision assumes it, and your load balancer will thank you.
 - **Resources for data, tools for actions, prompts for templates.** MCP has all three primitives; use them correctly.
 - **Versioning and discoverability.** Servers should advertise their version and capabilities.
 - **Logging and instrumentation.** Treat the MCP server like any other production service.
@@ -188,4 +206,5 @@ When this conversation completes, the user should have:
 3. Permission model: what cannot be called without approval; how approval is enforced
 4. MCP server identification: which tools should be MCP-exposed for reuse
 5. Sandbox plan for any execution surface (code, file, network)
-6. Structured output schemas for tool results
+6. For every MCP connection: the revision it speaks (2026-07-28 or a dated sunset), how it registers and authenticates, and where the conformance suite runs
+7. Structured output schemas for tool results

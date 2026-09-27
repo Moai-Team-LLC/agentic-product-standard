@@ -1,0 +1,73 @@
+# Canon 1 — the operating point of an agentic system: Autonomy × Oversight.
+# v4.0 split the single ladder into two axes (ADR-0004): who chooses the next step
+# (autonomy) is a different question from whether a human approves each action (oversight).
+autonomy:
+  title: Autonomy — who chooses the next step
+  levels:
+    - id: L0
+      name: Single LLM call
+      what: One prompt → one response
+      use_when: Classification, extraction, summarization
+      cost: Lowest
+    - id: L1
+      name: Augmented LLM
+      what: One call + retrieval, tools, memory
+      use_when: Q&A over docs, simple assistants, lookup + reformat
+      cost: Low
+    - id: L2
+      name: Workflow
+      what: Deterministic code orchestrates LLM steps
+      use_when: The path is known; predictability matters
+      cost: Low–medium
+    - id: L3
+      name: Bounded decomposition
+      formerly: Orchestrator-Worker
+      what: The LLM decomposes the task dynamically, within a bounded graph
+      use_when: Parallelizable, breadth-first work — typically built with the Orchestrator-Workers pattern
+      cost: Medium–high
+    - id: L4
+      name: Autonomous agent loop
+      what: The LLM chooses the next step until termination
+      use_when: The path cannot be enumerated; cost and compounding errors are tolerable
+      cost: Highest
+
+oversight:
+  title: Oversight — whether a human approves each consequential action
+  consequential: >-
+    A consequential action is any action at permission tier P3 or above — external write,
+    financial, communication, destructive ([`AGENT_STANDARD.md`](@/AGENT_STANDARD.md) ·
+    Permission Tiers).
+    Destructive (P6) actions require explicit human approval at every oversight mode (DoD 4).
+  modes:
+    - id: O0
+      name: Human in the loop
+      what: A human approves each consequential action before it executes
+      requires: Per-action approval is the control (DoD 4)
+    - id: O1
+      name: Human on the loop
+      what: Actions inside the declared blast radius execute without per-action approval; a human supervises live and can veto, pause, or take over
+      requires: Loop License (DoD 16–19)
+    - id: O2
+      name: Unattended
+      what: No human watches in real time; people are reached through the escalation path and sampled review
+      requires: Loop License + success-legitimacy audit (DoD 16–19, 30)
+
+escalation:
+  climb: >-
+    **Climb autonomy** (L → L+1) only when L delivers **pass@1 ≥ 90%** on a curated eval set.
+  relax: >-
+    **Relax oversight** (O0 → O1 → O2) only under a **Loop License**, whose eval gate adds
+    consistency: **pass^5 ≥ a declared threshold** on the same set. O2 also requires a
+    published **legitimacy rate** (DoD 30).
+  horizon: >-
+    Measure your reliability horizon on your own eval set. Benchmark time horizons do not
+    transfer — they differ between domains by orders of magnitude (METR) — so this standard
+    sets no hour thresholds.
+
+examples:
+  - point: L3 · O0
+    note: "an orchestrator whose every external action waits for approval: no Loop License required"
+  - point: L2 · O2
+    note: "a nightly pipeline that auto-applies its output: Loop License and legitimacy audit, despite its low autonomy"
+  - point: L4 · O1
+    note: "an autonomous loop a human supervises live: Loop License required"

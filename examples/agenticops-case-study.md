@@ -1,5 +1,7 @@
 # Case study: AgenticOps — a reference implementation of *Fleet operations*
 
+> **Terminology note (Standard v4.0).** This study predates v4.0. Its "Layer N" references follow `STANDARD.md` Part II, the technology stack, which v4.0 labels **Stack N**; in v4.0 "Layer N" means a harness layer (ADR-0005). DoD numbers and scorecard items refer to the version audited. A v4.0 re-audit is on the [roadmap](../ROADMAP.md).
+
 [AgenticOps](https://github.com/Moai-Team-LLC/AgenticOps) (Apache-2.0) is the
 runtime / operations companion to this standard. Where `AGENT_STANDARD.md` and the
 nine-layer stack describe how to build one correct agent or system, AgenticOps

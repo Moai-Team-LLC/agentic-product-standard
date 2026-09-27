@@ -187,11 +187,11 @@ Beyond the dominant constraint, check these before committing:
 1. **Production deployments at known companies.** Demos prove ideas; production proves robustness.
 2. **Active maintenance.** Last 6 months of commits, issue response times, releases.
 3. **Documentation quality.** Especially examples close to your use case.
-4. **Observability integration.** OpenInference / OpenLLMetry support, or first-class tracing.
+4. **Observability integration.** Emits the OpenTelemetry GenAI semantic conventions — natively or through OpenInference / OpenLLMetry — so traces survive a vendor swap.
 5. **Escape hatch.** Can you drop down to raw SDK calls when the abstraction doesn't fit?
 6. **Lock-in.** What changes if you swap models? Swap memory? Swap orchestrator?
 
-> **On model lock-in specifically:** the *framework* question is separate from the *provider* question. To swap models or providers without touching agent code, put every call behind one OpenAI-compatible endpoint. The family's reference implementation of that plane is **[AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway)** — provider swap becomes config, not code, with eval-sourced routing and per-run/tenant cost ceilings (harness Layers 1 + 9). Vendor-neutral: keep LiteLLM / Portkey / raw Bifrost if you already run one (Principle 2). See the [`reference-stack`](../reference-stack/SKILL.md) skill.
+> **On model lock-in specifically:** the *framework* question is separate from the *provider* question. To swap models or providers without touching agent code, put every call behind one OpenAI-compatible endpoint. The family's reference implementation of that plane is **[AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway)** — provider swap becomes config, not code, with eval-sourced routing and per-run/tenant cost ceilings (Stack 1 + harness Layer 9). Vendor-neutral: keep LiteLLM / Portkey / raw Bifrost if you already run one (Principle 2). See the [`reference-stack`](../reference-stack/SKILL.md) skill.
 
 ## Framework misuse patterns
 

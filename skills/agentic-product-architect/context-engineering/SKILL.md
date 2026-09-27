@@ -1,6 +1,6 @@
 ---
 name: context-engineering
-description: Engineer what goes into the LLM context window — system prompts, retrieved docs, tool schemas, conversation history, memory, examples. Apply the four operations write/select/compress/isolate to manage context as a finite resource. Enforce the 40% rule on context utilization. Use whenever the user is designing system prompts, debugging quality degradation in long conversations, hitting context limits, managing per-step retrieval, dealing with sub-agent context isolation, or asking about "context engineering" / "prompt engineering" / CLAUDE.md / AGENTS.md / instruction files.
+description: Engineer what goes into the LLM context window — system prompts, retrieved docs, tool schemas, conversation history, memory, examples. Apply the four operations write/select/compress/isolate to manage context as a finite resource. Enforce the context budget — the 40% rule, measured per model. Use whenever the user is designing system prompts, debugging quality degradation in long conversations, hitting context limits, managing per-step retrieval, dealing with sub-agent context isolation, or asking about "context engineering" / "prompt engineering" / CLAUDE.md / AGENTS.md / instruction files.
 ---
 
 # Context Engineering for Agents
@@ -46,7 +46,7 @@ Compaction is a pipeline, not a single operation. Claude Code's 5-layer referenc
 4. Summarize entire conversation segments
 5. Hard truncate with summary if all else fails
 
-**Rule:** the compaction trigger should fire at 40%, not 90%. Compacting late is compacting badly.
+**Rule:** the compaction trigger should fire at the budget (40% by default), not at 90%. Compacting late is compacting badly.
 
 ### Isolate — separate concerns across context windows
 
@@ -58,16 +58,18 @@ When two tasks need different framing or would interfere, give them separate win
 
 **Rule:** isolation is not free — coordination overhead grows. Use it where parallelism or independent framing earns its cost.
 
-## The 40% rule (operational)
+## The context budget (operational)
 
-Track context utilization at every turn. Three thresholds:
+The 40% rule is a default, not a law of nature. Your **budget** is the fill level at which *your* eval pass rate starts to drop for the model in use — measure it by running the eval set at increasing context fill and finding the knee. Until you have measured it, the budget is **40% of the window**. Re-measure on every model change: a bigger window moves the knee, it does not remove it — and 40% of a 1M-token window is 400K tokens, far past where context-rot studies see accuracy fall. That is why DoD item 1 asks for a *measured* budget.
+
+Track context utilization at every turn against the budget (numbers in brackets are for the 40% default):
 
 | Utilization | Status | Action |
 |---|---|---|
-| < 30% | Healthy | Continue |
-| 30–40% | Watch | Schedule compaction at next natural break |
-| > 40% | Degrading | Compact now |
-| > 60% | Dumb zone | You're already losing quality; compact aggressively, consider session restart |
+| < 0.75 × budget (< 30%) | Healthy | Continue |
+| 0.75–1 × budget (30–40%) | Watch | Schedule compaction at next natural break |
+| > budget (> 40%) | Degrading | Compact now |
+| > 1.5 × budget (> 60%) | Dumb zone | You're already losing quality; compact aggressively, consider session restart |
 
 Most production agents track this as a live metric, like memory pressure.
 
@@ -138,7 +140,7 @@ System prompts and tool schemas are stable across turns. Cache them. Both Anthro
 
 When agent quality drops, work this checklist before reaching for a bigger model:
 
-- [ ] Context utilization above 40% — compact more aggressively
+- [ ] Context utilization above the budget (40% by default) — compact more aggressively
 - [ ] System prompt over 2k tokens of guidance — audit for redundancy
 - [ ] Tool descriptions stale or vague — rewrite as prompts
 - [ ] Retrieved chunks too large or too many — tighten retrieval

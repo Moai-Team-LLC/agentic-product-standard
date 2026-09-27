@@ -1,0 +1,36 @@
+# The Agentic Product Standard
+
+> A canonical, vendor-neutral standard for building production-grade agentic products — the Autonomy × Oversight ladder, five composition patterns, the nine-layer harness, a 33-item Definition of Done, the Loop and Graph Licenses for operation without per-action approval — with a machine-readable canon, a conformance tool, and Claude Code / Agent Skills that operationalize it. MIT-licensed.
+
+Start with STANDARD.md for the product-level canon, AGENT_STANDARD.md for one agent, and SCORECARD.md to assess a real deployment. Everything enumerable (principles, ladder, harness, DoD, anti-patterns, scorecard) is also available as YAML in canon/, which is the single source the documents are generated from.
+
+## Standard
+
+- [STANDARD.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/STANDARD.md): the product-level canon — principles, Autonomy × Oversight, patterns, harness, technology stack, Definition of Done, Loop License, eval science, anti-patterns
+- [AGENT_STANDARD.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/AGENT_STANDARD.md): the single-agent operational standard — contracts, permission tiers, runner, evals, trace schema
+- [SCORECARD.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/SCORECARD.md): binary M0–M3 self-assessment with stable item ids
+- [CROSSWALK.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/CROSSWALK.md): each DoD item mapped to the EU AI Act (with Digital Omnibus dates), OWASP Agentic Top 10, NIST AI RMF, IMDA
+- [CONTEXT.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/CONTEXT.md): the shared vocabulary
+
+## Machine-readable canon
+
+- [canon/dod.yaml](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/canon/dod.yaml): the Definition of Done — normative text, binding conditions, audit points, crosswalk
+- [canon/scorecard.yaml](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/canon/scorecard.yaml): scorecard items, bands, and the operating-envelope rules
+- [canon/ladder.yaml](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/canon/ladder.yaml): autonomy levels L0–L4, oversight modes O0–O2, escalation rules
+- [canon/antipatterns.yaml](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/canon/antipatterns.yaml): the anti-patterns with signal, failure mode, fix, severity
+
+## Conformance and templates
+
+- [docs/conformance.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/docs/conformance.md): score a product's aps-conformance.yaml in CI (band, envelope, SARIF)
+- [templates/](https://github.com/Moai-Team-LLC/agentic-product-standard/tree/main/templates): Loop and Graph License checklists, CI gates, red-team kit, telemetry checker, safe outputs, decision tree
+
+## Skills
+
+- [skills/agentic-product-architect](https://github.com/Moai-Team-LLC/agentic-product-standard/tree/main/skills/agentic-product-architect): master skill routing to twelve sub-skills for multi-agent products
+- [skills/agent-builder](https://github.com/Moai-Team-LLC/agentic-product-standard/tree/main/skills/agent-builder): the single-agent track, bundling AGENT_STANDARD.md and templates
+
+## Optional
+
+- [CHANGELOG.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/CHANGELOG.md): what changed in each release and why
+- [docs/adr](https://github.com/Moai-Team-LLC/agentic-product-standard/tree/main/docs/adr): architecture decision records for the standard itself
+- [ECOSYSTEM.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/ECOSYSTEM.md): the AgenticProduct family of reference implementations

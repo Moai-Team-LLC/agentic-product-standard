@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Moai-Team-LLC/agentic-product-standard/templates/safe-outputs/safe-output.schema.json",
+  "title": "Safe-output action request",
+  "description": "One typed action an agent requests. The applier — not the agent — decides whether it runs. Extend the enum and the per-type rules for your system; keep the set closed.",
+  "type": "object",
+  "required": ["type", "target", "reason"],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "description": "Closed enumeration of action types. Anything else is rejected.",
+      "enum": ["comment", "label", "open_pull_request", "update_record", "send_notification"]
+    },
+    "target": {
+      "description": "The exact resource the action touches (e.g. 'issue/123', 'repo/docs', 'crm/account/42'). Checked against the policy's allow-list.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "body": {
+      "description": "Payload for the action (text, patch, field values). Size-limited; never interpreted as a command.",
+      "type": ["string", "object"],
+      "maxLength": 65536
+    },
+    "reason": {
+      "description": "Why the agent wants this — logged with the decision for review and evals.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    }
+  }
+}

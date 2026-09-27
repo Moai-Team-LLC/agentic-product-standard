@@ -1,0 +1,24 @@
+# The decision checklist. `core` is the 10-question canon (README, master skill, decision tree);
+# STANDARD.md Part IX asks `core` + `extended`. templates/decision-tree/README.md must carry
+# every core question verbatim — CI enforces it.
+core:
+  - q: What is the minimum autonomy level (L0–L4) that solves this, and under which oversight mode (O0–O2)?
+    hint: → default to O0; relaxing oversight costs a Loop License
+  - q: Can it be solved by composing the 5 patterns without a full agent loop?
+    hint: (chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer)
+  - q: Is the task breadth-first (parallelizable) or depth-first (coherent)?
+    hint: → determines single-agent vs multi-agent
+  - q: What are the 3 failure modes that would lose user trust first?
+  - q: Where are the permission boundaries? What MUST the agent NOT do?
+  - q: Which constraint dominates framework choice?
+    hint: (control, vendor alignment, type safety, multi-agent roles, RAG-heaviness, TS vs Python)
+  - q: Where does state live? (in-context = anti-pattern for long-running)
+  - q: Who validates outputs at each stage? (assertion / LLM judge / human review)
+  - q: Where do traces live, with what retention?
+  - q: "Eval set: how many examples, who labels, how does it grow?"
+extended:
+  - q: Does the deployment hit the lethal trifecta? If so, which leg do we break?
+  - q: Which MCP revision do we speak — and are tool definitions pinned and servers allow-listed?
+  - q: What is the per-run token/cost ceiling, and where in the code is it enforced?
+  - q: Which identity does each agent act as, and who delegated it?
+  - q: Which regulations apply, and what is our role and risk class under each?
