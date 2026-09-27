@@ -44,11 +44,11 @@ What must be written to trace (see `trace-event.json`).
 ## 14. Stop Conditions *(required at L3+ or O1+)*
 Max iterations; token / time / spend budgets; timeout; escalation after N consecutive failures.
 
-## 15. Memory Model *(required at L3+ or O1+)*
+## 15. Memory Model *(required at O1+; recommended at L3+)*
 What is persisted, for how long, from where (provenance), and whether a past run can be replayed.
 
-## 16. Determinism Map & Operating Point *(required at L3+ or O1+)*
-Which steps are deterministic and which are model-driven. The operating point — autonomy `L0–L4` · oversight `O0–O2` — and which consequential (P3+) actions, if any, run without per-action approval. Anything at `O1+` needs a Loop License.
+## 16. Operating Point & Determinism Map *(operating point: every agent; determinism map: required at O1+, recommended at L3+)*
+The operating point — autonomy `L0–L4` · oversight `O0–O2` — and which consequential (P3+) actions, if any, run without per-action approval. Anything at `O1+` needs a Loop License. Which steps are deterministic and which are model-driven.
 
 ## 17. Identity
 The agent's own non-human identity, its credential lifetime and scopes, and who can delegate work to it. Never a shared service account or a person's token.

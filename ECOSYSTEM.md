@@ -1,7 +1,8 @@
 # The AgenticProduct family — Ecosystem
 
 The AgenticProduct family is one standard and five reference implementations. The
-standard is the contract — prose-canon (ADR-0002), vendor-neutral, MIT. Each
+standard is the contract — a prose canon (ADR-0002) generated from a machine-readable one
+(ADR-0003), vendor-neutral, MIT. Each
 implementation is the reference build of one surface the standard defines, and
 conforms to it rather than extends it. This document is a map of the family, not
 a migration guide.
@@ -24,8 +25,8 @@ the other implementations are Apache-2.0 (some with a separate enterprise editio
 
 The standard sets the contract every member is measured against — the agent loop,
 context and memory discipline, durable execution, guardrails, human-in-the-loop,
-evaluation, observability, and cross-cutting security and identity. It ships as a
-prose canon plus two Claude Code skill tracks (agent-builder for a single agent,
+evaluation, observability, and the two cross-cutting layers — security and identity, cost
+and FinOps. It ships as a prose canon plus two Claude Code skill tracks (agent-builder for a single agent,
 agentic-product-architect for multi-agent products).
 
 The five implementations divide the operational surface:

@@ -86,7 +86,7 @@ Each item lists the **gate level** at which it becomes mandatory and, where it a
 - [ ] **(M2)** CI blocks deploy on eval regression; 100% of production runs traced. <sub>`eval.ci-gate` · DoD 12</sub>
 - [ ] **(M2)** Telemetry follows the OTel GenAI semantic conventions at a pinned revision, with `invoke_agent` / `chat` / `execute_tool` spans; a schema test runs on exported traces, and a migration test precedes any pin bump. <sub>`obs.telemetry-pinned` · DoD 29</sub>
 - [ ] **(M2)** Prompt and completion content is not captured in traces by default; capture is enabled by a written policy with retention and access limits. <sub>`obs.no-content` · DoD 29</sub>
-- [ ] **(M3)** Traces capture the **trajectory**, not just the final answer. <sub>`obs.trajectory` · DoD 29</sub>
+- [ ] **(M3)** Traces capture the **trajectory**, not just the final answer. <sub>`obs.trajectory`</sub>
 - [ ] **(M3)** Online evals run on completed production threads; failing traces feed the offline set. <sub>`eval.online`</sub>
 - [ ] **(M3)** Reliability tracked with `pass^k`, not only `pass@1`. <sub>`eval.pass-k`</sub>
 
@@ -108,7 +108,7 @@ Each item lists the **gate level** at which it becomes mandatory and, where it a
 - [ ] **(M2)** Golden sets declare **labeling provenance** (rubric version, labeler, date, agreement); unanchored sets back no license or gate; rubrics are versioned with judge re-baselining on change. <sub>`meas.provenance` · DoD 22</sub>
 - [ ] **(M2, if LLM judges)** Inter-judge agreement monitored; sustained near-perfect agreement triggers a decorrelation review, sustained low agreement a rubric review. <sub>`meas.inter-judge` · DoD 22</sub>
 - [ ] **(M2)** Input and behavior **drift** monitored vs. the eval distribution with a declared refresh policy (behavior drift at autonomy ≥ L2). <sub>`meas.drift` · DoD 23</sub>
-- [ ] **(M3)** Provider-hosted models are canaried on a cadence; a detected silent change triggers the eval regression gate before continued reliance. <sub>`meas.canary` · DoD 23</sub>
+- [ ] **(M3)** Provider-hosted models are canaried on a cadence; a detected silent change triggers the eval regression gate before continued reliance. <sub>`meas.canary`</sub>
 - [ ] **(M2)** Wherever a human approval counts as a control, override rate and approval latency (p50/p95) are tracked per queue, and a rubber-stamp alarm triggers a review. <sub>`meas.automation-bias` · DoD 33</sub>
 - [ ] **(M2, O1+)** Human-oversight program: sampling schedule per oversight mode with automatic re-escalation on regression; reviews captured as stratified labeled data. <sub>`meas.oversight-plan` · DoD 33</sub>
 

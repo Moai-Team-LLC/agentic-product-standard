@@ -25,7 +25,7 @@ The **Conformance Contract** release candidate. v3.x added a license, then a sci
   - 30 *Success-legitimacy audit* at O2.
   - 31 *Regulatory classification record*.
 
-  The two items that were unnumbered since v1.4/v3.1 get numbers and change no obligation: **32** tenant isolation and **33** human oversight as a program. Item 33 gains automation-bias measurement: override rate, approval latency, and a rubber-stamp alarm.
+  The two items that were unnumbered since v1.4/v3.1 get numbers — the numbering itself changes no obligation: **32** tenant isolation and **33** human oversight as a program. Separately, item 33 gains automation-bias measurement: override rate, approval latency, and a rubber-stamp alarm.
 - **Numbering.** "Layer N" now always means a harness layer; `STANDARD.md` Part II sections become **Stack 1–9** ([ADR-0005](docs/adr/0005-layer-and-stack-numbering.md)). Part II anchors changed from `#layer-…` to `#stack-…`.
 - **Anti-patterns 19 → 20.** New: **20. Counting a pass as a success without legitimacy review.** Anti-pattern 15 gains its 2026 variant: an MCP client that can only register through the deprecated Dynamic Client Registration.
 

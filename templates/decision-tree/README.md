@@ -15,8 +15,8 @@ It is **derived from** the [10-question checklist](../../README.md#-the-10-quest
 ```mermaid
 flowchart TD
     Q1["<b>Q1.</b> What is the minimum autonomy level<br/>(L0–L4) that solves this?"]
-    Q1 -->|"L0–L1: fixed steps,<br/>model does one bounded job"| A["<b>A · Deterministic pipeline</b><br/>or a single LLM call"]
-    Q1 -->|"L2+: the path varies<br/>with the input"| Q2
+    Q1 -->|"L0–L1: one call, maybe with<br/>tools or retrieval, in fixed code"| A["<b>A · Single LLM call</b><br/>inside deterministic code"]
+    Q1 -->|"L2+: several LLM steps,<br/>or the model picks the path"| Q2
 
     Q2["<b>Q2.</b> Can it be solved by composing the<br/>5 patterns, without a full agent loop?"]
     Q2 -->|"Yes — chaining, routing,<br/>parallelization, evaluator,<br/>orchestrator"| B["<b>B · Workflow composition</b><br/>fixed topology, no open-ended loop"]
@@ -38,11 +38,11 @@ flowchart TD
     Q6 -->|"Yes — O0"| E["<b>E · Graph, O0</b><br/>orchestrator + subagents,<br/>human approves external actions"]
     Q6 -->|"No — O1 / O2"| F["<b>F · Graph, O1/O2</b>"]
 
-    A --> LA["No license at O0.<br/>Core DoD · <b>Loop License</b> if its output<br/>is applied without approval (O1+)"]
-    B --> LB["No license at O0.<br/>Core DoD · <b>Loop License</b> if it<br/>acts without approval (O1+)"]
-    C --> LC["No license.<br/>Core DoD"]
+    A --> LA["No license at O0.<br/>Core DoD · <b>Loop License</b> if its output<br/>is applied without approval (O1+)<br/>+ legitimacy audit at O2 (30)"]
+    B --> LB["No license at O0.<br/>Core DoD · <b>Loop License</b> if it<br/>acts without approval (O1+)<br/>+ legitimacy audit at O2 (30)"]
+    C --> LC["No license.<br/>Core DoD + stop conditions (17)"]
     D --> LD["<b>Loop License</b> — six gates<br/>DoD 16–19 · + legitimacy audit at O2 (30)"]
-    E --> LE["No license, but the<br/><b>weakest-link bound</b> already applies<br/>Core DoD"]
+    E --> LE["No license, but the<br/><b>weakest-link bound</b> already applies<br/>Core DoD + stop conditions (17)"]
     F --> LF["<b>Loop License</b> per O1+ node<br/><b>+ Graph License</b><br/>DoD 16–19 · 25 · 30 at O2"]
 
     classDef leaf fill:#e8f0fe,stroke:#3367d6,stroke-width:2px,color:#111
@@ -51,7 +51,7 @@ flowchart TD
     class LA,LB,LC,LD,LE,LF lic
 ```
 
-**Core DoD** = every Definition of Done item that binds without an oversight or composition condition — the ones with no condition in `STANDARD.md` Part III, plus the conditional items your product triggers (MCP → 14, 26; LLM judges → 11, 20; retrieval → 21; multi-tenant → 32; a regulated market → 31). Delegating across an organization or vendor boundary adds 28 at any leaf.
+**Core DoD** = every Definition of Done item that binds without an oversight or composition condition — the ones with no condition in `STANDARD.md` Part III, plus the conditional items your product triggers (MCP → 14, 26; LLM judges → 11, 20; retrieval → 21; multi-tenant → 32; a regulated market → 31). It includes 33: at O0 the approval queue *is* the control, so its override rate and latency are measured too. Delegating across an organization or vendor boundary adds 28 at any leaf.
 
 ---
 
@@ -59,11 +59,11 @@ flowchart TD
 
 | Leaf | Architecture | Oversight | License required | Checklist | DoD |
 |---|---|---|---|---|---|
-| **A** | Deterministic pipeline, or a single LLM call inside fixed steps | O0 (O1+ if its output is applied without approval) | None at O0; **Loop License** at O1+ | [`loop-license/CHECKLIST.md`](../loop-license/CHECKLIST.md) at O1+ | Core (+ 16–19 at O1+) |
-| **B** | Workflow composition — the [five patterns](../../STANDARD.md#canon-2-the-five-composition-patterns) with a fixed topology and no open-ended loop | O0 (O1+ if it acts without approval) | None at O0; **Loop License** at O1+ | [`loop-license/CHECKLIST.md`](../loop-license/CHECKLIST.md) at O1+ | Core (+ 16–19 at O1+) |
-| **C** | Single agent — it decides its next step; a human approves every consequential action | O0 | None | — | Core (+ 17 at L3+) |
+| **A** | A single LLM call — augmented with tools or retrieval at most — inside deterministic code (L0–L1) | O0 (O1+ if its output is applied without approval) | None at O0; **Loop License** at O1+ | [`loop-license/CHECKLIST.md`](../loop-license/CHECKLIST.md) at O1+ | Core (+ 16–19 at O1+; + 30 at O2) |
+| **B** | Workflow composition — the [five patterns](../../STANDARD.md#canon-2-the-five-composition-patterns) with a bounded topology and no open-ended loop (L2; L3 when an orchestrator decomposes the task) | O0 (O1+ if it acts without approval) | None at O0; **Loop License** at O1+ | [`loop-license/CHECKLIST.md`](../loop-license/CHECKLIST.md) at O1+ | Core (+ 17 at L3; + 16–19 at O1+; + 30 at O2) |
+| **C** | Single agent — it decides its next step (L4); a human approves every consequential action | O0 | None | — | Core + 17 |
 | **D** | Single agent whose consequential actions run without per-action approval | O1 / O2 | **Loop License** (+ legitimacy audit at O2) | [`loop-license/CHECKLIST.md`](../loop-license/CHECKLIST.md) | Core + 16–19 (+ 30 at O2) |
-| **E** | Graph of agents — orchestrator plus subagents, human approves external actions | O0 | None — but the **weakest-link bound** already governs any path you later promote | [`graph-license/CHECKLIST.md`](../graph-license/CHECKLIST.md) (as a design aid) | Core |
+| **E** | Graph of agents — orchestrator plus subagents (L3+), human approves external actions | O0 | None — but the **weakest-link bound** already governs any path you later promote | [`graph-license/CHECKLIST.md`](../graph-license/CHECKLIST.md) (as a design aid) | Core + 17 |
 | **F** | Graph of agents whose consequential actions run without per-action approval | O1 / O2 | **Loop License per O1+ node** *and* a **Graph License** for the composition | [`graph-license/CHECKLIST.md`](../graph-license/CHECKLIST.md) | Core + 16–19 · 25 (+ 30 at O2) |
 
 **Leaf F is the one people get wrong.** A graph of licensed loops is *not* a licensed graph — the risks that hurt are the ones no single node owns (Part IV, *License Composition*; anti-pattern 19). **Leaves A and B at O1+ are the ones people forget:** a "simple pipeline" that writes its output to production without review has relaxed oversight just as surely as an autonomous loop has.

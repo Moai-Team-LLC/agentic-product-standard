@@ -1,6 +1,6 @@
 ---
 name: harness-engineering
-description: Design the harness — the 9-layer scaffolding around the LLM loop that makes agents reliable. Covers the agent loop itself (gather/act/verify), context management, durable execution, guardrails, human-in-the-loop, evals, observability, and the cross-cutting security & identity layer. In production agents, the harness is 98% of the code. Use whenever the user is structuring code around an agent loop, asks "how do I make this reliable / production-ready," is implementing verification, retry logic, sub-agent delegation, permission systems, approval gates, or wants to understand what makes Claude Code / Codex / Devin work beyond the model.
+description: Design the harness — the 9-layer scaffolding around the LLM loop that makes agents reliable. Covers the agent loop itself (gather/act/verify), context management, durable execution, guardrails, human-in-the-loop, evals, observability, and the two cross-cutting layers, security & identity and cost & FinOps. In production agents the harness is most of the code — ~98% in Claude Code, by one estimate. Use whenever the user is structuring code around an agent loop, asks "how do I make this reliable / production-ready," is implementing verification, retry logic, sub-agent delegation, permission systems, approval gates, or wants to understand what makes Claude Code / Codex / Devin work beyond the model.
 ---
 
 # Harness Engineering
@@ -164,7 +164,7 @@ Trace **everything**. Most agent failures are not text-quality issues — they'r
 - Context utilization at this step
 - Latency
 
-**Instrumentation:** emit spans on the **OpenTelemetry GenAI semantic conventions** (OpenInference and OpenLLMetry instrument to them) so you can switch observability vendors (Langfuse, LangSmith, Braintrust, Arize) without re-instrumenting. See `STANDARD.md` Part II · Layer 6.
+**Instrumentation:** emit spans on the **OpenTelemetry GenAI semantic conventions** (OpenInference and OpenLLMetry instrument to them) so you can switch observability vendors (Langfuse, LangSmith, Braintrust, Arize) without re-instrumenting. See `STANDARD.md` Part II · Stack 6.
 
 ## Cycle of Trust — the meta-pattern
 
@@ -234,13 +234,14 @@ engineering constraint, not a month-end surprise.
 - **Model routing and cascades** — a small model for routing and classification, the
   flagship only for reasoning.
 - **Measure cost-per-outcome, not total spend** — cost belongs on the same traces as
-  Layer 6, attributed per agent and per run.
+  everything else (Layer 7 · Observability; `STANDARD.md` Stack 6), attributed per agent
+  and per run.
 - **Re-derive ceilings on every model change** — prices, tokenizers, and context
   behavior all move with the model; a ceiling copied from the old one is a guess.
 - **Multi-agent economics** — only pay the multi-agent premium when task value
   justifies it; if one agent clears the bar, one agent is the answer.
 
-Reference implementation: **AgenticGateway** (together with Layer 1).
+Reference implementation: **AgenticGateway** (Part II · Stack 1 — model and provider — together with Layer 9).
 
 ## Harness as the durable advantage
 

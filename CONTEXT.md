@@ -71,8 +71,9 @@ loop is the last resort.
 - **Context engineering** — the four operations on the context window: **Write,
   Select, Compress, Isolate**. The context budget: stay under the fill level
   where your evals start to degrade — 40% of the window until you have measured it.
-- **Eval pyramid** — L1 code assertions (every change) · L2 LLM-as-judge
-  (calibrated, binary) · L3 human/agent trace review.
+- **Eval pyramid** — Level 1 code assertions (every change) · Level 2 LLM-as-judge
+  (calibrated, binary) · Level 3 human/agent trace review. (Not the autonomy levels:
+  "L3" always means autonomy.)
 - **Failure mode** — a named, product-specific way the system loses trust (e.g.
   "missed human handoff," "wrong tool selection"). Evals are organized by these,
   never by generic "quality."
@@ -92,7 +93,8 @@ loop is the last resort.
   `python3 tools/aps.py skills validate`.
 - A **master skill** (`agentic-product-architect`) routes to **sub-skills** by
   dominant concern (architecture, context, harness, tools/MCP, memory, durable
-  execution, evals, framework choice, production readiness, antipatterns).
+  execution, evals, framework choice, production readiness, antipatterns, tenant
+  isolation, and the reference stack).
 - **Progressive disclosure** — the master stays thin; depth lives in the
   sub-skill it routes to.
 - Skills are **small, composable, model-agnostic**, and reference this CONTEXT
