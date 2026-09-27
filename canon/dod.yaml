@@ -114,8 +114,10 @@ items:
         - Each one routes through an approval gate
         - Approval is logged with who/when/what
       why: >-
-        Replit incident — an agent deleted a production database holding records on 1,200+
-        companies despite a "code freeze" prompt. Prompts don't enforce.
+        Replit incident ([Fortune, 23 Jul 2025](https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/))
+        — an agent deleted a production database holding records on 1,206 executives and
+        1,196+ companies (the agent's own count) despite a "code freeze" prompt. Prompts don't
+        enforce.
       gap: '"the prompt tells the agent not to delete production data" — insufficient.'
     crosswalk: {eu_ai_act: ["14"], owasp_asi: [ASI02], nist_ai_rmf: ["MANAGE 2"], imda: [1, 2]}
 
@@ -283,7 +285,9 @@ items:
         - Merge blocked on regression vs main branch
         - 100% of production traffic produces traces
         - Traces include all required fields (see the telemetry contract, item 29)
-        - Trace retention sufficient for incident investigation (typically 30–90 days)
+        - >-
+          Trace retention sufficient for incident investigation (typically 30–90 days; at least
+          six months where the EU AI Act's high-risk logging duties apply — Art. 19, Art. 26(6))
       why: evals without enforcement are theater; traces are the only way to debug failures after launch.
       gap: evals exist but don't gate merges; tracing is sampled, missing the failures.
     crosswalk: {eu_ai_act: ["12", "15", "72"], nist_ai_rmf: ["MEASURE 3", "MANAGE 4"], imda: [3]}
@@ -383,11 +387,13 @@ items:
     applies_if: mcp
     text: >-
       Every MCP connection speaks revision **2026-07-28** — or carries a dated sunset — and
-      passes the official conformance suite in CI at a pinned version; no state depends on a
-      protocol session; no new dependency on Roots, Sampling, or Logging; `requestState` is
-      treated as untrusted and integrity-protected where it affects authorization; clients
-      register with Client ID Metadata Documents (never Dynamic Client Registration alone),
-      validate `iss` (RFC 9207), and key stored credentials by issuer; no token passthrough,
+      runs the official conformance suite in CI at a pinned version against what 2026-07-28
+      requires, each baselined failure a documented, dated gap; no state depends on a protocol
+      session; no new dependency on Roots, Sampling, or Logging; `requestState` is treated as
+      untrusted, and integrity-protected and verified wherever it influences authorization,
+      resource access, or business logic; clients use pre-registration or Client ID Metadata
+      Documents (Dynamic Client Registration only as a documented fallback), validate `iss`
+      (RFC 9207), and bind stored client credentials to their issuer; no token passthrough,
       anywhere (Stack 2 · Layer 8)
     audit:
       checks:
@@ -396,22 +402,27 @@ items:
           it speaks, and a sunset date for anything older than 2026-07-28
         - >-
           The official conformance suite (`@modelcontextprotocol/conformance`) runs in CI
-          against each server and client you own, at a pinned version, with its
-          expected-failures file reviewed like code
+          against each server and client you own, at a pinned version, with
+          `--requirements 2026-07-28`; its expected-failures file is reviewed like code, and
+          every entry is an owned, dated gap — a baselined failure is still a failure
         - >-
           No dependence on `Mcp-Session-Id`; cross-call state uses explicit, server-minted
           handles or your own store (item 2)
         - >-
           `requestState` handled as attacker-controlled input and integrity-protected
-          (HMAC/AEAD) wherever it influences authorization, resource access, or business logic
+          (HMAC/AEAD) wherever it influences authorization, resource access, or business logic;
+          state that fails verification is rejected
         - >-
-          Clients register with a Client ID Metadata Document, validate a present `iss`
-          against the recorded issuer, and key persisted credentials by issuer; servers never
-          pass tokens through
+          Clients use pre-registration or a Client ID Metadata Document (Dynamic Client
+          Registration only as a documented fallback for an authorization server that supports
+          neither), validate a present `iss` against the recorded issuer, and bind pre-registered
+          or dynamically registered client credentials to the authorization server that issued
+          them; servers never pass tokens through
         - >-
-          Gateways that route on `Mcp-Method` / `Mcp-Name` reject header/body mismatches and
-          protocol versions that predate the headers; `private` cache entries never cross a
-          user or tenant
+          Servers reject header/body mismatches (`HeaderMismatch`); gateways that authorize on
+          `Mcp-Method` / `Mcp-Name` reject requests whose `MCP-Protocol-Version` is absent or
+          predates header validation; a `private` cache entry is never served outside the
+          authorization context it was fetched under
       why: >-
         the 2026-07-28 revision moved state out of the protocol and hardened authorization.
         Code written for the 2025 session-and-DCR model now carries state nobody can see and
@@ -444,8 +455,8 @@ items:
       why: >-
         an agent that shares an identity cannot be scoped, rotated, revoked, or audited on its
         own; when it misbehaves you cannot tell which agent did what on whose behalf. NIST's
-        NCCoE concept paper on software and AI agent identity and authorization (Feb 2026)
-        builds on OAuth 2.0 and SPIFFE for exactly this.
+        NCCoE concept paper on software and AI agent identity and authorization (initial public
+        draft, Feb 2026) frames exactly this problem and references OAuth 2.0 and SPIFFE.
       gap: >-
         every agent in the fleet calling tools with one service-account key nobody rotates, so
         the audit log says "svc-agents" for every action.

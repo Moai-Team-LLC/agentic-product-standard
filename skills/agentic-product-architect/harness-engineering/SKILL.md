@@ -5,7 +5,7 @@ description: Design the harness — the 9-layer scaffolding around the LLM loop 
 
 # Harness Engineering
 
-OpenAI's "Harness Engineering" post and Liu et al.'s Claude Code analysis (arXiv:2604.14228) converge on the same finding: in a production agent, ~98% of code is *not* the model loop. It's the harness — context management, permission systems, verification, sub-agent delegation, tool routing, recovery.
+OpenAI's "Harness Engineering" post and Liu et al.'s Claude Code analysis (arXiv:2604.14228) converge on the same finding: in a production agent, most of the code is *not* the model loop — ~98% in Claude Code, by a community estimate. It's the harness — context management, permission systems, verification, sub-agent delegation, tool routing, recovery.
 
 LangChain's empirical finding (March 2026): holding model constant at gpt-5.2-codex, their coding agent moved from Top 30 to Top 5 on Terminal Bench 2.0 (52.8% → 66.5%) **only by changing the harness**. As model capability converges, harness quality is the durable competitive advantage.
 
@@ -176,7 +176,7 @@ verify preconditions → execute → verify outcome →
 log trace → update memory/state
 ```
 
-**Permission boundaries are enforced by code, never by prompt.** The Replit incident (July 2025) — an agent deleted a production database holding records on 1,200+ companies despite an explicit "code freeze" instruction — is the canonical reference for why. The model will ignore prompt-level restrictions under enough pressure. Code won't.
+**Permission boundaries are enforced by code, never by prompt.** The Replit incident (July 2025) — an agent deleted a production database holding records on 1,206 executives and 1,196+ companies despite an explicit "code freeze" instruction (Fortune, 23 Jul 2025) — is the canonical reference for why. The model will ignore prompt-level restrictions under enough pressure. Code won't.
 
 **Implementation:**
 - Tool credentials scoped with OAuth / IAM, not held by the agent
@@ -210,7 +210,7 @@ This is Claude Code's Task tool. It's Anthropic Research's sub-researcher patter
 Not a box in the stack — a layer that wraps all seven. Safety is structural, not a filter bolted on the edge (content classifiers top out ~97%, so ~3% of injection lands by design). The cross-cutting controls:
 
 - **Agent identity & least privilege** — each agent acts under its own non-human identity (never a shared service account or a person's token) with scoped, short-lived credentials; identity and `tenant_id` come from auth, never the model; every action is attributable to the agent and to whoever delegated it.
-- **Protocol auth baseline** — MCP on revision 2026-07-28: no state in a protocol session, clients registered by Client ID Metadata Document, `iss` validated, credentials keyed by issuer, `requestState` treated as untrusted, the official conformance suite in CI. An MCP gateway can authorize per tool on the `Mcp-Method` / `Mcp-Name` headers — an enforcement point outside the model.
+- **Protocol auth baseline** — MCP on revision 2026-07-28: no state in a protocol session, clients registered by pre-registration or Client ID Metadata Document, `iss` validated, client credentials bound to their issuer, `requestState` treated as untrusted, the official conformance suite in CI. An MCP gateway can authorize per tool on the `Mcp-Method` / `Mcp-Name` headers — an enforcement point outside the model — as long as it rejects protocol versions that predate header validation.
 - **Inter-agent trust** — across an org or vendor boundary, verify the peer's signed A2A Agent Card before delegating, and treat what comes back as untrusted input.
 - **Lethal-trifecta check** — private data + untrusted content + external comms together = an exfiltration channel; break one leg before shipping.
 - **MCP supply chain** — pin tool definitions by hash, alert on change (rug pulls), install from an allow-listed registry.

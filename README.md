@@ -62,7 +62,7 @@ Six principles converged *independently* across the production practices of the 
 |---|---|---|
 | 1 | **Determinism by default, agency by necessity** | Every degree of autonomy must be *earned*, not granted upfront. |
 | 2 | **Architecture beats framework** | Patterns outlive libraries. |
-| 3 | **Harness > model** | Reliability lives in the code *around* the LLM — in a production coding agent that harness is ~98% of the code. |
+| 3 | **Harness > model** | Reliability lives in the code *around* the LLM — in Claude Code, by one community estimate, that harness is ~98% of the code. |
 | 4 | **Context engineering is the core discipline** | What enters the context window determines everything. |
 | 5 | **Eval-driven development is non-negotiable** | No measurement → no improvement. No trace review → no understanding. |
 | 6 | **Security is a structural property, not a guardrail** | Safety comes from architecture — identity, least privilege, isolation, pinned tools — not filters bolted onto the edges. |
@@ -251,7 +251,7 @@ Compose agentic products from these primitives *like Lego* — before reaching f
 
 ## The 9-layer harness
 
-In a production agent, the harness — everything *around* the LLM loop — is **~98% of the code** (a community estimate for Claude Code, cited by Liu et al., *Dive into Claude Code*, arXiv:2604.14228). Seven layers stack around the loop; two more cut across all of them.
+In a production agent, the harness — everything *around* the LLM loop — is **most of the code**: ~98% in Claude Code, by a community estimate cited by Liu et al., *Dive into Claude Code* (arXiv:2604.14228). Seven layers stack around the loop; two more cut across all of them.
 
 <!-- canon:begin:readme.harness -->
 ```
@@ -275,7 +275,7 @@ In a production agent, the harness — everything *around* the LLM loop — is *
 
 <!-- canon:end:readme.harness -->
 
-> **Permission boundaries are enforced by code, never by prompt.** The Replit incident of July 2025 — an agent deleted a production database holding records on 1,200+ companies despite an explicit "code freeze" in its prompt ([Fortune, 23 Jul 2025](https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/)) — is the canonical proof. The model will ignore prompt-level restrictions under enough pressure. Code won't.
+> **Permission boundaries are enforced by code, never by prompt.** The Replit incident of July 2025 — an agent deleted a production database holding records on 1,206 executives and 1,196+ companies despite an explicit "code freeze" in its prompt ([Fortune, 23 Jul 2025](https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/)) — is the canonical proof. The model will ignore prompt-level restrictions under enough pressure. Code won't.
 
 > **Layers 8 and 9 are cross-cutting.** Identity, least privilege, and isolation constrain every layer; injection defense spans input and output. Run the **lethal-trifecta** check (private data × untrusted content × external comms) on every deployment, **pin MCP tool definitions by hash** so a server can't rug-pull you, speak **MCP 2026-07-28** with its hardened auth, and give **every agent its own identity**. A guardrail is one tactic, not the discipline — see [`STANDARD.md` · Stack 8](STANDARD.md#stack-8-security--identity--cross-cutting) and the [red-team kit](templates/security/README.md). Cost is the same kind of property: a per-run ceiling enforced in code and re-derived on every model change, not a dashboard someone reads after the invoice (Layer 9).
 

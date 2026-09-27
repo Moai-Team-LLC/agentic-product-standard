@@ -123,7 +123,7 @@ Rules:
 2. **Top-K with a confidence floor.** Don't return matches below similarity threshold; better to return nothing than noise.
 3. **Inject as structured context.** "User profile: {role: CTO, company: Acme}" beats "Here's the conversation from last week..."
 4. **Decay matters.** Recent memories often beat old; consider time-weighted retrieval.
-5. **Honor freshness from the source.** Knowledge fetched over MCP (revision 2026-07-28) carries caching hints — `ttlMs` and `cacheScope`. Treat the TTL as the freshness contract for anything you persist from it, invalidate on change notifications, and never let a `private`-scoped entry be served to another user or tenant.
+5. **Honor freshness from the source.** Resources and lists fetched over MCP (revision 2026-07-28) carry caching hints — `ttlMs` and `cacheScope`. Treat the TTL as the freshness contract for anything you persist from them, invalidate on change notifications, and never serve a `private`-scoped entry outside the authorization context (access token) it was fetched under — let alone to another user or tenant.
 
 ## Memory as architecture, not feature
 

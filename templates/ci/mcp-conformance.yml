@@ -1,17 +1,19 @@
 # MCP conformance workflow — TEMPLATE (DoD 26).
 #
-# DoD 26 asks every MCP server and client you own to pass the official conformance
+# DoD 26 asks every MCP server and client you own to run the official conformance
 # suite (https://github.com/modelcontextprotocol/conformance) in CI, at a pinned
-# version, against revision 2026-07-28. Copy this to .github/workflows/ in the repo
-# that owns the server or client, and wire the TODO points.
+# version, against what revision 2026-07-28 requires (--requirements). Copy this to
+# .github/workflows/ in the repo that owns the server or client, and wire the TODO
+# points.
 #
 # Pin the suite. As of Standard v4.0.0-rc.1 the npm `latest` tag (0.1.16) predates
 # 2026-07-28 support; the pre-release below provides `--requirements 2026-07-28`.
 # Move the pin deliberately, like any other test dependency.
 #
 # Known gaps go in a reviewed expected-failures file (--expected-failures), never in
-# a disabled job — silencing a gate to pass CI is DoD 24's anti-case. If you have
-# no known failures, drop the --expected-failures flag.
+# a disabled job — silencing a gate to pass CI is DoD 24's anti-case. A baselined
+# failure is still a failure against the requirement set: give each entry an owner
+# and a date, and burn the list down. If you have no known failures, drop the flag.
 
 name: mcp-conformance
 
@@ -35,12 +37,17 @@ jobs:
           node-version: "22"
 
       # TODO: install and start YOUR MCP server in the background, listening on
-      # the URL below, and wait until it answers.
+      # the URL below, and wait until it answers. Any HTTP status means it is up:
+      # a 2026-07-28 server answers a plain GET with 405 Method Not Allowed.
       - name: Start the server under test
         run: |
           npm ci
           (npm run start:mcp > server.log 2>&1 &)
-          for i in $(seq 1 30); do curl -sf -o /dev/null http://localhost:3000/mcp && break; sleep 1; done
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/mcp || true)
+            [ "$code" != "000" ] && break
+            sleep 1
+          done
 
       - name: Run the conformance suite
         run: |
@@ -65,9 +72,11 @@ jobs:
         with:
           node-version: "22"
       - run: npm ci
-      # TODO: the command that launches YOUR MCP client against the suite's test server.
+      # TODO: the command that launches YOUR MCP client. The suite appends its test
+      # server's URL as the last argument and runs the client once per scenario.
       - name: Run the conformance suite
         run: |
           npx -y "$CONFORMANCE" client \
             --command "npm run mcp-client" \
+            --requirements "$MCP_REVISION" \
             --expected-failures .mcp-conformance/expected-failures.yaml

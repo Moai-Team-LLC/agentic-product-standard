@@ -2,7 +2,7 @@
 
 *From [The Agentic Product Standard](../../STANDARD.md), Stack 6. A tripwire, not an observability stack: run it in CI against a trace your agent exported, and it fails when the telemetry contract breaks.*
 
-DoD 29 asks for four things, and [`check_genai_trace.py`](check_genai_trace.py) checks each one on an **OTLP/JSON** trace export (the format the OpenTelemetry Collector's file exporter and most SDK exporters write):
+The telemetry contract (DoD 29, plus DoD 27's identity on every agent span) comes down to five checks, and [`check_genai_trace.py`](check_genai_trace.py) runs each one on an **OTLP/JSON** trace export (the format the OpenTelemetry Collector's file exporter and most SDK exporters write):
 
 | Check | What it asserts | Flag |
 |---|---|---|
@@ -18,6 +18,6 @@ python3 check_genai_trace.py trace.json
 python3 check_genai_trace.py trace.json --allow-content --revision-attr service.semconv.genai
 ```
 
-Why these four: the GenAI conventions are still in *Development* status and moved to their own repository (`open-telemetry/semantic-conventions-genai`) at semconv v1.42.0 — so a revision you do not pin is a contract that can change under you; and the conventions themselves make prompt and completion content opt-in, because traces are a data store. Bump the pinned revision only together with a migration test — this checker, run against a trace from the new instrumentation, is that test's floor.
+Why these five: the GenAI conventions are still in *Development* status and moved to their own repository (`open-telemetry/semantic-conventions-genai`) at semconv v1.42.0 — so a revision you do not pin is a contract that can change under you; and the conventions themselves make prompt and completion content opt-in, because traces are a data store. Bump the pinned revision only together with a migration test — this checker, run against a trace from the new instrumentation, is that test's floor.
 
 The attribute names follow the conventions as of this release; if the conventions rename one, update the constants at the top of the script in the same change that bumps your pin.

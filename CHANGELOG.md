@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [4.0.0-rc.1] — 2026-09-27
 
-The **Conformance Contract** release candidate. v3.x added a license, then a science, then a gate, then a graph — each release grew the Definition of Done and the copies of it drifted. v4.0 stabilizes the contract instead of growing it again. The standard gets one machine-readable source that every document is generated from. It gets a conformance tool that checks a product against that source in CI. The ladder is redrawn on the two axes the market and the regulators actually use. And the protocol baselines the standard leans on — MCP, A2A, OpenTelemetry, the EU AI Act — are brought up to their state as of September 2026. This is a **major** release: some v3.3-conformant products will not be v4.0-conformant (see *Migration*). It is published as a release candidate for a two-week comment period before 4.0.0.
+The **Conformance Contract** release candidate. v3.x added a license, then a science, then a gate, then a graph — each release grew the Definition of Done and the copies of it drifted. v4.0 stabilizes the contract instead of growing it again. The standard gets one machine-readable source that every document is generated from. It gets a conformance tool that checks a product against that source in CI. The ladder is redrawn on two axes — how much the agent decides, and how closely a human oversees it — which the EU AI Act already treats separately. And the protocol baselines the standard leans on — MCP, A2A, OpenTelemetry, the EU AI Act — are brought up to their state as of September 2026. This is a **major** release: some v3.3-conformant products will not be v4.0-conformant (see *Migration*). It is published as a release candidate for a two-week comment period before 4.0.0.
 
 ### Breaking
 - **Autonomy × Oversight** (Canon 1, [ADR-0004](docs/adr/0004-autonomy-and-oversight-axes.md)). The single L0–L4 ladder becomes two axes:
@@ -44,7 +44,7 @@ The **Conformance Contract** release candidate. v3.x added a license, then a sci
   - an optional endpoint badge.
 
   This closes the "conformance linter" ask that has been open since v2.0.
-- **[`CROSSWALK.md`](CROSSWALK.md)** maps every DoD item to the EU AI Act, OWASP ASI01–ASI10, NIST AI RMF categories, and IMDA's four dimensions, with reverse indexes. It includes the dates fixed by the Digital Omnibus (Regulation (EU) 2026/1744): Art. 50 from 2 Aug 2026, Annex III high-risk from 2 Dec 2027, Annex I from 2 Aug 2028. It is a crosswalk, not a compliance claim.
+- **[`CROSSWALK.md`](CROSSWALK.md)** maps each DoD item to the EU AI Act, OWASP ASI01–ASI10, NIST AI RMF categories, and IMDA's four dimensions wherever an entry applies, with reverse indexes. It includes the dates fixed by the Digital Omnibus (Regulation (EU) 2026/1744): Art. 50 from 2 Aug 2026, Annex III high-risk from 2 Dec 2027, Annex I from 2 Aug 2028. It is a crosswalk, not a compliance claim.
 - **Templates:**
   - [`ci/mcp-conformance.yml`](templates/ci/mcp-conformance.yml) runs the official MCP conformance suite, pinned (DoD 26).
   - [`telemetry/`](templates/telemetry/README.md) is a stdlib checker for the telemetry contract (DoD 29).
@@ -59,7 +59,7 @@ The **Conformance Contract** release candidate. v3.x added a license, then a sci
   - a stateless core;
   - multi-round-trip `input_required` in place of server-initiated elicitation;
   - `Mcp-Method` / `Mcp-Name` routing headers as a policy enforcement point outside the model;
-  - `ttlMs` / `cacheScope` caching, with the tool-definition pin re-verified on every refetch and `private` entries treated as a tenant boundary;
+  - `ttlMs` / `cacheScope` caching, with the tool-definition pin re-verified on every refetch and `private` entries kept to the authorization context they were fetched under;
   - Roots, Sampling, and Logging deprecated.
 
   Layer 8 also adds sections on per-agent identity (NIST NCCoE concept paper, Feb 2026) and inter-agent trust (A2A v1.0 signed Agent Cards).
@@ -73,6 +73,17 @@ The **Conformance Contract** release candidate. v3.x added a license, then a sci
 - `GOVERNANCE.md` describes releases: the canon owns the version, major releases ship as release candidates with a comment period, and tags are immutable contracts. The release workflow publishes `-rc` tags as pre-releases and refuses a tag that does not match the canon.
 
 ### Fixed
+- **Facts, after a review against primary sources.**
+  - The Replit figures now follow the coverage (records on 1,206 executives and 1,196+ companies, by the agent's own count), and Fortune is cited wherever the incident is used as evidence.
+  - The ~98%-of-code figure is scoped to Claude Code, the system the estimate describes.
+  - Advisory APS-2026-01 corrects several points:
+    - HTTP+SSE may go in the next MCP revision.
+    - Dynamic Client Registration joins Roots, Sampling and Logging on the 2027 clock.
+    - A `private` cache entry is bound to its authorization context, not to a tenant.
+    - It is client credentials, not tokens, that are bound to an issuer.
+    - The server, not the gateway, checks headers against the body.
+    - MCP Apps did not move; it was always an extension.
+  - A2A Agent Card signatures date from v0.3.0 and are optional; v1.0 specifies JCS canonicalization.
 - The durable-execution skill's frontmatter was not valid YAML: an unquoted `answer:` inside the description broke strict parsers.
 - The `agent-builder` contract template lacked the sections the standard makes mandatory at L3+/O1+.
 
@@ -89,7 +100,7 @@ The **Conformance Contract** release candidate. v3.x added a license, then a sci
    - automation-bias metrics on your approval queues (33).
 5. **Optionally, adopt `aps-conformance`.** Start from `templates/conformance/aps-conformance.template.yaml`.
 
-*Sources are cited inline in `STANDARD.md`, `CROSSWALK.md`, and `AGENT_STANDARD.md`'s evidence appendix. Facts were checked against primary sources where they were reachable: the MCP specification sources, the A2A and OpenTelemetry repositories, EUR-Lex / Commission / Council pages, NIST, IMDA, OWASP, METR, and the Agent Skills specification. Where only a search-index excerpt was available, the claim is stated conservatively.*
+*Sources are cited inline in `STANDARD.md`, `CROSSWALK.md`, and `AGENT_STANDARD.md`'s evidence appendix. The MCP, A2A, OpenTelemetry, Agent Skills, and conformance-suite claims were checked against their primary sources — the specification and repository texts. EUR-Lex, Commission, Council, NIST, IMDA, OWASP, and METR pages could not be fetched from the review environment; those claims rest on search-index excerpts of the primary pages and are stated conservatively. Corrections are welcome — open an issue with the source.*
 
 [4.0.0-rc.1]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v4.0.0-rc.1
 
@@ -106,7 +117,7 @@ A **consistency** patch. Nothing normative changes. The canon had drifted across
 
 ### Changed
 - **Principle 3** no longer claims that "98% of *reliability*" lives in the harness, which is a share of reliability no one has measured. It now says the harness is ~98% of the *code* and cites the source: a community estimate for Claude Code (~1.6% AI decision logic, ~98.4% operational infrastructure) quoted in Liu et al., *Dive into Claude Code* (arXiv:2604.14228).
-- **The Replit incident** now cites its primary coverage (Fortune, 23 Jul 2025) wherever it is used as evidence.
+- **The Replit incident** now cites its primary coverage (Fortune, 23 Jul 2025) in `STANDARD.md` and the README.
 - **Reading lists** add the primary specifications the standard builds on, with the version to pin.
 - The README says in one line how this standard differs from Klarna's *Agentic Product Protocol* and from *AgentReady*.
 

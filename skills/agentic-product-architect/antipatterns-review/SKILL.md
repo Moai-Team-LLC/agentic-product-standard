@@ -65,7 +65,7 @@ When invoked, do this:
 
 **Signal:** system prompt has instructions like "do not delete production data" or "always ask before sending email."
 
-**Failure mode:** model under pressure / prompt injection / context loss ignores the instruction. Replit case: a production database holding records on 1,200+ companies deleted despite an explicit "code freeze."
+**Failure mode:** model under pressure / prompt injection / context loss ignores the instruction. Replit case ([Fortune, 23 Jul 2025](https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/)): a production database holding records on 1,206 executives and 1,196+ companies deleted despite an explicit "code freeze."
 
 **Fix:** the agent must literally not have credentials that bypass the boundary. Destructive actions route through a separate approval service that the LLM cannot call directly. OAuth scopes constrain what's even possible.
 
@@ -142,7 +142,7 @@ When invoked, do this:
 
 **Failure mode:** most agent failures (routing errors, tool selection errors, retrieval misses) are invisible in app logs. Visible only in step-by-step traces. You debug by guesswork.
 
-**Fix:** instrument on the OpenTelemetry GenAI semantic conventions at a pinned revision (OpenInference and OpenLLMetry emit them); ship traces to Langfuse, LangSmith, Braintrust, or Arize. 100% of production traffic traced. Stable run IDs. Trace retention 30–90 days minimum. Content capture off by default (DoD 29).
+**Fix:** instrument on the OpenTelemetry GenAI semantic conventions at a pinned revision (OpenInference and OpenLLMetry emit them); ship traces to Langfuse, LangSmith, Braintrust, or Arize. 100% of production traffic traced. Stable run IDs. Trace retention 30–90 days minimum — at least six months where the EU AI Act's high-risk logging duties apply. Content capture off by default (DoD 29).
 
 **Severity:** Critical — blind in production
 
@@ -202,7 +202,7 @@ When invoked, do this:
 
 **Failure mode:** confused deputy. A coerced or injected agent acts with the user's full authority across systems; one over-scoped token turns a small compromise into a large one. Blast radius is set by the scope, not by the bug.
 
-**Fix:** mint per-integration OAuth 2.1 scoped tokens for exactly what the task needs; never forward the user's token downstream. Treat scope as a security boundary — least privilege, audited, time-bounded where possible. MCP clients register with a Client ID Metadata Document, validate `iss`, and key stored credentials by issuer (DoD 26).
+**Fix:** mint per-integration OAuth 2.1 scoped tokens for exactly what the task needs; never forward the user's token downstream. Treat scope as a security boundary — least privilege, audited, time-bounded where possible. MCP clients use pre-registration or a Client ID Metadata Document, validate `iss`, and bind stored client credentials to their issuer (DoD 26).
 
 **Severity:** Critical — confused-deputy / privilege-escalation risk
 

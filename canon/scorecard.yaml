@@ -120,17 +120,17 @@ sections:
         band: M2
         dod: [26]
         applies_if: mcp
-        text: Every MCP connection speaks revision 2026-07-28 (or carries a dated sunset); no state rides on a protocol session; no new use of Roots / Sampling / Logging; `requestState` is treated as untrusted input.
+        text: Every MCP connection speaks revision 2026-07-28 (or carries a dated sunset); no state rides on a protocol session; no new use of Roots / Sampling / Logging; `requestState` is treated as untrusted input and integrity-protected wherever it influences authorization, resource access, or business logic.
       - id: sec.mcp-auth
         band: M2
         dod: [26]
         applies_if: mcp
-        text: MCP clients register with Client ID Metadata Documents (not Dynamic Client Registration alone), validate `iss` (RFC 9207), and key stored credentials by issuer; servers never pass tokens through.
+        text: MCP clients use pre-registration or Client ID Metadata Documents (Dynamic Client Registration only as a documented fallback), validate `iss` (RFC 9207), and bind stored client credentials to their issuer; servers never pass tokens through.
       - id: sec.mcp-conformance
         band: M2
         dod: [26]
         applies_if: mcp
-        text: The official MCP conformance suite runs in CI, at a pinned version, against every MCP server and client you own.
+        text: The official MCP conformance suite runs in CI, at a pinned version and against what 2026-07-28 requires, for every MCP server and client you own; each baselined failure is an owned, dated gap.
       - id: sec.tokens
         band: M2
         dod: [27]

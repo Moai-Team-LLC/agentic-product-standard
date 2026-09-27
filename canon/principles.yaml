@@ -13,8 +13,8 @@ principles:
   - n: 3
     key: harness
     name: Harness > model
-    summary: Reliability lives in the code *around* the LLM — in a production coding agent that harness is ~98% of the code.
-    statement: reliability lives in the code around the LLM, not in the LLM itself; in a production coding agent that harness is ~98% of the code (Canon 4).
+    summary: Reliability lives in the code *around* the LLM — in Claude Code, by one community estimate, that harness is ~98% of the code.
+    statement: reliability lives in the code around the LLM, not in the LLM itself; in Claude Code, by one community estimate, that harness is ~98% of the code (Canon 4).
   - n: 4
     key: context
     name: Context engineering is the core discipline

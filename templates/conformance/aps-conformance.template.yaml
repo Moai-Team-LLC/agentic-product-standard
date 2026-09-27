@@ -83,11 +83,11 @@ items:
   sec.trifecta: {status: no, evidence: ""}
   # (M2, if MCP · DoD 14) MCP tool definitions pinned by hash with change alerts, re-verified whenever a cached tool list expires; servers from an allow-listed registry, version-pinned + signature-checked.
   sec.mcp-pinning: {status: no, evidence: ""}
-  # (M2, if MCP · DoD 26) Every MCP connection speaks revision 2026-07-28 (or carries a dated sunset); no state rides on a protocol session; no new use of Roots / Sampling / Logging; requestState is treated as untrusted input.
+  # (M2, if MCP · DoD 26) Every MCP connection speaks revision 2026-07-28 (or carries a dated sunset); no state rides on a protocol session; no new use of Roots / Sampling / Logging; requestState is treated as untrusted input and integrity-protected wherever it influences authorization, resource access, or business logic.
   sec.mcp-baseline: {status: no, evidence: ""}
-  # (M2, if MCP · DoD 26) MCP clients register with Client ID Metadata Documents (not Dynamic Client Registration alone), validate iss (RFC 9207), and key stored credentials by issuer; servers never pass tokens through.
+  # (M2, if MCP · DoD 26) MCP clients use pre-registration or Client ID Metadata Documents (Dynamic Client Registration only as a documented fallback), validate iss (RFC 9207), and bind stored client credentials to their issuer; servers never pass tokens through.
   sec.mcp-auth: {status: no, evidence: ""}
-  # (M2, if MCP · DoD 26) The official MCP conformance suite runs in CI, at a pinned version, against every MCP server and client you own.
+  # (M2, if MCP · DoD 26) The official MCP conformance suite runs in CI, at a pinned version and against what 2026-07-28 requires, for every MCP server and client you own; each baselined failure is an owned, dated gap.
   sec.mcp-conformance: {status: no, evidence: ""}
   # (M2 · DoD 27) OAuth 2.1 scoped, short-lived, audience-bound tokens; no token passthrough; no over-scoping.
   sec.tokens: {status: no, evidence: ""}
