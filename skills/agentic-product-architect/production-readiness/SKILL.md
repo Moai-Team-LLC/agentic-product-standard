@@ -46,7 +46,7 @@ This is an audit checklist, not a feature list. Walk through it with the user; m
 | 21 | Retrieval metrics | Measurement science and human oversight | Wherever memory or retrieval is used | M2 |
 | 22 | Ground-truth provenance | Measurement science and human oversight | always | M2 |
 | 23 | Drift monitoring | Measurement science and human oversight | always | M2 |
-| 33 | Human oversight as a program | Measurement science and human oversight | Wherever a human approval counts as a control; the oversight plan at O1+ | M2 |
+| 33 | Human oversight as a program | Measurement science and human oversight | always | M2 |
 | 24 | No safety gate silenced to pass CI | Gate integrity | always | M1 |
 | 25 | Graph License | Composition (multi-agent) | Any graph of agents operating at O1+ | M2 |
 | 28 | Inter-agent trust | Composition (multi-agent) | Wherever work is delegated across a trust boundary | M2 |

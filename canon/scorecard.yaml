@@ -235,7 +235,6 @@ sections:
         text: Prompt and completion content is not captured in traces by default; capture is enabled by a written policy with retention and access limits.
       - id: obs.trajectory
         band: M3
-        dod: [29]
         text: Traces capture the **trajectory**, not just the final answer.
       - id: eval.online
         band: M3
@@ -329,7 +328,6 @@ sections:
         text: Input and behavior **drift** monitored vs. the eval distribution with a declared refresh policy (behavior drift at autonomy ≥ L2).
       - id: meas.canary
         band: M3
-        dod: [23]
         text: Provider-hosted models are canaried on a cadence; a detected silent change triggers the eval regression gate before continued reliance.
       - id: meas.automation-bias
         band: M2

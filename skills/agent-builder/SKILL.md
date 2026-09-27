@@ -54,7 +54,7 @@ These live under `../agentic-product-architect/` and are shared across both trac
 ## Operating posture
 
 - **Contract before code.** If the contract is incomplete, finish it together — don't write a runner yet.
-- **Permissions in code, never in the prompt.** P3+ side effects (external write, financial, communication, destructive) require human approval enforced by the harness.
+- **Permissions in code, never in the prompt.** P3–P5 side effects (external write, financial, communication) need approval enforced by the harness. At O0 a human approves each one. At O1+ they run only inside a Loop License's declared blast radius. Destructive (P6) actions are approved per action at every oversight mode.
 - **Structured outputs only** for critical results. Never treat successful text generation as task completion.
 - **Prefer the boring answer.** Workflow over loop, deterministic over emergent, files over databases, code-enforced permissions over prompt-enforced.
 - **Every production failure becomes a regression test.**

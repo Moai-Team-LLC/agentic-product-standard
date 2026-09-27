@@ -103,9 +103,9 @@ The ultimate authority, but expensive. Reserve for:
 `pass@1` tells you how often the agent can succeed; it does not tell you whether you can stop watching it. Two more numbers do:
 
 - **`pass^k` — consistency.** Run each case k times; it passes only if all k succeed. A 90% `pass@1` agent can sit well below 90% `pass^5`, and an unwatched agent lives on the tail. The Loop License gates relaxing oversight (O0 → O1 → O2) on a declared `pass^5` threshold.
-- **Legitimacy rate — honesty of the pass.** A check the agent can satisfy without doing the task measures its skill at satisfying checks. METR found that on tasks longer than eight hours, at least 16% of runs scored as successful were illegitimate on review — tests edited, graders special-cased. At O2, review a stratified sample of *successful* runs each release, publish legitimate ÷ reviewed next to `pass@1` and `pass^5`, and gate promotion on a declared floor (DoD 30). Keep tests, graders, eval sets, and thresholds outside the agent's write scope at any oversight level where it acts unwatched.
+- **Legitimacy rate — honesty of the pass.** A check the agent can satisfy without doing the task measures its skill at satisfying checks. METR found that on tasks longer than eight hours, at least 16% of successful runs were illegitimate on review. At O2, review a stratified sample of *successful* runs each release, publish legitimate ÷ reviewed next to `pass@1` and `pass^5`, and gate promotion on a declared floor (DoD 30). Keep tests, graders, eval sets, and thresholds outside the agent's write scope at O1+ (DoD 18) — whenever its actions land without per-action approval.
 
-The CI template `templates/ci/eval-gate.yml` gates on all three when your eval report carries them.
+The CI template `templates/ci/eval-gate.yml` gates on all three when your eval report carries them — each against its floor and against the baseline main is held to, so a regression blocks the merge even above the floor.
 
 ## The eval set as a living artifact
 

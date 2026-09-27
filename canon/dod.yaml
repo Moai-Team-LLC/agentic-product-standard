@@ -3,8 +3,10 @@
 # Every item has a stable number: numbers are identifiers, never reused or renumbered, and
 # a group may list them out of order. `applies_if` is the machine condition, evaluated
 # against a product's profile in aps-conformance.yaml: flags multi_tenant, mcp, multi_agent,
-# cross_boundary, llm_judge, retrieval, regulated, and the integers autonomy (0–4) and
-# oversight (0–2). `binds` is the same condition in words. `text` is the normative clause in
+# cross_boundary, llm_judge, retrieval, regulated, fleet, multi_provider, and the integers
+# autonomy (0–4) and oversight (0–2). `binds` is the same condition in words. Where the
+# profile has no flag for the exact condition, `applies_if` is the nearest broader one (DoD 20
+# binds to *gating* judges, `llm_judge` to any judge): answer such an item `na` with a reason. `text` is the normative clause in
 # STANDARD.md Part III; `audit` feeds the production-readiness skill. `crosswalk` maps the
 # item to the frameworks in canon/regulatory.yaml — it shows where evidence produced here
 # supports an obligation; it is not a claim of legal compliance.
@@ -599,8 +601,7 @@ items:
       A sample of runs scored as successful is reviewed each release for **illegitimate
       success** — tampered or skipped tests, special-cased graders, hard-coded
       outputs, work routed around a check; the **legitimacy rate** is published with the eval
-      results and gates promotion alongside the pass rate (Part IV · *Independent
-      verification*)
+      results and gates promotion alongside the pass rate (Part IV · *Success legitimacy*)
     audit:
       checks:
         - "A sampling plan per release: how many successful runs are reviewed, stratified by task type, and by whom"
@@ -694,12 +695,13 @@ items:
     since: "3.1.0"
     text: >-
       Input drift monitored vs. the eval distribution with a declared **eval-refresh policy**;
-      provider-hosted models canaried, a detected change triggering the eval regression gate
-      (item 12) (Part V · *Drift monitoring*)
+      where the product relies on provider-hosted models, a detected silent model change
+      triggers the eval regression gate (item 12) before continued reliance — scheduled canary
+      evaluations are the recommended detector (Part V · *Drift monitoring*)
     audit:
       checks:
         - Input drift monitored vs. the eval distribution, with a declared refresh policy (thresholds + triggered action)
-        - Provider-hosted models canaried; a detected silent change triggers the regression gate; behavior drift watched at ≥ L2
+        - A detected silent change in a provider-hosted model triggers the regression gate (scheduled canaries recommended); behavior drift watched at ≥ L2
       why: >-
         drift answers "when did my evals stop representing production?" — without it a green
         suite can be measuring the past.
@@ -712,11 +714,10 @@ items:
     title: Human oversight as a program
     since: "3.1.0"
     changed: "4.0.0"
-    binds: Wherever a human approval counts as a control; the oversight plan at O1+
-    binds_short: approval gates
     text: >-
-      Human approval and review are run as a program: **override rate** and **approval
-      latency** (p50/p95) are measured per queue, and a
+      Wherever a human approval counts as a control — every per-action approval at O0, every
+      P6 gate at any mode — approval and review are run as a program: **override rate** and
+      **approval latency** (p50/p95) are measured per queue, and a
       **rubber-stamp alarm** — near-total approval at latencies too short to have read the
       action — triggers a review; at **O1+** the Loop License declares the oversight plan
       (sampling schedule per mode, reviewer SLA, re-escalation triggers) and reviews are
@@ -780,7 +781,7 @@ items:
     binds_short: multi-agent, O1+
     applies_if: multi_agent and oversight >= 1
     text: >-
-      **Graph License** held: the six gates re-evaluated at graph scope (graph-level golden tasks, regression gate, blast radius as
+      **Graph License** held: the six gates re-evaluated at graph scope (pass@1 **and** pass^5 on graph-level golden tasks — plus the legitimacy rate at O2 — regression gate, blast radius as
       the union of node radii **plus** the shared state store, per-node **and** aggregate cost
       caps, a kill switch tested against in-flight parallel branches, one named escalation
       owner); the **weakest-link bound** holds on every path to an external action; shared
@@ -791,8 +792,9 @@ items:
     audit:
       checks:
         - >-
-          The six gates re-evaluated at **graph** scope: graph-level golden tasks (end-to-end,
-          not the union of per-node suites) · regression gate on that set · blast radius as the
+          The six gates re-evaluated at **graph** scope: pass@1 and pass^5 thresholds on
+          graph-level golden tasks (end-to-end, not the union of per-node suites), plus the
+          legitimacy rate at O2 · regression gate on that set · blast radius as the
           **union** of node radii **plus the shared state store** · cost caps **per-node and
           aggregate** · a kill switch tested against **in-flight parallel branches** · **one**
           named escalation owner for the graph
@@ -810,7 +812,7 @@ items:
         a graph of licensed loops is not a licensed graph. The failures that hurt are exactly
         the ones no single node owns — nodes that pass in isolation failing in composition,
         fan-out multiplying spend past every per-node cap while each reads green, an
-        uncalibrated node lending a path autonomy it never earned, and an escalation path that
+        uncalibrated node lending a path oversight relief it never earned, and an escalation path that
         forks so no human is on the hook (Part IV, *License Composition*;
         [`CHECKLIST`](@/templates/graph-license/CHECKLIST.md)).
       gap: >-
@@ -832,7 +834,7 @@ items:
       verified** (JWS over the JCS-canonicalized card, keys from a trusted keystore or an
       allow-listed `jku` origin); unsigned or unverifiable peers fail closed; the delegated
       scope never exceeds the delegator's own; the peer's output enters as untrusted input
-      (Part IV · *Edges are ingestion boundaries*)
+      (Stack 8 · *Inter-agent trust*; Part IV · *Edges are ingestion boundaries*)
     audit:
       checks:
         - Every cross-boundary peer is listed with its expected signing keys (or trusted keystore) and the scopes it may receive

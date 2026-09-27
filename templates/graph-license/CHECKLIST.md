@@ -17,7 +17,7 @@ One row per node. A node with no license is not disqualifying on its own — it 
 
 ## 2. The six gates at graph scope
 
-- [ ] **1. Graph-level eval threshold.** A named pass rate on **end-to-end golden tasks for the graph**, not the union of per-node suites. State the number and the set. *(Nodes that each pass in isolation routinely fail in composition — that gap is the reason this gate exists.)*
+- [ ] **1. Graph-level eval threshold.** Named **pass@1** and **pass^5** minimums on **end-to-end golden tasks for the graph**, not the union of per-node suites — and, at **O2**, the legitimacy-rate floor. State the numbers and the set. *(Nodes that each pass in isolation routinely fail in composition — that gap is the reason this gate exists.)*
 - [ ] **2. Regression gate** on the graph-level set, blocking promotion in CI.
 - [ ] **3. Declared blast radius** = the **union** of every node's radius **plus the shared state store**. Written down; enforced below the model.
 - [ ] **4. Cost caps — per-node *and* aggregate.** Fan-out multiplies burn; per-node caps alone do not bound a graph.

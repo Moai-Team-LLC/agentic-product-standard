@@ -353,7 +353,7 @@ An agentic product is **not production-ready** until every Definition of Done it
 | Security and identity | **13** Lethal-trifecta check · **14** MCP tool defs pinned; allow-listed registry *(MCP)* · **26** MCP protocol & auth baseline *(MCP)* · **27** Per-agent identity |
 | Cost | **15** Per-run cost ceiling in code |
 | Operating without per-action approval (O1+) — the Loop License | **16** Loop License (six gates) *(O1+)* · **17** Stop conditions *(L3+ or O1+)* · **18** Independent verification *(O1+)* · **19** Loop economics *(O1+)* · **30** Success-legitimacy audit *(O2)* |
-| Measurement science and human oversight | **20** Judge calibration (ECE/Brier) *(gating judges)* · **21** Retrieval metrics *(retrieval)* · **22** Ground-truth provenance · **23** Drift monitoring · **33** Human oversight as a program *(approval gates)* |
+| Measurement science and human oversight | **20** Judge calibration (ECE/Brier) *(gating judges)* · **21** Retrieval metrics *(retrieval)* · **22** Ground-truth provenance · **23** Drift monitoring · **33** Human oversight as a program |
 | Gate integrity | **24** No safety gate silenced to pass CI |
 | Composition (multi-agent) | **25** Graph License *(multi-agent, O1+)* · **28** Inter-agent trust *(cross-boundary)* |
 | Governance and regulation | **31** Regulatory classification record *(regulated)* |
@@ -388,7 +388,7 @@ The fastest way to recognize a doomed agent project — the skill set's `antipat
 
 <!-- canon:end:readme.antipatterns -->
 
-## ⚖️ Regulation & frameworks
+## 📜 Regulation & frameworks
 
 Every Definition of Done item produces evidence — a test, a trace, a record, a gate. **[`CROSSWALK.md`](CROSSWALK.md)** maps that evidence onto the frameworks teams get asked about: the **EU AI Act** (with the dates fixed by the Digital Omnibus, Regulation (EU) 2026/1744 — Art. 50 transparency from 2 Aug 2026, high-risk obligations from 2 Dec 2027 for Annex III and 2 Aug 2028 for Annex I), the **OWASP Top 10 for Agentic Applications**, the **NIST AI RMF**, and Singapore **IMDA**'s agentic governance framework. DoD 31 asks for the input all of it depends on: a written **regulatory classification record** — your role and risk class — kept in version control. A crosswalk is not a compliance claim, and none of this is legal advice.
 

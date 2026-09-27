@@ -381,7 +381,7 @@ The normative text of each item is in `STANDARD.md` Part III; this file is the a
 ### 23. Drift monitoring
 
 - [ ] Input drift monitored vs. the eval distribution, with a declared refresh policy (thresholds + triggered action)
-- [ ] Provider-hosted models canaried; a detected silent change triggers the regression gate; behavior drift watched at ≥ L2
+- [ ] A detected silent change in a provider-hosted model triggers the regression gate (scheduled canaries recommended); behavior drift watched at ≥ L2
 
 **Why:** drift answers "when did my evals stop representing production?" — without it a green suite can be measuring the past.
 
@@ -390,8 +390,6 @@ The normative text of each item is in `STANDARD.md` Part III; this file is the a
 ---
 
 ### 33. Human oversight as a program
-
-*Binds: Wherever a human approval counts as a control; the oversight plan at O1+.*
 
 - [ ] Override rate and approval latency (p50/p95) are tracked per approval queue and per reviewer
 - [ ] A rubber-stamp alarm fires on sustained near-100% approval at very low latency — and the queue is reviewed, not the alarm silenced
@@ -424,14 +422,14 @@ The normative text of each item is in `STANDARD.md` Part III; this file is the a
 
 *Binds: Any graph of agents operating at O1+.*
 
-- [ ] The six gates re-evaluated at **graph** scope: graph-level golden tasks (end-to-end, not the union of per-node suites) · regression gate on that set · blast radius as the **union** of node radii **plus the shared state store** · cost caps **per-node and aggregate** · a kill switch tested against **in-flight parallel branches** · **one** named escalation owner for the graph
+- [ ] The six gates re-evaluated at **graph** scope: pass@1 and pass^5 thresholds on graph-level golden tasks (end-to-end, not the union of per-node suites), plus the legitimacy rate at O2 · regression gate on that set · blast radius as the **union** of node radii **plus the shared state store** · cost caps **per-node and aggregate** · a kill switch tested against **in-flight parallel branches** · **one** named escalation owner for the graph
 - [ ] **Weakest-link bound** holds: no path to an external action runs under less oversight than its least-licensed node allows
 - [ ] Shared state carries **writer provenance** (producing node, timestamp, `verified_by` / `unverified`); consumers can filter on it; no external action fires from an unverified field
 - [ ] Every **fan-in** is a declared verification point or an explicit pass-through with rationale
 - [ ] Every **edge class** is marked **enforced** or **declared**; declared-only edges are not counted as controls
 - [ ] Graph eval suite includes **poisoned-state** scenarios (a hijacked or hallucinating node writing to shared state)
 
-**Why:** a graph of licensed loops is not a licensed graph. The failures that hurt are exactly the ones no single node owns — nodes that pass in isolation failing in composition, fan-out multiplying spend past every per-node cap while each reads green, an uncalibrated node lending a path autonomy it never earned, and an escalation path that forks so no human is on the hook (Part IV, *License Composition*; [`CHECKLIST`](../../../templates/graph-license/CHECKLIST.md)).
+**Why:** a graph of licensed loops is not a licensed graph. The failures that hurt are exactly the ones no single node owns — nodes that pass in isolation failing in composition, fan-out multiplying spend past every per-node cap while each reads green, an uncalibrated node lending a path oversight relief it never earned, and an escalation path that forks so no human is on the hook (Part IV, *License Composition*; [`CHECKLIST`](../../../templates/graph-license/CHECKLIST.md)).
 
 **Common gap:** the topology is drawn in an SOP or a system prompt and then cited as a control, though nothing in the runtime prevents a different route (anti-pattern 18).
 

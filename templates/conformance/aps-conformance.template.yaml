@@ -137,7 +137,7 @@ items:
   obs.telemetry-pinned: {status: no, evidence: ""}
   # (M2 · DoD 29) Prompt and completion content is not captured in traces by default; capture is enabled by a written policy with retention and access limits.
   obs.no-content: {status: no, evidence: ""}
-  # (M3 · DoD 29) Traces capture the trajectory, not just the final answer.
+  # (M3) Traces capture the trajectory, not just the final answer.
   obs.trajectory: {status: no, evidence: ""}
   # (M3) Online evals run on completed production threads; failing traces feed the offline set.
   eval.online: {status: no, evidence: ""}
@@ -177,7 +177,7 @@ items:
   meas.inter-judge: {status: no, evidence: ""}
   # (M2 · DoD 23) Input and behavior drift monitored vs. the eval distribution with a declared refresh policy (behavior drift at autonomy ≥ L2).
   meas.drift: {status: no, evidence: ""}
-  # (M3 · DoD 23) Provider-hosted models are canaried on a cadence; a detected silent change triggers the eval regression gate before continued reliance.
+  # (M3) Provider-hosted models are canaried on a cadence; a detected silent change triggers the eval regression gate before continued reliance.
   meas.canary: {status: no, evidence: ""}
   # (M2 · DoD 33) Wherever a human approval counts as a control, override rate and approval latency (p50/p95) are tracked per queue, and a rubber-stamp alarm triggers a review.
   meas.automation-bias: {status: no, evidence: ""}

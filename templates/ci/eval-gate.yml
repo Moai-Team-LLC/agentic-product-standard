@@ -10,6 +10,13 @@
 # only when their thresholds below are set — set them for anything the Loop
 # License covers (oversight O1+): the license gates on pass^5, and at O2 on the
 # legitimacy rate from your success-legitimacy audit (DoD 16, 30).
+#
+# Two kinds of gate run here. Absolute floors (MIN_*) say "never ship below this".
+# The regression gate says "never ship worse than main": it compares this run with
+# a baseline report committed to the repo (BASELINE_FILE, same JSON contract) and
+# fails when any metric drops by more than MAX_REGRESSION. That comparison is what
+# DoD 12 and Loop License gate 2 require. Update the baseline deliberately, in the
+# PR that moves it, so the change is a reviewed diff (like a snapshot test).
 
 name: eval-gate
 
@@ -19,10 +26,12 @@ on:
     branches: [main]
 
 env:
-  MIN_PASS_RATE: "0.90"        # pass@1 — the autonomy escalation gate (≥90%)
+  MIN_PASS_RATE: "0.90"        # pass@1 floor — ≥90% is also the bar for climbing autonomy (Canon 1)
   MIN_PASS_K: ""               # e.g. "0.80" — pass^k floor your Loop License declares (O1+)
   EXPECTED_K: "5"              # the k your pass^k must be measured at
   MIN_LEGITIMACY_RATE: ""      # e.g. "0.95" — legitimacy floor from your audit (O2)
+  BASELINE_FILE: "evals/baseline.json"   # the report main is held to; "" disables the regression gate
+  MAX_REGRESSION: "0.00"       # allowed drop per metric vs. the baseline (absorb eval noise, not regressions)
 
 jobs:
   evals:
@@ -45,7 +54,7 @@ jobs:
           # described above as its final line. Capture the whole output.
           python -m evals --report json | tee eval-output.txt
 
-      - name: Gate on pass@1, pass^k and legitimacy
+      - name: Gate on pass@1, pass^k, legitimacy, and regression vs. baseline
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -73,6 +82,21 @@ jobs:
               print(f"::error::pass^k measured at k={report.get('k')}, expected k={os.environ['EXPECTED_K']}"); failed = True
           gate("pass_k", "MIN_PASS_K", f"pass^{os.environ['EXPECTED_K']}")
           gate("legitimacy_rate", "MIN_LEGITIMACY_RATE", "legitimacy rate")
+          base_path = os.environ.get("BASELINE_FILE", "").strip()
+          if base_path:
+              if not os.path.exists(base_path):
+                  print(f"::error::no baseline at {base_path} — commit one (a report from main) or set BASELINE_FILE to \"\"")
+                  failed = True
+              else:
+                  base = json.load(open(base_path, encoding="utf-8"))
+                  tol = float(os.environ.get("MAX_REGRESSION", "0") or 0)
+                  for key in ("pass_rate", "pass_k", "legitimacy_rate"):
+                      if key in base and key in report:
+                          drop = float(base[key]) - float(report[key])
+                          ok = drop <= tol + 1e-9   # float noise, not a regression
+                          print(f"{key}: {float(report[key]):.3f} vs. baseline {float(base[key]):.3f} {'ok' if ok else 'REGRESSION'}")
+                          if not ok:
+                              print(f"::error::{key} regressed by {drop:.3f} against {base_path} (tolerance {tol})"); failed = True
           sys.exit(1 if failed else 0)
           PY
 

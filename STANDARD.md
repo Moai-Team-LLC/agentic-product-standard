@@ -188,7 +188,7 @@ Choose by the dominant requirement:
 
 **Freshness is part of the memory model.** Resources and lists fetched over MCP now carry caching hints (`ttlMs`, `cacheScope` on `resources/read` and the `*/list` methods — tool-call results carry none): treat the TTL as the freshness contract for anything you persist from them, invalidate on change notifications, and never serve a `private`-scoped entry outside the authorization context it was fetched under — a different access token means a different cache, and a different user or tenant never shares one (DoD 32).
 
-The reference implementation of this layer is **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** — citation-enforced knowledge & memory served headlessly over MCP, self-hostable on Postgres + pgvector. Bring-your-own (Mem0 / Zep / Letta / files) stays fine (Principle 2); this is the paved road, not a mandate. See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
+The reference implementation of this stack section is **[AgenticMind](https://github.com/Moai-Team-LLC/AgenticMind)** — citation-enforced knowledge & memory served headlessly over MCP, self-hostable on Postgres + pgvector. Bring-your-own (Mem0 / Zep / Letta / files) stays fine (Principle 2); this is the paved road, not a mandate. See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
 
 ### Stack 5: Durable execution — **mandatory**
 
@@ -222,7 +222,7 @@ Options:
 
 **Distinguish LLM observability from agent observability.** LLM observability is per-call (tokens, latency, cost); **agent observability** is trajectory-, multi-turn-, and session-level (did the agent take a sane path?). You need both. Run **online / production evals**: evaluators on completed threads, with failing live traces routed back into the offline eval set.
 
-The reference implementation of this layer is **[AgenticPerformance (APL)](https://github.com/Moai-Team-LLC/AgenticPerformance)** — OTel traces → per-agent golden-set evals with a CI gate, a named failure taxonomy, and a governed improvement loop. Bring your own (LangSmith / Langfuse / Braintrust / Phoenix) is fine (Principle 2); this is the paved road, not a mandate. See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
+The reference implementation of this stack section is **[AgenticPerformance (APL)](https://github.com/Moai-Team-LLC/AgenticPerformance)** — OTel traces → per-agent golden-set evals with a CI gate, a named failure taxonomy, and a governed improvement loop. Bring your own (LangSmith / Langfuse / Braintrust / Phoenix) is fine (Principle 2); this is the paved road, not a mandate. See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
 
 ### Stack 7: Framework selection
 
@@ -241,7 +241,7 @@ The deciding factor is the **dominant constraint**, not the hype:
 | MCP-native + Temporal | **mcp-agent (lastmile-ai)** |
 | .NET / enterprise Microsoft stack | **Microsoft Agent Framework (1.0 GA)** |
 
-**2026 framework reality (verify before quoting — this layer ages fastest):**
+**2026 framework reality (verify before quoting — this section ages fastest):**
 - **Microsoft Agent Framework 1.0 went GA (April 2026)** and supersedes both AutoGen and Semantic Kernel, which are now in maintenance mode. Reframe any "AutoGen" reference as **AG2** (the community fork) or **MAF**.
 - The vendor SDKs — **OpenAI Agents SDK, Google ADK, Claude Agent SDK** — are all production-grade as of 2026.
 - **LangGraph** is the stateful-workflow default; **Pydantic AI** is the type-safe pick; **CrewAI** is fastest for role-based prototyping.
@@ -271,7 +271,7 @@ Security is Principle 6 and the 8th harness layer. It is the largest gap in most
 
 > **Runnable:** [`templates/security/`](templates/security/README.md) ships a red-team kit — a lethal-trifecta gate, indirect-prompt-injection test cases, and an MCP tool-definition hash-pinning / rug-pull detector.
 
-The reference implementation for red-teaming this layer is **[AgenticAssurance (AAL)](https://github.com/Moai-Team-LLC/AgenticAssurance)** — an OWASP-Agentic / MITRE-ATLAS attack library plus a toxic-flow graph that finds lethal-trifecta / RCE composition paths single-prompt scanners miss, emitting SARIF for CI code-scanning. It operationalizes the lethal-trifecta check above; framework-neutral, not a runtime guardrail (Principle 2). See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
+The reference implementation for red-teaming this stack section is **[AgenticAssurance (AAL)](https://github.com/Moai-Team-LLC/AgenticAssurance)** — an OWASP-Agentic / MITRE-ATLAS attack library plus a toxic-flow graph that finds lethal-trifecta / RCE composition paths single-prompt scanners miss, emitting SARIF for CI code-scanning. It operationalizes the lethal-trifecta check above; framework-neutral, not a runtime guardrail (Principle 2). See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
 
 ### Stack 9: Cost & FinOps — **cross-cutting**
 
@@ -285,7 +285,7 @@ Make cost a first-class engineering constraint, not a month-end surprise:
 - **The multi-agent economics rule:** only pay the 15× when the task value justifies it. If a single agent clears the bar, the orchestra is waste.
 - **Re-derive ceilings on every model change.** A ceiling is a number of tokens at a price; both move with the model. When Anthropic released Claude Opus 5.5 (Sep 2026) it priced input and output tokens 20% below Opus 5 and cache reads — most of an agent's token bill — 60% below, and put typical workload cost 40% lower at default settings — a ceiling copied from the old model is now either loose or meaningless. The model-swap runbook re-measures cost per task and re-derives ceilings and routing before the swap ships (DoD 15).
 
-The reference implementation of this layer (together with Stack 1) is **[AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway)** — per-run/tenant cost ceilings enforced in code, prompt + semantic caching, and eval-sourced routing behind one OpenAI-compatible key. Bring your own gateway (LiteLLM / Portkey / raw Bifrost) is fine (Principle 2); this is the paved road, not a mandate. See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
+The reference implementation of this stack section (together with Stack 1) is **[AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway)** — per-run/tenant cost ceilings enforced in code, prompt + semantic caching, and eval-sourced routing behind one OpenAI-compatible key. Bring your own gateway (LiteLLM / Portkey / raw Bifrost) is fine (Principle 2); this is the paved road, not a mandate. See the [`reference-stack`](skills/agentic-product-architect/reference-stack/SKILL.md) skill.
 
 ---
 
@@ -330,21 +330,21 @@ An agentic product is **not production-ready** until every item below that binds
 - [ ] **17.** *(At autonomy L3+ or oversight O1+)* Stop conditions declared in the Agent Contract and enforced by the runner: max iterations, token/time/spend budgets, timeout, escalation after N consecutive failures (Part IV)
 - [ ] **18.** *(At oversight O1 or O2)* Independent verification: the producing model does not grade its own work; deterministic checks first; any LLM judge is calibrated (items 11 and 20) and decorrelated from the writer; the checks, graders, and eval sets sit outside the agent's write scope (Part IV)
 - [ ] **19.** *(At oversight O1 or O2)* Loop economics: cost per run and cost per *verified* outcome tracked in traces; per-run and per-window cost caps declared (Part IV · Layer 9)
-- [ ] **30.** *(At oversight O2)* A sample of runs scored as successful is reviewed each release for **illegitimate success** — tampered or skipped tests, special-cased graders, hard-coded outputs, work routed around a check; the **legitimacy rate** is published with the eval results and gates promotion alongside the pass rate (Part IV · *Independent verification*)
+- [ ] **30.** *(At oversight O2)* A sample of runs scored as successful is reviewed each release for **illegitimate success** — tampered or skipped tests, special-cased graders, hard-coded outputs, work routed around a check; the **legitimacy rate** is published with the eval results and gates promotion alongside the pass rate (Part IV · *Success legitimacy*)
 
 ### Measurement science and human oversight
 - [ ] **20.** *(Wherever an LLM judge gates O1+ operation, auto-apply, or release)* The gating judge has **documented calibration** — accuracy + calibration error (ECE/Brier) against an anchored ground-truth sample within a declared recency window; no unvalidated verbalized confidence used as a gating signal (Part V · *Judge calibration*)
 - [ ] **21.** *(Wherever memory or retrieval is used)* Memory/retrieval components evaluated with **retrieval metrics** (≥ Recall@k, MRR) on a labeled set, independently of end-to-end task evals; embedding/chunking/index changes pass a declared **retrieval regression gate** (Part V · *Retrieval evaluation* · Stack 4)
 - [ ] **22.** Golden sets declare **labeling provenance** (rubric version, labeler type, date, agreement); unanchored sets do not back a license or release gate; rubrics are versioned instruction artifacts with judge re-baselining on change (Part V · *Ground-truth discipline* · Part IV)
-- [ ] **23.** Input drift monitored vs. the eval distribution with a declared **eval-refresh policy**; provider-hosted models canaried, a detected change triggering the eval regression gate (item 12) (Part V · *Drift monitoring*)
-- [ ] **33.** *(Wherever a human approval counts as a control; the oversight plan at O1+)* Human approval and review are run as a program: **override rate** and **approval latency** (p50/p95) are measured per queue, and a **rubber-stamp alarm** — near-total approval at latencies too short to have read the action — triggers a review; at **O1+** the Loop License declares the oversight plan (sampling schedule per mode, reviewer SLA, re-escalation triggers) and reviews are captured as stratified labeled data (Part V · *Human oversight*)
+- [ ] **23.** Input drift monitored vs. the eval distribution with a declared **eval-refresh policy**; where the product relies on provider-hosted models, a detected silent model change triggers the eval regression gate (item 12) before continued reliance — scheduled canary evaluations are the recommended detector (Part V · *Drift monitoring*)
+- [ ] **33.** Wherever a human approval counts as a control — every per-action approval at O0, every P6 gate at any mode — approval and review are run as a program: **override rate** and **approval latency** (p50/p95) are measured per queue, and a **rubber-stamp alarm** — near-total approval at latencies too short to have read the action — triggers a review; at **O1+** the Loop License declares the oversight plan (sampling schedule per mode, reviewer SLA, re-escalation triggers) and reviews are captured as stratified labeled data (Part V · *Human oversight*)
 
 ### Gate integrity
 - [ ] **24.** No safety-class gate is disabled repo-wide to pass CI — a correctness test, type-safety (`no-unsafe-*` / `no-explicit-any`), security lint, or a coverage/mutation floor; a false positive is scoped to a file/glob with a named reason and the gate re-proven to still fire (Canon 5, *gate-integrity invariant*). Binds wherever such a gate exists.
 
 ### Composition (multi-agent)
-- [ ] **25.** *(Any graph of agents operating at O1+)* **Graph License** held: the six gates re-evaluated at graph scope (graph-level golden tasks, regression gate, blast radius as the union of node radii **plus** the shared state store, per-node **and** aggregate cost caps, a kill switch tested against in-flight parallel branches, one named escalation owner); the **weakest-link bound** holds on every path to an external action; shared state carries writer provenance and verification status; every fan-in is a declared verification point or a rationalized pass-through; every edge class is marked **enforced** or **declared**, and declared-only edges are not counted as controls (Part IV · [`CHECKLIST`](templates/graph-license/CHECKLIST.md))
-- [ ] **28.** *(Wherever work is delegated across a trust boundary)* Before delegating across a trust boundary — another organization, vendor, or independently operated service, typically over A2A — the peer's **signed Agent Card is verified** (JWS over the JCS-canonicalized card, keys from a trusted keystore or an allow-listed `jku` origin); unsigned or unverifiable peers fail closed; the delegated scope never exceeds the delegator's own; the peer's output enters as untrusted input (Part IV · *Edges are ingestion boundaries*)
+- [ ] **25.** *(Any graph of agents operating at O1+)* **Graph License** held: the six gates re-evaluated at graph scope (pass@1 **and** pass^5 on graph-level golden tasks — plus the legitimacy rate at O2 — regression gate, blast radius as the union of node radii **plus** the shared state store, per-node **and** aggregate cost caps, a kill switch tested against in-flight parallel branches, one named escalation owner); the **weakest-link bound** holds on every path to an external action; shared state carries writer provenance and verification status; every fan-in is a declared verification point or a rationalized pass-through; every edge class is marked **enforced** or **declared**, and declared-only edges are not counted as controls (Part IV · [`CHECKLIST`](templates/graph-license/CHECKLIST.md))
+- [ ] **28.** *(Wherever work is delegated across a trust boundary)* Before delegating across a trust boundary — another organization, vendor, or independently operated service, typically over A2A — the peer's **signed Agent Card is verified** (JWS over the JCS-canonicalized card, keys from a trusted keystore or an allow-listed `jku` origin); unsigned or unverifiable peers fail closed; the delegated scope never exceeds the delegator's own; the peer's output enters as untrusted input (Stack 8 · *Inter-agent trust*; Part IV · *Edges are ingestion boundaries*)
 
 ### Governance and regulation
 - [ ] **31.** *(Wherever the product is exposed to a regulated jurisdiction, e.g. EU users)* A written record states the jurisdictions the product is exposed to and, for each regime, the product's **role** and **risk class** — under the EU AI Act: provider or deployer; prohibited, high-risk (Annex I or III), transparency (Art. 50), or minimal; general-purpose-model dependencies — with the application dates that bind it; the record has an owner and is re-reviewed whenever the intended purpose, user base, or model changes ([`CROSSWALK`](CROSSWALK.md))
@@ -399,7 +399,7 @@ A check the agent can satisfy without doing the task measures its skill at satis
 
 ### Stop conditions & fail paths
 
-An unattended loop with no declared way to stop is the defining L4 anti-pattern.
+A loop with no declared way to stop is the defining anti-pattern of both axes: an autonomous loop (L3+) runs until something outside it intervenes, and a loop nobody approves step by step (O1+) runs until someone notices. Stop conditions therefore bind on either condition.
 
 > **MUST — every agent spec at L3+ or O1+ declares, and the runner enforces:**
 > - **Max iterations** — a hard turn/step ceiling per run.
@@ -451,7 +451,7 @@ The standard fixes **what** to measure and declare, not **how**: the reference i
 Two properties decide whether a loop is operable, and both MUST be **declared during design, not reconstructed after an incident**:
 
 > **MUST — the Agent Contract declares, at architecture time:**
-> - **The operating point** — the autonomy level and the oversight mode the system runs at (Canon 1). What runs in production must match what was licensed; relaxing oversight is a release, not a toggle.
+> - **The operating point** — the autonomy level and the oversight mode the system runs at (Canon 1). Every system declares one; for a licensed loop it is what the license was issued against. What runs in production must match what was licensed; relaxing oversight is a release, not a toggle.
 > - **The memory model** — what the loop persists, for how long (retention), where it came from (provenance), and whether a past run can be **replayed** from it. *"Where does the state live on step 7?"* must have an answer on the whiteboard, not in a post-mortem.
 > - **The determinism map** — which steps are deterministic (pure functions, tools, checks) and which are model-driven, so durability, replay, and verification attach to the right steps (Stack 5). A loop whose determinism boundary is unknown cannot be made durable or independently verified.
 
@@ -464,7 +464,7 @@ Wiring loops into a graph — nodes doing work, edges routing between them, shar
 It binds the **topology, not the runtime**: the requirements below take no position on which framework draws the graph (that is Stack 7's question), and they hold whether the edges are a runtime construct, a set of queues, or an orchestrator calling sub-agents.
 
 > **MUST — no license inheritance by wiring.** A graph of licensed loops is not itself licensed. A graph operating at **O1+** MUST hold its own **Graph License**: the six gates, re-evaluated at *graph* scope.
-> 1. **Eval pass-rate threshold** on **graph-level golden tasks** — end-to-end outcomes, not the union of per-node suites. Nodes that each pass in isolation routinely fail in composition.
+> 1. **Eval threshold** on **graph-level golden tasks** — **pass@1** *and* **pass^5** on end-to-end outcomes, not the union of per-node suites, plus the legitimacy-rate floor at O2. Nodes that each pass in isolation routinely fail in composition.
 > 2. **Regression gate** on that graph-level set (DoD 12).
 > 3. **Declared blast radius** — the **union** of every node's radius **plus the shared state store**, which is a blast surface in its own right.
 > 4. **Cost caps — per-node *and* aggregate.** Fan-out multiplies burn: per-node caps alone do not bound a graph, because the graph's spend is the product of its branching, not the max of its nodes.
@@ -544,7 +544,7 @@ The market narrates its craft as a ladder of five layers. The ladder is a useful
 
 ## Part V. Eval discipline & measurement science (per Husain/Shankar)
 
-This discipline matters more than the choice of framework. The rules below set the shape of an eval program; the *measurement science* subsections that follow set what makes its numbers trustworthy — because an autonomy license (Part IV) is only as sound as the evals and judges behind it.
+This discipline matters more than the choice of framework. The rules below set the shape of an eval program; the *measurement science* subsections that follow set what makes its numbers trustworthy — because a Loop License (Part IV) is only as sound as the evals and judges behind it.
 
 ### The three-level eval pyramid
 
@@ -573,7 +573,7 @@ This discipline matters more than the choice of framework. The rules below set t
 
 *Reference benchmarks (as orientation, never as ground truth — see anti-pattern 12): τ-bench / τ²-bench (policy adherence, dual-control), SWE-bench Verified, GAIA, TerminalBench, WebArena. LLM-as-judge agrees with humans ~85% of the time but carries position / verbosity / self-preference bias — keep judges binary and calibrated.*
 
-> **Runnable:** [`templates/ci/eval-gate.yml`](templates/ci/eval-gate.yml) is a copy-paste CI workflow that blocks a merge when the eval pass-rate drops below the ≥90% gate (DoD item 12) — and, when your eval report carries them, when `pass^5` or the legitimacy rate drops below the thresholds your Loop License declares.
+> **Runnable:** [`templates/ci/eval-gate.yml`](templates/ci/eval-gate.yml) is a copy-paste CI workflow that blocks a merge when any eval metric regresses against the baseline main is held to (DoD item 12), or falls below its floor — pass@1 ≥ 90%, and, when your eval report carries them, the `pass^5` and legitimacy-rate thresholds your Loop License declares.
 
 ### Judge calibration & bias
 
@@ -584,7 +584,7 @@ This discipline matters more than the choice of framework. The rules below set t
 > - **never** uses unvalidated verbalized confidence as the gating signal — use validated self-consistency or swap-consistency;
 > - pairwise judging **MUST** randomize order or apply a swap-consistency check.
 >
-> Judges **SHOULD** be screened for position, verbosity, and self-preference bias. A judge's **calibration status is an input to the Loop License** (Part IV): an uncalibrated judge invalidates the license for the levels it gates, and its low-confidence verdicts abstain and escalate rather than passing. *(Reference artifact: the versioned **Judge Card** — AgenticPerformance.)*
+> Judges **SHOULD** be screened for position, verbosity, and self-preference bias. A judge's **calibration status is an input to the Loop License** (Part IV): an uncalibrated judge invalidates the license for the oversight modes it gates, and its low-confidence verdicts abstain and escalate rather than passing. *(Reference artifact: the versioned **Judge Card** — AgenticPerformance.)*
 
 *Compliance note: supports EU AI Act Art. 15 (accuracy & robustness) declarations.*
 
@@ -605,7 +605,7 @@ Retrieval failures and reasoning failures are different diseases; an end-to-end 
 A golden set is only as trustworthy as its labels. A **rubric** (rater guideline) is the written labeling standard — definitions, positive and negative examples, edge-case rules; on this line **LLM judges are raters and rubrics are their guidelines**. Measure **inter-annotator agreement (IAA)** with chance-corrected statistics — **Cohen's κ** (two raters), **Fleiss' κ** (n raters), **Krippendorff's α** (missing data / ordinal); conventional bands: 0.6–0.8 substantial, >0.8 strong. Diagnostically, sustained κ < 0.6 signals an **ambiguous rubric**; sustained κ > 0.95 between "independent" judges signals **suspected correlation** → run a decorrelation review. **Gold questions** (known-answer probes mixed into the judging stream) QA the judge continuously; **adjudication** (a third judge or a human) resolves disagreements, and adjudicated items are the highest-grade golden material. A golden set without **labeling provenance** is **unanchored** — you cannot know what its pass rate means.
 
 > **MUST:**
-> - Golden sets declare **labeling provenance**: rubric version, labeler type, label date, and agreement statistics where multiple labelers were used. **Unanchored sets MUST NOT back an autonomy license or a release gate;**
+> - Golden sets declare **labeling provenance**: rubric version, labeler type, label date, and agreement statistics where multiple labelers were used. **Unanchored sets MUST NOT back a Loop License, an autonomy escalation, or a release gate;**
 > - judge **rubrics are versioned instruction artifacts** under the Instruction Supply Chain (Part IV) — a rubric change **MUST trigger judge re-baselining**.
 >
 > Multi-judge verification **SHOULD** monitor inter-judge agreement: sustained near-perfect agreement **MUST** trigger a decorrelation review, sustained low agreement a rubric review. Judges **SHOULD** be qualified against gold questions before gating duty and monitored with gold probes after.

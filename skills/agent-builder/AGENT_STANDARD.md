@@ -26,7 +26,7 @@ The core principle:
 
 Default to deterministic software. Add agency only where the path cannot be fully predefined.
 
-A note on terminology used throughout this document: **autonomy levels (L0–L4)** describe *how much* control flow the model owns; **permission tiers (P0–P6)** describe *how dangerous* a tool's side effects are. They are two distinct scales — never conflate them.
+A note on terminology used throughout this document: **autonomy levels (L0–L4)** describe *how much* control flow the model owns; **oversight modes (O0–O2)** describe *whether a human approves* each consequential action; **permission tiers (P0–P6)** describe *how dangerous* a tool's side effects are — and "consequential" means P3+. They are three distinct scales — never conflate them.
 
 ---
 
@@ -253,9 +253,9 @@ Two disciplines make the license real:
   provenanced, eval-gated before deploy, regression-tested on update (OWASP LLM03).
 
 A judge's calibration status is an input to the license: an uncalibrated judge
-invalidates it for the levels that judge gates (Doctrine 5). Declare the stop
+invalidates it for the oversight modes that judge gates (Doctrine 5). Declare the stop
 conditions, memory model, determinism map, the operating point, and — at `O1+` — the
-**human-oversight plan** (sampling schedule per level, reviewer SLA, re-escalation triggers) in the
+**human-oversight plan** (sampling schedule per oversight mode, reviewer SLA, re-escalation triggers) in the
 Agent Contract at design time. Full treatment: `STANDARD.md` Part IV; the one-page
 gate is `templates/loop-license/CHECKLIST.md`.
 
@@ -491,11 +491,11 @@ What must be written to trace.
 ## 14. Stop Conditions *(required at L3+ or O1+)*
 Max iterations, token/time/spend budgets, timeout, and escalation after N consecutive failures.
 
-## 15. Memory Model *(required at L3+ or O1+)*
+## 15. Memory Model *(required at O1+; recommended at L3+)*
 What is persisted, retention, provenance, and whether a run is replayable from it.
 
-## 16. Determinism Map & Operating Point *(required at L3+ or O1+)*
-Which steps are deterministic (tools, checks, pure functions) vs. model-driven. The operating point (`L0–L4 · O0–O2`), and which consequential actions, if any, run without per-action approval.
+## 16. Operating Point & Determinism Map *(operating point: every agent; determinism map: required at O1+, recommended at L3+)*
+The operating point (`L0–L4 · O0–O2`), and which consequential actions, if any, run without per-action approval. Which steps are deterministic (tools, checks, pure functions) vs. model-driven.
 
 ## 17. Identity
 The agent's own non-human identity, its credential lifetime and scopes, and who may delegate work to it.
@@ -1005,15 +1005,17 @@ What must be logged.
 
 ## Permission Tiers
 
-| Tier | Type | Examples | Approval |
-|---|---|---|---|
-| P0 | Read | retrieve document, inspect state | No |
-| P1 | Draft | create draft, suggest plan | No |
-| P2 | Internal Write | save draft, update internal task state | Usually no |
-| P3 | External Write | publish page, update external CRM | Yes |
-| P4 | Financial | create charge, change price, issue refund | Yes |
-| P5 | Communication | send email, message user, notify customer | Yes |
-| P6 | Destructive | delete data, revoke access, overwrite production | Always yes |
+| Tier | Type | Examples | Approval at O0 | Approval at O1 / O2 |
+|---|---|---|---|---|
+| P0 | Read | retrieve document, inspect state | No | No |
+| P1 | Draft | create draft, suggest plan | No | No |
+| P2 | Internal Write | save draft, update internal task state | Usually no | Usually no |
+| P3 | External Write | publish page, update external CRM | Yes, per action | Inside the Loop License's declared blast radius; outside it, per action |
+| P4 | Financial | create charge, change price, issue refund | Yes, per action | Inside the declared blast radius and cost ceilings; outside them, per action |
+| P5 | Communication | send email, message user, notify customer | Yes, per action | Inside the declared blast radius; outside it, per action |
+| P6 | Destructive | delete data, revoke access, overwrite production | Always, per action | Always, per action |
+
+The oversight mode decides who approves P3–P5. At O0 a human approves each action. At O1/O2 the Loop License's declared blast radius is the approval, and anything outside it escalates to a human. P6 is approved per action at every mode.
 
 ## Tool Design Rules
 
@@ -1045,16 +1047,14 @@ propose tool call
 - Use sandboxing where possible.
 - Separate read tools from write tools.
 - Separate draft creation from publishing.
-- Require approval for external side effects (P3+).
-- Require approval for financial actions (P4).
-- Require approval for external communication (P5).
-- Always require approval for destructive actions (P6).
+- Gate external writes (P3), financial actions (P4), and external communication (P5). At O0, a human approves each one. At O1+, they run only inside the Loop License's declared blast radius, and anything outside it escalates to a human.
+- Always require per-action approval for destructive actions (P6), at every oversight mode.
 - Log every tool call with input summary and output summary.
 - Never let the model invent tool names.
 - Never let tool permissions live only in the prompt.
 - **Pin MCP tool definitions by cryptographic hash and alert on any change** — a server can mutate a tool's description after you approved it (rug pull / tool poisoning). Install community servers only from an allow-listed registry, version-pinned and signature-checked. Treat every external MCP server as untrusted supply chain.
 - **Run the lethal-trifecta check on the tool set as a whole:** if the agent can reach private data, ingest untrusted content, *and* communicate externally, break one leg before shipping (see Doctrine 7).
-- **Writes are earned, not standing.** Default the session to read-only; a P3+ mutation requires explicit, time-bounded, scoped *elevation* confirmed **out-of-band** — through a channel the agent cannot read (the agent must never see the OTP/secret, or it can self-approve). Each write cites its exact target; destructive (P6) actions get a dry-run preview first. Credential reads return metadata only, never the secret. (Full pattern: the `tool-design-mcp` skill's `SECURE-WRITE-ACTIONS.md`.)
+- **Writes are earned, not standing.** Default the session to read-only; a P3+ mutation requires explicit, time-bounded, scoped *elevation* confirmed **out-of-band** — through a channel the agent cannot read (the agent must never see the OTP/secret, or it can self-approve). Each write cites its exact target; destructive (P6) actions get a dry-run preview first. Credential reads return metadata only, never the secret. At O1+ the Loop License is the standing elevation for P3–P5 inside its declared blast radius. Anything outside that radius, and every P6 action, still needs out-of-band elevation. (Full pattern: the `tool-design-mcp` skill's `SECURE-WRITE-ACTIONS.md`.)
 
 ## Tenant Isolation
 
@@ -1119,7 +1119,7 @@ Human-in-the-loop is a load-bearing pattern, not an afterthought. Use three conc
 
 Required design points:
 - **Interrupt between tool selection and tool invocation** for high-blast-radius actions.
-- Require explicit approval before any P3+ side effect.
+- Require explicit approval before any P3+ side effect at O0. At O1+, require it before any P3+ side effect outside the Loop License's declared blast radius. At every mode, require it before any P6 action.
 - Prefer an "agent inbox" UX where a human reviews queued actions before they execute.
 
 ---
@@ -1309,9 +1309,8 @@ Determine whether an agentic system is safe and reliable enough for production.
 - [ ] Active tool count is < 20 per agent (or RAG-over-tools is used).
 - [ ] Tool inputs are schema-validated.
 - [ ] Permissions are enforced in code.
-- [ ] Destructive actions require approval.
-- [ ] Financial actions require approval.
-- [ ] External communication requires approval.
+- [ ] Destructive actions (P6) require per-action approval at every oversight mode.
+- [ ] External writes, financial actions, and external communication (P3–P5) require approval. At O0 that is per action; at O1+ it is a Loop License's declared blast radius, with anything outside it escalated.
 - [ ] Tool calls are logged.
 
 ### Tenant Isolation (if multi-tenant)
@@ -1530,7 +1529,7 @@ Implementation requirements:
 - All handoffs must be explicit.
 - All outputs must be schema-validated.
 - All tools must go through permission checks.
-- All external side effects must require approval.
+- All external side effects must require approval. At O0 that is per action; at O1+ it is the Loop License's declared blast radius. P6 is always per action.
 - All runs must be traceable.
 - The system must support retry and partial failure recovery.
 
@@ -1568,7 +1567,7 @@ Evaluate:
 7. Are tools allowlisted and kept under ~20 active?
 8. Are permissions enforced in code?
 9. Are side effects classified (P0–P6)?
-10. Are approval gates present for P3+ actions?
+10. Are approval gates present for P3+ actions? At O0 that means per action; at O1+, a Loop License. P6 is always per action.
 11. Are retries, timeouts, and idempotency handled?
 12. Are traces emitted for every run?
 13. Are evals present and judges calibrated?
@@ -1596,9 +1595,9 @@ Return:
 4. Do not pass raw sub-agent transcripts to parent agents.
 5. Do not let agents communicate through unstructured free-form text when state matters.
 6. Do not rely on prompts for permission enforcement.
-7. Do not let agents perform destructive actions without approval.
-8. Do not let agents perform financial actions without approval.
-9. Do not let agents send external communications without approval.
+7. Do not let agents perform destructive actions without per-action approval, at any oversight mode.
+8. Do not let agents perform financial actions without approval — per action, or inside a Loop License's declared blast radius (rule 23).
+9. Do not let agents send external communications without approval — per action, or inside a Loop License's declared blast radius (rule 23).
 10. Do not treat memory as a dumping ground.
 11. Do not use LLM-as-judge where code assertions are enough.
 12. Do not use LLM-as-judge without calibrating against human labels.

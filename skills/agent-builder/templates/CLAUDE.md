@@ -8,14 +8,14 @@
 {One paragraph: the product, and the one part an LLM dynamically directs.}
 
 ## Operating point
-{L0–L4 · O0–O2} — autonomy (who picks the next step) × oversight (whether a human approves each consequential action). Do not climb autonomy without eval evidence (≥90% pass@1); do not relax oversight below O0 without a Loop License.
+{L0–L4 · O0–O2} — autonomy (who picks the next step) × oversight (whether a human approves each consequential action). Do not climb autonomy without eval evidence (≥90% pass@1); do not relax oversight beyond O0 (to O1 or O2) without a Loop License.
 
 ## What the agent owns / must not do
 - Owns: {the primary artifact}
 - Must NOT: {forbidden actions; the permission boundary}
 
 ## Permission tiers in play
-{Which P-tiers exist here, and which require human approval. P3+ always gated.}
+{Which P-tiers exist here, and how each is gated. At O0, P3+ needs per-action approval; at O1+, only inside the Loop License's declared blast radius. P6 always needs per-action approval.}
 
 ## Where state lives
 {Externalized store / files — never only the context window. Keep utilization under the measured context budget (~40% of the window until measured).}
