@@ -1,0 +1,11 @@
+# AITM-SMB Release Candidate Status
+
+AITM-SMB `0.7.0` completed pre-1.0 semantic consolidation.
+
+AITM-SMB `1.0.0` is the stable release produced from that candidate.
+
+See:
+
+- `RELEASE_NOTES_1.0.md`
+- `audits/1.0_RELEASE_AUDIT.md`
+- `PUBLIC_API.md`
