@@ -436,8 +436,19 @@ def section(text, title):
     return "\n".join(out)
 
 
+def skill_outputs(skills):
+    """Map artifact path -> set of skills whose `## Produces` names it."""
+    out = {}
+    for name in skills.values():
+        text = read(os.path.join(ROOT, "skills", name, "SKILL.md"))
+        for token in set(re.findall(r"artifacts/[\w.-]+\.md", section(text, "Produces"))):
+            out.setdefault(token, set()).add(name)
+    return out
+
+
 def check_artifacts(version, prefixes, skills, rep):
     art_dir = os.path.join(ROOT, "artifacts")
+    outputs = skill_outputs(skills)
     index_text = read(os.path.join(art_dir, "INDEX.md"))
     for name in sorted(os.listdir(art_dir)):
         if not name.endswith(".md") or name in ("INDEX.md", "_ARTIFACT_CONTRACT.md"):
@@ -484,6 +495,11 @@ def check_artifacts(version, prefixes, skills, rep):
         for skill in produced:
             if skill not in skills.values():
                 rep.error(relpath, "produced_by names unknown skill `%s`" % skill)
+        declared, actual = set(produced), outputs.get("artifacts/" + name, set())
+        for skill in sorted(actual - declared):
+            rep.error(relpath, "skill `%s` produces this artifact but is not in produced_by" % skill)
+        for skill in sorted(declared - actual):
+            rep.error(relpath, "produced_by lists `%s` but its `## Produces` does not name this artifact" % skill)
         heads = headings(text)
         for h in ("Purpose", "Validation"):
             if not any(x.startswith(h) for x in heads):
@@ -639,6 +655,15 @@ def ids_in(value):
     return found
 
 
+def is_missing_marker(value):
+    """TRACEABILITY.md: a missing link is recorded visibly as `MISSING:<reason>`."""
+    if isinstance(value, str):
+        return value.strip().startswith("MISSING")
+    if isinstance(value, list):
+        return any(isinstance(v, str) and v.strip().startswith("MISSING") for v in value)
+    return False
+
+
 def field_ids(record, *names):
     found = set()
     for name in names:
@@ -646,8 +671,8 @@ def field_ids(record, *names):
     return found
 
 
-def run_engagement(target, rep):
-    prefixes = registered_prefixes()
+def run_engagement(target, rep, extra_prefixes=()):
+    prefixes = registered_prefixes() | set(extra_prefixes)
     gates = declared_gates()
     files = list_files(target, (".md", ".yaml", ".yml"))
     records, references = [], {}
@@ -694,8 +719,7 @@ def run_engagement(target, rep):
     def need(prefix, fields, target_prefix, what):
         for ident, rec in by_prefix.get(prefix, []):
             linked = [i for i in field_ids(rec, *fields) if i.startswith(target_prefix + "-")]
-            missing_marker = any(isinstance(rec.get(f), str) and str(rec.get(f)).startswith("MISSING")
-                                 for f in fields)
+            missing_marker = any(is_missing_marker(rec.get(f)) for f in fields)
             if not linked:
                 if missing_marker:
                     rep.warn(defined[ident][1], "%s declares a missing %s link" % (ident, what))
@@ -721,7 +745,8 @@ def run_engagement(target, rep):
         return None, None
 
     gated = (("OUT", ("approved",), "HG-OUTCOME"),
-             ("INI", ("approved", "active", "completed"), "HG-INITIATIVE"))
+             ("INI", ("approved", "active", "completed"), "HG-INITIATIVE"),
+             ("TOA", ("approved",), "HG-TOA"))
     for prefix, statuses, gate in gated:
         for ident, rec in by_prefix.get(prefix, []):
             if str(rec.get("status", "")).strip() in statuses:
@@ -745,6 +770,8 @@ def run_engagement(target, rep):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--engagement", metavar="DIR", help="check an engagement workspace instead of the framework")
+    parser.add_argument("--extra-prefixes", metavar="ABC,XYZ", default="",
+                        help="ID prefixes registered by an Extension (engagement mode)")
     parser.add_argument("--strict", action="store_true", help="treat warnings as errors")
     parser.add_argument("--quiet", action="store_true", help="print only problems and the summary line")
     args = parser.parse_args(argv)
@@ -755,7 +782,8 @@ def main(argv=None):
         if not os.path.isdir(target):
             print("not a directory: %s" % args.engagement, file=sys.stderr)
             return 2
-        stats = run_engagement(target, rep)
+        extra = [p.strip() for p in args.extra_prefixes.split(",") if p.strip()]
+        stats = run_engagement(target, rep, extra)
         label = "engagement %s" % rel(target, os.getcwd())
     else:
         stats = run_framework(rep)
