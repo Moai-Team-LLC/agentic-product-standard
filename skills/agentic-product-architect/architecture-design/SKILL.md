@@ -68,7 +68,7 @@ input → classifier → {handler_A | handler_B | handler_C | escalate_to_human}
 
 **Example:** customer service triage. Code-review by language. Different prompts for different document types.
 
-**Production tip:** use a small fast model (Haiku, GPT-4.1-mini, Gemini Flash) for the classifier. The cost saving is enormous and the routing accuracy is usually fine.
+**Production tip:** use a small, fast model tier for the classifier (the current Haiku / mini / Flash class — pin the exact model in config, not in prose). The cost saving is enormous and the routing accuracy is usually fine; confirm it on your routing eval set.
 
 ### Pattern 3: Parallelization
 

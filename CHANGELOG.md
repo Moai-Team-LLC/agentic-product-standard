@@ -5,6 +5,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [3.3.1] — 2026-09-27
+
+A **consistency** patch. Nothing normative changes. The canon had drifted across its own copies, and this release puts the counts, lists and diagrams back in agreement. It also records where the protocol landscape moved underneath the standard: MCP 2026-07-28 is now final.
+
+### Fixed
+- **The harness really has nine layers.** v3.3 declared nine layers (after #30), but every diagram still drew eight, and `AGENT_STANDARD.md` counted "the seven in the stack plus Security & Identity." Layer 9 (Cost & FinOps) now appears as the second cross-cutting layer in the README, `STANDARD.md` Canon 4, both copies of `AGENT_STANDARD.md`, `CONTEXT.md`, and the `harness-engineering` skill. A numbering note separates the harness layers (Canon 4) from Part II's technology-stack sections, which are also numbered 1–9 and coincide with the harness only at 8 and 9.
+- **`STANDARD.md` Part VIII listed 17 anti-patterns** while the README and the `antipatterns-review` skill listed 19. Anti-patterns 18 (*prose topology counted as a control*) and 19 (*license inheritance by wiring*) are added to the canon.
+- **The master `agentic-product-architect` skill** listed only 12 of the 19 anti-patterns. Its sub-skills index was split by a misplaced section and omitted `reference-stack`, and its paved-road paragraph left out AgenticGateway. All three are corrected.
+- **README Definition of Done.** The 4×4 grid could not show which cell was which of the 25 items. It is replaced by a grouped table keyed by item number, including the two conditional items (multi-tenant isolation; the L3+ oversight plan).
+- **Stale text.** `CONTRIBUTING.md` still said "eight-layer harness" and told contributors never to add code templates, which contradicted `templates/`. The PR template asked contributors to keep the Russian translation in sync, although it was removed in v1.3.0. `production-readiness` referred to "21 of 23". The architect track README was versioned "v2.1 — June 2026". `framework-selection` recommended Semantic Kernel and AutoGen, although `STANDARD.md` records both as superseded by Microsoft Agent Framework. The `harness-engineering` skill pointed observability at OpenInference/OpenLLMetry instead of the OpenTelemetry GenAI conventions the standard mandates.
+
+### Changed
+- **Principle 3** no longer claims that "98% of *reliability*" lives in the harness, which is a share of reliability no one has measured. It now says the harness is ~98% of the *code* and cites the source: a community estimate for Claude Code (~1.6% AI decision logic, ~98.4% operational infrastructure) quoted in Liu et al., *Dive into Claude Code* (arXiv:2604.14228).
+- **The Replit incident** now cites its primary coverage (Fortune, 23 Jul 2025) wherever it is used as evidence.
+- **Reading lists** add the primary specifications the standard builds on, with the version to pin.
+- The README says in one line how this standard differs from Klarna's *Agentic Product Protocol* and from *AgentReady*.
+
+### Added
+- **Advisory [APS-2026-01](docs/advisories/APS-2026-01-mcp-2026-07-28.md): MCP 2026-07-28.** This informative note covers the stateless core, multi-round-trip requests, routing headers, caching scope, and authorization changes: Client ID Metadata Documents replacing Dynamic Client Registration, RFC 9207 issuer validation, and issuer-bound credentials. It also covers the deprecations and the official conformance suite. For each change it gives what the change means for Layer 8, DoD 14, and anti-pattern 15, plus a checklist to act on before v4.0 makes it normative.
+
+[3.3.1]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v3.3.1
+
 ## [3.3.0] — 2026-08-05
 
 The **License Composition** release. v3.0 gave a *loop* a license; a graph of licensed loops multiplies that question rather than answering it. The vocabulary for wiring agents together — nodes, edges, shared state, fan-out — crystallized in the market as *graph engineering* one rung above loop engineering, and arrived with no governance attached. This release supplies it: Part IV now binds the **topology**, not the runtime, and takes no position on which framework draws the graph.

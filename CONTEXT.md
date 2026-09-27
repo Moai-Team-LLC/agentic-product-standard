@@ -11,8 +11,8 @@ when a term's meaning shifts, change it here and the skills inherit it.
   boundaries**. Not "a product with AI."
 - **Determinism by default, agency by necessity** — autonomy is earned on evals,
   not granted upfront.
-- **Harness > model** — ~98% of production reliability lives in the code around
-  the LLM, not in the model.
+- **Harness > model** — production reliability lives in the code around the LLM,
+  not in the model; in a production coding agent that harness is ~98% of the code.
 
 ## The ladder (autonomy levels)
 
@@ -35,8 +35,12 @@ loop is the last resort.
 1. Agent Loop (gather → act → verify) · 2. Context & Memory · 3. Durable
 Execution · 4. Guardrails (input/output) · 5. Human-in-the-Loop · 6. Evaluation
 (CI gates) · 7. Observability & Tracing — over MCP / function calling to Tools.
-8. Security & Identity (cross-cutting: identity, least privilege, injection
-defense, pinned tool definitions) constrains all seven.
+Two cross-cutting layers constrain all seven: 8. Security & Identity (identity,
+least privilege, injection defense, pinned tool definitions) and 9. Cost & FinOps
+(per-run ceilings enforced in code, caching, routing, cost per outcome).
+
+"Layer N" means a harness layer. `STANDARD.md` Part II also numbers its
+technology-stack sections 1–9; the two lists coincide only at 8 and 9.
 
 ## Recurring terms
 

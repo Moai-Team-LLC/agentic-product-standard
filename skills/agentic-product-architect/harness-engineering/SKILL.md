@@ -11,9 +11,13 @@ LangChain's empirical finding (March 2026): holding model constant at gpt-5.2-co
 
 ## The 9-layer harness model
 
-Every production agent has these layers — seven in the stack below, plus a **cross-cutting Security & Identity layer (layer 8)** that constrains all of them. Build the stack in this order; skipping is technical debt:
+Every production agent has these layers — seven in the stack below, plus two **cross-cutting** layers that constrain all of them: **Security & Identity (layer 8)** and **Cost & FinOps (layer 9)**. Build the stack in this order; skipping is technical debt:
 
 ```
+╔═════════════════════════════════════════════╗
+║  9. Cost & FinOps          (cross-cutting)  ║
+║  8. Security & Identity    (cross-cutting)  ║
+╚═════════════════════════════════════════════╝
 ┌─────────────────────────────────────────────┐
 │  7. Observability & Tracing                 │
 ├─────────────────────────────────────────────┤
@@ -162,7 +166,7 @@ Trace **everything**. Most agent failures are not text-quality issues — they'r
 - Context utilization at this step
 - Latency
 
-**Instrumentation:** use OpenInference / OpenLLMetry so you can switch observability vendors (Langfuse, LangSmith, Braintrust, Arize) without re-instrumenting.
+**Instrumentation:** emit spans on the **OpenTelemetry GenAI semantic conventions** (OpenInference and OpenLLMetry instrument to them) so you can switch observability vendors (Langfuse, LangSmith, Braintrust, Arize) without re-instrumenting. See `STANDARD.md` Part II · Layer 6.
 
 ## Cycle of Trust — the meta-pattern
 
@@ -174,7 +178,7 @@ verify preconditions → execute → verify outcome →
 log trace → update memory/state
 ```
 
-**Permission boundaries are enforced by code, never by prompt.** The Replit incident (2025) — an agent wiped a production database for 1,200+ companies despite an explicit "code freeze" instruction — is the canonical reference for why. The model will ignore prompt-level restrictions under enough pressure. Code won't.
+**Permission boundaries are enforced by code, never by prompt.** The Replit incident (July 2025) — an agent deleted a production database holding records on 1,200+ companies despite an explicit "code freeze" instruction — is the canonical reference for why. The model will ignore prompt-level restrictions under enough pressure. Code won't.
 
 **Implementation:**
 - Tool credentials scoped with OAuth / IAM, not held by the agent

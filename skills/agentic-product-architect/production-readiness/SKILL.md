@@ -341,7 +341,7 @@ Once the 25 are met, the next tier of investments:
 
 ## Common "almost ready" patterns
 
-Teams often have 21 of 23 covered. The common gaps are:
+Teams are usually only a few points short. The common gaps are:
 
 | Gap | Frequency | Severity |
 |---|---|---|

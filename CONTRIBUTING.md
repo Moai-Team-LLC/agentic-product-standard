@@ -6,7 +6,7 @@ Thanks for helping improve **The Agentic Product Standard**. This is a living do
 
 The standard has two kinds of content, and they invite different contributions:
 
-- **Stable canons** — the autonomy ladder, the five composition patterns, single-vs-multi-agent, the eight-layer harness, the Cycle of Trust. These change rarely. Challenge them only with strong evidence (a production writeup, a reproducible result, a credible primary source).
+- **Stable canons** — the autonomy ladder, the five composition patterns, single-vs-multi-agent, the nine-layer harness, the Cycle of Trust. These change rarely. Challenge them only with strong evidence (a production writeup, a reproducible result, a credible primary source).
 - **Fast-moving specifics** — vendor rankings, framework recommendations, tool counts, cost figures, reading-list entries. These age quickly. **PRs that update them are exactly what we want.**
 
 Especially welcome:
@@ -22,7 +22,7 @@ Especially welcome:
 1. **Cite primary sources.** "Anthropic says X" needs a link. Single-vendor benchmarks are directional, not ground truth — frame them that way (this is anti-pattern #12).
 2. **Prefer the boring, durable claim** over the exciting, fragile one. The standard tilts toward what survives the next model release.
 3. **Keep the standard and the skills in sync.** If you change a canon in `STANDARD.md`, update the matching `SKILL.md` so the guidance doesn't drift.
-4. **Don't add code templates.** The skill set teaches judgment, not boilerplate — framework-specific code rots fast and lives better in the framework's own docs.
+4. **No framework boilerplate in the skills.** The skill set teaches judgment, not boilerplate — framework-specific code rots fast and lives better in the framework's own docs. The exception is `templates/`: small, framework-neutral, dependency-light **gates** (a CI check, a red-team tripwire, a one-page license checklist) that make a mandate executable.
 5. **One topic per PR.** A vendor update and a new exemplar are two PRs.
 
 ## How to contribute

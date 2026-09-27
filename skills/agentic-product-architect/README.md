@@ -64,6 +64,6 @@ The content distills production practices from:
 
 ## Versioning
 
-v2.1 — June 2026
+Tracks Standard v3.3.1 — September 2026
 
 Skills should evolve. The field moves fast; revisit quarterly. The architectural canons (the autonomy ladder, 5 patterns, single-vs-multi, the harness) are stable. Specific vendors and framework rankings will shift.
