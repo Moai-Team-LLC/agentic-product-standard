@@ -1,0 +1,65 @@
+---
+artifact_type: pilot-plan
+framework_version: 1.1.0
+status: canonical
+entity: Pilot
+id_prefix: PLT
+owner_module: execution/PILOT_MODEL.md
+produced_by: [07-build-roadmap, 25-design-pilot]
+---
+
+# Pilot Plan
+
+## Purpose
+
+Define a bounded operational test of a transformation Hypothesis under real or production-representative conditions ([`execution/PILOT_MODEL.md`](../execution/PILOT_MODEL.md) §1), fixed before the pilot runs.
+
+## Record
+
+```yaml
+pilot:
+  id: PLT-###
+  initiative_id:            # INI-###
+  hypothesis_ids: []        # HYP-### tested
+  capability_ids: []        # CAP-###
+  outcome_ids: []           # OUT-### the pilot targets
+  pilot_type: shadow | assisted | controlled_execution | limited_autonomous   # execution/PILOT_MODEL.md §3
+  autonomy_level: L0 | L1 | L2 | L3 | L4 | L5   # highest level the pilot operates at
+  scope:                    # dimensions constrained (execution/PILOT_MODEL.md §4)
+  participants:
+  duration_or_volume:
+  baseline:                 # MET-### baselines, or the recorded baseline gap
+  intervention:             # the change applied: INT-### and a short description
+  control_or_comparison:    # comparison method: control group, prior period, shadow comparison
+  metric_ids: []            # MET-###
+  risks: []                 # RSK-### (artifacts/decision-assumption-log.md)
+  guardrails: []
+  rollback:
+  success_criteria: []      # fixed before execution
+  stop_criteria: []         # fixed before execution
+  evidence_plan:            # evidence to collect; evaluations are pre-registered in the Evaluation Plan
+  owner:
+  decision_owner:           # human who decides promotion after the pilot (HG-PROMOTION)
+
+slices: []                  # optional: SLC records the pilot runs (execution/DELIVERY_SLICE.md §2)
+experiments: []             # optional: EXP records that serve the pilot (execution/EXPERIMENT_MODEL.md §3)
+```
+
+Level meanings: [`diagnostics/AUTONOMY_SUITABILITY.md`](../diagnostics/AUTONOMY_SUITABILITY.md) §2. SLC and EXP records held here are not repeated in [`artifacts/transformation-roadmap.md`](transformation-roadmap.md).
+
+## Rules
+
+The pilot's evaluations are pre-registered in [`artifacts/evaluation-plan.md`](evaluation-plan.md) (`pilot_id` set) before the pilot runs. Its result is recorded there as `pilot_result`.
+
+`autonomy_level` MUST NOT exceed the approved Authority Ceiling ([`artifacts/autonomy-assessment.md`](autonomy-assessment.md)). A level above the currently approved one (AUT `current_level`) requires a Decision closing `HG-AUTHORITY` before the pilot starts (criteria: [`governance/AUTHORITY_ESCALATION_MODEL.md`](../governance/AUTHORITY_ESCALATION_MODEL.md) §3 (a)); accepting a material Risk (`RSK-###`) requires `HG-RISK` ([`STANDARD.md`](../STANDARD.md) §8).
+
+Governed: Execution Gate C ([`artifacts/execution-gate.md`](execution-gate.md)) passes before the pilot starts.
+
+## Validation
+
+- [ ] linked to one Initiative, the Hypotheses it tests, its Capabilities, and its Outcomes
+- [ ] pilot type and autonomy level stated; the level is within the Authority Ceiling; a level above AUT `current_level` has an approved `HG-AUTHORITY` Decision before the pilot starts
+- [ ] baseline (or Evidence Debt for its absence) and comparison method stated
+- [ ] success and stop criteria and the Evaluation Plan are fixed before execution
+- [ ] none of the invalidity conditions in [`execution/PILOT_MODEL.md`](../execution/PILOT_MODEL.md) §5 holds
+- [ ] guardrails, rollback, owner, and decision owner are named

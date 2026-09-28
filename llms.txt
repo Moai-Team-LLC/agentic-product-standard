@@ -29,6 +29,11 @@ Start with STANDARD.md for the product-level canon, AGENT_STANDARD.md for one ag
 - [skills/agentic-product-architect](https://github.com/Moai-Team-LLC/agentic-product-standard/tree/main/skills/agentic-product-architect): master skill routing to twelve sub-skills for multi-agent products
 - [skills/agent-builder](https://github.com/Moai-Team-LLC/agentic-product-standard/tree/main/skills/agent-builder): the single-agent track, bundling AGENT_STANDARD.md and templates
 
+## Related methodology
+
+- [aitm-smb/](https://github.com/Moai-Team-LLC/agentic-product-standard/tree/main/aitm-smb): AITM-SMB, the business-level AI transformation methodology upstream of this standard — where AI belongs in a small or mid-sized business, at what authority, behind which human decision gates; own semver and `aitm-smb-v*` release tags
+- [aitm-smb/docs/crosswalk-agentic-product-standard.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/aitm-smb/docs/crosswalk-agentic-product-standard.md): how AITM-SMB's business-authority ladder (AITM-L0–L5) and records map onto the Autonomy × Oversight operating point and the Loop License
+
 ## Optional
 
 - [CHANGELOG.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/CHANGELOG.md): what changed in each release and why

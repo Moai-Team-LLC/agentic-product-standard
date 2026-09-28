@@ -19,6 +19,7 @@ body:
         - skills — framework-selection
         - skills — production-readiness
         - skills — antipatterns-review
+        - aitm-smb/ (AITM-SMB methodology)
         - README / other
     validations:
       required: true

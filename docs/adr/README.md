@@ -19,3 +19,4 @@ ADR to one decision and one page.
 | [0003](0003-machine-readable-canon.md) | A machine-readable canon, and prose generated from it | Accepted |
 | [0004](0004-autonomy-and-oversight-axes.md) | Autonomy and oversight are two axes; the Loop License binds on oversight | Accepted |
 | [0005](0005-layer-and-stack-numbering.md) | "Layer N" is the harness; Part II sections are "Stack N" | Accepted |
+| [0006](0006-host-aitm-smb-as-split-ready-subfolder.md) | Host AITM-SMB as a split-ready subfolder | Accepted |

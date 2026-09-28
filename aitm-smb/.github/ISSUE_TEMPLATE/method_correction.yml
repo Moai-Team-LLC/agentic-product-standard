@@ -1,0 +1,66 @@
+# Standalone copy for after a split (git subtree split --prefix=aitm-smb).
+# Inert while AITM-SMB lives inside the Agentic Product Standard repository:
+# GitHub reads issue forms only from the host's .github/ISSUE_TEMPLATE/.
+
+name: "Method correction"
+description: Report something in AITM-SMB that is wrong, contradictory, unclear, or broken.
+labels: ["correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for errors in the existing method: a contradiction between two files, a broken reference, a rule that cannot be followed, a skill that does not match its sources. To change what the method does, use the **Method change proposal** form. Security or agent-safety problems go to a private advisory (SECURITY.md), not here.
+  - type: dropdown
+    id: location
+    attributes:
+      label: Where is the problem?
+      options:
+        - Canonical Core (STANDARD, PUBLIC_API, CORE_MODEL, CANONICAL_CONCEPTS, ontology, TRACEABILITY)
+        - Lifecycle (EXECUTION_MODEL, METHOD_FLOW, DECISION_MODEL, methodology/ phase files)
+        - Profiles and conformance (APPLICATION_PROFILES, PROFILE_SELECTION, MINIMUM_ARTIFACT_SET, CONFORMANCE)
+        - Modules (diagnostics, design, transition, portfolio, execution, evaluation, operations, governance, change, measurement, economics, evidence)
+        - Artifact contracts (artifacts/)
+        - Skills (skills/, root SKILL.md)
+        - Agent protocol (AGENTS, AGENT_CONTEXT_POLICY, AGENT_OUTPUT_STANDARD, AGENT_DIAGNOSTIC_PROTOCOL)
+        - Worked example (examples/)
+        - Tooling and CI (tools/, .github/)
+        - README, QUICKSTART, docs/, rubrics/, other informative files
+    validations:
+      required: true
+  - type: input
+    id: files
+    attributes:
+      label: File and section
+      description: AITM-root-relative path and section, e.g. `methodology/04-prioritization.md` Exit condition. For a contradiction, name both files.
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: What does it currently say?
+      description: Quote the exact passage.
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What should it say, and why?
+      description: Which canonical source (CANONICAL_CONCEPTS.md, NORMATIVE_INDEX.md precedence) supports the correction?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: The AITM-SMB version (MANIFEST.md) or commit you read.
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched the existing issues for this problem.
+          required: true
+        - label: The report names no real company, client, or person.
+          required: true

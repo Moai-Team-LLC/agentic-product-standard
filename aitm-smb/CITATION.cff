@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use AITM-SMB, please cite it using the metadata below."
+title: "AITM-SMB: AI Transformation Methodology for Small and Medium-Sized Businesses"
+type: software
+authors:
+  - family-names: Duchenchuk
+    given-names: Alex
+version: 1.1.0
+date-released: 2026-09-28
+license: MIT
+repository-code: "https://github.com/Moai-Team-LLC/agentic-product-standard"
+url: "https://github.com/Moai-Team-LLC/agentic-product-standard/tree/main/aitm-smb"
+abstract: >-
+  AITM-SMB is an open, domain-neutral, agent-readable methodology for the AI
+  transformation of small and medium-sized businesses. Its unit of
+  transformation is the Business Capability, not the AI use case: every change
+  traces from a measurable business Outcome through diagnosed Gaps and Causes to
+  Interventions, Initiatives, Metrics, and Evidence. AI is optional (four of
+  eighteen intervention families); its authority is granted explicitly at
+  human decision gates, bounded, observable, and reducible.
+keywords:
+  - AI transformation
+  - small and medium-sized businesses
+  - business capability
+  - methodology
+  - human oversight
+  - AI governance
+  - agent skills

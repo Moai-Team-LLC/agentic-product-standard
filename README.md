@@ -37,6 +37,7 @@ Most teams ship agent demos. Few ship agents that survive contact with productio
 - [What's in this repo](#whats-in-this-repo)
 - [Install the skills](#-install-the-skills)
 - [The AgenticProduct family](#-the-agenticproduct-family)
+- [Upstream: AITM-SMB](#-upstream-aitm-smb--deciding-where-ai-belongs)
 - [The Autonomy Ladder](#the-autonomy-ladder)
 - [The five composition patterns](#the-five-composition-patterns)
 - [The 9-layer harness](#the-9-layer-harness)
@@ -95,6 +96,7 @@ agentic-product-standard/
 ├── templates/decision-tree/             ← which architecture to build, and the license it owes
 ├── examples/                            ← reference implementations, audited against the canon
 ├── docs/                                ← conformance guide, advisories, architecture decision records
+├── aitm-smb/                            ← AITM-SMB: business-level AI transformation methodology (own semver, split-ready)
 └── skills/                              ← Claude Code skill set (operationalizes the standard; hash-locked)
     ├── agent-builder/                    ← single-agent track (bundles AGENT_STANDARD.md + templates/)
     └── agentic-product-architect/        ← multi-agent track: master router + sub-skills
@@ -197,6 +199,14 @@ The standard tells you *how*; five reference implementations are repos you can *
 
 Generated secrets are written into each member's local `.env` and never printed. Paved road, not a mandate — swap any member for your own (Principle 2).
 
+## 🧭 Upstream: AITM-SMB — deciding *where* AI belongs
+
+This standard answers *how to build* an agentic product. **[AITM-SMB](aitm-smb/README.md)** (AI Transformation Methodology for Small and Medium-Sized Businesses) answers the question that comes before it: *which business capability should change, whether AI belongs in that change at all, and how much authority it may have*. It starts from a measurable business Outcome and a Business Capability, not from an AI use case. It treats AI as optional — four of its eighteen intervention families involve AI, and simpler fixes are challenged first — and it requires evidence and human decision gates before AI authority or scale increases.
+
+AITM-SMB lives in [`aitm-smb/`](aitm-smb/) as a self-contained, split-ready methodology with its own versioning (currently 1.1.0), [skills](aitm-smb/skills/INDEX.md), [artifact contracts](aitm-smb/artifacts/INDEX.md), [worked example](aitm-smb/examples/compact-scenario-b/README.md), and [validator](aitm-smb/tools/validate.py). Start with its [quickstart](aitm-smb/QUICKSTART.md).
+
+> **Different ladders, different questions.** AITM-SMB's **L0–L5** is a business *authority* ladder: what the AI may do in the business (suggest, draft, execute with approval, execute within policy, pursue a bounded objective). This standard's operating point describes the AI component: *autonomy* **L0–L4** (who chooses the next step) × *oversight* **O0–O2** (whether a human approves each consequential action). AITM authority corresponds to the oversight axis: up to AITM-L3 a human approves every consequential action (**O0**); AITM-L4 and L5 act without per-action approval (**O1/O2**), so the Loop License binds. Write **AITM-L3** / **APS-L3** in mixed contexts. The [crosswalk](aitm-smb/docs/crosswalk-agentic-product-standard.md) maps the two and shows where an AITM-SMB decision hands off to this standard.
+
 ## The Autonomy Ladder
 
 Never start with "build an agent." Start with *"what is the minimum autonomy this task requires — and must a human still approve each action?"* Since v4.0 those are two axes, earned separately; together they are the system's **operating point**. The cost of getting either wrong is asymmetric.
@@ -233,6 +243,8 @@ An **operating point** is one of each:
 - `L4 · O1` — an autonomous loop a human supervises live: Loop License required.
 
 <!-- canon:end:readme.ladder -->
+
+*These are the AI component's autonomy levels and oversight modes (APS-L0…L4, APS-O0…O2). They are not the business-authority levels of [AITM-SMB](aitm-smb/docs/crosswalk-agentic-product-standard.md), which correspond to the oversight axis.*
 
 ## The five composition patterns
 

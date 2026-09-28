@@ -1,0 +1,96 @@
+name: aitm-smb
+
+# CI and releases for the AITM-SMB methodology in aitm-smb/. The folder is
+# split-ready (git subtree split --prefix=aitm-smb); aitm-smb/.github/ carries
+# the equivalent standalone workflow for after a split. Every command runs
+# from inside aitm-smb/ so it is identical in both places.
+#
+# Release: push a tag aitm-smb-vX.Y.Z matching aitm-smb/MANIFEST.md. The
+# release notes are the matching aitm-smb/CHANGELOG.md section; the Core and
+# Full distributions are attached. Path filters do not apply to tag pushes.
+# --latest=false keeps the host standard's own release marked Latest.
+
+on:
+  push:
+    branches: [main]
+    paths: ["aitm-smb/**", ".github/workflows/aitm-smb.yml"]
+    tags: ["aitm-smb-v*"]
+  pull_request:
+    paths: ["aitm-smb/**", ".github/workflows/aitm-smb.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Integrity, worked example, distributions
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aitm-smb
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Framework integrity
+        run: python3 tools/validate.py
+
+      - name: Worked example trace integrity
+        run: python3 tools/validate.py --engagement examples/compact-scenario-b
+
+      - name: Build Core and Full distributions
+        run: python3 tools/build_dist.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aitm-smb-dist
+          path: aitm-smb/dist/*.zip
+
+  release:
+    name: Publish GitHub Release
+    needs: validate
+    if: startsWith(github.ref, 'refs/tags/aitm-smb-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    defaults:
+      run:
+        working-directory: aitm-smb
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the tag matches MANIFEST.md
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#aitm-smb-v}"
+          MANIFEST_VERSION=$(python3 -c 'import sys; sys.path.insert(0, "tools"); from validate import manifest; print(manifest()["version"])')
+          if [ "$VERSION" != "$MANIFEST_VERSION" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match MANIFEST.md version $MANIFEST_VERSION"
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Extract release notes from CHANGELOG.md
+        run: |
+          set -euo pipefail
+          awk -v v="$VERSION" '
+            $0 ~ ("^## \\[" v "\\]") { f=1; next }
+            f && /^## \[/ { exit }
+            f { print }
+          ' CHANGELOG.md > notes.md
+          # Relative links do not resolve on the Release page; point them at the tagged tree.
+          BASE="https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/aitm-smb/"
+          sed -E -i "s#\]\((\.?/)?([^):\#][^):]*)\)#](${BASE}\2)#g" notes.md
+          if [ ! -s notes.md ]; then
+            echo "::error::no CHANGELOG.md section for $VERSION"
+            exit 1
+          fi
+
+      - name: Build distributions and create the release
+        run: |
+          set -euo pipefail
+          python3 tools/build_dist.py
+          gh release create "$GITHUB_REF_NAME" \
+            --title "AITM-SMB $VERSION" --notes-file notes.md --verify-tag --latest=false \
+            dist/aitm-smb-core-"$VERSION".zip dist/aitm-smb-full-"$VERSION".zip

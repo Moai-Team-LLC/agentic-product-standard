@@ -36,6 +36,10 @@ Requirements: Python 3.9+ and PyYAML (`pip install pyyaml jsonschema` — jsonsc
 
 "Layer N" is a **harness** layer (Canon 4). `STANDARD.md` Part II sections are **Stack N**. The operating point is `L0–L4 · O0–O2` (autonomy × oversight); the Loop License binds at O1+. See `CONTEXT.md`.
 
+## `aitm-smb/` is a separate methodology
+
+`aitm-smb/` hosts AITM-SMB, the upstream business-level methodology, with its own semver, changelog, canonical source and release tags (`aitm-smb-vX.Y.Z`), kept split-ready ([ADR-0006](docs/adr/0006-host-aitm-smb-as-split-ready-subfolder.md)). The canon rule above does not reach into it: its single source is `aitm-smb/CANONICAL_CONCEPTS.md`, and its rules are `aitm-smb/CONTRIBUTING.md` and `aitm-smb/MAINTENANCE.md`. Run its checks from inside the folder (`cd aitm-smb && python3 tools/validate.py`). The repo-wide link, prose-count and skill-frontmatter checks still cover it; its skills are not in `skills-lock.json`. Its `L0–L5` is a business-authority ladder, not the operating point — write `AITM-L<n>` beside `APS-L<n>` / `APS-O<n>` where both appear.
+
 ## Changes and releases
 
 - Conventional Commits, header ≤ 72 characters (`.githooks/commit-msg`; `git config core.hooksPath .githooks`).
