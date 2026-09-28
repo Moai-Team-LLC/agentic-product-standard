@@ -4,12 +4,23 @@ name: validate
 # While AITM-SMB lives inside the Agentic Product Standard repository this
 # file is inert; the active workflow is .github/workflows/aitm-smb.yml at the
 # host root. Keep the two in step. Standalone release tags are vX.Y.Z.
+#
+# The distributions are built once, in the validate job; the Full one is
+# unpacked and validated on its own before the release job publishes that
+# same build. Run the workflow manually with an existing tag to rebuild that
+# release's assets; it never creates or moves a tag.
 
 on:
   push:
     branches: [main]
     tags: ["v*"]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing vX.Y.Z tag whose release assets to rebuild"
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -20,40 +31,66 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || '' }}
       - run: python3 tools/validate.py
       - run: python3 tools/validate.py --engagement examples/compact-scenario-b
       - run: python3 tools/build_dist.py
+      - name: Full distribution validates on its own
+        run: |
+          set -euo pipefail
+          VERSION=$(python3 -c 'import sys; sys.path.insert(0, "tools"); from validate import manifest; print(manifest()["version"])')
+          DEST="$RUNNER_TEMP/full"
+          rm -rf "$DEST"
+          python3 -m zipfile -e "dist/aitm-smb-full-$VERSION.zip" "$DEST"
+          cd "$DEST/aitm-smb-$VERSION"
+          python3 tools/validate.py
+          python3 tools/validate.py --engagement examples/compact-scenario-b
       - uses: actions/upload-artifact@v4
         with:
           name: aitm-smb-dist
           path: dist/*.zip
+          if-no-files-found: error
 
   release:
     needs: validate
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     env:
       GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ inputs.tag || github.ref_name }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || '' }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: aitm-smb-dist
+          path: dist
       - name: Release with CHANGELOG notes and distributions
         run: |
           set -euo pipefail
-          VERSION="${GITHUB_REF_NAME#v}"
+          printf '%s' "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$' || { echo "::error::$TAG is not a vX.Y.Z tag"; exit 1; }
+          VERSION="${TAG#v}"
           MANIFEST_VERSION=$(python3 -c 'import sys; sys.path.insert(0, "tools"); from validate import manifest; print(manifest()["version"])')
           [ "$VERSION" = "$MANIFEST_VERSION" ] || { echo "::error::tag does not match MANIFEST.md ($MANIFEST_VERSION)"; exit 1; }
+          NOTES="$RUNNER_TEMP/notes.md"
           awk -v v="$VERSION" '
             $0 ~ ("^## \\[" v "\\]") { f=1; next }
             f && /^## \[/ { exit }
             f { print }
-          ' CHANGELOG.md > notes.md
+          ' CHANGELOG.md > "$NOTES"
           # Relative links do not resolve on the Release page; point them at the tagged tree.
-          BASE="https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/"
-          sed -E -i "s#\]\((\.?/)?([^):\#][^):]*)\)#](${BASE}\2)#g" notes.md
-          [ -s notes.md ] || { echo "::error::no CHANGELOG.md section for $VERSION"; exit 1; }
-          python3 tools/build_dist.py
-          gh release create "$GITHUB_REF_NAME" --title "AITM-SMB $VERSION" \
-            --notes-file notes.md --verify-tag \
-            dist/aitm-smb-core-"$VERSION".zip dist/aitm-smb-full-"$VERSION".zip
+          BASE="https://github.com/${GITHUB_REPOSITORY}/blob/${TAG}/"
+          sed -E -i "s#\]\((\.?/)?([^):\#][^):]*)\)#](${BASE}\2)#g" "$NOTES"
+          [ -s "$NOTES" ] || { echo "::error::no CHANGELOG.md section for $VERSION"; exit 1; }
+          assets=(dist/aitm-smb-core-"$VERSION".zip dist/aitm-smb-full-"$VERSION".zip)
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" "${assets[@]}" --clobber
+          else
+            gh release create "$TAG" --title "AITM-SMB $VERSION" \
+              --notes-file "$NOTES" --verify-tag "${assets[@]}"
+          fi

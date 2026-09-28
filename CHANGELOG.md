@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 - **AITM-SMB 1.1.0** in [`aitm-smb/`](aitm-smb/README.md) — the business-level AI transformation methodology that sits upstream of this standard (which capability changes, whether AI belongs, how much authority it gets). Self-contained and split-ready with its own semver, MIT license, 40 agent skills plus a root `SKILL.md` adapter, artifact contracts, a fictional worked example, and a stdlib-only validator. See its [changelog](aitm-smb/CHANGELOG.md).
-- [`.github/workflows/aitm-smb.yml`](.github/workflows/aitm-smb.yml) — validates the methodology and its worked example on every change under `aitm-smb/`, and on an `aitm-smb-vX.Y.Z` tag publishes a GitHub Release with the Core and Full distributions attached (not marked Latest).
+- [`.github/workflows/aitm-smb.yml`](.github/workflows/aitm-smb.yml) — validates the methodology and its worked example on every change under `aitm-smb/`, and on an `aitm-smb-vX.Y.Z` tag publishes a GitHub Release with the Core and Full distributions attached (not marked Latest). It publishes the build it validated, after checking that the unpacked Full distribution validates on its own; run manually with an existing tag, it rebuilds and replaces that release's assets without moving the tag.
 - [ADR-0006](docs/adr/0006-host-aitm-smb-as-split-ready-subfolder.md) — why AITM-SMB is hosted here as a split-ready folder, and how its authority ladder relates to this standard's operating point.
 
 ### Changed

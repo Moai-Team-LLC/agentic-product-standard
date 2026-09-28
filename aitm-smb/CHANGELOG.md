@@ -4,6 +4,9 @@ All notable changes to AITM-SMB. The format follows [Keep a Changelog](https://k
 
 ## [Unreleased]
 
+### Fixed
+- The Full distribution first attached to the 1.1.0 release also held the release job's own notes file (notes.md), written into the folder before the build, so `tools/validate.py` failed in the unpacked archive. The release workflow now writes its notes outside the folder, publishes the build it validated after checking that the unpacked Full distribution validates on its own, and can be run manually with an existing tag to rebuild that release's assets. The 1.1.0 assets are replaced by a rebuild from the unchanged tag.
+
 ## [1.1.0] — 2026-09-28
 
 **Consolidation & open-source release.** The first public release of AITM-SMB. It is a MINOR release: no object in the Public Methodology API changes meaning, and no stable identifier is repurposed ([`PUBLIC_API.md`](PUBLIC_API.md) §9). Record field names, some paths, and several rules were clarified or tightened; each such change is listed below and in the upgrade guide. A pre-release review of the internal 1.0.0 found definitions restated in several files, release claims the shipped files did not support, and execution steps no phase ran. This release gives every rule and record shape one owner, wires the full lifecycle into the skills, and adds what a public project needs. Full notes, upgrade steps and the 1.0 → 1.1 field migration table: [`releases/1.1.0.md`](releases/1.1.0.md).
