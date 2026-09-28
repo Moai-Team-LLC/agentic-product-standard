@@ -51,7 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: aps
-        uses: Moai-Team-LLC/agentic-product-standard@v4.0.0-rc.1
+        uses: Moai-Team-LLC/agentic-product-standard@v4.0.0
         with:
           file: aps-conformance.yaml
           badge: aps-badge.json            # optional shields.io endpoint JSON
@@ -88,4 +88,4 @@ A scorecard answered from memory drifts towards green. Requiring a pointer for e
 
 ## Versioning
 
-The tool refuses a file whose `standard` is a different major version: a v3 answer to a v4 contract means nothing. Pin the Action to the exact tag you conform to (`@v4.0.0-rc.1`, then `@v4.0.0`), and move the pin as a deliberate change. Within a major version, moving the pin should not lower your band: tightening what "conformant" means takes a major release ([`GOVERNANCE.md`](../GOVERNANCE.md)), so a minor release does not add a required item to a band you have already reached.
+The tool refuses a file whose `standard` is a different major version: a v3 answer to a v4 contract means nothing. Pin the Action to the exact tag you conform to (`@v4.0.0`), and move the pin as a deliberate change. Within a major version, moving the pin should not lower your band: tightening what "conformant" means takes a major release ([`GOVERNANCE.md`](../GOVERNANCE.md)), so a minor release does not add a required item to a band you have already reached.

@@ -25,7 +25,7 @@ Outside evidence pointed the same way. The EU AI Act already separates the two: 
 
 - Every "L3+" binding in the standard, the skills, the checklists, and the decision tree was re-expressed as O1+ (or L3+ or O1+ for stop conditions). Systems that relied on "below L3" to avoid the Loop License while acting without approval now owe it; systems at L3 under per-action approval no longer do.
 - Products must declare an operating point; the scorecard (`arch.operating-point`) and the conformance tool check it against the band achieved.
-- Migration note in `CHANGELOG.md` [4.0.0-rc.1].
+- Migration note in `CHANGELOG.md` [4.0.0].
 
 ## Alternatives considered
 

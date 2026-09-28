@@ -64,6 +64,6 @@ The content distills production practices from:
 
 ## Versioning
 
-Tracks Standard v4.0.0-rc.1 — September 2026. The lists that must never drift — the ladder, the harness, the Definition of Done, the anti-patterns — are generated from the standard's `canon/` and hash-locked in `skills-lock.json`.
+Tracks Standard v4.0.0 — September 2026. The lists that must never drift — the ladder, the harness, the Definition of Done, the anti-patterns — are generated from the standard's `canon/` and hash-locked in `skills-lock.json`.
 
 Skills should evolve. The field moves fast; revisit quarterly. The architectural canons (the autonomy ladder, 5 patterns, single-vs-multi, the harness) are stable. Specific vendors and framework rankings will shift.

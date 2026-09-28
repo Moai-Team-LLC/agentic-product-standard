@@ -4,11 +4,12 @@ A living view of where the Agentic Product Standard is headed. Not a commitment 
 direction. Issues and PRs that move these forward are very welcome; see
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Now — v4.0 "Conformance Contract" (release candidate 4.0.0-rc.1)
+## Now — v4.0 "Conformance Contract" (4.0.0)
 
-- **Request for comments.** 4.0.0-rc.1 is open for two weeks of review in GitHub
-  Discussions before 4.0.0 is cut: the two-axis ladder (ADR-0004), DoD items 26–33, the
-  machine-readable canon (ADR-0003), and the `aps-conformance` Action.
+- **Feedback on 4.0.** The RFC ([#32](https://github.com/Moai-Team-LLC/agentic-product-standard/issues/32))
+  stays open until 12 Oct 2026: the two-axis ladder (ADR-0004), DoD items 26–33, the
+  machine-readable canon (ADR-0003), and the `aps-conformance` Action. Corrections land in
+  4.0.x; anything that tightens what "conformant" means waits for 5.0 (`GOVERNANCE.md`).
 - **Dogfood the family.** Run every [AgenticProduct family](ECOSYSTEM.md) member through
   `aps-conformance` and publish the results — the standard's strongest argument is its own
   reference stack passing it. Re-audit the case studies in [`examples/`](examples/) against
