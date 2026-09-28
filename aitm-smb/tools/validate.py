@@ -98,6 +98,8 @@ def _scalar(text):
     return text
 
 
+PARSE_WARNINGS = []
+
 _KEY_RE = re.compile(r"^([A-Za-z_][\w.-]*|\"[^\"]+\")\s*:(\s+(.*))?$")
 
 
@@ -139,6 +141,13 @@ def _parse_map(lines, i, indent):
         key = m.group(1).strip('"')
         value = (m.group(3) or "").strip()
         i += 1
+        if key in result:
+            PARSE_WARNINGS.append("duplicate key `%s` in one mapping (the later value hides the earlier one; "
+                                  "use a list or separate blocks)" % key)
+        if value.startswith("[") and not value.endswith("]"):
+            while i < len(lines) and lines[i][0] > indent and not value.endswith("]"):
+                value += " " + lines[i][1]
+                i += 1
         if value in ("|", ">", "|-", ">-"):
             parts = []
             while i < len(lines) and lines[i][0] > indent:
@@ -635,7 +644,9 @@ def walk_records(node, out, source):
         ident = node.get("id")
         if isinstance(ident, str) and ID_RE.fullmatch(ident.strip()):
             out.append((ident.strip(), node, source))
-        for value in node.values():
+        for key, value in node.items():
+            if key == "artifact":  # instance metadata (_ARTIFACT_CONTRACT.md), not a record
+                continue
             walk_records(value, out, source)
     elif isinstance(node, list):
         for item in node:
@@ -681,12 +692,17 @@ def run_engagement(target, rep, extra_prefixes=()):
         text = read(path)
         blocks = [text] if path.endswith((".yaml", ".yml")) else yaml_blocks(text)
         for block in blocks:
+            del PARSE_WARNINGS[:]
             try:
                 walk_records(parse_yaml(block), records, relpath)
             except Exception as exc:  # pragma: no cover - defensive
                 rep.warn(relpath, "could not parse a yaml block (%s)" % exc)
+            for msg in PARSE_WARNINGS:
+                rep.error(relpath, msg)
         for m in ID_RE.finditer(text):
-            references.setdefault("%s-%s" % m.groups(), set()).add(relpath)
+            # Tokens with unregistered prefixes (e.g. ISO-9001, ORD-1234) are business text, not references.
+            if m.group(1) in prefixes:
+                references.setdefault("%s-%s" % m.groups(), set()).add(relpath)
         for g in set(GATE_RE.findall(text)):
             if g not in gates:
                 rep.error(relpath, "unknown human gate %s" % g)
@@ -757,6 +773,26 @@ def run_engagement(target, rep, extra_prefixes=()):
                 elif str(dec.get("status")).strip() != "approved":
                     rep.error(defined[dec_id][1], "%s closes %s for %s but is not approved"
                               % (dec_id, gate, ident))
+    def level(value):
+        m = re.match(r"^L([0-5])\b", str(value or "").strip())
+        return int(m.group(1)) if m else 0
+
+    for ident, rec in by_prefix.get("AUT", []):
+        if max(level(rec.get("maximum_allowed_level")), level(rec.get("current_level"))) > 0:
+            dec_id, dec = gate_decision("HG-AUTHORITY", ident)
+            if not dec:
+                rep.error(defined[ident][1], "%s grants AI authority above L0 but no Decision closes HG-AUTHORITY for it"
+                          % ident)
+            elif str(dec.get("status")).strip() != "approved":
+                rep.warn(defined[dec_id][1], "%s (HG-AUTHORITY for %s) is not approved yet" % (dec_id, ident))
+    for ident, rec in by_prefix.get("RSK", []):
+        if str(rec.get("status", "")).strip() == "accepted":
+            dec_ids = [i for i in ids_in(rec.get("acceptance_decision_id")) if i in defined]
+            if not dec_ids:
+                rep.error(defined[ident][1], "%s is accepted but acceptance_decision_id names no Decision" % ident)
+            for dec_id in dec_ids:
+                if str(defined[dec_id][0].get("status")).strip() != "approved":
+                    rep.error(defined[ident][1], "%s is accepted by %s, which is not approved" % (ident, dec_id))
     for ident, rec in decisions:
         if rec.get("gate") and str(rec.get("status")).strip() == "approved" and not rec.get("approved_by"):
             rep.error(defined[ident][1], "%s approves %s without `approved_by`" % (ident, rec.get("gate")))
