@@ -6,13 +6,6 @@ authoritative; when a term's meaning shifts, change it here and the skills
 inherit it. The marked sections are generated from `canon/` — edit the canon,
 then run `python3 tools/aps.py render`.
 
-Scope: the Agentic Product Standard and its skills under `skills/`. The
-`aitm-smb/` methodology keeps its own vocabulary (`aitm-smb/CANONICAL_CONCEPTS.md`);
-notably its **L0–L5** ladder is a business *authority* ladder, not the
-operating point below; it corresponds to the oversight axis. In mixed
-contexts write **AITM-L<n>** / **APS-L<n>** · **APS-O<n>**
-(see `aitm-smb/docs/crosswalk-agentic-product-standard.md`).
-
 ## Core stance
 
 - **Agentic product** — a product where part of the process is dynamically
