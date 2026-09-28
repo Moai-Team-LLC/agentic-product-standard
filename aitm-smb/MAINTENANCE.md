@@ -33,6 +33,8 @@ Orphan check: a file with no inbound reference may never be loaded under bounded
 
 Record the result in the release notes ([`releases/`](releases/)). Tagging and publication: [`VERSIONING.md`](VERSIONING.md) §10. The 1.0.0 record: [`releases/1.0.0-release-checklist.md`](releases/1.0.0-release-checklist.md).
 
+A published tag never moves. If a release's distributions must be rebuilt (a failed upload, or a defect in the build rather than in the tagged files), run the release workflow manually with the tag as its input: it rebuilds both distributions from the tagged tree, checks that the unpacked Full distribution validates on its own, and replaces the release assets. Record the rebuild in CHANGELOG.md.
+
 A material methodology change, and every MAJOR change, SHOULD be recorded as an ADR ([`decisions/README.md`](decisions/README.md); template [`decisions/ADR-0000-template.md`](decisions/ADR-0000-template.md)).
 
 ---
