@@ -1,14 +1,15 @@
 ---
 name: 14-assess-autonomy
 description: "Assesses how much authority AI may hold for each action class of an AI-type Intervention, separately from AI fit: rates the autonomy dimensions, recommends an autonomy level on the L0-L5 authority ladder, and proposes the Authority Ceiling with prohibited actions, approval requirements, escalation conditions and an accountable owner; stops for authority approval (HG-AUTHORITY). Use in Phase 3, invoked by skill 04 for each AI_* candidate proposed for selection, or when a ceiling must be re-assessed. Produces Autonomy Assessments. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: diagnostic-specialist
-phase: "3"
-human_gate: true
-gates: [HG-AUTHORITY]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: diagnostic-specialist
+  phase: "3"
+  human_gate: "true"
+  gates: "HG-AUTHORITY"
 ---
 
 # Skill 14: Assess Agentic Autonomy

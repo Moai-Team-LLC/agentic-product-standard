@@ -1,13 +1,14 @@
 ---
 name: 38-audit-conformance
 description: "Audits an engagement's conformance to AITM-SMB: the core chain and minimum valid path, every CONFORMANCE core item including cause versus symptom, non-AI alternatives, AI justification, system effects (INV-09) and observable, reducible AI authority (INV-07), the STANDARD invariants, claimed profile content, human-gate Decisions, evidence separation, component-only applications, and waivers; then writes the conformance declaration. Use at any phase, via skill 10, and before an engagement claims conformance. Produces the conformance section of artifacts/transformation-intent.md and findings; the result is not approval of any gated decision. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: framework-operations
-phase: "any"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: framework-operations
+  phase: "any"
+  human_gate: "false"
 ---
 
 # Skill 38: Audit AITM-SMB Conformance

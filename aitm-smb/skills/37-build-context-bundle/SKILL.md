@@ -1,13 +1,14 @@
 ---
 name: 37-build-context-bundle
 description: "Builds the bounded context an agent needs for one skill: the Core bundle, the active profiles from the profile Decision (provisional while HG-OUTCOME is open), the relevant phase file, the skill with its normative sources and artifact contracts, the modules the profiles activate for it, and only the upstream engagement records and Evidence the task needs, with personal data minimized. Use before any orchestrator or specialist step that needs context, and when a new agent session joins an engagement. Produces no persistent artifact; returns the loaded files, the active profiles, and any missing normative dependency in findings. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: framework-operations
-phase: "any"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: framework-operations
+  phase: "any"
+  human_gate: "false"
 ---
 
 # Skill 37: Build Agent Context Bundle

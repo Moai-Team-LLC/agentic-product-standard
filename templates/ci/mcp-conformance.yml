@@ -1,0 +1,86 @@
+# MCP conformance workflow — TEMPLATE (DoD 26).
+#
+# DoD 26 asks every MCP server and client you own to run the official conformance
+# suite (https://github.com/modelcontextprotocol/conformance) in CI, at a pinned
+# version, against what revision 2026-07-28 requires (--requirements). Copy this to
+# .github/workflows/ in the repo that owns the server or client, and wire the TODO
+# points.
+#
+# Pin the suite. As of Standard v4.0.0-rc.1 the npm `latest` tag (0.1.16) predates
+# 2026-07-28 support; the pre-release below provides `--requirements 2026-07-28`.
+# Move the pin deliberately, like any other test dependency.
+#
+# Known gaps go in a reviewed expected-failures file (--expected-failures), never in
+# a disabled job — silencing a gate to pass CI is DoD 24's anti-case. A baselined
+# failure is still a failure against the requirement set: give each entry an owner
+# and a date, and burn the list down. If you have no known failures, drop the flag.
+
+name: mcp-conformance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+env:
+  CONFORMANCE: "@modelcontextprotocol/conformance@0.2.0-alpha.11"
+  MCP_REVISION: "2026-07-28"
+
+jobs:
+  server:
+    name: MCP server conformance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # TODO: install and start YOUR MCP server in the background, listening on
+      # the URL below, and wait until it answers. Any HTTP status means it is up:
+      # a 2026-07-28 server answers a plain GET with 405 Method Not Allowed.
+      - name: Start the server under test
+        run: |
+          npm ci
+          (npm run start:mcp > server.log 2>&1 &)
+          up=0
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/mcp || true)
+            if [ "$code" != "000" ]; then up=1; break; fi
+            sleep 1
+          done
+          if [ "$up" != 1 ]; then
+            echo "::error::the MCP server never answered on http://localhost:3000/mcp"; cat server.log; exit 1
+          fi
+
+      - name: Run the conformance suite
+        run: |
+          npx -y "$CONFORMANCE" server \
+            --url http://localhost:3000/mcp \
+            --requirements "$MCP_REVISION" \
+            --expected-failures .mcp-conformance/expected-failures.yaml
+
+      - name: Upload server log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcp-server-log
+          path: server.log
+
+  client:
+    name: MCP client conformance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm ci
+      # TODO: the command that launches YOUR MCP client. The suite appends its test
+      # server's URL as the last argument and runs the client once per scenario.
+      - name: Run the conformance suite
+        run: |
+          npx -y "$CONFORMANCE" client \
+            --command "npm run mcp-client" \
+            --requirements "$MCP_REVISION" \
+            --expected-failures .mcp-conformance/expected-failures.yaml

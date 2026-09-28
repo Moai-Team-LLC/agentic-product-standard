@@ -1,13 +1,14 @@
 ---
 name: 26-design-evaluation
 description: "Pre-registers how a pilot, rollout, or operating Capability will be evaluated: one Evaluation record per relevant layer, from business Outcome to risk and governance, including human-AI interaction and technical reliability where AI is used, with metrics, method, sample, threshold and owner fixed before execution, and AI evaluations that strengthen as autonomy rises. Use in Phase 6 before a pilot runs, in Phase 7 before a rollout stage whose evaluation must be extended, and in Phase 8 when new evaluations are needed. Produces the plan section (EVL plan fields) of artifacts/evaluation-plan.md. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: execution-governance
-phase: "6-8"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: execution-governance
+  phase: "6-8"
+  human_gate: "false"
 ---
 
 # Skill 26: Design Evaluation

@@ -1,13 +1,14 @@
 ---
 name: 30-design-adoption
 description: "Designs the Adoption Plan for a transformation: one role transition per affected role (task dispositions, removed and new tasks, decision-right, skill and metric changes), behavior changes across the adoption dimensions including manager behavior and exception handling, training, incentives, trust and workflow-fit risks, communication, support, feedback channel and adoption metrics, with resistance treated as evidence. Use in Phase 7 before a pilot or rollout changes how people work. Produces adoption and role-transition records per artifacts/adoption-plan.md. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: execution-governance
-phase: "7"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: execution-governance
+  phase: "7"
+  human_gate: "false"
 ---
 
 # Skill 30: Design Change Adoption

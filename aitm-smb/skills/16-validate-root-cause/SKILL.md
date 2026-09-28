@@ -1,13 +1,14 @@
 ---
 name: 16-validate-root-cause
 description: "Tests the cause Hypotheses of a Gap against supporting and falsifying evidence, competing explanations, the counterfactual challenge and the intervention trap test, then sets each Hypothesis's confidence and status (validated or rejected), proposes acceptance as testable to the Capability or Outcome owner, or defines the cheapest useful validation test. Use in Phase 2, invoked by skill 03, before a Gap is declared ready for intervention design. Produces updated Hypothesis records in the Decision and Assumption Log, Diagnostic Record updates and Evidence Register entries. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: diagnostic-specialist
-phase: "2"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: diagnostic-specialist
+  phase: "2"
+  human_gate: "false"
 ---
 
 # Skill 16: Validate Root Cause

@@ -1,14 +1,15 @@
 ---
 name: 09-measure-evolution
 description: "Phase 8 orchestrator. Determines whether the transformation created sustained business value and evolves the system from evidence: evaluates Outcome, Capability, operating, AI-quality and economic effects against baselines, pre-registers new evaluations (skill 26) and records their results, assesses value state and attribution (skill 33), and promotes or demotes AI authority from evidence (skill 34); stops before value is declared realized (HG-VALUE) or authority is increased (HG-AUTHORITY). Use after rollout or operation has produced evidence. Produces the Transformation Scorecard, the Value Realization Report and updated evaluation and authority records; returns disproved diagnosis or design to its phase. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: orchestrator
-phase: "8"
-human_gate: true
-gates: [HG-VALUE, HG-AUTHORITY]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: orchestrator
+  phase: "8"
+  human_gate: "true"
+  gates: "HG-VALUE, HG-AUTHORITY"
 ---
 
 # Skill 09: Orchestrate Measurement & Evolution

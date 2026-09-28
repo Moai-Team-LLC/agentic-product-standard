@@ -1,0 +1,10 @@
+{
+  "description": "The declared blast radius, as data. Per-run limits bound what one unattended run can do; targets are anchored regular expressions.",
+  "max_requests_per_run": 20,
+  "actions": {
+    "comment":           { "targets": ["^issue/[0-9]+$", "^pull/[0-9]+$"], "max_per_run": 10 },
+    "label":             { "targets": ["^issue/[0-9]+$"], "max_per_run": 10 },
+    "open_pull_request": { "targets": ["^repo/docs$"], "max_per_run": 1 },
+    "update_record":     { "targets": ["^crm/account/[0-9]+$"], "max_per_run": 5 }
+  }
+}

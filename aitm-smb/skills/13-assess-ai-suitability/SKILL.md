@@ -1,13 +1,14 @@
 ---
 name: 13-assess-ai-suitability
 description: "Assesses whether probabilistic AI creates more value than process redesign, deterministic software or automation for one AI-type candidate Intervention: checks that simpler and non-AI alternatives were considered, rates every AI suitability dimension, and classifies AI fit A to E with its selection consequence. Use in Phase 3 (intervention design), invoked by skill 04 for each AI_* candidate. Produces an AI Suitability Assessment; it never sets authority. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: diagnostic-specialist
-phase: "3"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: diagnostic-specialist
+  phase: "3"
+  human_gate: "false"
 ---
 
 # Skill 13: Assess AI Suitability

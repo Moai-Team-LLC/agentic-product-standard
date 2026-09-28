@@ -1,13 +1,14 @@
 ---
 name: 24-audit-local-optimization
 description: "Audits a selected Initiative or a Target Operating Architecture for local optimization (INV-09): upstream, downstream, shared-resource, incentive and Constraint Migration effects, which role absorbs new exceptions, and whether the change improves the target Outcome or only a local metric. Use in Phase 5, or whenever a local improvement may degrade the wider operating system. Updates the existing SFX record per artifacts/system-effect-assessment.md, or creates one where none exists. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: design-specialist
-phase: "5"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: design-specialist
+  phase: "5"
+  human_gate: "false"
 ---
 
 # Skill 24: Audit Local Optimization Risk

@@ -1,14 +1,15 @@
 ---
 name: 33-assess-value-realization
 description: "Assesses whether an Initiative created attributable, sustained business value: compares the Outcome metric with baseline and target, traces the benefit chain, nets implementation and operating cost, records attribution confidence with competing explanations, checks sustainability and that governance remains effective, proposes the value state and value conclusion, and updates Execution Gate G. Use in Phase 8 once rollout or operation has produced evidence. Produces a VRL record per artifacts/value-realization-report.md; declaring value REALIZED or SUSTAINED stops for HG-VALUE. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: execution-governance
-phase: "8"
-human_gate: true
-gates: [HG-VALUE]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: execution-governance
+  phase: "8"
+  human_gate: "true"
+  gates: "HG-VALUE"
 ---
 
 # Skill 33: Assess Value Realization

@@ -26,7 +26,7 @@ The core principle:
 
 Default to deterministic software. Add agency only where the path cannot be fully predefined.
 
-A note on terminology used throughout this document: **autonomy levels (L0–L4)** describe *how much* control flow the model owns; **permission tiers (P0–P6)** describe *how dangerous* a tool's side effects are. They are two distinct scales — never conflate them.
+A note on terminology used throughout this document: **autonomy levels (L0–L4)** describe *how much* control flow the model owns; **oversight modes (O0–O2)** describe *whether a human approves* each consequential action; **permission tiers (P0–P6)** describe *how dangerous* a tool's side effects are — and "consequential" means P3+. They are three distinct scales — never conflate them.
 
 ---
 
@@ -36,19 +36,29 @@ A note on terminology used throughout this document: **autonomy levels (L0–L4)
 
 Always start with the least autonomous design that can produce the required value.
 
-Use this autonomy ladder:
+Place the agent on two axes — **autonomy** (who chooses the next step) and **oversight** (whether a human approves each consequential, P3+ action). The pair is the agent's **operating point**, written `L2 · O0`, and it is declared in the Agent Contract:
 
+<!-- canon:begin:agent-standard.ladder -->
 | Level | Pattern | Use When |
 |---|---|---|
 | L0 | Single LLM call | Classification, extraction, summarization |
-| L1 | Augmented LLM | One call plus retrieval, tools, or memory |
-| L2 | Deterministic workflow | The path is known and reliability matters |
-| L3 | Orchestrator-worker | The system must dynamically decompose bounded work |
-| L4 | Autonomous agent loop | The path is genuinely open-ended and cannot be enumerated |
+| L1 | Augmented LLM | Q&A over docs, simple assistants, lookup + reformat |
+| L2 | Workflow | The path is known; predictability matters |
+| L3 | Bounded decomposition | Parallelizable, breadth-first work — typically built with the Orchestrator-Workers pattern |
+| L4 | Autonomous agent loop | The path cannot be enumerated; cost and compounding errors are tolerable |
 
-**Transition rule:** do not climb to level `L+1` until level `L` reaches **≥90% pass rate on a curated eval set**. Every degree of autonomy must earn its place through evals, not be granted in advance.
+| Oversight | Mode | Requires |
+|---|---|---|
+| O0 | Human in the loop — a human approves each consequential action before it executes | Per-action approval is the control (`STANDARD.md` DoD 4) |
+| O1 | Human on the loop — actions inside the declared blast radius execute without per-action approval; a human supervises live and can veto, pause, or take over | Loop License (`STANDARD.md` DoD 16–19) |
+| O2 | Unattended — no human watches in real time; people are reached through the escalation path and sampled review | Loop License + success-legitimacy audit (`STANDARD.md` DoD 16–19, 30) |
+
+<!-- canon:end:agent-standard.ladder -->
+
+**Transition rules:** do not climb to level `L+1` until level `L` reaches **≥90% pass@1 on a curated eval set**. Do not relax oversight (`O0` → `O1` → `O2`) without a **Loop License** (Doctrine 8), whose eval gate adds consistency — a declared **pass^5** threshold — and, at `O2`, a published legitimacy rate. Every degree of autonomy, and every step away from per-action approval, must earn its place through evals, not be granted in advance.
 
 Rules:
+- Default new agents to `O0`: a human approves each consequential action.
 - Do not use L3 when L2 is enough.
 - Do not use L4 unless the task cannot be expressed as a bounded workflow.
 - Do not create multi-agent systems before a single-agent or workflow baseline exists.
@@ -69,31 +79,31 @@ Metaprinciple: solve the task by composing these patterns on deterministic code 
 
 ### 2. Harness Over Model
 
-Model choice matters. The harness matters more. In a production coding agent, roughly **98% of the code is harness**, not the model loop — and as model capability converges, harness quality is the durable competitive advantage.
+Model choice matters. The harness matters more. In Claude Code, by one community estimate, roughly **98% of the code is harness**, not the model loop — and as model capability converges, harness quality is the durable competitive advantage.
 
-A production agent must be surrounded by **nine** harness layers: the seven in the stack below, plus a **cross-cutting Security & Identity layer** (see Doctrine 7) that constrains all of them.
+A production agent must be surrounded by **nine** harness layers: the seven in the stack below, plus two **cross-cutting** layers that constrain all of them — **Security & Identity** (layer 8, see Doctrine 7) and **Cost & FinOps** (layer 9: per-run token/cost ceilings enforced in code, caching, model routing, cost per outcome).
 
+<!-- canon:begin:agent-standard.harness -->
 ```text
-┌───────────────────────────────────────────────┐
-│ 7. Observability & Tracing      (log everything)│
-├───────────────────────────────────────────────┤
-│ 6. Evaluation Layer             (CI gates)      │
-├───────────────────────────────────────────────┤
-│ 5. Human-in-the-Loop            (notify/ask/review)
-├───────────────────────────────────────────────┤
-│ 4. Guardrails                   (input/output validation, defense in depth)
-├───────────────────────────────────────────────┤
-│ 3. Durable Execution            (pause / resume / retry)
-├───────────────────────────────────────────────┤
-│ 2. Context & Memory Management  (write/select/compress/isolate)
-├───────────────────────────────────────────────┤
-│ 1. Agent Loop                   (gather → act → verify)
-└───────────────────────────────────────────────┘
-                  ↕ MCP / function calling
-          ┌──────────────────────────┐
-          │   Tools & Resources      │
-          └──────────────────────────┘
+╔══════════════════════════════════════════════╗
+║  9. Cost & FinOps           (cross-cutting)  ║ ← per-run ceilings in code · caching · routing · cost per verified outcome
+║  8. Security & Identity     (cross-cutting)  ║ ← threat model · injection defense · per-agent identity · least-privilege tokens · pinned tool defs · protocol auth baseline
+╠══════════════════════════════════════════════╣
+║   7. Observability & Tracing                 ║ ← log EVERYTHING — on pinned OTel GenAI conventions
+║   6. Evaluation (CI gates)                   ║ ← block regressions
+║   5. Human-in-the-Loop (notify/ask/review)   ║ ← approval gates
+║   4. Guardrails (input/output validation)    ║ ← defense in depth
+║   3. Durable Execution (Workflow + Activity) ║ ← pause/resume/retry
+║   2. Context & Memory Management             ║ ← write/select/compress/isolate
+║   1. Agent Loop (gather → act → verify)      ║ ← the "agent" proper
+╚══════════════════════════════════════════════╝
+              ↕ MCP / function calling
+       ┌──────────────────────────┐
+       │   Tools & Resources      │
+       └──────────────────────────┘
 ```
+
+<!-- canon:end:agent-standard.harness -->
 
 Never rely on a prompt to enforce security, permissions, or control flow.
 
@@ -113,7 +123,7 @@ Treat context as an engineered resource:
   the model fills the gap with plausible-but-invented values that pass a shallow
   check. Any value not in the closed set is a failure, not a creative liberty.
 
-**The 40% rule:** keep context-window utilization below ~40% of the model's limit. Degradation past that threshold is non-linear — recall drops sharply in the "dumb zone." Avoid filling the context window with raw transcripts, large files, irrelevant prior decisions, or unused tool descriptions.
+**The context budget (the 40% rule, measured):** keep context-window utilization below the fill level where your own evals start to degrade for the model in use — **~40% of the window by default**, until you have measured it; re-measure on every model change. Degradation past that threshold is non-linear — recall drops sharply in the "dumb zone," and on very large windows a percentage rule is far too loose. Avoid filling the context window with raw transcripts, large files, irrelevant prior decisions, or unused tool descriptions.
 
 ### 4. Cycle of Trust
 
@@ -125,9 +135,9 @@ verify preconditions → execute → verify outcome →
 write trace → update memory
 ```
 
-Permissions are enforced in **code**, never in the prompt. The model will, given the chance, ignore an instruction it was told to obey. The canonical proof is the July 2025 Replit incident, where an agent deleted the production database of 1,200+ companies despite an explicit "code and action freeze" written into its prompt. Treat every tool surface as an RPC endpoint exposed to untrusted input.
+Permissions are enforced in **code**, never in the prompt. The model will, given the chance, ignore an instruction it was told to obey. The canonical proof is the July 2025 Replit incident (reported by Fortune, 23 Jul 2025), where an agent deleted a production database holding records on 1,206 executives and 1,196+ companies, by the agent's own count, despite an explicit "code and action freeze" written into its prompt. Treat every tool surface as an RPC endpoint exposed to untrusted input.
 
-The "verify outcome" step is only trust-bearing if the verifier is. A judge whose calibration status is not `calibrated` (Doctrine 5) MUST NOT gate autonomous action at L3+, an auto-apply, or a release — a low-confidence verdict abstains and escalates. A flaky grader in a release gate is a prompt-enforced permission by another name: it looks like a check and isn't one.
+The "verify outcome" step is only trust-bearing if the verifier is. A judge whose calibration status is not `calibrated` (Doctrine 5) MUST NOT gate operation without per-action approval (O1+), an auto-apply, or a release — a low-confidence verdict abstains and escalates. A flaky grader in a release gate is a prompt-enforced permission by another name: it looks like a check and isn't one.
 
 ### 5. Eval-Driven Development
 
@@ -144,7 +154,7 @@ Start with:
 Each production failure becomes a permanent regression test.
 
 **Measurement science — what makes the numbers trustworthy:**
-- **Calibrate judges; don't trust their words.** A judge that gates L3+/auto-apply/release has documented calibration (accuracy + ECE/Brier against an anchored ground-truth sample, within a recency window). Use validated self-consistency or swap-consistency as the confidence signal — never raw verbalized confidence — and screen for position, verbosity, and self-preference bias.
+- **Calibrate judges; don't trust their words.** A judge that gates O1+ operation, auto-apply, or release has documented calibration (accuracy + ECE/Brier against an anchored ground-truth sample, within a recency window). Use validated self-consistency or swap-consistency as the confidence signal — never raw verbalized confidence — and screen for position, verbosity, and self-preference bias.
 - **Anchor the golden set.** Declare labeling provenance (rubric version, labeler, date, agreement); an unanchored set backs nothing. Rubrics are versioned instruction artifacts — a rubric change re-baselines its judges.
 - **Evaluate retrieval on its own terms** — Recall@k and MRR against a labeled set, separately from end-to-end task evals; embedding/chunking/index changes pass a retrieval regression gate.
 - **Monitor drift** — input, behavior, and provider — against the eval distribution; a canary that detects a silent provider change triggers the regression gate.
@@ -188,19 +198,38 @@ Three checks belong in every design, not just at review:
 - **The MCP supply chain.** Community MCP servers are untrusted code whose tool
   descriptions can mutate after approval (rug pull). Pin tool definitions by hash,
   alert on change, install only from an allow-listed registry.
-- **Agent identity.** Each agent gets a distinct, least-privilege, short-lived,
-  audience-bound identity. Identity and tenant are derived from auth, never asserted
-  by the model. (Map controls to the OWASP Top 10 for Agentic Applications.)
+- **Agent identity.** Each agent acts under its own non-human identity — never a
+  shared service account or a person's token — with least-privilege, short-lived,
+  audience-bound credentials. Identity and tenant are derived from auth, never
+  asserted by the model, and every action is attributable to the agent and to the
+  human or system that delegated it. (Map controls to the OWASP Top 10 for
+  Agentic Applications.)
+
+Two protocol baselines turn the checks above into testable contracts:
+
+- **MCP 2026-07-28.** Speak the current revision (or carry a dated sunset); keep no
+  state in a protocol session; build nothing new on the deprecated Roots, Sampling,
+  or Logging; treat an echoed `requestState` as untrusted, and integrity-protect and
+  verify it wherever it influences authorization, resource access, or business
+  logic; register clients by pre-registration or a Client ID Metadata Document
+  (Dynamic Client Registration only as a documented fallback), validate the issuer
+  (`iss`, RFC 9207), and bind stored client credentials to their issuer; never pass
+  a token through; run the official conformance suite in CI.
+- **A2A signed Agent Cards.** Before delegating across an organization or vendor
+  boundary, verify the peer's card signature against a trusted keystore; fail
+  closed on unsigned or unverifiable cards; delegate no more scope than you hold;
+  treat the peer's output as untrusted input.
 
 ### 8. The Loop License
 
-An agent that runs **unattended** — finding its own work and looping without a
-human in each turn (L3–L4) — must hold a **Loop License** before it ships, and
-keep holding it to stay unattended. Six gates, all required, each enforced in
-code and tested:
+An agent whose consequential actions run **without a human approving each one**
+— oversight `O1` (a human on the loop) or `O2` (unattended), at any autonomy
+level — must hold a **Loop License** before it ships, and keep holding it to stay
+there. Six gates, all required, each enforced in code and tested:
 
-1. **Eval pass-rate threshold** — a named minimum on a representative set,
-   measured before promotion.
+1. **Eval threshold** — named minimums on a representative set, measured before
+   promotion: pass@1 **and** pass^5 (all five of five attempts succeed); at `O2`,
+   the legitimacy rate too.
 2. **Regression gate** — CI blocks promotion when the pass rate drops against baseline.
 3. **Declared blast radius** — the maximum scope one run can affect, enforced below the model.
 4. **Cost cap** — per-run and per-window ceilings enforced in code.
@@ -212,7 +241,11 @@ Two disciplines make the license real:
 - **Independent verification.** The producing model does not grade its own work —
   deterministic checks first, and any LLM judge is calibrated and *decorrelated*
   from the writer (a different model or materially different context, seeing the
-  artifact, not the writer's reasoning). Writer and Checker are separate agents.
+  artifact, not the writer's reasoning). Writer and Checker are separate agents,
+  and the checks — tests, graders, eval sets, thresholds — sit outside the
+  agent's write scope. At `O2`, a sample of successful runs is also reviewed each
+  release for **illegitimate success** (edited tests, special-cased graders,
+  hard-coded outputs) and the legitimacy rate gates promotion.
 - **The ingestion boundary and the instruction supply chain.** "Find work" is
   untrusted input — test it for indirect injection, separate instructions from
   data, least-privilege the triggers (OWASP LLM01). Skills, prompts and
@@ -220,9 +253,9 @@ Two disciplines make the license real:
   provenanced, eval-gated before deploy, regression-tested on update (OWASP LLM03).
 
 A judge's calibration status is an input to the license: an uncalibrated judge
-invalidates it for the levels that judge gates (Doctrine 5). Declare the stop
-conditions, memory model, determinism map, and — at L3+ — the **human-oversight
-plan** (sampling schedule per level, reviewer SLA, re-escalation triggers) in the
+invalidates it for the oversight modes that judge gates (Doctrine 5). Declare the stop
+conditions, memory model, determinism map, the operating point, and — at `O1+` — the
+**human-oversight plan** (sampling schedule per oversight mode, reviewer SLA, re-escalation triggers) in the
 Agent Contract at design time. Full treatment: `STANDARD.md` Part IV; the one-page
 gate is `templates/loop-license/CHECKLIST.md`.
 
@@ -455,14 +488,17 @@ When the agent must stop, ask, hand off, or request human approval.
 ## 13. Logging Requirements
 What must be written to trace.
 
-## 14. Stop Conditions *(required at L3+)*
+## 14. Stop Conditions *(required at L3+ or O1+)*
 Max iterations, token/time/spend budgets, timeout, and escalation after N consecutive failures.
 
-## 15. Memory Model *(required at L3+)*
+## 15. Memory Model *(required at O1+; recommended at L3+)*
 What is persisted, retention, provenance, and whether a run is replayable from it.
 
-## 16. Determinism Map *(required at L3+)*
-Which steps are deterministic (tools, checks, pure functions) vs. model-driven.
+## 16. Operating Point & Determinism Map *(operating point: every agent; determinism map: required at O1+, recommended at L3+)*
+The operating point (`L0–L4 · O0–O2`), and which consequential actions, if any, run without per-action approval. Which steps are deterministic (tools, checks, pure functions) vs. model-driven.
+
+## 17. Identity
+The agent's own non-human identity, its credential lifetime and scopes, and who may delegate work to it.
 ```
 
 ## Design Rules
@@ -581,7 +617,7 @@ export async function runAgent(input: AgentInput, runtime: AgentRuntime): Promis
   const context = await runtime.context.select({
     agentId: "agent-name",
     task: validatedInput.task,
-    maxContextBudget: runtime.contextBudget, // keep utilization < ~40%
+    maxContextBudget: runtime.contextBudget, // measured budget; ~40% of the window until measured
   })
 
   // State is durable and externalized: restore if a prior run exists, else create.
@@ -884,7 +920,7 @@ Storage choice follows the dominant requirement: general-purpose recall, evolvin
 
 ## Context Rules
 
-- Keep context-window utilization below ~40% (the 40% rule).
+- Keep context-window utilization below the measured budget (~40% of the window until measured).
 - Do not pass all context by default.
 - Do not pass raw sub-agent transcripts to parent agents.
 - Do not include unused tools in the active tool list.
@@ -969,15 +1005,17 @@ What must be logged.
 
 ## Permission Tiers
 
-| Tier | Type | Examples | Approval |
-|---|---|---|---|
-| P0 | Read | retrieve document, inspect state | No |
-| P1 | Draft | create draft, suggest plan | No |
-| P2 | Internal Write | save draft, update internal task state | Usually no |
-| P3 | External Write | publish page, update external CRM | Yes |
-| P4 | Financial | create charge, change price, issue refund | Yes |
-| P5 | Communication | send email, message user, notify customer | Yes |
-| P6 | Destructive | delete data, revoke access, overwrite production | Always yes |
+| Tier | Type | Examples | Approval at O0 | Approval at O1 / O2 |
+|---|---|---|---|---|
+| P0 | Read | retrieve document, inspect state | No | No |
+| P1 | Draft | create draft, suggest plan | No | No |
+| P2 | Internal Write | save draft, update internal task state | Usually no | Usually no |
+| P3 | External Write | publish page, update external CRM | Yes, per action | Inside the Loop License's declared blast radius; outside it, per action |
+| P4 | Financial | create charge, change price, issue refund | Yes, per action | Inside the declared blast radius and cost ceilings; outside them, per action |
+| P5 | Communication | send email, message user, notify customer | Yes, per action | Inside the declared blast radius; outside it, per action |
+| P6 | Destructive | delete data, revoke access, overwrite production | Always, per action | Always, per action |
+
+The oversight mode decides who approves P3–P5. At O0 a human approves each action. At O1/O2 the Loop License's declared blast radius is the approval, and anything outside it escalates to a human. P6 is approved per action at every mode.
 
 ## Tool Design Rules
 
@@ -1009,16 +1047,14 @@ propose tool call
 - Use sandboxing where possible.
 - Separate read tools from write tools.
 - Separate draft creation from publishing.
-- Require approval for external side effects (P3+).
-- Require approval for financial actions (P4).
-- Require approval for external communication (P5).
-- Always require approval for destructive actions (P6).
+- Gate external writes (P3), financial actions (P4), and external communication (P5). At O0, a human approves each one. At O1+, they run only inside the Loop License's declared blast radius, and anything outside it escalates to a human.
+- Always require per-action approval for destructive actions (P6), at every oversight mode.
 - Log every tool call with input summary and output summary.
 - Never let the model invent tool names.
 - Never let tool permissions live only in the prompt.
 - **Pin MCP tool definitions by cryptographic hash and alert on any change** — a server can mutate a tool's description after you approved it (rug pull / tool poisoning). Install community servers only from an allow-listed registry, version-pinned and signature-checked. Treat every external MCP server as untrusted supply chain.
 - **Run the lethal-trifecta check on the tool set as a whole:** if the agent can reach private data, ingest untrusted content, *and* communicate externally, break one leg before shipping (see Doctrine 7).
-- **Writes are earned, not standing.** Default the session to read-only; a P3+ mutation requires explicit, time-bounded, scoped *elevation* confirmed **out-of-band** — through a channel the agent cannot read (the agent must never see the OTP/secret, or it can self-approve). Each write cites its exact target; destructive (P6) actions get a dry-run preview first. Credential reads return metadata only, never the secret. (Full pattern: the `tool-design-mcp` skill's `SECURE-WRITE-ACTIONS.md`.)
+- **Writes are earned, not standing.** Default the session to read-only; a P3+ mutation requires explicit, time-bounded, scoped *elevation* confirmed **out-of-band** — through a channel the agent cannot read (the agent must never see the OTP/secret, or it can self-approve). Each write cites its exact target; destructive (P6) actions get a dry-run preview first. Credential reads return metadata only, never the secret. At O1+ the Loop License is the standing elevation for P3–P5 inside its declared blast radius. Anything outside that radius, and every P6 action, still needs out-of-band elevation. (Full pattern: the `tool-design-mcp` skill's `SECURE-WRITE-ACTIONS.md`.)
 
 ## Tenant Isolation
 
@@ -1083,7 +1119,7 @@ Human-in-the-loop is a load-bearing pattern, not an afterthought. Use three conc
 
 Required design points:
 - **Interrupt between tool selection and tool invocation** for high-blast-radius actions.
-- Require explicit approval before any P3+ side effect.
+- Require explicit approval before any P3+ side effect at O0. At O1+, require it before any P3+ side effect outside the Loop License's declared blast radius. At every mode, require it before any P6 action.
 - Prefer an "agent inbox" UX where a human reviews queued actions before they execute.
 
 ---
@@ -1213,6 +1249,8 @@ Minimum trace event:
   "trace_id": "uuid",
   "run_id": "uuid",
   "agent_id": "string",
+  "agent_principal": "string",
+  "delegated_by": "string",
   "event_type": "agent.started | context.selected | llm.called | tool.called | guardrail.checked | approval.requested | agent.completed | agent.failed",
   "timestamp": "ISO-8601",
   "input_summary": {},
@@ -1226,7 +1264,7 @@ Minimum trace event:
 }
 ```
 
-Instrument once through an open standard (e.g. OpenTelemetry / OpenInference) so the observability vendor can be swapped without re-instrumenting.
+Instrument once on the **OpenTelemetry GenAI semantic conventions**, pinned to a revision (the `semantic-conventions-genai` repository has no tagged releases yet — pin a commit and run a migration test before moving it), so the observability vendor can be swapped without re-instrumenting. Emit an `invoke_agent` span per run with child `chat` and `execute_tool` spans and record token usage. **Do not capture prompt or completion content by default** — the conventions make those attributes opt-in; enable them only by written policy with retention and access limits. Carry the agent identity and tenant on every span.
 
 ---
 
@@ -1241,7 +1279,8 @@ Determine whether an agentic system is safe and reliable enough for production.
 ### Architecture
 
 - [ ] The system uses the least autonomous architecture sufficient for the task.
-- [ ] The baseline level reached ≥90% eval pass rate before any escalation in autonomy.
+- [ ] The operating point (autonomy `L0–L4` · oversight `O0–O2`) is declared and matches what runs in production.
+- [ ] The baseline level reached ≥90% pass@1 before any escalation in autonomy; any relaxation of oversight is covered by a Loop License with a pass^5 threshold.
 - [ ] Agent boundaries are explicit.
 - [ ] Each agent has one primary responsibility.
 - [ ] There is a clear final owner of user-facing output.
@@ -1258,7 +1297,7 @@ Determine whether an agentic system is safe and reliable enough for production.
 ### Context
 
 - [ ] Context is scoped per agent.
-- [ ] Context-window utilization stays below ~40% in a typical cycle.
+- [ ] Context-window utilization stays below the measured budget (~40% of the window until measured) in a typical cycle.
 - [ ] State is externalized.
 - [ ] Memory is separated by type.
 - [ ] Sub-agent outputs are condensed.
@@ -1270,9 +1309,8 @@ Determine whether an agentic system is safe and reliable enough for production.
 - [ ] Active tool count is < 20 per agent (or RAG-over-tools is used).
 - [ ] Tool inputs are schema-validated.
 - [ ] Permissions are enforced in code.
-- [ ] Destructive actions require approval.
-- [ ] Financial actions require approval.
-- [ ] External communication requires approval.
+- [ ] Destructive actions (P6) require per-action approval at every oversight mode.
+- [ ] External writes, financial actions, and external communication (P3–P5) require approval. At O0 that is per action; at O1+ it is a Loop License's declared blast radius, with anything outside it escalated.
 - [ ] Tool calls are logged.
 
 ### Tenant Isolation (if multi-tenant)
@@ -1289,7 +1327,9 @@ Determine whether an agentic system is safe and reliable enough for production.
 - [ ] The lethal-trifecta check is performed and documented; if all three legs are present, at least one is broken.
 - [ ] MCP tool definitions are pinned by hash with change alerts; servers come from an allow-listed registry, version-pinned and signature-checked.
 - [ ] Tokens are OAuth 2.1 scoped, short-lived, and audience-bound; no token passthrough; no over-scoping.
-- [ ] Each agent has a distinct least-privilege identity; identity and tenant are derived from auth, never from the model.
+- [ ] Each agent has its own least-privilege non-human identity (no shared service account, no human token); identity and tenant are derived from auth, never from the model; every action is attributable to the agent and its delegator.
+- [ ] MCP connections speak revision 2026-07-28 (or carry a dated sunset), run the official conformance suite in CI (every baselined failure an owned, dated gap), register clients by pre-registration or Client ID Metadata Document, validate `iss`, and bind stored client credentials to their issuer.
+- [ ] Cross-boundary delegation verifies the peer's signed Agent Card before handing over work; unsigned or unverifiable peers fail closed.
 - [ ] Indirect prompt injection (poisoned documents / tool output) is in the threat model, not just user-turn injection.
 
 ### Cost
@@ -1316,12 +1356,14 @@ Determine whether an agentic system is safe and reliable enough for production.
 - [ ] Production failures become regression tests.
 - [ ] Subjective judges use binary outputs.
 - [ ] Judges are calibrated against human labels (TPR/TNR tracked).
-- [ ] Human review exists for high-risk changes.
+- [ ] Human review exists for high-risk changes; approval queues track override rate and approval latency.
 - [ ] CI blocks critical regressions.
+- [ ] At `O1+`, the agent cannot modify its own tests, graders, eval sets, or thresholds; at `O2`, a sample of successful runs is reviewed for illegitimate success each release.
 
 ### Observability
 
-- [ ] 100% of production agent runs are traced.
+- [ ] 100% of production agent runs are traced, on the OpenTelemetry GenAI conventions at a pinned revision.
+- [ ] Prompt and completion content is not captured in traces by default.
 - [ ] Tool calls are visible in traces.
 - [ ] Context selection is visible in traces.
 - [ ] Permission checks are visible in traces.
@@ -1369,7 +1411,8 @@ An agent is done only when all of these are true:
 - [ ] Inputs are schema-validated.
 - [ ] Outputs are schema-validated.
 - [ ] Guardrails run on input and output.
-- [ ] Context is scoped (utilization target < ~40%).
+- [ ] Operating point declared (`L0–L4 · O0–O2`).
+- [ ] Context is scoped (utilization under the measured budget; ~40% until measured).
 - [ ] State is externalized and durable.
 - [ ] Tools are allowlisted (< 20 active, or RAG-over-tools).
 - [ ] Permissions are enforced in code.
@@ -1380,7 +1423,8 @@ An agent is done only when all of these are true:
 - [ ] Per-run token/cost ceiling enforced in code; cost-per-task tracked.
 - [ ] Retry, timeout, and idempotency policies exist.
 - [ ] Long-running work can pause/resume.
-- [ ] Trace events are emitted (OTel GenAI conventions).
+- [ ] Trace events are emitted (OTel GenAI conventions, pinned revision; content capture off by default).
+- [ ] The agent acts under its own identity; its actions are attributable to it and its delegator.
 - [ ] Known failure modes are documented.
 - [ ] Golden evals exist.
 - [ ] Failure-mode evals exist.
@@ -1437,7 +1481,7 @@ Implementation requirements:
 - Use LLM calls only where reasoning, generation, classification, or synthesis is genuinely needed.
 - Validate all inputs and outputs with schemas; add guardrails on both.
 - Keep state outside the context window; make it durable and resumable.
-- Scope context per task; target context-window utilization below ~40%.
+- Scope context per task; keep context-window utilization under the measured budget (~40% until measured).
 - Enforce permissions in code.
 - Log all agent decisions, tool calls, validations, and errors.
 - Add retry, timeout, and idempotency policies.
@@ -1485,7 +1529,7 @@ Implementation requirements:
 - All handoffs must be explicit.
 - All outputs must be schema-validated.
 - All tools must go through permission checks.
-- All external side effects must require approval.
+- All external side effects must require approval. At O0 that is per action; at O1+ it is the Loop License's declared blast radius. P6 is always per action.
 - All runs must be traceable.
 - The system must support retry and partial failure recovery.
 
@@ -1518,12 +1562,12 @@ Evaluate:
 2. Are agent boundaries clear?
 3. Does every agent have a contract?
 4. Are inputs and outputs schema-validated, with guardrails?
-5. Is context scoped, and does utilization stay below ~40%?
+5. Is context scoped, and does utilization stay under the measured budget (~40% until measured)?
 6. Is state externalized and durable/resumable?
 7. Are tools allowlisted and kept under ~20 active?
 8. Are permissions enforced in code?
 9. Are side effects classified (P0–P6)?
-10. Are approval gates present for P3+ actions?
+10. Are approval gates present for P3+ actions? At O0 that means per action; at O1+, a Loop License. P6 is always per action.
 11. Are retries, timeouts, and idempotency handled?
 12. Are traces emitted for every run?
 13. Are evals present and judges calibrated?
@@ -1551,15 +1595,15 @@ Return:
 4. Do not pass raw sub-agent transcripts to parent agents.
 5. Do not let agents communicate through unstructured free-form text when state matters.
 6. Do not rely on prompts for permission enforcement.
-7. Do not let agents perform destructive actions without approval.
-8. Do not let agents perform financial actions without approval.
-9. Do not let agents send external communications without approval.
+7. Do not let agents perform destructive actions without per-action approval, at any oversight mode.
+8. Do not let agents perform financial actions without approval — per action, or inside a Loop License's declared blast radius (rule 23).
+9. Do not let agents send external communications without approval — per action, or inside a Loop License's declared blast radius (rule 23).
 10. Do not treat memory as a dumping ground.
 11. Do not use LLM-as-judge where code assertions are enough.
 12. Do not use LLM-as-judge without calibrating against human labels.
 13. Do not use generic evals as the primary quality signal.
 14. Do not ship long-running agents without durable execution.
-15. Do not exceed ~40% context-window utilization by default.
+15. Do not exceed the context budget (~40% of the window until you have measured your own).
 16. Do not claim production readiness without traces.
 17. Do not add autonomy without eval evidence.
 18. Do not choose a framework before defining the architecture.
@@ -1567,6 +1611,9 @@ Return:
 20. Do not let the model select from an open vocabulary where a closed enumeration can be inlined.
 21. Do not ship the lethal trifecta (private data × untrusted content × external comms) without breaking at least one leg.
 22. Do not load community MCP tool definitions without pinning them by hash and alerting on change.
+23. Do not relax oversight — let consequential actions run without per-action approval — without a Loop License.
+24. Do not let an agent modify the tests, graders, eval sets, or thresholds that decide whether it succeeded.
+25. Do not run an agent on a shared service account or a person's credentials.
 
 ---
 
@@ -1603,6 +1650,8 @@ Agent Loop
 + Human-in-the-Loop
 + Evaluation
 + Observability
+× Security & Identity   (cross-cutting)
+× Cost & FinOps         (cross-cutting)
 ```
 
 ```text
@@ -1636,10 +1685,18 @@ directionally correct, not as audited benchmarks.
 | Single-agent for depth-first / shared-context work; "telephone game" risk | Cognition, *Don't Build Multi-Agents* (Walden Yan, Jun 2025) |
 | Context engineering = write / select / compress / isolate | LangChain, *Context Engineering for Agents* (Lance Martin, Jun 2025) |
 | The ~40% context-window "dumb zone" | HumanLayer (Dex Horthy), empirical context-budget guidance |
-| ~98% of a production coding agent is harness, not model loop; harness as the durable advantage | OpenAI, *Harness Engineering* (Feb 2026); Liu et al., Claude Code analysis (arXiv:2604.14228); LangChain, *Improving Deep Agents with harness engineering* (Mar 2026) |
+| Autonomy and oversight are separate axes | EU AI Act — AI systems operate "with varying levels of autonomy" (Art. 3(1)); human oversight is a requirement of its own (Art. 14) |
+| Automation bias makes rubber-stamped approval a non-control; measure override rates and response times | IMDA, *Model AI Governance Framework for Agentic AI* (Jan 2026, updated May 2026); EU AI Act Art. 14(4)(b) |
+| Benchmark time horizons do not transfer to a product; on tasks over eight hours, at least 16% of successful runs were illegitimate on review | METR, note on time-horizon limitations (22 Jan 2026); METR, *Frontier Risk Report* (May 2026) |
+| MCP 2026-07-28: stateless core, Client ID Metadata Documents, RFC 9207 issuer validation, issuer-bound credentials, deprecated Roots/Sampling/Logging | MCP specification 2026-07-28 and its changelog (28 Jul 2026); official conformance suite (modelcontextprotocol/conformance) |
+| Signed Agent Cards (JWS over JCS-canonicalized cards); verification only a SHOULD in the spec | A2A specification v1.0.1, §8.4 (v1.0 released 12 Mar 2026) |
+| GenAI conventions moved to their own repository, still Development status; content capture opt-in | OpenTelemetry semantic conventions v1.42.0 (Jun 2026); `semantic-conventions-genai` |
+| Distinct, attributable identity per agent | NIST NCCoE concept paper, *Accelerating the Adoption of Software and Artificial Intelligence Agent Identity and Authorization* (initial public draft, Feb 2026) |
+| Skills are a supply chain: 13.4% of 3,984 public skills had critical-level issues; 76 confirmed malicious payloads | Snyk, *ToxicSkills* (Feb 2026); Agent Skills specification (agentskills.io) |
+| ~98% of Claude Code is harness, not model loop (a community estimate); harness as the durable advantage | Liu et al., *Dive into Claude Code* (arXiv:2604.14228) — cites a community estimate of ~1.6% AI decision logic vs. ~98.4% operational infrastructure in Claude Code; OpenAI, *Harness Engineering* (Feb 2026); LangChain, *Improving Deep Agents with harness engineering* (Mar 2026) |
 | RAG over tool descriptions ≈3.2× tool-selection accuracy; cuts prompt tokens >50% | *RAG-MCP* (arXiv:2505.03275) |
 | MCP scale (10,000+ servers, 177,000+ tools) and MCP/A2A split | MCP security framework (arXiv:2604.05969); *How are AI agents used?* (arXiv:2603.23802); A2A (Google → Linux Foundation, 2025) |
-| Permissions must be enforced outside the model — Replit deleted a production DB despite a prompt "code freeze" | Fortune, *AI-powered coding tool wiped out a software company's database* (Jul 23, 2025) |
+| Permissions must be enforced outside the model — Replit deleted a production DB despite a prompt "code freeze" | Jason Lemkin (SaaStr) on X, Jul 18, 2025; Replit CEO Amjad Masad's response, Jul 20, 2025; Fortune, *AI-powered coding tool wiped out a software company's database* (Jul 23, 2025) |
 | Durable execution: agent loop = Workflow (replayable), LLM/tool calls = Activities (retried) | Temporal pattern; first-party integrations for OpenAI Agents SDK, Pydantic AI, Vercel AI SDK, mcp-agent |
 | Eval discipline: error analysis first; 3-level pyramid; binary judges; calibrate against ~100 human labels; track TPR/TNR; product-specific failure modes | Hamel Husain, *A Field Guide to Rapidly Improving AI Products* / *Your AI Product Needs Evals*; Shreya Shankar, *Who Validates the Validators?* |
 | HITL patterns notify / ask / review; agent inbox; interrupt between tool selection and invocation | LangChain (Harrison Chase), *Introducing ambient agents* (Jan 14, 2025) |

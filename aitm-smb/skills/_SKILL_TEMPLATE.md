@@ -1,14 +1,15 @@
 ---
 name: NN-slug                         # equals the directory name
 description: "<one line, double-quoted, <= 1024 characters: what the skill does, when to use it, what it produces>. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active                        # draft | active | deprecated
-category: orchestrator | diagnostic-specialist | design-specialist | execution-governance | framework-operations
-phase: "N"                            # orchestrators: their phase; specialists: the phase(s) they serve, e.g. "2" or "6-7"
-human_gate: true | false              # true: the output requires a STANDARD.md §8 approval before downstream use
-gates: [HG-...]                       # present only when human_gate is true
+metadata:                             # AITM-SMB fields; strings only (Agent Skills specification)
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active                      # draft | active | deprecated
+  category: orchestrator              # orchestrator | diagnostic-specialist | design-specialist | execution-governance | framework-operations
+  phase: "N"                          # orchestrators: their phase; specialists: the phase(s) they serve, e.g. "2" or "6-7"
+  human_gate: "false"                 # "true": the output requires a STANDARD.md §8 approval before downstream use
+  gates: "HG-..."                     # only when human_gate is "true": gate IDs, comma-separated
 ---
 
 # Skill NN: <Title>

@@ -1,14 +1,15 @@
 ---
 name: 31-operationalize-governance
 description: "Makes AI governance executable for an AI-enabled Capability: completes the AI Governance Canvas within the approved Authority Ceilings (owner, risk owner, permissions, prohibited actions, approvals, escalation and stop conditions, evaluation, audit evidence, recovery path, cost boundary), assigns AI components to the canonical change-control classes, and defines the authority promotion and demotion path and the incident review loop. Use in Phase 7 wherever AI is used; Compact needs only the Governance minimum fields. Produces the canvas per artifacts/ai-governance-canvas.md and stops where material risk is accepted or AI authority is granted. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: execution-governance
-phase: "7"
-human_gate: true
-gates: [HG-RISK]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: execution-governance
+  phase: "7"
+  human_gate: "true"
+  gates: "HG-RISK"
 ---
 
 # Skill 31: Operationalize Governance

@@ -1,0 +1,98 @@
+name: aps-conformance
+description: >-
+  Score an agentic product against The Agentic Product Standard — maturity band, operating-envelope
+  check, Definition of Done coverage, and SARIF findings tagged with the regulatory obligations they support.
+author: Moai Team LLC
+branding:
+  icon: check-square
+  color: blue
+
+inputs:
+  file:
+    description: Path to the product's aps-conformance.yaml, relative to the workspace.
+    required: false
+    default: aps-conformance.yaml
+  sarif:
+    description: Where to write the SARIF 2.1.0 report (upload it with github/codeql-action/upload-sarif).
+    required: false
+    default: aps-conformance.sarif
+  badge:
+    description: Where to write a shields.io endpoint badge JSON. Empty to skip.
+    required: false
+    default: ""
+  fail-under:
+    description: >-
+      Fail the step below this band (M0–M3). Default — the band the declared operating point requires.
+    required: false
+    default: ""
+  require-dod:
+    description: >-
+      Also fail while any Definition of Done item that binds to the product is open — the
+      production-ready gate. Default false: the step gates on the band only.
+    required: false
+    default: "false"
+  allow-unevidenced:
+    description: Count a `yes` without evidence as yes. Default false — evidence-based scoring.
+    required: false
+    default: "false"
+
+outputs:
+  band:
+    description: The maturity band achieved (M0–M3).
+    value: ${{ steps.score.outputs.band }}
+  required:
+    description: The band the declared operating point requires.
+    value: ${{ steps.score.outputs.required }}
+  envelope-ok:
+    description: "'true' when the achieved band covers the declared operating point."
+    value: ${{ steps.score.outputs.envelope_ok }}
+  production-ready:
+    description: "'true' when the band covers the operating point and no binding DoD item is open."
+    value: ${{ steps.score.outputs.production_ready }}
+
+runs:
+  using: composite
+  steps:
+    - name: Ensure PyYAML
+      shell: bash
+      run: |
+        python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml || {
+          echo "::error::aps-conformance needs PyYAML and could not install it — run actions/setup-python before this step"
+          exit 1
+        }
+
+    - name: Score conformance
+      id: score
+      shell: bash
+      env:
+        APS_FILE: ${{ inputs.file }}
+        APS_SARIF: ${{ inputs.sarif }}
+        APS_BADGE: ${{ inputs.badge }}
+        APS_FAIL_UNDER: ${{ inputs.fail-under }}
+        APS_REQUIRE_DOD: ${{ inputs.require-dod }}
+        APS_ALLOW_UNEVIDENCED: ${{ inputs.allow-unevidenced }}
+      run: |
+        # GitHub runs `bash -eo pipefail`: a failing gate must not kill the step before the
+        # outputs are written, so the exit code is captured explicitly.
+        set +e
+        report="$RUNNER_TEMP/aps-conformance-$GITHUB_ACTION.json"
+        rm -f "$report"   # never report an earlier run's band
+        args=(conformance "$APS_FILE" --root "$GITHUB_WORKSPACE" --sarif "$APS_SARIF"
+              --json "$report" --summary "$GITHUB_STEP_SUMMARY")
+        if [ -n "$APS_BADGE" ]; then args+=(--badge "$APS_BADGE"); fi
+        if [ -n "$APS_FAIL_UNDER" ]; then args+=(--fail-under "$APS_FAIL_UNDER"); fi
+        if [ "$APS_REQUIRE_DOD" = "true" ]; then args+=(--require-dod); fi
+        if [ "$APS_ALLOW_UNEVIDENCED" = "true" ]; then args+=(--allow-unevidenced); fi
+        python3 "$GITHUB_ACTION_PATH/tools/aps.py" "${args[@]}"
+        rc=$?
+        if [ -f "$report" ]; then
+          python3 - "$report" >> "$GITHUB_OUTPUT" <<'PY'
+        import json, sys
+        r = json.load(open(sys.argv[1], encoding="utf-8"))
+        print(f"band={r['achieved']}")
+        print(f"required={r['required']}")
+        print(f"envelope_ok={'true' if r['envelope_ok'] else 'false'}")
+        print(f"production_ready={'true' if r['production_ready'] else 'false'}")
+        PY
+        fi
+        exit $rc

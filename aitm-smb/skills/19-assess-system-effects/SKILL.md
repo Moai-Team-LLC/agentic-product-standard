@@ -1,13 +1,14 @@
 ---
 name: 19-assess-system-effects
 description: "Checks an Initiative for effects beyond its own Capability: upstream support, downstream demand, shared-resource and incentive effects, likely Constraint Migration and who absorbs new exceptions, with a verdict on whether it improves the target Outcome or only a local metric, and mitigations. Use in every profile (in Compact a short record): in Phase 4 for each Initiative proposed for selection, before HG-INITIATIVE (invoked by skill 05), and in Phase 5 to refine it at system level (invoked by skill 06). Produces one System Effect Assessment per Initiative. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: design-specialist
-phase: "4-5"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: design-specialist
+  phase: "4-5"
+  human_gate: "false"
 ---
 
 # Skill 19: Assess System Effects

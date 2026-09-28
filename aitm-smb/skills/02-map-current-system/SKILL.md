@@ -1,13 +1,14 @@
 ---
 name: 02-map-current-system
 description: "Phase 1 orchestrator. Builds an evidence-based model of how the business produces value today for the approved Outcomes: discovers Capabilities and their CURRENT States (skill 11) and, where the profile requires it, maps value streams, roles, decisions, processes, data, knowledge and applications. Use after Outcomes are approved (HG-OUTCOME) and before diagnosis. Produces the Capability Map, the Business System Map and Evidence Register entries. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: orchestrator
-phase: "1"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: orchestrator
+  phase: "1"
+  human_gate: "false"
 ---
 
 # Skill 02: Orchestrate Current-System Mapping

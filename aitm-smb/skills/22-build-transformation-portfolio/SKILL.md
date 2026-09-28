@@ -1,14 +1,15 @@
 ---
 name: 22-build-transformation-portfolio
 description: "Builds the Transformation Portfolio for several Initiatives: categorizes them, maps dependencies, shared enablers and resource contention, applies the portfolio criteria and dominance rule, measures change saturation, sets the WIP limit, and applies the portfolio stop condition before any Initiative is added. Use in Phase 6 when the Portfolio profile is active or several Initiatives compete for the same people, enablers, or constraint. Produces a PTF record per artifacts/transformation-portfolio.md and stops for Initiative and budget approval. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: design-specialist
-phase: "6"
-human_gate: true
-gates: [HG-INITIATIVE, HG-BUDGET]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: design-specialist
+  phase: "6"
+  human_gate: "true"
+  gates: "HG-INITIATIVE, HG-BUDGET"
 ---
 
 # Skill 22: Build Transformation Portfolio

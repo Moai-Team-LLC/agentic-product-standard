@@ -1,13 +1,14 @@
 ---
 name: 04-design-interventions
 description: "Phase 3 orchestrator. Designs candidate Interventions for each intervention-ready Gap across all intervention families, from eliminating and simplifying work to AI, with simpler alternatives considered before AI; assesses AI suitability (skill 13) for AI candidates and autonomy (skill 14) for those proposed for selection. Use after diagnosis, before prioritization. Produces the Intervention Map, AI Suitability Assessments and Autonomy Assessments with proposed Authority Ceilings. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: orchestrator
-phase: "3"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: orchestrator
+  phase: "3"
+  human_gate: "false"
 ---
 
 # Skill 04: Orchestrate Intervention Design

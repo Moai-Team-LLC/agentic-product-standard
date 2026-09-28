@@ -84,7 +84,7 @@ For failure modes that need judgment but are too expensive for human review on e
 
 5. **Version the judge prompt.** Treat it as code. Diff reviews. If the judge prompt changes, all historical scores are invalidated.
 
-6. **The judge is decorrelated from the writer.** Self-check by the model that produced the work does not count as verification — it shares its own blind spots. Use a different model or a materially different prompt/context, and let it see the *artifact*, not the writer's reasoning. For unattended (L3+) loops this is mandatory — see the Loop License and the "Writer / Checker, done right" pattern in `STANDARD.md` Part IV.
+6. **The judge is decorrelated from the writer.** Self-check by the model that produced the work does not count as verification — it shares its own blind spots. Use a different model or a materially different prompt/context, and let it see the *artifact*, not the writer's reasoning. For systems running without per-action approval (oversight O1+) this is mandatory — see the Loop License and the "Writer / Checker, done right" pattern in `STANDARD.md` Part IV.
 
 ### Level 3: Human review
 
@@ -97,6 +97,15 @@ The ultimate authority, but expensive. Reserve for:
 - Edge cases the judges flag as uncertain
 
 **Pattern:** sample 20–50 production traces weekly, review with the team, update the eval set with new failure modes discovered.
+
+## Consistency and legitimacy — the numbers autonomy runs on
+
+`pass@1` tells you how often the agent can succeed; it does not tell you whether you can stop watching it. Two more numbers do:
+
+- **`pass^k` — consistency.** Run each case k times; it passes only if all k succeed. A 90% `pass@1` agent can sit well below 90% `pass^5`, and an unwatched agent lives on the tail. The Loop License gates relaxing oversight (O0 → O1 → O2) on a declared `pass^5` threshold.
+- **Legitimacy rate — honesty of the pass.** A check the agent can satisfy without doing the task measures its skill at satisfying checks. METR found that on tasks longer than eight hours, at least 16% of successful runs were illegitimate on review. At O2, review a stratified sample of *successful* runs each release, publish legitimate ÷ reviewed next to `pass@1` and `pass^5`, and gate promotion on a declared floor (DoD 30). Keep tests, graders, eval sets, and thresholds outside the agent's write scope at O1+ (DoD 18) — whenever its actions land without per-action approval.
+
+The CI template `templates/ci/eval-gate.yml` gates on all three when your eval report carries them — each against its floor and against the baseline main is held to, so a regression blocks the merge even above the floor.
 
 ## The eval set as a living artifact
 

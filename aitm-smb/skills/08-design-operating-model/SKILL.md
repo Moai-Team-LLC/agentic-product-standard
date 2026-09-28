@@ -1,14 +1,15 @@
 ---
 name: 08-design-operating-model
 description: "Phase 7 orchestrator. Makes the transformed system operable and governed and moves it from pilot to rollout: ownership, observability (skill 28), adoption and role transitions (skill 30), AI governance (skill 31), pilot evaluation (skill 32), rollout planning after promotion (skill 29), new evaluations (skill 26) and readiness checks (skill 35) before each rollout stage, and authority grants and changes (skill 34); stops at Decision Rights, AI authority, risk and pilot-promotion gates. Use once the roadmap is approved and while pilots and rollouts run. Produces the Operating Model, Observability, Adoption and Rollout Plans, the AI Governance Canvas, pilot results and Execution Gate records. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: orchestrator
-phase: "7"
-human_gate: true
-gates: [HG-DECISION-RIGHTS, HG-AUTHORITY, HG-RISK, HG-PROMOTION]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: orchestrator
+  phase: "7"
+  human_gate: "true"
+  gates: "HG-DECISION-RIGHTS, HG-AUTHORITY, HG-RISK, HG-PROMOTION"
 ---
 
 # Skill 08: Orchestrate Operating Model & Governance

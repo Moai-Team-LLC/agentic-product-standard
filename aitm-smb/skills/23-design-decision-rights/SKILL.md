@@ -1,14 +1,15 @@
 ---
 name: 23-design-decision-rights
 description: "Designs the Decision Rights Map: for each material operational business decision, the accountable human decision owner and the current and target authority models, decomposed where authority differs between parts, with the information, knowledge, policy and escalation it needs, and AI authority that does not exceed the approved Authority Ceiling. Use in Phase 5 when a design changes who or what decides. Produces BDS records per artifacts/decision-rights-map.md and stops for decision-rights approval. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: design-specialist
-phase: "5"
-human_gate: true
-gates: [HG-DECISION-RIGHTS]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: design-specialist
+  phase: "5"
+  human_gate: "true"
+  gates: "HG-DECISION-RIGHTS"
 ---
 
 # Skill 23: Design Decision Rights

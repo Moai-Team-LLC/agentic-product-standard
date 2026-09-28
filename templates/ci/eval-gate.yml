@@ -4,9 +4,19 @@
 # mandate is not a mechanism. Copy this into your agent repo at
 # .github/workflows/eval-gate.yml and wire the two TODO points to your stack.
 #
-# Contract: your eval command prints a JSON line {"pass_rate": <0..1>, ...} as
-# its LAST line of stdout (or adapt the parse step). The job fails if the rate
-# is below MIN_PASS_RATE — that is the gate.
+# Contract: your eval command prints a JSON line as the LAST line of stdout, e.g.
+#   {"pass_rate": 0.93, "pass_k": 0.86, "k": 5, "legitimacy_rate": 0.97}
+# `pass_rate` (pass@1) is required. `pass_k` and `legitimacy_rate` are checked
+# only when their thresholds below are set — set them for anything the Loop
+# License covers (oversight O1+): the license gates on pass^5, and at O2 on the
+# legitimacy rate from your success-legitimacy audit (DoD 16, 30).
+#
+# Two kinds of gate run here. Absolute floors (MIN_*) say "never ship below this".
+# The regression gate says "never ship worse than main": it compares this run with
+# a baseline report committed to the repo (BASELINE_FILE, same JSON contract) and
+# fails when any metric drops by more than MAX_REGRESSION. That comparison is what
+# DoD 12 and Loop License gate 2 require. Update the baseline deliberately, in the
+# PR that moves it, so the change is a reviewed diff (like a snapshot test).
 
 name: eval-gate
 
@@ -16,7 +26,12 @@ on:
     branches: [main]
 
 env:
-  MIN_PASS_RATE: "0.90"   # escalation gate from the Autonomy Ladder (≥90%)
+  MIN_PASS_RATE: "0.90"        # pass@1 floor — ≥90% is also the bar for climbing autonomy (Canon 1)
+  MIN_PASS_K: ""               # e.g. "0.80" — pass^k floor your Loop License declares (O1+)
+  EXPECTED_K: "5"              # the k your pass^k must be measured at
+  MIN_LEGITIMACY_RATE: ""      # e.g. "0.95" — legitimacy floor from your audit (O2)
+  BASELINE_FILE: "evals/baseline.json"   # the report main is held to; "" disables the regression gate
+  MAX_REGRESSION: "0.00"       # allowed drop per metric vs. the baseline (absorb eval noise, not regressions)
 
 jobs:
   evals:
@@ -35,22 +50,55 @@ jobs:
         id: run
         run: |
           set -euo pipefail
-          # TODO: replace with your eval command; it must print a final JSON
-          # line containing "pass_rate". Capture the whole output and the tail.
+          # TODO: replace with your eval command; it must print the JSON line
+          # described above as its final line. Capture the whole output.
           python -m evals --report json | tee eval-output.txt
 
-      - name: Gate on pass rate
+      - name: Gate on pass@1, pass^k, legitimacy, and regression vs. baseline
         run: |
           set -euo pipefail
-          rate="$(grep -oE '"pass_rate"[[:space:]]*:[[:space:]]*[0-9.]+' eval-output.txt \
-                   | tail -1 | grep -oE '[0-9.]+$')"
-          if [ -z "${rate:-}" ]; then
-            echo "::error::no pass_rate found in eval output"; exit 1
-          fi
-          echo "pass_rate=$rate (gate: $MIN_PASS_RATE)"
-          awk -v r="$rate" -v m="$MIN_PASS_RATE" 'BEGIN{ exit !(r+0 >= m+0) }' || {
-            echo "::error::eval pass rate $rate is below the $MIN_PASS_RATE gate"; exit 1; }
-          echo "eval gate passed."
+          python3 - <<'PY'
+          import json, os, sys
+          lines = [l for l in open("eval-output.txt", encoding="utf-8").read().splitlines() if l.strip()]
+          try:
+              report = json.loads(lines[-1])
+          except (IndexError, json.JSONDecodeError):
+              print("::error::the last line of the eval output is not a JSON report"); sys.exit(1)
+          failed = False
+          def gate(key, env, label):
+              global failed
+              floor = os.environ.get(env, "").strip()
+              if not floor:
+                  return
+              if key not in report:
+                  print(f"::error::{label} threshold is set but the report has no '{key}'"); failed = True; return
+              value = float(report[key])
+              ok = value >= float(floor)
+              print(f"{label}: {value:.3f} (gate {floor}) {'ok' if ok else 'FAIL'}")
+              if not ok:
+                  print(f"::error::{label} {value:.3f} is below the {floor} gate"); failed = True
+          gate("pass_rate", "MIN_PASS_RATE", "pass@1")
+          if os.environ.get("MIN_PASS_K", "").strip() and str(report.get("k")) != os.environ["EXPECTED_K"]:
+              print(f"::error::pass^k measured at k={report.get('k')}, expected k={os.environ['EXPECTED_K']}"); failed = True
+          gate("pass_k", "MIN_PASS_K", f"pass^{os.environ['EXPECTED_K']}")
+          gate("legitimacy_rate", "MIN_LEGITIMACY_RATE", "legitimacy rate")
+          base_path = os.environ.get("BASELINE_FILE", "").strip()
+          if base_path:
+              if not os.path.exists(base_path):
+                  print(f"::error::no baseline at {base_path} — commit one (a report from main) or set BASELINE_FILE to \"\"")
+                  failed = True
+              else:
+                  base = json.load(open(base_path, encoding="utf-8"))
+                  tol = float(os.environ.get("MAX_REGRESSION", "0") or 0)
+                  for key in ("pass_rate", "pass_k", "legitimacy_rate"):
+                      if key in base and key in report:
+                          drop = float(base[key]) - float(report[key])
+                          ok = drop <= tol + 1e-9   # float noise, not a regression
+                          print(f"{key}: {float(report[key]):.3f} vs. baseline {float(base[key]):.3f} {'ok' if ok else 'REGRESSION'}")
+                          if not ok:
+                              print(f"::error::{key} regressed by {drop:.3f} against {base_path} (tolerance {tol})"); failed = True
+          sys.exit(1 if failed else 0)
+          PY
 
       - name: Upload eval report
         if: always()

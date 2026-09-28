@@ -1,13 +1,14 @@
 ---
 name: 39-audit-framework-integrity
 description: "Audits the AITM-SMB repository itself before a release: runs python3 tools/validate.py and its engagement check on the worked example, resolves orphan warnings, and performs the MAINTENANCE release audits that need judgment: duplicate definitions and artifact-versus-module record parity, semantic consistency, registry-versus-directory parity, skill and contract shape, profile and artifact completeness, skill dependencies, versions, CHANGELOG and migration table, and the abstract-scenario walk-through. Use before every release and after structural changes; it is a maintainer skill, not an engagement skill. Produces findings only. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: framework-operations
-phase: "maintenance"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: framework-operations
+  phase: "maintenance"
+  human_gate: "false"
 ---
 
 # Skill 39: Audit Framework Integrity

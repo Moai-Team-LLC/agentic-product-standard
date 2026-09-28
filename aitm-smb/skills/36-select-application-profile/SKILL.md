@@ -1,13 +1,14 @@
 ---
 name: 36-select-application-profile
 description: "Selects the engagement's Application Profiles: a base profile (Compact or Standard) and each add-on (Governed, Portfolio, Measured) evaluated independently, by answering the PROFILE_SELECTION questions against the APPLICATION_PROFILES use-when lists, applying the PROFILE_SELECTION defaults where an answer is unknown (Standard base, a Governed condition treated as holding, Measured added, Portfolio re-checked at the Phase 1 exit), and records the selection, rationale and change triggers as a proposed Decision approved together with HG-OUTCOME. Use at the start of an engagement (Phase 0, via skill 01), whenever no approved profile Decision exists, at the Phase 1 exit re-check, and when new evidence changes an answer. Produces a DEC record in artifacts/decision-assumption-log.md. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: framework-operations
-phase: "0"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: framework-operations
+  phase: "0"
+  human_gate: "false"
 ---
 
 # Skill 36: Select Application Profile

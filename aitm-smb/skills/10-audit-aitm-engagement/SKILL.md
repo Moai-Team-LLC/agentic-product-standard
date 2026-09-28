@@ -1,13 +1,14 @@
 ---
 name: 10-audit-aitm-engagement
 description: "Cross-phase orchestrator. Audits an AITM-SMB engagement at any point for semantic traceability, conformance with the selected profiles, evidence discipline, human decision gates and AI authority boundaries, by running the conformance audit (skill 38). Use before a phase exit, before a human gate decision, or when conformance is claimed. Returns findings and the decisions a human must take; skill 38 writes the conformance declaration into the Transformation Intent. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: orchestrator
-phase: "any"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: orchestrator
+  phase: "any"
+  human_gate: "false"
 ---
 
 # Skill 10: Orchestrate Conformance Audit

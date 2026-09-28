@@ -1,0 +1,369 @@
+# The anti-patterns — the fastest way to recognize a doomed agent project.
+# `title` (+ optional `gloss`) feeds the short lists (README, master skill); `summary` feeds
+# STANDARD.md Part VIII; signal / failure_mode / fix / severity feed the antipatterns-review
+# skill. Numbers are identifiers: never reused, never renumbered.
+# Links: write repo-root paths as `@/path`; the renderer makes them relative per target.
+
+antipatterns:
+  - n: 1
+    title: Multi-agent before a single-agent baseline
+    since: "1.0.0"
+    summary: First prove value on one agent.
+    signal: the design has 3+ agents from day one; no single-agent version was tried.
+    failure_mode: >-
+      complexity tax without proven value. Sub-agents lose context to each other; coordination
+      overhead dominates; debugging is hard.
+    fix: >-
+      rebuild as single-agent. If it works at 80%+ pass rate, you have a baseline. Add a second
+      agent only when the single-agent version demonstrably hits a wall (context exhaustion or
+      genuine parallelizable subtasks).
+    severity: High — almost always over-engineering
+
+  - n: 2
+    title: Framework abstractions before understanding the raw API
+    since: "1.0.0"
+    summary: Otherwise debugging turns into reverse-engineering someone else's code.
+    signal: >-
+      code uses LangGraph / CrewAI / etc. but the engineer can't explain what the underlying
+      LLM calls look like or what gets sent over the wire.
+    failure_mode: >-
+      debugging becomes reverse-engineering the framework. Performance issues invisible. Bugs
+      misattributed to the model.
+    fix: >-
+      rebuild v0 in raw SDK calls. Once you understand the call shape, decide if the framework
+      still earns its place. Many teams discover they don't need it.
+    severity: High — compounds every future bug
+
+  - n: 3
+    title: LLM judges without calibration against human labels
+    since: "1.0.0"
+    summary: A metric with no trust value is not a metric.
+    signal: team has LLM judges in evals; no one has measured TPR/TNR against a human-labeled set.
+    failure_mode: >-
+      scores look good while quality degrades; or scores look bad while quality is fine.
+      Either way, team loses trust in evals and reverts to vibe check.
+    fix: >-
+      get 100 human labels for each judge. Run the judge. Compute TPR/TNR. Iterate the judge
+      prompt to > 80% on both. Re-run calibration whenever the judge prompt changes.
+    severity: Critical — invalidates the entire eval system
+
+  - n: 4
+    title: Permissions enforced through prompts
+    since: "1.0.0"
+    summary: The model will ignore them. Enforce in code only.
+    signal: >-
+      system prompt has instructions like "do not delete production data" or "always ask
+      before sending email."
+    failure_mode: >-
+      model under pressure / prompt injection / context loss ignores the instruction. Replit
+      case ([Fortune, 23 Jul 2025](https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/)): a production database
+      holding records on 1,206 executives and 1,196+ companies deleted despite an explicit
+      "code freeze."
+    fix: >-
+      the agent must literally not have credentials that bypass the boundary. Destructive
+      actions route through a separate approval service that the LLM cannot call directly.
+      OAuth scopes constrain what's even possible.
+    severity: Critical — Replit-class incident risk
+
+  - n: 5
+    title: Memory as an afterthought
+    since: "1.0.0"
+    summary: Externalizing state is an architectural decision; the retrofit is painful.
+    signal: >-
+      memory was added late; it's bolted on to an existing agent loop; no policy for what gets
+      written or evicted.
+    failure_mode: >-
+      memory grows without bound; agent retrieves irrelevant junk; personalization is
+      inconsistent or wrong.
+    fix: >-
+      treat memory as architecture (see `memory-architecture/`). Define types, vendor,
+      write/read discipline, eviction, privacy. Sometimes the right answer is "remove memory
+      until we need it."
+    severity: Medium-High — hard to retrofit
+
+  - n: 6
+    title: Generic evals ("helpfulness," "correctness")
+    since: "1.0.0"
+    summary: They do not catch product-specific failures.
+    signal: eval suite has "is this response good?" or "is this correct?" as the primary metric.
+    failure_mode: >-
+      misses product-specific failure modes. "Helpfulness" is high while users complain about
+      the specific things that matter.
+    fix: >-
+      read 20–50 production traces. Identify 5–10 named, product-specific failure modes
+      ("missed handoff," "stale data," "wrong tool"). Each becomes an eval. Drop generic
+      metrics or keep them as supplementary.
+    severity: High — wasted eval investment
+
+  - n: 7
+    title: Likert scales in an LLM judge
+    gloss: binary only
+    since: "1.0.0"
+    summary: Binary outputs are the only thing that calibrates.
+    signal: LLM judges output scores 1–5 or "rate the quality."
+    failure_mode: >-
+      scores don't align with human raters; noise dominates signal; teams can't act on a 3.4
+      vs 3.6.
+    fix: >-
+      binary outputs only. True/false. Pass/fail. Each judge checks one specific criterion. If
+      you need multiple dimensions, use multiple binary judges.
+    severity: Medium-High — produces unactionable metrics
+
+  - n: 8
+    title: ">100 tools per agent"
+    since: "1.0.0"
+    summary: The model gets confused. Use RAG-MCP or routing.
+    signal: tool count is in the high tens or hundreds; agent often picks the wrong tool.
+    failure_mode: >-
+      tool descriptions overlap; model can't disambiguate; selection accuracy drops sharply
+      past ~20 active tools.
+    fix: |-
+      Three options (see `tool-design-mcp/`):
+      - Routing — classifier dispatches to specialist with ~5–10 tools
+      - RAG-MCP — retrieve only relevant tools per turn (3.2× accuracy lift)
+      - Hierarchical tools — meta-tools that internally dispatch
+    severity: High — tool selection failures cascade
+
+  - n: 9
+    title: One agent for both breadth and depth
+    since: "1.0.0"
+    summary: "Specialize: one type of agent, one type of task."
+    signal: >-
+      the same agent handles both "research X across many sources" and "write coherent long
+      document about X."
+    failure_mode: >-
+      wrong architecture for at least one of the tasks. Multi-agent for the depth-first work
+      loses context; single-agent for the breadth-first work serializes parallelizable work.
+    fix: >-
+      split. The breadth-first task gets multi-agent (orchestrator + sub-agents). The
+      depth-first task gets single-agent. They can share tools and memory; they shouldn't share
+      architecture.
+    severity: High — fundamental architectural mismatch
+
+  - n: 10
+    title: Deploying without trace monitoring
+    since: "1.0.0"
+    summary: Most failures are routing/tool-selection — visible only in traces.
+    signal: agent is in production; only logs are application logs (errors, generic info).
+    failure_mode: >-
+      most agent failures (routing errors, tool selection errors, retrieval misses) are
+      invisible in app logs. Visible only in step-by-step traces. You debug by guesswork.
+    fix: >-
+      instrument on the OpenTelemetry GenAI semantic conventions at a pinned revision
+      (OpenInference and OpenLLMetry emit them); ship traces to Langfuse, LangSmith,
+      Braintrust, or Arize. 100% of production traffic traced. Stable run IDs. Trace retention
+      30–90 days minimum — at least six months where the EU AI Act's high-risk logging duties
+      apply. Content capture off by default (DoD 29).
+    severity: Critical — blind in production
+
+  - n: 11
+    title: Hardcoded prompts without version control
+    since: "1.0.0"
+    summary: Prompts are code.
+    signal: >-
+      prompts live in Python string literals across the codebase; changes are made without
+      diff review.
+    failure_mode: >-
+      can't roll back; can't A/B test; can't attribute eval changes to prompt changes; can't
+      audit when a regulator asks.
+    fix: >-
+      prompts in version control as separate files (Markdown, YAML, JSON). Diff-reviewed.
+      Versioned. Loaded with explicit version IDs in production. Eval scores tagged with prompt
+      version.
+    severity: Medium-High — invisible until it matters
+
+  - n: 12
+    title: Treating single-vendor benchmarks as ground truth
+    since: "1.0.0"
+    summary: >-
+      Anthropic's 90.2% lift, Letta's 500+ interactions — directionally correct, not absolute
+      truth.
+    signal: >-
+      team cites "90% improvement" from a vendor blog post or marketing material as
+      justification for an architectural choice.
+    failure_mode: >-
+      vendor numbers are directionally correct but not absolute truth. Anthropic's 90.2%
+      multi-agent lift, Letta's "500+ interactions," Mem0's benchmarks vs competitors — all
+      real but with measurement bias and selection effects.
+    fix: >-
+      treat vendor benchmarks as hypotheses to test on your data. Build evals on your actual
+      use case. Compare on your data, not theirs.
+    severity: Medium — leads to wrong choices justified by impressive numbers
+
+  - n: 13
+    title: Trusting community MCP servers without pinning or scanning
+    gloss: rug pulls
+    since: "2.0.0"
+    summary: >-
+      Tool descriptions can mutate after you approve them (rug pull). Pin by hash; alert on
+      change.
+    signal: >-
+      MCP servers are installed straight from a URL or a community list; tool definitions are
+      approved once and never re-checked; no hash pin, no change alert.
+    failure_mode: >-
+      the tool description you approved is not the one running next week. A server can mutate
+      its tool definitions after you trust it (rug pull) — the model now follows instructions
+      you never reviewed. The supply chain is the attack surface.
+    fix: >-
+      install only from an allow-listed registry. Pin tool definitions by hash and alert on any
+      change — including on every refetch after a cached tool list expires. Scan tool
+      descriptions for injected instructions before first use and after each version bump.
+    severity: Critical — silent compromise through a trusted dependency
+
+  - n: 14
+    title: Deploying the lethal trifecta with no mitigation
+    since: "2.0.0"
+    summary: >-
+      Private data + untrusted content + external comms = an exfiltration channel. Break one
+      leg.
+    signal: >-
+      the agent has access to private data, ingests untrusted content (web, email, documents),
+      and can communicate externally (send, post, call out) — and all three legs are live with
+      nothing breaking the chain.
+    failure_mode: >-
+      injected content reads a secret and exfiltrates it. The three capabilities are
+      individually reasonable; together they are an exfiltration channel. Prompt-level "don't
+      leak data" does not hold.
+    fix: >-
+      run the lethal-trifecta check (Simon Willison). If all three legs are present, break at
+      least one by design — strip untrusted content before it reaches a privileged context,
+      drop the external-comms capability on that path, or gate egress through an allow-list
+      the model cannot edit.
+    severity: Critical — direct data-exfiltration risk
+
+  - n: 15
+    title: Token passthrough / over-scoped OAuth
+    gloss: confused deputy
+    since: "2.0.0"
+    changed: "4.0.0"
+    summary: >-
+      Forwarding a user's token, or minting broad scopes "to be safe," is a confused deputy
+      waiting to happen. Its 2026 variant: an MCP client that can only register through the
+      now-deprecated Dynamic Client Registration.
+    signal: >-
+      the agent forwards the user's token to downstream services, or holds OAuth scopes far
+      broader than the task needs ("full access, to be safe") — or an MCP client can only
+      register through Dynamic Client Registration and never validates the issuer.
+    failure_mode: >-
+      confused deputy. A coerced or injected agent acts with the user's full authority across
+      systems; one over-scoped token turns a small compromise into a large one. Blast radius is
+      set by the scope, not by the bug.
+    fix: >-
+      mint per-integration OAuth 2.1 scoped tokens for exactly what the task needs; never
+      forward the user's token downstream. Treat scope as a security boundary — least
+      privilege, audited, time-bounded where possible. MCP clients use pre-registration or a
+      Client ID Metadata Document, validate `iss`, and bind stored client credentials to their
+      issuer (DoD 26).
+    severity: Critical — confused-deputy / privilege-escalation risk
+
+  - n: 16
+    title: No budget ceiling on autonomous sessions
+    since: "2.0.0"
+    summary: Without a per-run cost circuit breaker, one bad loop is an unbounded invoice.
+    signal: >-
+      autonomous or long-running sessions have no per-run token/cost cap enforced in code;
+      cost is watched on a dashboard, if at all.
+    failure_mode: >-
+      one bad loop is an unbounded invoice. A retry storm or a self-prompting cycle runs until
+      someone notices the bill — the dashboard reports the damage, it doesn't stop it.
+    fix: >-
+      enforce a hard per-run token/cost ceiling in code (a circuit breaker) that halts a
+      runaway or looping session. Record cost-per-task in traces so the ceiling is tuned from
+      real data — and re-derive it when the model changes.
+    severity: High — unbounded cost exposure
+
+  - n: 17
+    title: Peer-to-peer multi-agent buses instead of an orchestrator
+    since: "2.0.0"
+    summary: >-
+      Free-form agent debates multiply context and resist evaluation. Use an orchestrator with
+      isolated subagents.
+    signal: >-
+      agents talk to each other freely on a shared bus or in a group "debate"; there is no
+      single coordinator owning the task and the context.
+    failure_mode: >-
+      free-form agent-to-agent chatter multiplies context, compounds misunderstandings between
+      sub-agents, and resists evaluation — you cannot score a path no one owns. Coordination
+      overhead dominates; debugging is guesswork.
+    fix: >-
+      use an orchestrator with isolated sub-agents. The orchestrator owns the task and the
+      context; sub-agents receive scoped briefs and return results. Communication flows
+      through the coordinator, not a peer mesh.
+    severity: High — unevaluable, context-multiplying coordination
+
+  - n: 18
+    title: Prose topology counted as a control
+    gloss: an SOP-defined route is not a guardrail
+    since: "3.3.0"
+    summary: >-
+      A route described in an SOP, a skill, or a system prompt is documentation, not a
+      guardrail — it holds until the moment it matters, and prose cannot fail loudly. Mark
+      every edge class enforced or declared; count only enforced edges (Part IV).
+    signal: >-
+      the graph's routing is described in an SOP, a skill, or a system prompt — "the
+      researcher hands off to the reviewer, who never writes to production" — and that
+      description is cited in a design review or a license as though it constrained anything.
+      Nothing in the runtime or the code prevents a different route.
+    failure_mode: >-
+      the topology holds right up until the moment it matters. Under an ambiguous state, a
+      novel input, or an injected instruction, the agent takes an edge the diagram does not
+      have, and every control that assumed the diagram silently no longer applies. The
+      architecture diagram and the running system diverge with no error, because prose cannot
+      fail loudly.
+    fix: >-
+      mark every edge class **enforced** or **declared** at architecture time. Enforced means
+      the runtime or the code makes the other routes unavailable. Count only enforced edges as
+      controls in any license; declared edges are documentation. This is the graph-scale form
+      of "permissions enforced by code, not by prompt" (anti-pattern 4) — an
+      instruction-defined route binds exactly as well as an instruction-defined permission.
+    severity: High — controls that are believed but not enforced
+
+  - n: 19
+    title: License inheritance by wiring
+    gloss: a graph of licensed loops is not a licensed graph
+    since: "3.3.0"
+    summary: >-
+      "Every agent is production-ready, so the graph is." A graph of licensed loops is not a
+      licensed graph — hold a Graph License (Part IV, *License Composition*).
+    signal: >-
+      "every agent in the graph is production-ready, so the graph is production-ready."
+      Per-node evals exist; there is no end-to-end eval on the composition. Cost caps are
+      per-node with no aggregate ceiling. The kill switch was tested against idle nodes, never
+      against branches in flight. Each node escalates to its own owner.
+    failure_mode: >-
+      the graph's risks are the ones no node owns. Nodes that pass in isolation fail in
+      composition; fan-out multiplies spend past every per-node cap while each cap reads green;
+      an unlicensed or uncalibrated node on an action path lends the whole path a freedom from
+      oversight it never earned; and when something goes wrong, the escalation path forks and
+      no human is on the hook for the system.
+    fix: >-
+      give the graph its own **Graph License** — the six gates re-evaluated at graph scope,
+      plus the weakest-link bound (a path runs under no less oversight than its least-licensed
+      node allows), shared-state provenance, fan-in as a declared verification point, and one
+      named escalation owner. Run [`templates/graph-license/CHECKLIST.md`](@/templates/graph-license/CHECKLIST.md).
+    severity: Critical — unearned autonomy on paths that reach production
+
+  - n: 20
+    title: Counting a pass as a success without legitimacy review
+    since: "4.0.0"
+    summary: >-
+      A check the agent can satisfy without doing the task measures its skill at satisfying
+      checks. Keep checks out of the agent's reach, audit a sample of successes, and publish
+      the legitimacy rate (DoD 30).
+    signal: >-
+      the success rate comes only from automated checks; nobody reviews the path of runs that
+      passed; the agent can write to the tests, graders, or eval sets that score it; the pass
+      rate climbs faster than the product gets better.
+    failure_mode: >-
+      the agent learns to satisfy the checker instead of the task — editing or skipping tests,
+      special-casing the grader's inputs, hard-coding expected outputs. METR found that on
+      tasks longer than eight hours at least 16% of runs scored as successful were
+      illegitimate on review. The metric rises while real capability does not, and the Loop
+      License is issued on a number that measures gaming.
+    fix: >-
+      put checks, graders, eval sets, and thresholds outside the agent's write scope. Each
+      release, review a stratified sample of successful runs — the path, not just the outcome;
+      publish the legitimacy rate next to pass@1 and pass^5 and gate promotion on a declared
+      floor (DoD 30). Turn every illegitimate success into a regression case and, where
+      possible, a deterministic tripwire.
+    severity: High — Critical at O2, where licenses are issued on the gamed metric

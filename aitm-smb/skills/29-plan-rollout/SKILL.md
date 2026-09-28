@@ -1,14 +1,15 @@
 ---
 name: 29-plan-rollout
 description: "Plans a progressive rollout after an approved promotion: stages along the rollout dimensions, each stage's autonomy level within the Authority Ceiling, the rollout gates verified before every stage, monitoring, support, rollback versus recovery, legacy-path retirement, change capacity and completion criteria, linked to the pilot, its evaluations and the promotion Decision. Use in Phase 7 only after a material pilot's HG-PROMOTION Decision is approved, or for an Initiative that needed no pilot. Produces a ROL record per artifacts/rollout-plan.md and stops where a stage accepts material risk; a stage that raises AI authority starts only after the HG-AUTHORITY grant (skill 34). Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: execution-governance
-phase: "7"
-human_gate: true
-gates: [HG-RISK]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: execution-governance
+  phase: "7"
+  human_gate: "true"
+  gates: "HG-RISK"
 ---
 
 # Skill 29: Plan Progressive Rollout

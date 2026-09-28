@@ -62,4 +62,4 @@ Resuming an engagement: run 37, read from the workspace the proposed gate Decisi
 
 ## Beyond AITM-SMB: building the AI component
 
-AITM-SMB decides whether AI belongs, what authority it gets, and how it is evaluated, governed, and valued. It does not design or build the software. When an approved Initiative moves on to building an AI component or agent, continue with [`docs/crosswalk-agentic-product-standard.md`](docs/crosswalk-agentic-product-standard.md). AITM autonomy levels are authority levels, not the architecture levels of the Agentic Product Standard (APS): write `AITM-L3` versus `APS-L3` when both appear.
+AITM-SMB decides whether AI belongs, what authority it gets, and how it is evaluated, governed, and valued. It does not design or build the software. When an approved Initiative moves on to building an AI component or agent, continue with [`docs/crosswalk-agentic-product-standard.md`](docs/crosswalk-agentic-product-standard.md). AITM autonomy levels are authority levels, not the autonomy levels or oversight modes of the Agentic Product Standard (APS), whose operating point is L0–L4 × O0–O2: write `AITM-L3` versus `APS-L3` when both appear.

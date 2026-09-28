@@ -1,13 +1,14 @@
 ---
 name: 21-design-transition-states
 description: "Designs independently operable Transition States (State records of type TRANSITION) between the CURRENT and TARGET States: sequence, mode (cutover, shadow, parallel), owner, changes by dimension, evidence to collect, entry and exit conditions, rollback or recovery, and explicitly sequenced authority steps within the Authority Ceiling. Use in Phase 6 when the profile requires Transition States (Standard and above) or when changes cannot safely happen at once. Produces STA records per artifacts/transition-state.md. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: design-specialist
-phase: "6"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: design-specialist
+  phase: "6"
+  human_gate: "false"
 ---
 
 # Skill 21: Design Transition States

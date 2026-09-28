@@ -1,14 +1,15 @@
 ---
 name: 06-design-target-system
 description: "Phase 5 orchestrator. Designs the target system for the selected Initiatives: a Capability Target State per selected Capability (skill 15), system-level refinement of the System Effect Assessments (skills 19, 24) and, from the Standard profile, the Capability Network, System Constraint, Decision Rights and an integrated Target Operating Architecture (skills 17, 18, 23, 20); stops for architecture and decision-rights approval (HG-TOA, HG-DECISION-RIGHTS); under Governed, records Execution Gate B. Use after Initiatives are selected, before roadmap design. Produces only the design artifacts the active profile requires. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: orchestrator
-phase: "5"
-human_gate: true
-gates: [HG-TOA, HG-DECISION-RIGHTS]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: orchestrator
+  phase: "5"
+  human_gate: "true"
+  gates: "HG-TOA, HG-DECISION-RIGHTS"
 ---
 
 # Skill 06: Orchestrate Target System Design

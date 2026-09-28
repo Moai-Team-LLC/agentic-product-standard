@@ -1,14 +1,15 @@
 ---
 name: 34-manage-authority-promotion
 description: "Reviews AI authority for one action class of a Capability from evidence and recommends promote, retain, or demote: reads the current level and Authority Ceiling from the Autonomy Assessment, checks the demotion triggers and promotion criteria of the Authority Escalation Model against evaluation results, incident history and operating signals, never proposes a level above the ceiling, follows the promotion path, and proposes a High-class AI Change. Use in Phase 7 or 8 before a pilot or rollout stage runs above the approved level, when operation would use more authority, when restoring authority after a demotion, or when evidence suggests reducing it; it performs every grant. Demotion takes effect at once; promotion stops for HG-AUTHORITY. Updates artifacts/autonomy-assessment.md and the changes in artifacts/ai-governance-canvas.md. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: execution-governance
-phase: "7-8"
-human_gate: true
-gates: [HG-AUTHORITY]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: execution-governance
+  phase: "7-8"
+  human_gate: "true"
+  gates: "HG-AUTHORITY"
 ---
 
 # Skill 34: Manage AI Authority Promotion

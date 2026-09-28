@@ -1,14 +1,15 @@
 ---
 name: 05-prioritize-initiatives
 description: "Phase 4 orchestrator. Decides which candidate Interventions to select, defer, reject or investigate, with written trade-offs, economic hypotheses, System Constraint relevance and, under the Portfolio profile, portfolio criteria; creates an Initiative record for each candidate proposed for selection, records its system effects (skill 19) before the selection is decided, and stops for Initiative and budget approval (HG-INITIATIVE, HG-BUDGET). Use after intervention design, before target-system design. Produces Initiative records with their economic hypotheses in the Transformation Roadmap, draft System Effect Assessments, the Prioritization Matrix, Intervention status updates, Execution Gate A (Governed) and selection Decisions. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: orchestrator
-phase: "4"
-human_gate: true
-gates: [HG-INITIATIVE, HG-BUDGET]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: orchestrator
+  phase: "4"
+  human_gate: "true"
+  gates: "HG-INITIATIVE, HG-BUDGET"
 ---
 
 # Skill 05: Orchestrate Prioritization

@@ -1,13 +1,14 @@
 ---
 name: 18-identify-system-constraint
 description: "Identifies the current System Constraint, the condition that most limits the business system from improving a target Outcome: lists material bottlenecks, applies the constraint test, separates local bottlenecks from the system constraint, and predicts the likely Constraint Migration and how to monitor it. Use in Phase 5 under the Standard profile or above, invoked by skill 06, or when evidence suggests the constraint has moved. Produces a System Constraint record. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: design-specialist
-phase: "5"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: design-specialist
+  phase: "5"
+  human_gate: "false"
 ---
 
 # Skill 18: Identify System Constraint

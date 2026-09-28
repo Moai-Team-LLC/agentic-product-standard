@@ -8,7 +8,7 @@ Each skill lives at `skills/<directory>/SKILL.md`. Shape of a skill: [`skills/_S
 
 ## 1. Skill classes
 
-AITM-SMB skills are divided into five classes. The frontmatter `category` names the kind of work.
+AITM-SMB skills are divided into five classes. The frontmatter field `metadata.category` names the kind of work.
 
 | Class | Numbers | `category` |
 |---|---|---|
@@ -71,7 +71,7 @@ Phase: [`EXECUTION_MODEL.md`](../EXECUTION_MODEL.md) §1. Human gates: [`STANDAR
 | 39 | `39-audit-framework-integrity` | check the AITM-SMB repository's integrity before a release | maintenance | — | none (findings) |
 | 40 | `40-handle-incident` | record and triage incidents; demote authority when a trigger fires | 7-8 | — | incident-record |
 
-"Human gates" lists the gates a skill's output requires (`human_gate: true`); the skill records each as a proposed gate Decision in the decision-assumption-log, and the named human's approval updates it ([`AGENTS.md`](../AGENTS.md) §4). Every skill still stops at any other gate whose trigger occurs. Each skill's frontmatter and `## Produces` are authoritative; report any drift from this table (skill 39).
+"Human gates" lists the gates a skill's output requires (`metadata.human_gate: "true"`); the skill records each as a proposed gate Decision in the decision-assumption-log, and the named human's approval updates it ([`AGENTS.md`](../AGENTS.md) §4). Every skill still stops at any other gate whose trigger occurs. Each skill's frontmatter and `## Produces` are authoritative; report any drift from this table (skill 39).
 
 ---
 
@@ -120,19 +120,21 @@ Produces: names each artifact contract (`artifacts/<name>.md`) the skill writes 
 Frontmatter (shape: [`skills/_SKILL_TEMPLATE.md`](_SKILL_TEMPLATE.md)):
 
 ```text
-name                        equals the directory name
-description                 one line: what it does, when to use it, what it produces
-version                     skill version
-minimum_framework_version   oldest AITM-SMB version the skill works with
-framework                   AITM-SMB
-status                      draft | active | deprecated
-category                    §1
-phase                       orchestrators: their phase; specialists: the phase(s) they serve
-human_gate                  true | false
-gates                       only when human_gate is true: the STANDARD.md §8 gate IDs
+name                                 equals the directory name
+description                          one line: what it does, when to use it, what it produces
+metadata.framework                   AITM-SMB
+metadata.version                     skill version
+metadata.minimum_framework_version   oldest AITM-SMB version the skill works with
+metadata.status                      draft | active | deprecated
+metadata.category                    §1
+metadata.phase                       orchestrators: their phase; specialists: the phase(s) they serve
+metadata.human_gate                  "true" | "false"
+metadata.gates                       only when human_gate is "true": STANDARD.md §8 gate IDs, comma-separated
 ```
 
-`human_gate: true` means the skill's output requires a [`STANDARD.md`](../STANDARD.md) §8 approval before downstream use; `gates` names the gates the skill itself records. `HG-AUTHORITY` is recorded only by skill 14 (Authority Ceiling) and skill 34 (every grant); skills that need a grant hand off to 34. The skill then records each gate as a proposed Decision and stops with `HUMAN_DECISION_REQUIRED` until the named human approves it ([`AGENTS.md`](../AGENTS.md) §4). `human_gate: false` does not exempt a skill from any gate whose trigger occurs.
+The top-level keys follow the Agent Skills specification (agentskills.io): `name` and `description`, optionally `license`, `compatibility` and `allowed-tools`, and `metadata`. AITM-SMB's own fields live under `metadata` as strings, so every skill loads in any Agent Skills client.
+
+`metadata.human_gate: "true"` means the skill's output requires a [`STANDARD.md`](../STANDARD.md) §8 approval before downstream use; `metadata.gates` names the gates the skill itself records. `HG-AUTHORITY` is recorded only by skill 14 (Authority Ceiling) and skill 34 (every grant); skills that need a grant hand off to 34. The skill then records each gate as a proposed Decision and stops with `HUMAN_DECISION_REQUIRED` until the named human approves it ([`AGENTS.md`](../AGENTS.md) §4). `metadata.human_gate: "false"` does not exempt a skill from any gate whose trigger occurs.
 
 Status at gates, for every skill: a gate reached, or a required upstream gate still open, yields `HUMAN_DECISION_REQUIRED` unless a higher-precedence status applies, and the gate is always listed in `open_gates`; `BLOCKED` is only for a missing input or an unresolved normative conflict ([`PUBLIC_API.md`](../PUBLIC_API.md) §8).
 

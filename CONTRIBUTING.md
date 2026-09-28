@@ -6,7 +6,7 @@ Thanks for helping improve **The Agentic Product Standard**. This is a living do
 
 The standard has two kinds of content, and they invite different contributions:
 
-- **Stable canons** — the autonomy ladder, the five composition patterns, single-vs-multi-agent, the eight-layer harness, the Cycle of Trust. These change rarely. Challenge them only with strong evidence (a production writeup, a reproducible result, a credible primary source).
+- **Stable canons** — the autonomy × oversight ladder, the five composition patterns, single-vs-multi-agent, the nine-layer harness, the Cycle of Trust. These change rarely. Challenge them only with strong evidence (a production writeup, a reproducible result, a credible primary source).
 - **Fast-moving specifics** — vendor rankings, framework recommendations, tool counts, cost figures, reading-list entries. These age quickly. **PRs that update them are exactly what we want.**
 
 Especially welcome:
@@ -21,14 +21,14 @@ Especially welcome:
 
 1. **Cite primary sources.** "Anthropic says X" needs a link. Single-vendor benchmarks are directional, not ground truth — frame them that way (this is anti-pattern #12).
 2. **Prefer the boring, durable claim** over the exciting, fragile one. The standard tilts toward what survives the next model release.
-3. **Keep the standard and the skills in sync.** If you change a canon in `STANDARD.md`, update the matching `SKILL.md` so the guidance doesn't drift.
-4. **Don't add code templates.** The skill set teaches judgment, not boilerplate — framework-specific code rots fast and lives better in the framework's own docs.
+3. **Edit the canon, not the copies.** Anything enumerable — a principle, a ladder level, a harness layer, a Definition of Done item, an anti-pattern, a scorecard item — lives in [`canon/`](canon/); the documents that repeat it are generated. Change the YAML, run `python3 tools/aps.py render`, and commit both. For hand-written guidance, update `STANDARD.md` and the matching `SKILL.md` together so it doesn't drift. [`AGENTS.md`](AGENTS.md) has the full loop.
+4. **No framework boilerplate in the skills.** The skill set teaches judgment, not boilerplate — framework-specific code rots fast and lives better in the framework's own docs. The exception is `templates/`: small, framework-neutral, dependency-light **gates** (a CI check, a red-team tripwire, a one-page license checklist) that make a mandate executable.
 5. **One topic per PR.** A vendor update and a new exemplar are two PRs.
 
 ## How to contribute
 
 1. Fork the repo and create a branch: `git checkout -b fix/framework-rankings`.
-2. Make your change. Edit the relevant `STANDARD.md` section and/or the matching `skills/.../SKILL.md`.
+2. Make your change. Edit the relevant `STANDARD.md` section and/or the matching `skills/.../SKILL.md` — or `canon/*.yaml` for enumerable content, then `python3 tools/aps.py render`. Before you push, run `python3 tools/aps.py check` and `python3 -m unittest discover -s tools/tests` (needs Python 3.9+ and `pip install pyyaml jsonschema`).
 3. Commit using [Conventional Commits](https://www.conventionalcommits.org/) — e.g. `docs: update memory-vendor matrix for 2026 Q3`. Running `./setup.sh` wires a dependency-free local hook (`.githooks/commit-msg`) that checks this on commit; CI validates every PR commit with `commitlint`. To enable the hook without a full setup: `git config core.hooksPath .githooks`.
 4. Open a PR describing **what changed and why**, with sources for any factual claim.
 

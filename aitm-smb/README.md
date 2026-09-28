@@ -161,7 +161,7 @@ Point `--engagement` at your own workspace to check its trace before claiming co
 
 ## Relation to the Agentic Product Standard
 
-AITM-SMB decides *whether and how much* AI a business change should use: the Intervention type, the authority level, the Authority Ceiling, and the pilot evidence. The [Agentic Product Standard](https://github.com/Moai-Team-LLC/agentic-product-standard) (APS), which hosts this folder, decides *how to build and license* the AI component. The two use unrelated ladders: AITM-SMB L0–L5 is a business authority ladder, APS L0–L4 an architecture ladder; write `AITM-L3` or `APS-L3` when both appear. The informative [crosswalk](docs/crosswalk-agentic-product-standard.md) maps the ladders, the artifacts, and the hand-off. It adds no requirement to either standard.
+AITM-SMB decides *whether and how much* AI a business change should use: the Intervention type, the authority level, the Authority Ceiling, and the pilot evidence. The [Agentic Product Standard](https://github.com/Moai-Team-LLC/agentic-product-standard) (APS), which hosts this folder, decides *how to build and license* the AI component. The ladders differ: AITM-SMB L0–L5 is a business authority ladder, while APS describes the AI component by an operating point, autonomy L0–L4 (who chooses the next step) × oversight O0–O2 (whether a human approves each consequential action). AITM authority corresponds to APS oversight; write `AITM-L3` or `APS-L3` when both appear. The informative [crosswalk](docs/crosswalk-agentic-product-standard.md) maps the ladders, the artifacts, and the hand-off. It adds no requirement to either standard.
 
 ## Versioning and stability
 

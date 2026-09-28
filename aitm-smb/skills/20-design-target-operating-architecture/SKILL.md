@@ -1,14 +1,15 @@
 ---
 name: 20-design-target-operating-architecture
 description: "Integrates the Capability Target States of the Capabilities in scope into one Target Operating Architecture: value streams, roles and decision rights, coordination, information and knowledge ownership, application boundaries, automation and AI responsibilities within approved Authority Ceilings, governance, system-level metrics and economics; runs the consistency rules and pre-approval system checks and stops for approval (HG-TOA). Use in Phase 5 under the Standard profile or above, invoked by skill 06 after the Capability Target States, Capability Network, System Constraint and Decision Rights exist. Produces the Target Operating Architecture. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: design-specialist
-phase: "5"
-human_gate: true
-gates: [HG-TOA]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: design-specialist
+  phase: "5"
+  human_gate: "true"
+  gates: "HG-TOA"
 ---
 
 # Skill 20: Design Target Operating Architecture

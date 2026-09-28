@@ -1,23 +1,23 @@
 # The Graph License — one-page checklist
 
-*From [The Agentic Product Standard](../../STANDARD.md), Part IV (*License Composition*). Run this against a real deployment, with the team in the room, before a **graph of agents** runs unattended (Autonomy Ladder L3+). Every box is binary — a half-met control is a No.*
+*From [The Agentic Product Standard](../../STANDARD.md), Part IV (*License Composition*). Run this against a real deployment, with the team in the room, before a **graph of agents** runs at oversight **O1 or O2** — consequential actions without per-action approval. Every box is binary — a half-met control is a No.*
 
-**This checklist assumes the [Loop License](../loop-license/CHECKLIST.md), it does not replace it.** Each unattended node holds its own; this page asks the question the per-node licenses cannot answer: *is the composition licensed?* A graph of licensed loops is **not** licensed by virtue of the wiring.
+**This checklist assumes the [Loop License](../loop-license/CHECKLIST.md), it does not replace it.** Each node that runs at O1+ holds its own; this page asks the question the per-node licenses cannot answer: *is the composition licensed?* A graph of licensed loops is **not** licensed by virtue of the wiring.
 
 ## 1. Per-node inventory
 
 One row per node. A node with no license is not disqualifying on its own — it is what the weakest-link bound (§3) is for.
 
-| Node | What it does | Autonomy level | Loop License? | Judge calibrated? | Blast radius |
+| Node | What it does | Operating point | Loop License? | Judge calibrated? | Blast radius |
 |---|---|---|---|---|---|
-| | | L_ | Yes / No / n/a (deterministic) | Yes / No / n/a | |
+| | | L_ · O_ | Yes / No / n/a (deterministic) | Yes / No / n/a | |
 
 - [ ] Every node in the running topology appears in this table — including deterministic steps and any node added "temporarily".
 - [ ] Every node marked *deterministic* genuinely is: no model call anywhere on its path.
 
 ## 2. The six gates at graph scope
 
-- [ ] **1. Graph-level eval threshold.** A named pass rate on **end-to-end golden tasks for the graph**, not the union of per-node suites. State the number and the set. *(Nodes that each pass in isolation routinely fail in composition — that gap is the reason this gate exists.)*
+- [ ] **1. Graph-level eval threshold.** Named **pass@1** and **pass^5** minimums on **end-to-end golden tasks for the graph**, not the union of per-node suites — and, at **O2**, the legitimacy-rate floor. State the numbers and the set. *(Nodes that each pass in isolation routinely fail in composition — that gap is the reason this gate exists.)*
 - [ ] **2. Regression gate** on the graph-level set, blocking promotion in CI.
 - [ ] **3. Declared blast radius** = the **union** of every node's radius **plus the shared state store**. Written down; enforced below the model.
 - [ ] **4. Cost caps — per-node *and* aggregate.** Fan-out multiplies burn; per-node caps alone do not bound a graph.
@@ -28,12 +28,12 @@ One row per node. A node with no license is not disqualifying on its own — it 
 
 For **every path that ends in an external action** (a write, a send, a payment, a deploy, a public post):
 
-| Path (node → node → action) | Nodes on it | Weakest link (min licensed level) | Declared level | OK? |
+| Path (node → node → action) | Nodes on it | Weakest link (least-licensed node) | Oversight the path runs under | OK? |
 |---|---|---|---|---|
-| | | L_ | L_ | declared ≤ weakest |
+| | | | O_ | no more relaxed than the weakest link allows |
 
 - [ ] Every external action in the system is traced to at least one path in this table.
-- [ ] **No path declares an autonomy level above its weakest link.** An unlicensed node — or one gated by an uncalibrated judge — anywhere on the path caps that path at **L2** (propose-approve).
+- [ ] **No path runs under more relaxed oversight than its weakest link allows.** An unlicensed node — or one gated by an uncalibrated judge — anywhere on the path caps that path at **O0** (propose-approve).
 
 ## 4. Shared state — provenance
 
@@ -83,6 +83,6 @@ One row per merge point where parallel branches join.
 
 ---
 
-**Scoring.** All boxes Yes → the graph is licensed for unattended L3+ operation, this release. The first No is your next piece of work. Re-run every release; the score should only ratchet up.
+**Scoring.** All boxes Yes → the graph is licensed to run at O1+, this release. The first No is your next piece of work. Re-run every release; the score should only ratchet up.
 
-*Definition of Done item 25 maps to this checklist; items 16–19 map to the [Loop License](../loop-license/CHECKLIST.md) each node still owes. The reference implementations of enforcement and measurement are the [AgenticProduct family](../../ECOSYSTEM.md) — paved road, not a mandate (Principle 2).*
+*Definition of Done item 25 maps to this checklist (and item 28 wherever a node delegates across a trust boundary — verify the peer's signed Agent Card first); items 16–19 map to the [Loop License](../loop-license/CHECKLIST.md) each node still owes. The reference implementations of enforcement and measurement are the [AgenticProduct family](../../ECOSYSTEM.md) — paved road, not a mandate (Principle 2).*

@@ -1,13 +1,14 @@
 ---
 name: 15-design-target-state
 description: "Designs the Capability Target State of one selected Capability: its target capability statement, people and decision rights, process, data and knowledge, application and automation boundaries, AI only where a selected Intervention justifies it and within the approved Authority Ceiling, controls, metrics, and the Gaps it closes. Use in Phase 5, invoked by skill 06 for each selected Capability, in every profile. Produces a Capability Target State (a State of type TARGET). Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: design-specialist
-phase: "5"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: design-specialist
+  phase: "5"
+  human_gate: "false"
 ---
 
 # Skill 15: Design Capability Target State

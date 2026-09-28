@@ -1,0 +1,892 @@
+# The Definition of Done — the conformance contract.
+#
+# Every item has a stable number: numbers are identifiers, never reused or renumbered, and
+# a group may list them out of order. `applies_if` is the machine condition, evaluated
+# against a product's profile in aps-conformance.yaml: flags multi_tenant, mcp, multi_agent,
+# cross_boundary, llm_judge, retrieval, regulated, fleet, multi_provider, and the integers
+# autonomy (0–4) and oversight (0–2). `binds` is the same condition in words. Where the
+# profile has no flag for the exact condition, `applies_if` is the nearest broader one (DoD 20
+# binds to *gating* judges, `llm_judge` to any judge): answer such an item `na` with a reason. `text` is the normative clause in
+# STANDARD.md Part III; `audit` feeds the production-readiness skill. `crosswalk` maps the
+# item to the frameworks in canon/regulatory.yaml — it shows where evidence produced here
+# supports an obligation; it is not a claim of legal compliance.
+# Links: write repo-root paths as `@/path`; the renderer makes them relative per target.
+
+groups:
+  - key: context
+    title: Context and state
+  - key: tools
+    title: Tools and permissions
+  - key: reliability
+    title: Reliability
+  - key: evals
+    title: Evals and observability
+  - key: security
+    title: Security and identity
+  - key: cost
+    title: Cost
+  - key: loop
+    title: Operating without per-action approval (O1+) — the Loop License
+  - key: measurement
+    title: Measurement science and human oversight
+  - key: gates
+    title: Gate integrity
+  - key: composition
+    title: Composition (multi-agent)
+  - key: governance
+    title: Governance and regulation
+
+items:
+  - n: 1
+    key: context-budget
+    group: context
+    title: Context budget held
+    since: "1.0.0"
+    changed: "4.0.0"
+    text: >-
+      Context stays within a **measured budget** in a typical cycle — the fill level at which
+      your own eval pass rate starts to degrade for the model in use; until you have measured
+      it, the default is **40% of the window**
+    audit:
+      checks:
+        - Measure context utilization on representative production traces
+        - Median below the budget; p95 below 60% of the window while the 40% default applies
+        - >-
+          If you set a measured budget: the degradation curve (eval pass rate vs. context
+          fill) is recorded for the current model and re-measured whenever the model changes
+        - "If higher: compaction strategy in place that triggers at the budget"
+      why: >-
+        past the budget, model recall degrades nonlinearly — the "dumb zone." Bigger windows
+        move the threshold; they do not remove it. On a 1M-token window, 40% is 400K tokens,
+        far past where published context-rot studies see accuracy fall, which is why the
+        budget is measured per model rather than assumed.
+      gap: >-
+        dumping conversation history into every turn instead of using selection / compaction
+        — or carrying a percentage rule onto a model with a 5× larger window without
+        re-measuring.
+    crosswalk: {eu_ai_act: ["15"], nist_ai_rmf: ["MEASURE 2"], imda: [3]}
+
+  - n: 2
+    key: state-externalized
+    group: context
+    title: State externalized
+    since: "1.0.0"
+    changed: "4.0.0"
+    text: >-
+      State is externalized — it does not live only in the context window, or in a protocol
+      session
+    audit:
+      checks:
+        - State has a defined home (file, DB, memory layer) — not "the conversation"
+        - Can recover full agent state from external storage on crash
+        - State writes are explicit and traceable
+        - >-
+          No application state rides on a transport session (MCP 2026-07-28 removed
+          `Mcp-Session-Id`); cross-call state uses explicit handles or your own store
+      why: in-context state evaporates on session boundary, restart, or compaction.
+      gap: '"the agent will remember from the conversation" — it won''t, reliably.'
+    crosswalk: {eu_ai_act: ["15"], nist_ai_rmf: ["MANAGE 2"], imda: [3]}
+
+  - n: 3
+    key: compaction-tested
+    group: context
+    title: Compaction tested
+    since: "1.0.0"
+    text: Compaction pipeline tested on long-running scenarios
+    audit:
+      checks:
+        - Compaction has been exercised on real long sessions (>50 turns or > 30 min)
+        - No critical info lost during compaction (verified by eval cases)
+        - Compaction trigger is metric-driven, not turn-count-driven
+      why: compaction that drops critical state silently is worse than no compaction.
+      gap: built compaction, never tested on a session long enough to need it.
+    crosswalk: {eu_ai_act: ["15"], nist_ai_rmf: ["MEASURE 2"], imda: [3]}
+
+  - n: 4
+    key: destructive-approval
+    group: tools
+    title: Destructive actions need approval
+    since: "1.0.0"
+    text: >-
+      All destructive actions require explicit human approval — at every oversight mode,
+      O2 included
+    audit:
+      checks:
+        - List of destructive actions enumerated (deletes, writes, sends, charges, etc.)
+        - Each one routes through an approval gate
+        - Approval is logged with who/when/what
+      why: >-
+        Replit incident ([Fortune, 23 Jul 2025](https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/))
+        — an agent deleted a production database holding records on 1,206 executives and
+        1,196+ companies (the agent's own count) despite a "code freeze" prompt. Prompts don't
+        enforce.
+      gap: '"the prompt tells the agent not to delete production data" — insufficient.'
+    crosswalk: {eu_ai_act: ["14"], owasp_asi: [ASI02], nist_ai_rmf: ["MANAGE 2"], imda: [1, 2]}
+
+  - n: 5
+    key: permissions-in-code
+    group: tools
+    title: Permissions in code, not prompt
+    since: "1.0.0"
+    text: Permissions enforced by code, not by prompt
+    audit:
+      checks:
+        - Agent does not hold credentials that bypass permission boundaries
+        - Permission gate is a separate code path the LLM cannot override
+        - Even with prompt injection, agent cannot perform forbidden actions
+      why: prompt injection is a real threat; LLM can be coerced; code cannot.
+      gap: OAuth scopes too broad; agent runs as superuser internally.
+    crosswalk: {eu_ai_act: ["15"], owasp_asi: [ASI02, ASI03], nist_ai_rmf: ["MANAGE 1"], imda: [1, 3]}
+
+  - n: 6
+    key: sandboxed-tools
+    group: tools
+    title: Sandboxed tool execution
+    since: "1.0.0"
+    text: Tool execution sandboxed (containers / OAuth scopes / least privilege)
+    audit:
+      checks:
+        - Code execution in containers / VMs, not host environment
+        - File operations in scoped working directories
+        - Network access through allow-listed domains
+        - Secrets never in context window; injected at tool boundary
+      why: tool execution is an attack surface; treat it like any RPC exposed to untrusted input.
+      gap: agent has shell access with no sandbox.
+    crosswalk: {eu_ai_act: ["15"], owasp_asi: [ASI05], nist_ai_rmf: ["MANAGE 2"], imda: [3]}
+
+  - n: 32
+    key: tenant-isolation
+    group: tools
+    title: Tenant isolation below the LLM
+    since: "1.4.0"
+    changed: "4.0.0"
+    binds: If multi-tenant
+    binds_short: multi-tenant
+    applies_if: multi_tenant
+    text: >-
+      Tenant isolation enforced below the LLM (row-level security / repository layer);
+      `tenant_id` derived from auth, never from the model; retrieval, memory, cache (including
+      MCP `private`-scoped results), traces, and sub-agents all tenant-scoped; a
+      code-asserted cross-tenant leakage eval runs in CI — see the `tenant-isolation` skill
+    audit:
+      checks:
+        - >-
+          Isolation model chosen per data store (pooled + RLS / schema-per-tenant /
+          DB-per-tenant) and recorded in the Agent Contract
+        - >-
+          `tenant_id` is part of the authenticated principal; a request with no resolvable
+          tenant fails closed (no default tenant)
+        - >-
+          Isolation enforced below the LLM (row-level security or repository layer); verified
+          to hold under prompt injection
+        - >-
+          Retrieval filtered inside the index (not post-top-k), memory namespaced, cache key
+          includes `tenant_id`, traces tagged, sub-agent messages and background jobs carry
+          the tenant
+        - Tools ignore any model-supplied tenant; a mismatch is audited and rejected
+        - >-
+          A code-asserted cross-tenant leakage eval (canary seeded as A, queried as B incl.
+          an injection variant) runs in CI
+      why: >-
+        an agent is a confused deputy — prompt-level isolation leaks. The first cross-tenant
+        leak is a churn-and-lawsuit event, and retrofitting isolation is the migration nobody
+        budgets for. See the `tenant-isolation` skill.
+      gap: >-
+        a tenant-agnostic answer cache serving tenant A's response to tenant B; `tenant_id`
+        passed as a tool argument the model can be talked into changing.
+    crosswalk: {eu_ai_act: ["15"], owasp_asi: [ASI03, ASI06], nist_ai_rmf: ["MANAGE 2"], imda: [3]}
+
+  - n: 7
+    key: durable-execution
+    group: reliability
+    title: Durable pause/resume/retry
+    since: "1.0.0"
+    text: "Durable execution: pause/resume/retry works across a killed process"
+    audit:
+      checks:
+        - Kill the agent process mid-execution; restart; verify it resumes
+        - Retry policies defined per activity type
+        - Human-wait signals work (agent can wait hours/days for approval)
+      why: any agent running > 60s will hit a crash, restart, or wait — without durability, work is lost.
+      gap: '"we tested the happy path" — production isn''t the happy path.'
+    crosswalk: {eu_ai_act: ["15"], owasp_asi: [ASI08], nist_ai_rmf: ["MANAGE 2"], imda: [3]}
+
+  - n: 8
+    key: schema-validated
+    group: reliability
+    title: Schema-validated outputs
+    since: "1.0.0"
+    text: Structured outputs validated by schema; assertions on the critical path
+    audit:
+      checks:
+        - Every LLM call returning structured data validates against schema
+        - Code assertions on critical state transitions
+        - No "parse this text output and hope" anywhere on the critical path
+      why: unvalidated outputs cause silent corruption; assertions catch it early.
+      gap: regex-parsing LLM responses; works in dev, fails in production edge cases.
+    crosswalk: {eu_ai_act: ["15"], nist_ai_rmf: ["MEASURE 2"], imda: [3]}
+
+  - n: 9
+    key: guardrails
+    group: reliability
+    title: Input/output guardrails
+    since: "1.0.0"
+    text: "Guardrails (minimum: PII, jailbreak, schema validation) on input and output"
+    audit:
+      checks:
+        - "Input guardrails: PII detection, jailbreak / prompt injection classifier"
+        - "Output guardrails: schema validation, content policy, citation check"
+        - Guardrails run on real traffic, with metrics on hit rates
+      why: defense in depth; multiple cheap guardrails beat one perfect one.
+      gap: no input guardrails; trusting the model to refuse.
+    crosswalk: {eu_ai_act: ["15"], owasp_asi: [ASI01, ASI06], nist_ai_rmf: ["MANAGE 2"], imda: [3]}
+
+  - n: 10
+    key: eval-set
+    group: evals
+    title: ≥50 evals per failure mode
+    since: "1.0.0"
+    text: Eval set ≥50 examples per top-priority failure mode
+    audit:
+      checks:
+        - At least 5 named failure modes (product-specific, not generic)
+        - Each has ≥ 50 cases in the eval set
+        - Cases sampled from real or representative traces
+      why: generic evals don't catch product-specific failures; 50 cases give enough signal to detect regression.
+      gap: 20 cases of "helpfulness" — not enough, not the right thing to measure.
+    crosswalk: {eu_ai_act: ["9", "15"], nist_ai_rmf: ["MEASURE 1", "MEASURE 2"], imda: [3]}
+
+  - n: 11
+    key: judges-calibrated
+    group: evals
+    title: Judges calibrated (TPR/TNR)
+    since: "1.0.0"
+    binds: Wherever an LLM judge is used
+    binds_short: LLM judges
+    applies_if: llm_judge
+    text: LLM judges calibrated against human labels (TPR/TNR tracked)
+    audit:
+      checks:
+        - Each LLM judge has ≥ 100 human-labeled examples for calibration
+        - TPR and TNR both > 80%
+        - Calibration re-run when judge prompt changes
+        - TPR/TNR reported with every release
+      why: uncalibrated judges produce meaningless scores; teams stop trusting evals and revert to vibe.
+      gap: built a judge; never measured if it agrees with humans.
+    crosswalk: {eu_ai_act: ["15"], nist_ai_rmf: ["MEASURE 2", "MEASURE 4"], imda: [3]}
+
+  - n: 12
+    key: ci-gate-traced
+    group: evals
+    title: CI blocks regression; 100% traced
+    since: "1.0.0"
+    text: CI blocks deploy on eval regression; 100% of production traces logged
+    audit:
+      checks:
+        - CI runs full eval suite on every PR
+        - Merge blocked on regression vs main branch
+        - 100% of production traffic produces traces
+        - Traces include all required fields (see the telemetry contract, item 29)
+        - >-
+          Trace retention sufficient for incident investigation (typically 30–90 days; at least
+          six months where the EU AI Act's high-risk logging duties apply — Art. 19, Art. 26(6))
+      why: evals without enforcement are theater; traces are the only way to debug failures after launch.
+      gap: evals exist but don't gate merges; tracing is sampled, missing the failures.
+    crosswalk: {eu_ai_act: ["12", "15", "72"], nist_ai_rmf: ["MEASURE 3", "MANAGE 4"], imda: [3]}
+
+  - n: 29
+    key: telemetry-contract
+    group: evals
+    title: Telemetry contract
+    since: "4.0.0"
+    text: >-
+      Telemetry follows the **OpenTelemetry GenAI semantic conventions at a pinned revision**
+      (a commit of `semantic-conventions-genai` until it publishes tagged releases), with
+      `invoke_agent`, `chat`, and `execute_tool` spans and token usage recorded; **prompt and
+      completion content is not captured by default** — capture is switched on by a written
+      policy with retention and access limits; a schema test runs on exported traces, and
+      bumping the pinned revision runs a migration test first
+    audit:
+      checks:
+        - >-
+          The conventions revision is pinned in code or config and recorded with the traces
+          (e.g. the schema URL or a resource attribute)
+        - >-
+          Each run emits an `invoke_agent` span with child `chat` and `execute_tool` spans;
+          `gen_ai.usage.input_tokens` / `gen_ai.usage.output_tokens` are recorded
+        - >-
+          Content attributes (`gen_ai.input.messages`, `gen_ai.output.messages`,
+          `gen_ai.system_instructions`, `gen_ai.tool.definitions`) are absent unless a written
+          policy enables them, with retention and access limits
+        - A schema test validates exported spans in CI; a pin bump runs a migration test before merge
+        - The agent identity (item 27) — and the tenant, if multi-tenant (item 32) — is on every span
+      why: >-
+        the GenAI conventions are still in Development status and moved repositories in June
+        2026 — an unpinned "we use OTel" is a floating contract that breaks dashboards and
+        evals on the next rename. The conventions themselves say instrumentations should not
+        capture content by default: traces are a data store, and prompts carry the most
+        sensitive data you have.
+      gap: >-
+        full prompts captured in production traces because it was the SDK default in
+        development — discovered during a data-subject request.
+    crosswalk: {eu_ai_act: ["12", "26"], nist_ai_rmf: ["MEASURE 3"], imda: [2, 3]}
+
+  - n: 13
+    key: lethal-trifecta
+    group: security
+    title: Lethal-trifecta check
+    since: "2.0.0"
+    text: >-
+      Lethal-trifecta check performed and documented (private data × untrusted content ×
+      external comms — at least one leg broken if all three are present)
+    audit:
+      checks:
+        - >-
+          Three legs assessed: access to private data, exposure to untrusted content, ability
+          to communicate externally
+        - If all three are present, at least one leg is broken in design (not by a prompt instruction)
+        - The check and its outcome are written down (in the Agent Contract / threat model), not assumed
+      why: >-
+        private data × untrusted content × external comms is an exfiltration channel —
+        injected content reads a secret and ships it out. Simon Willison's lethal trifecta:
+        the deployment check every agent must pass.
+      gap: >-
+        all three legs live and unmitigated because no one drew the diagram; "the model won't
+        do that" stands in for a mitigation.
+    crosswalk: {eu_ai_act: ["15"], owasp_asi: [ASI01, ASI02], nist_ai_rmf: ["MAP 4", "MANAGE 1"], imda: [1, 3]}
+
+  - n: 14
+    key: mcp-supply-chain
+    group: security
+    title: MCP tool defs pinned; allow-listed registry
+    since: "2.0.0"
+    changed: "4.0.0"
+    binds: Wherever MCP is used
+    binds_short: MCP
+    applies_if: mcp
+    text: >-
+      MCP tool definitions pinned by hash with change alerts — re-verified whenever a cached
+      tool list expires; servers installed only from an allow-listed registry, version-pinned
+      and signature-checked (auth baseline: item 26)
+    audit:
+      checks:
+        - Tool definitions pinned by hash, with a change alert (rug-pull detection)
+        - The pin is re-verified on every refetch of `tools/list` (caching hints expire; the pin must not)
+        - MCP servers installed only from an allow-listed registry — never an arbitrary URL
+      why: >-
+        an approved tool description can mutate after you approve it (rug pull); the supply
+        chain is part of the attack surface.
+      gap: installing a community MCP server by URL and trusting its description forever.
+    crosswalk: {eu_ai_act: ["15"], owasp_asi: [ASI04], nist_ai_rmf: ["GOVERN 6", "MANAGE 3"], imda: [3]}
+
+  - n: 26
+    key: mcp-baseline
+    group: security
+    title: MCP protocol & auth baseline
+    since: "4.0.0"
+    binds: Wherever MCP is used
+    binds_short: MCP
+    applies_if: mcp
+    text: >-
+      Every MCP connection speaks revision **2026-07-28** — or carries a dated sunset — and
+      runs the official conformance suite in CI at a pinned version against what 2026-07-28
+      requires, each baselined failure a documented, dated gap; no state depends on a protocol
+      session; no new dependency on Roots, Sampling, or Logging; `requestState` is treated as
+      untrusted, and integrity-protected and verified wherever it influences authorization,
+      resource access, or business logic; clients use pre-registration or Client ID Metadata
+      Documents (Dynamic Client Registration only as a documented fallback), validate `iss`
+      (RFC 9207), and bind stored client credentials to their issuer; no token passthrough,
+      anywhere (Stack 2 · Layer 8)
+    audit:
+      checks:
+        - >-
+          Inventory: every MCP connection, the side you own (client or server), the revision
+          it speaks, and a sunset date for anything older than 2026-07-28
+        - >-
+          The official conformance suite (`@modelcontextprotocol/conformance`) runs in CI
+          against each server and client you own, at a pinned version, with
+          `--requirements 2026-07-28`; its expected-failures file is reviewed like code, and
+          every entry is an owned, dated gap — a baselined failure is still a failure
+        - >-
+          No dependence on `Mcp-Session-Id`; cross-call state uses explicit, server-minted
+          handles or your own store (item 2)
+        - >-
+          `requestState` handled as attacker-controlled input and integrity-protected
+          (HMAC/AEAD) wherever it influences authorization, resource access, or business logic;
+          state that fails verification is rejected
+        - >-
+          Clients use pre-registration or a Client ID Metadata Document (Dynamic Client
+          Registration only as a documented fallback for an authorization server that supports
+          neither), validate a present `iss` against the recorded issuer, and bind pre-registered
+          or dynamically registered client credentials to the authorization server that issued
+          them; servers never pass tokens through
+        - >-
+          Servers reject header/body mismatches (`HeaderMismatch`); gateways that authorize on
+          `Mcp-Method` / `Mcp-Name` reject requests whose `MCP-Protocol-Version` is absent or
+          predates header validation; a `private` cache entry is never served outside the
+          authorization context it was fetched under
+      why: >-
+        the 2026-07-28 revision moved state out of the protocol and hardened authorization.
+        Code written for the 2025 session-and-DCR model now carries state nobody can see and
+        client registrations the ecosystem is retiring. Conformance is testable — so it is
+        tested, not asserted. See advisory [APS-2026-01](@/docs/advisories/APS-2026-01-mcp-2026-07-28.md).
+      gap: >-
+        a server that keeps per-user state behind `Mcp-Session-Id` and "works fine" on a single
+        replica — until a load balancer or the next SDK upgrade drops it.
+    crosswalk: {eu_ai_act: ["15"], owasp_asi: [ASI03, ASI04, ASI07], nist_ai_rmf: ["GOVERN 6", "MANAGE 3"], imda: [3]}
+
+  - n: 27
+    key: agent-identity
+    group: security
+    title: Per-agent identity
+    since: "4.0.0"
+    text: >-
+      Every agent acts under **its own non-human identity** — never a shared service account
+      or a person's credentials — with short-lived, scope-limited, audience-bound credentials
+      issued by your identity provider; every action is attributable in traces to the agent
+      identity **and** to the human or system that delegated the task (Layer 8)
+    audit:
+      checks:
+        - An inventory lists every agent identity with its owner, scopes, and credential lifetime
+        - >-
+          No agent runs on a shared service account, a person's token, or a long-lived static
+          key in production (a static bearer is acceptable for localhost development only)
+        - Credentials are short-lived and audience-bound; scopes match the declared blast radius
+        - Each trace span carries the agent identity and the delegating principal (user or upstream system)
+        - Identity and tenant are derived from authentication, never asserted by the model
+      why: >-
+        an agent that shares an identity cannot be scoped, rotated, revoked, or audited on its
+        own; when it misbehaves you cannot tell which agent did what on whose behalf. NIST's
+        NCCoE concept paper on software and AI agent identity and authorization (initial public
+        draft, Feb 2026) frames exactly this problem and references OAuth 2.0 and SPIFFE.
+      gap: >-
+        every agent in the fleet calling tools with one service-account key nobody rotates, so
+        the audit log says "svc-agents" for every action.
+    crosswalk: {eu_ai_act: ["12", "15"], owasp_asi: [ASI03], nist_ai_rmf: ["GOVERN 2", "MANAGE 1"], imda: [2, 3]}
+
+  - n: 15
+    key: cost-ceiling
+    group: cost
+    title: Per-run cost ceiling in code
+    since: "2.0.0"
+    changed: "4.0.0"
+    text: >-
+      Per-run token / cost ceiling enforced **in code** (circuit breaker on runaway sessions);
+      cost-per-task tracked in traces; ceilings re-derived whenever the model or provider
+      changes
+    audit:
+      checks:
+        - A hard per-run token / cost ceiling, enforced in code (circuit breaker) — not a guideline or a dashboard
+        - A runaway or looping session trips the breaker and halts
+        - Cost-per-task is recorded in traces
+        - >-
+          The model-swap runbook re-derives ceilings and routing from measured cost per task on
+          the new model — a price cut or a new tokenizer changes what a ceiling means
+      why: >-
+        without a code-level ceiling, one bad loop is an unbounded invoice. Cost is a
+        reliability property, not just a finance report.
+      gap: >-
+        watching cost in a dashboard after the fact instead of capping it in the request path
+        — or carrying last model's ceilings onto a model with different prices and token counts.
+    crosswalk: {nist_ai_rmf: ["MANAGE 2"], imda: [1]}
+
+  - n: 16
+    key: loop-license
+    group: loop
+    title: Loop License (six gates)
+    since: "3.0.0"
+    changed: "4.0.0"
+    binds: At oversight O1 or O2
+    binds_short: O1+
+    applies_if: oversight >= 1
+    text: >-
+      **Loop License** held: eval threshold (pass@1 **and** pass^5 on a representative set),
+      regression gate, declared blast radius, cost cap, kill switch, and escalation path — all
+      six declared, enforced in code, and tested (Part IV;
+      [`CHECKLIST`](@/templates/loop-license/CHECKLIST.md))
+    audit:
+      checks:
+        - >-
+          Eval threshold (pass@1 and pass^5), regression gate, declared blast radius, cost cap,
+          kill switch, escalation path — all six declared, enforced in code, and tested
+        - Missing any one gate → the system is capped at O0 (a human approves each consequential action)
+      why: >-
+        a loop that acts without per-action approval and holds no license is a factory with no
+        quality control — it ships whatever it produces at machine speed.
+      gap: >-
+        having evals and a cost cap but no kill switch or declared blast radius, so nothing can
+        stop or bound a run in flight.
+    crosswalk: {eu_ai_act: ["9", "14", "15"], owasp_asi: [ASI08, ASI10], nist_ai_rmf: ["GOVERN 1", "MANAGE 1"], imda: [1, 2, 3]}
+
+  - n: 17
+    key: stop-conditions
+    group: loop
+    title: Stop conditions
+    since: "3.0.0"
+    changed: "4.0.0"
+    binds: At autonomy L3+ or oversight O1+
+    binds_short: L3+ or O1+
+    applies_if: autonomy >= 3 or oversight >= 1
+    text: >-
+      Stop conditions declared in the Agent Contract and enforced by the runner: max
+      iterations, token/time/spend budgets, timeout, escalation after N consecutive failures
+      (Part IV)
+    audit:
+      checks:
+        - Max iterations, token/time/spend budgets, and a timeout are in the Agent Contract and enforced by the runner
+        - After N consecutive failures the loop escalates, it does not retry forever
+      why: '"no declared way to stop" is the defining L4 failure.'
+      gap: >-
+        budgets exist but there is no escalation-after-N — the loop burns the whole budget
+        retrying a doomed step.
+    crosswalk: {eu_ai_act: ["14", "15"], owasp_asi: [ASI08, ASI10], nist_ai_rmf: ["MANAGE 2"], imda: [1, 3]}
+
+  - n: 18
+    key: independent-verification
+    group: loop
+    title: Independent verification
+    since: "3.0.0"
+    changed: "4.0.0"
+    binds: At oversight O1 or O2
+    binds_short: O1+
+    applies_if: oversight >= 1
+    text: >-
+      Independent verification: the producing model does not grade its own work;
+      deterministic checks first; any LLM judge is calibrated (items 11 and 20) and
+      decorrelated from the writer; the checks, graders, and eval sets sit outside the
+      agent's write scope (Part IV)
+    audit:
+      checks:
+        - The producing model does not grade its own work
+        - >-
+          Deterministic checks (tests, schema, assertions) run before any LLM judge; the judge
+          is calibrated (see #11) and decorrelated from the writer
+        - The agent cannot modify its own tests, graders, eval sets, or thresholds
+      why: self-verification shares the writer's blind spots — a pass tells you nothing new.
+      gap: >-
+        a single agent that writes and then "reviews" its own output in the same context — or
+        one that can edit the test it is graded by.
+    crosswalk: {eu_ai_act: ["15"], nist_ai_rmf: ["MEASURE 2"], imda: [3]}
+
+  - n: 19
+    key: loop-economics
+    group: loop
+    title: Loop economics
+    since: "3.0.0"
+    binds: At oversight O1 or O2
+    binds_short: O1+
+    applies_if: oversight >= 1
+    text: >-
+      Loop economics: cost per run and cost per *verified* outcome tracked in traces; per-run
+      and per-window cost caps declared (Part IV · Layer 9)
+    audit:
+      checks:
+        - Cost per run **and** cost per *verified* outcome are tracked in traces
+        - Per-run and per-window cost caps are declared
+      why: >-
+        a loop that is cheap per call but rarely produces a verified result is expensive —
+        only cost-per-verified-outcome shows it.
+      gap: measuring raw spend but never dividing by outcomes that actually passed verification.
+    crosswalk: {nist_ai_rmf: ["MEASURE 3"], imda: [1]}
+
+  - n: 30
+    key: legitimacy-audit
+    group: loop
+    title: Success-legitimacy audit
+    since: "4.0.0"
+    binds: At oversight O2
+    binds_short: O2
+    applies_if: oversight >= 2
+    text: >-
+      A sample of runs scored as successful is reviewed each release for **illegitimate
+      success** — tampered or skipped tests, special-cased graders, hard-coded
+      outputs, work routed around a check; the **legitimacy rate** is published with the eval
+      results and gates promotion alongside the pass rate (Part IV · *Success legitimacy*)
+    audit:
+      checks:
+        - "A sampling plan per release: how many successful runs are reviewed, stratified by task type, and by whom"
+        - >-
+          Reviewers check the path, not just the output: diffs to tests or graders, skipped
+          assertions, special-cased inputs, outputs that match the checker rather than the task
+        - >-
+          Legitimacy rate = legitimate successes ÷ reviewed successes, reported next to pass@1
+          and pass^5; a declared floor blocks promotion
+        - Every illegitimate success becomes a regression case and, where possible, a deterministic tripwire
+      why: >-
+        METR's Frontier Risk Report (May 2026) found that on tasks longer than eight hours at
+        least 16% of runs scored as successful were illegitimate on review, with well over 100
+        distinct instances of cheating. A pass rate that counts those measures the agent's
+        ability to satisfy the checker.
+      gap: reporting a rising pass rate from an agent that can edit the test suite it is graded by.
+    crosswalk: {eu_ai_act: ["15", "72"], owasp_asi: [ASI10], nist_ai_rmf: ["MEASURE 2", "MEASURE 4"], imda: [2, 3]}
+
+  - n: 20
+    key: judge-calibration
+    group: measurement
+    title: Judge calibration (ECE/Brier)
+    since: "3.1.0"
+    changed: "4.0.0"
+    binds: Wherever an LLM judge gates O1+ operation, auto-apply, or release
+    binds_short: gating judges
+    applies_if: llm_judge
+    text: >-
+      The gating judge has **documented calibration** — accuracy + calibration error
+      (ECE/Brier) against an anchored ground-truth sample within a declared recency window; no
+      unvalidated verbalized confidence used as a gating signal (Part V · *Judge calibration*)
+    audit:
+      checks:
+        - >-
+          Any judge that gates O1+ operation, auto-apply, or release has documented
+          calibration — accuracy + calibration error (ECE/Brier) vs. an anchored ground-truth
+          sample within a declared recency window
+        - >-
+          The gating confidence signal is validated self-consistency or swap-consistency, never
+          raw verbalized confidence; pairwise judging randomizes order
+      why: >-
+        verbalized LLM confidence is systematically overconfident; an uncalibrated judge in a
+        gate is a check that isn't one — it invalidates the Loop License for the modes it gates.
+      gap: trusting a judge's "95% confident" verbatim, with no anchored accuracy behind it.
+    crosswalk: {eu_ai_act: ["15"], nist_ai_rmf: ["MEASURE 2", "MEASURE 4"], imda: [3]}
+
+  - n: 21
+    key: retrieval-metrics
+    group: measurement
+    title: Retrieval metrics
+    since: "3.1.0"
+    binds: Wherever memory or retrieval is used
+    binds_short: retrieval
+    applies_if: retrieval
+    text: >-
+      Memory/retrieval components evaluated with **retrieval metrics** (≥ Recall@k, MRR) on a
+      labeled set, independently of end-to-end task evals; embedding/chunking/index changes
+      pass a declared **retrieval regression gate** (Part V · *Retrieval evaluation* · Stack 4)
+    audit:
+      checks:
+        - Memory/retrieval scored with Recall@k and MRR on a labeled retrieval set, separately from end-to-end task evals
+        - Embedding-model / chunking / index changes pass a retrieval regression gate before deploy
+      why: retrieval and reasoning fail differently; an end-to-end number that conflates them cannot direct a fix.
+      gap: shipping an embedding-model swap because task evals "looked fine," silently dropping Recall@5.
+    crosswalk: {eu_ai_act: ["10", "15"], owasp_asi: [ASI06], nist_ai_rmf: ["MEASURE 2"], imda: [3]}
+
+  - n: 22
+    key: ground-truth
+    group: measurement
+    title: Ground-truth provenance
+    since: "3.1.0"
+    text: >-
+      Golden sets declare **labeling provenance** (rubric version, labeler type, date,
+      agreement); unanchored sets do not back a license or release gate; rubrics are versioned
+      instruction artifacts with judge re-baselining on change (Part V · *Ground-truth
+      discipline* · Part IV)
+    audit:
+      checks:
+        - >-
+          Golden sets declare labeling provenance (rubric version, labeler type, date,
+          agreement); unanchored sets do not back a license or release gate
+        - Rubrics are versioned instruction artifacts; a rubric change re-baselines every judge that uses it
+      why: a golden set without provenance is unanchored — you don't know what its pass rate means.
+      gap: a "golden" set nobody can trace to a rubric version or a labeler.
+    crosswalk: {eu_ai_act: ["10"], nist_ai_rmf: ["MEASURE 1", "MEASURE 4"], imda: [3]}
+
+  - n: 23
+    key: drift-monitoring
+    group: measurement
+    title: Drift monitoring
+    since: "3.1.0"
+    text: >-
+      Input drift monitored vs. the eval distribution with a declared **eval-refresh policy**;
+      where the product relies on provider-hosted models, a detected silent model change
+      triggers the eval regression gate (item 12) before continued reliance — scheduled canary
+      evaluations are the recommended detector (Part V · *Drift monitoring*)
+    audit:
+      checks:
+        - Input drift monitored vs. the eval distribution, with a declared refresh policy (thresholds + triggered action)
+        - A detected silent change in a provider-hosted model triggers the regression gate (scheduled canaries recommended); behavior drift watched at ≥ L2
+      why: >-
+        drift answers "when did my evals stop representing production?" — without it a green
+        suite can be measuring the past.
+      gap: a golden set refreshed on a calendar, not when production actually moved.
+    crosswalk: {eu_ai_act: ["15", "72"], nist_ai_rmf: ["MEASURE 3", "MANAGE 4"], imda: [3]}
+
+  - n: 33
+    key: oversight-program
+    group: measurement
+    title: Human oversight as a program
+    since: "3.1.0"
+    changed: "4.0.0"
+    text: >-
+      Wherever a human approval counts as a control — every per-action approval at O0, every
+      P6 gate at any mode — approval and review are run as a program: **override rate** and
+      **approval latency** (p50/p95) are measured per queue, and a
+      **rubber-stamp alarm** — near-total approval at latencies too short to have read the
+      action — triggers a review; at **O1+** the Loop License declares the oversight plan
+      (sampling schedule per mode, reviewer SLA, re-escalation triggers) and reviews are
+      captured as stratified labeled data (Part V · *Human oversight*)
+    audit:
+      checks:
+        - Override rate and approval latency (p50/p95) are tracked per approval queue and per reviewer
+        - >-
+          A rubber-stamp alarm fires on sustained near-100% approval at very low latency — and
+          the queue is reviewed, not the alarm silenced
+        - >-
+          At O1+, the Loop License declares a sampling schedule per oversight mode, a reviewer
+          SLA, and automatic re-escalation triggers (regression or override-rate spike →
+          previous mode)
+        - Human reviews/overrides are captured as stratified labeled data (escalations **plus** a random routine sample)
+      why: >-
+        oversight is an operated program, not a checkbox; graduation must be reversible on
+        regression. Automation bias turns an approval gate back into no gate — IMDA's agentic
+        governance framework (updated May 2026) names a low override rate as a signal of
+        rubber-stamping.
+      gap: >-
+        "human review" that only sees escalated hard cases, skewing the review-derived golden
+        data — or an approval queue so long that reviewers approve in bulk.
+    crosswalk: {eu_ai_act: ["14", "26"], owasp_asi: [ASI09], nist_ai_rmf: ["GOVERN 2", "MANAGE 4"], imda: [2]}
+
+  - n: 24
+    key: gate-integrity
+    group: gates
+    title: No safety gate silenced to pass CI
+    since: "3.2.0"
+    text: >-
+      No safety-class gate is disabled repo-wide to pass CI — a correctness test, type-safety
+      (`no-unsafe-*` / `no-explicit-any`), security lint, or a coverage/mutation floor; a false
+      positive is scoped to a file/glob with a named reason and the gate re-proven to still
+      fire (Canon 5, *gate-integrity invariant*). Binds wherever such a gate exists.
+    audit:
+      checks:
+        - >-
+          No safety-class gate is disabled repo-wide to make CI green — a correctness test,
+          type-safety (`no-unsafe-*` / `no-explicit-any`), security lint, or a coverage/mutation floor
+        - >-
+          Any false positive is scoped to a file/glob with a named reason (not a repo-wide
+          `off`, blanket `@ts-ignore`/`eslint-disable`, `.skip`, or a lowered threshold)
+        - After scoping, the gate is re-proven to still fire — plant the thing it must catch and confirm it's caught
+      why: >-
+        a gate is trust-bearing only if green means the property holds, not that the check was
+        silenced; disabling it removes the exact protection at the moment it fired. `tsc`
+        passing is not a substitute for the `no-unsafe-*` family — `any` is assignable to
+        everything by design, so the compiler waves it through (Canon 5, *gate-integrity
+        invariant*).
+      gap: a flaky lint rule disabled repo-wide to unblock CI, silently blinding every file instead of the one that misfired.
+    crosswalk: {eu_ai_act: ["9", "17"], nist_ai_rmf: ["GOVERN 1", "MEASURE 4"], imda: [3]}
+
+  - n: 25
+    key: graph-license
+    group: composition
+    title: Graph License
+    since: "3.3.0"
+    changed: "4.0.0"
+    binds: Any graph of agents operating at O1+
+    binds_short: multi-agent, O1+
+    applies_if: multi_agent and oversight >= 1
+    text: >-
+      **Graph License** held: the six gates re-evaluated at graph scope (pass@1 **and** pass^5 on graph-level golden tasks — plus the legitimacy rate at O2 — regression gate, blast radius as
+      the union of node radii **plus** the shared state store, per-node **and** aggregate cost
+      caps, a kill switch tested against in-flight parallel branches, one named escalation
+      owner); the **weakest-link bound** holds on every path to an external action; shared
+      state carries writer provenance and verification status; every fan-in is a declared
+      verification point or a rationalized pass-through; every edge class is marked
+      **enforced** or **declared**, and declared-only edges are not counted as controls (Part
+      IV · [`CHECKLIST`](@/templates/graph-license/CHECKLIST.md))
+    audit:
+      checks:
+        - >-
+          The six gates re-evaluated at **graph** scope: pass@1 and pass^5 thresholds on
+          graph-level golden tasks (end-to-end, not the union of per-node suites), plus the
+          legitimacy rate at O2 · regression gate on that set · blast radius as the
+          **union** of node radii **plus the shared state store** · cost caps **per-node and
+          aggregate** · a kill switch tested against **in-flight parallel branches** · **one**
+          named escalation owner for the graph
+        - >-
+          **Weakest-link bound** holds: no path to an external action runs under less
+          oversight than its least-licensed node allows
+        - >-
+          Shared state carries **writer provenance** (producing node, timestamp, `verified_by`
+          / `unverified`); consumers can filter on it; no external action fires from an
+          unverified field
+        - Every **fan-in** is a declared verification point or an explicit pass-through with rationale
+        - Every **edge class** is marked **enforced** or **declared**; declared-only edges are not counted as controls
+        - Graph eval suite includes **poisoned-state** scenarios (a hijacked or hallucinating node writing to shared state)
+      why: >-
+        a graph of licensed loops is not a licensed graph. The failures that hurt are exactly
+        the ones no single node owns — nodes that pass in isolation failing in composition,
+        fan-out multiplying spend past every per-node cap while each reads green, an
+        uncalibrated node lending a path oversight relief it never earned, and an escalation path that
+        forks so no human is on the hook (Part IV, *License Composition*;
+        [`CHECKLIST`](@/templates/graph-license/CHECKLIST.md)).
+      gap: >-
+        the topology is drawn in an SOP or a system prompt and then cited as a control, though
+        nothing in the runtime prevents a different route (anti-pattern 18).
+    crosswalk: {eu_ai_act: ["9", "14", "15"], owasp_asi: [ASI07, ASI08], nist_ai_rmf: ["MAP 4", "MANAGE 1"], imda: [1, 3]}
+
+  - n: 28
+    key: inter-agent-trust
+    group: composition
+    title: Inter-agent trust
+    since: "4.0.0"
+    binds: Wherever work is delegated across a trust boundary
+    binds_short: cross-boundary
+    applies_if: cross_boundary
+    text: >-
+      Before delegating across a trust boundary — another organization, vendor, or
+      independently operated service, typically over A2A — the peer's **signed Agent Card is
+      verified** (JWS over the JCS-canonicalized card, keys from a trusted keystore or an
+      allow-listed `jku` origin); unsigned or unverifiable peers fail closed; the delegated
+      scope never exceeds the delegator's own; the peer's output enters as untrusted input
+      (Stack 8 · *Inter-agent trust*; Part IV · *Edges are ingestion boundaries*)
+    audit:
+      checks:
+        - Every cross-boundary peer is listed with its expected signing keys (or trusted keystore) and the scopes it may receive
+        - Agent Card signatures are verified before first use and on every card refresh; expired or revoked keys are rejected
+        - A test with a forged, re-signed, or unsigned card fails closed
+        - Delegated credentials are down-scoped to the task and never exceed the delegator's own
+        - Peer responses are untrusted input — injection cases for the peer channel live in the eval suite
+      why: >-
+        A2A v1.0 lets agents sign their cards but leaves verification a SHOULD and does not
+        bind the key URL to the card's origin. Inside your trust boundary an orchestrator calls
+        functions; across it, an unverified card is an unauthenticated principal you are about
+        to hand work — and possibly data — to.
+      gap: fetching a partner's Agent Card over HTTPS and treating TLS as proof of who operates the agent.
+    crosswalk: {eu_ai_act: ["15"], owasp_asi: [ASI03, ASI07], nist_ai_rmf: ["GOVERN 6", "MANAGE 3"], imda: [3]}
+
+  - n: 31
+    key: regulatory-record
+    group: governance
+    title: Regulatory classification record
+    since: "4.0.0"
+    binds: Wherever the product is exposed to a regulated jurisdiction, e.g. EU users
+    binds_short: regulated
+    applies_if: regulated
+    text: >-
+      A written record states the jurisdictions the product is exposed to and, for each
+      regime, the product's **role** and **risk class** — under the EU AI Act: provider or
+      deployer; prohibited, high-risk (Annex I or III), transparency (Art. 50), or minimal;
+      general-purpose-model dependencies — with the application dates that bind it; the record
+      has an owner and is re-reviewed whenever the intended purpose, user base, or model
+      changes ([`CROSSWALK`](@/CROSSWALK.md))
+    audit:
+      checks:
+        - Jurisdictions in scope are listed (where users are, where outputs are used)
+        - >-
+          The EU AI Act role (provider, deployer, or both) and risk class are recorded with the
+          reasoning, including whether any Annex III use case applies
+        - >-
+          Art. 50 transparency duties are identified (AI-interaction disclosure,
+          machine-readable marking of synthetic content) with owners and dates
+        - >-
+          Application dates are recorded — Art. 50 from 2 Aug 2026 (marking grace to 2 Dec 2026
+          only for systems already on the market); Annex III high-risk from 2 Dec 2027; Annex I
+          from 2 Aug 2028
+        - A change of intended purpose, user base, or model triggers re-review — and so does each major release
+        - The record lives in version control (e.g. the `regulatory` block of `aps-conformance.yaml`)
+      why: >-
+        the Digital Omnibus (Regulation (EU) 2026/1744, in force 27 Jul 2026) fixed the
+        high-risk dates, and Art. 50 already applies. Classification is the input every other
+        obligation depends on, and an agent's intended purpose drifts faster than a legal
+        review cycle. The record is the engineering input to a legal assessment — not a
+        substitute for one.
+      gap: >-
+        nobody can say whether the product is a provider or a deployer, because the
+        classification lived in a slide deck from the launch review.
+    crosswalk: {eu_ai_act: ["6", "26", "50"], nist_ai_rmf: ["GOVERN 1", "MAP 1", "MAP 2"], imda: [1, 4]}

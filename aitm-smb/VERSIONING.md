@@ -89,10 +89,11 @@ Deprecated artifact contracts MUST carry all four; other deprecated files SHOULD
 Skills and artifacts declare the framework version they target:
 
 ```yaml
-# skill frontmatter (skills/_SKILL_TEMPLATE.md)
-framework: AITM-SMB
-version: 1.1.0                     # the skill's own version
-minimum_framework_version: 1.1.0   # oldest framework version the skill works with
+# skill frontmatter (skills/_SKILL_TEMPLATE.md); AITM-SMB fields sit under metadata, as strings
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"                   # the skill's own version
+  minimum_framework_version: "1.1.0" # oldest framework version the skill works with
 
 # artifact contract frontmatter (artifacts/_ARTIFACT_CONTRACT.md)
 framework_version: 1.1.0
@@ -137,7 +138,7 @@ version in CITATION.cff
 the current version named in README.md
 ```
 
-CHANGELOG.md MUST have a section for it. Skill `minimum_framework_version` MUST NOT exceed it. `python3 tools/validate.py` checks all of this.
+CHANGELOG.md MUST have a section for it. Skill `metadata.minimum_framework_version` MUST NOT exceed it. `python3 tools/validate.py` checks all of this.
 
 ---
 

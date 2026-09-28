@@ -38,7 +38,7 @@ This file is the only place where the authority of each level is defined:
 
 The level is assessed per action class of a Capability, not per system.
 
-These are authority levels. They are not maturity levels ([`maturity/MATURITY_MODEL.md`](../maturity/MATURITY_MODEL.md) uses M0–M5) and not software-architecture levels. Where another ladder is in use, such as the Agentic Product Standard's architecture levels, write `AITM-L3` versus `APS-L3` (crosswalk: [`docs/crosswalk-agentic-product-standard.md`](../docs/crosswalk-agentic-product-standard.md)).
+These are authority levels. They are not maturity levels ([`maturity/MATURITY_MODEL.md`](../maturity/MATURITY_MODEL.md) uses M0–M5) and not software-architecture levels. Where another ladder is in use, such as the Agentic Product Standard's operating point (autonomy L0–L4 × oversight O0–O2), write `AITM-L3` versus `APS-L3` (crosswalk: [`docs/crosswalk-agentic-product-standard.md`](../docs/crosswalk-agentic-product-standard.md)).
 
 Any level above L0 is granted only through `HG-AUTHORITY` ([`STANDARD.md`](../STANDARD.md) §8). The currently approved level of an action class is its Autonomy Assessment `current_level`; the Authority Ceiling (§6) bounds it.
 

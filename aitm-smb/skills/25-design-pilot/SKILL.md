@@ -1,14 +1,15 @@
 ---
 name: 25-design-pilot
 description: "Designs a bounded pilot that tests a transformation Hypothesis under real or production-representative conditions: pilot type and autonomy level within the Authority Ceiling, smallest sufficient scope and duration, baseline and comparison method, success and stop criteria fixed before execution, risks, guardrails, rollback, evidence plan, owner and post-pilot decision owner, checked against the pilot validity rules; updates Execution Gate C. Use in Phase 6 when material uncertainty remains before an Initiative scales (INV-11). Produces a PLT record per artifacts/pilot-plan.md and stops where the pilot accepts material risk; a pilot above the approved AI level starts only after the HG-AUTHORITY grant (skill 34). Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: execution-governance
-phase: "6"
-human_gate: true
-gates: [HG-RISK]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: execution-governance
+  phase: "6"
+  human_gate: "true"
+  gates: "HG-RISK"
 ---
 
 # Skill 25: Design Pilot

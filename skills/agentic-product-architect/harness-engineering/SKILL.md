@@ -1,39 +1,39 @@
 ---
 name: harness-engineering
-description: Design the harness — the 9-layer scaffolding around the LLM loop that makes agents reliable. Covers the agent loop itself (gather/act/verify), context management, durable execution, guardrails, human-in-the-loop, evals, observability, and the cross-cutting security & identity layer. In production agents, the harness is 98% of the code. Use whenever the user is structuring code around an agent loop, asks "how do I make this reliable / production-ready," is implementing verification, retry logic, sub-agent delegation, permission systems, approval gates, or wants to understand what makes Claude Code / Codex / Devin work beyond the model.
+description: Design the harness — the 9-layer scaffolding around the LLM loop that makes agents reliable. Covers the agent loop itself (gather/act/verify), context management, durable execution, guardrails, human-in-the-loop, evals, observability, and the two cross-cutting layers, security & identity and cost & FinOps. In production agents the harness is most of the code — ~98% in Claude Code, by one estimate. Use whenever the user is structuring code around an agent loop, asks "how do I make this reliable / production-ready," is implementing verification, retry logic, sub-agent delegation, permission systems, approval gates, or wants to understand what makes Claude Code / Codex / Devin work beyond the model.
 ---
 
 # Harness Engineering
 
-OpenAI's "Harness Engineering" post and Liu et al.'s Claude Code analysis (arXiv:2604.14228) converge on the same finding: in a production agent, ~98% of code is *not* the model loop. It's the harness — context management, permission systems, verification, sub-agent delegation, tool routing, recovery.
+OpenAI's "Harness Engineering" post and Liu et al.'s Claude Code analysis (arXiv:2604.14228) converge on the same finding: in a production agent, most of the code is *not* the model loop — ~98% in Claude Code, by a community estimate. It's the harness — context management, permission systems, verification, sub-agent delegation, tool routing, recovery.
 
 LangChain's empirical finding (March 2026): holding model constant at gpt-5.2-codex, their coding agent moved from Top 30 to Top 5 on Terminal Bench 2.0 (52.8% → 66.5%) **only by changing the harness**. As model capability converges, harness quality is the durable competitive advantage.
 
 ## The 9-layer harness model
 
-Every production agent has these layers — seven in the stack below, plus a **cross-cutting Security & Identity layer (layer 8)** that constrains all of them. Build the stack in this order; skipping is technical debt:
+Every production agent has these layers — seven in the stack below, plus two **cross-cutting** layers that constrain all of them: **Security & Identity (layer 8)** and **Cost & FinOps (layer 9)**. Build the stack in this order; skipping is technical debt:
 
+<!-- canon:begin:skill.harness.diagram -->
 ```
-┌─────────────────────────────────────────────┐
-│  7. Observability & Tracing                 │
-├─────────────────────────────────────────────┤
-│  6. Evaluation Layer (CI gates)             │
-├─────────────────────────────────────────────┤
-│  5. Human-in-the-Loop (notify/ask/review)   │
-├─────────────────────────────────────────────┤
-│  4. Guardrails (input/output validation)    │
-├─────────────────────────────────────────────┤
-│  3. Durable Execution (Workflow + Activity) │
-├─────────────────────────────────────────────┤
-│  2. Context & Memory Management             │
-├─────────────────────────────────────────────┤
-│  1. Agent Loop (gather → act → verify)      │
-└─────────────────────────────────────────────┘
+╔══════════════════════════════════════════════╗
+║  9. Cost & FinOps           (cross-cutting)  ║ ← per-run ceilings in code · caching · routing · cost per verified outcome
+║  8. Security & Identity     (cross-cutting)  ║ ← threat model · injection defense · per-agent identity · least-privilege tokens · pinned tool defs · protocol auth baseline
+╠══════════════════════════════════════════════╣
+║   7. Observability & Tracing                 ║ ← log EVERYTHING — on pinned OTel GenAI conventions
+║   6. Evaluation (CI gates)                   ║ ← block regressions
+║   5. Human-in-the-Loop (notify/ask/review)   ║ ← approval gates
+║   4. Guardrails (input/output validation)    ║ ← defense in depth
+║   3. Durable Execution (Workflow + Activity) ║ ← pause/resume/retry
+║   2. Context & Memory Management             ║ ← write/select/compress/isolate
+║   1. Agent Loop (gather → act → verify)      ║ ← the "agent" proper
+╚══════════════════════════════════════════════╝
               ↕ MCP / function calling
        ┌──────────────────────────┐
        │   Tools & Resources      │
        └──────────────────────────┘
 ```
+
+<!-- canon:end:skill.harness.diagram -->
 
 ## Layer 1: The agent loop
 
@@ -48,7 +48,7 @@ Production loops add four things to the naive version:
 - **State as a first-class object.** The loop is a pure function `(state, event) → new_state`. This makes it resumable, testable, replayable.
 - **Explicit termination conditions.** Step limit, time limit, success criterion, escalation. Never "loop until LLM says done."
 - **A verification step before commit.** Outcome check: did the action achieve what we intended?
-- **Compaction trigger.** Loop calls compaction when context utilization crosses 40%.
+- **Compaction trigger.** Loop calls compaction when context utilization crosses the context budget (40% of the window until you have measured your own).
 
 ```python
 # Schematic — production loops add error handling, durability, etc.
@@ -56,7 +56,7 @@ def agent_loop(state, max_steps=20):
     for step in range(max_steps):
         if termination_condition(state):
             return state
-        if context_utilization(state) > 0.4:
+        if context_utilization(state) > CONTEXT_BUDGET:  # measured per model; 0.4 until measured
             state = compact(state)
         action = propose_action(state)
         if requires_approval(action):
@@ -138,7 +138,9 @@ HITL is load-bearing, not an afterthought. Harrison Chase's three patterns:
 - Approval UI shows: what action, what inputs, what consequences, what alternatives the agent considered
 - Rejection with feedback feeds back into the loop as new context
 
-**When you remove the human (L3+ unattended operation), the Loop License replaces this gate.** An agent that finds its own work and loops without a human in each turn must hold the six-gate Loop License — eval pass-rate threshold, regression gate, declared blast radius, cost cap, kill switch, escalation path — plus independent verification and a governed instruction supply chain. Full treatment: `STANDARD.md` Part IV; one-page gate: `templates/loop-license/CHECKLIST.md`.
+**When you relax oversight, the Loop License replaces this gate.** Autonomy (who picks the next step) and oversight (whether a human approves each consequential action) are separate axes. A system whose actions run without per-action approval — **O1** (a human on the loop) or **O2** (unattended), at any autonomy level — must hold the six-gate Loop License: an eval threshold on pass@1 *and* pass^5, a regression gate, a declared blast radius, a cost cap, a kill switch, and an escalation path — plus independent verification with the checks outside the agent's reach, a governed instruction supply chain, and at O2 a success-legitimacy audit. Full treatment: `STANDARD.md` Part IV; one-page gate: `templates/loop-license/CHECKLIST.md`.
+
+**Watch the humans, too.** An approval gate only counts while the approvals mean something. Track the override rate and the approval latency per queue; near-total approval at a few seconds per item is rubber-stamping (automation bias), and the gate has quietly become no gate (DoD 33).
 
 ## Layer 6: Evaluation Layer (CI gates)
 
@@ -162,7 +164,7 @@ Trace **everything**. Most agent failures are not text-quality issues — they'r
 - Context utilization at this step
 - Latency
 
-**Instrumentation:** use OpenInference / OpenLLMetry so you can switch observability vendors (Langfuse, LangSmith, Braintrust, Arize) without re-instrumenting.
+**Instrumentation:** emit spans on the **OpenTelemetry GenAI semantic conventions** (OpenInference and OpenLLMetry instrument to them) so you can switch observability vendors (Langfuse, LangSmith, Braintrust, Arize) without re-instrumenting. See `STANDARD.md` Part II · Stack 6.
 
 ## Cycle of Trust — the meta-pattern
 
@@ -174,7 +176,7 @@ verify preconditions → execute → verify outcome →
 log trace → update memory/state
 ```
 
-**Permission boundaries are enforced by code, never by prompt.** The Replit incident (2025) — an agent wiped a production database for 1,200+ companies despite an explicit "code freeze" instruction — is the canonical reference for why. The model will ignore prompt-level restrictions under enough pressure. Code won't.
+**Permission boundaries are enforced by code, never by prompt.** The Replit incident (July 2025) — an agent deleted a production database holding records on 1,206 executives and 1,196+ companies despite an explicit "code freeze" instruction (Fortune, 23 Jul 2025) — is the canonical reference for why. The model will ignore prompt-level restrictions under enough pressure. Code won't.
 
 **Implementation:**
 - Tool credentials scoped with OAuth / IAM, not held by the agent
@@ -207,7 +209,9 @@ This is Claude Code's Task tool. It's Anthropic Research's sub-researcher patter
 
 Not a box in the stack — a layer that wraps all seven. Safety is structural, not a filter bolted on the edge (content classifiers top out ~97%, so ~3% of injection lands by design). The cross-cutting controls:
 
-- **Agent identity & least privilege** — each agent gets a distinct, scoped, short-lived identity; identity and `tenant_id` come from auth, never the model.
+- **Agent identity & least privilege** — each agent acts under its own non-human identity (never a shared service account or a person's token) with scoped, short-lived credentials; identity and `tenant_id` come from auth, never the model; every action is attributable to the agent and to whoever delegated it.
+- **Protocol auth baseline** — MCP on revision 2026-07-28: no state in a protocol session, clients registered by pre-registration or Client ID Metadata Document, `iss` validated, client credentials bound to their issuer, `requestState` treated as untrusted, the official conformance suite in CI. An MCP gateway can authorize per tool on the `Mcp-Method` / `Mcp-Name` headers — an enforcement point outside the model — as long as it rejects protocol versions that predate header validation.
+- **Inter-agent trust** — across an org or vendor boundary, verify the peer's signed A2A Agent Card before delegating, and treat what comes back as untrusted input.
 - **Lethal-trifecta check** — private data + untrusted content + external comms together = an exfiltration channel; break one leg before shipping.
 - **MCP supply chain** — pin tool definitions by hash, alert on change (rug pulls), install from an allow-listed registry.
 - **Injection defense spans input *and* output** — including indirect injection (poisoned documents / tool output), plus an egress check.
@@ -230,11 +234,14 @@ engineering constraint, not a month-end surprise.
 - **Model routing and cascades** — a small model for routing and classification, the
   flagship only for reasoning.
 - **Measure cost-per-outcome, not total spend** — cost belongs on the same traces as
-  Layer 6, attributed per agent and per run.
+  everything else (Layer 7 · Observability; `STANDARD.md` Stack 6), attributed per agent
+  and per run.
+- **Re-derive ceilings on every model change** — prices, tokenizers, and context
+  behavior all move with the model; a ceiling copied from the old one is a guess.
 - **Multi-agent economics** — only pay the multi-agent premium when task value
   justifies it; if one agent clears the bar, one agent is the answer.
 
-Reference implementation: **AgenticGateway** (together with Layer 1).
+Reference implementation: **AgenticGateway** (Part II · Stack 1 — model and provider — together with Layer 9).
 
 ## Harness as the durable advantage
 
@@ -248,7 +255,7 @@ When the user is choosing where to invest engineering time, redirect this conver
 
 When the conversation completes, the user should have:
 
-1. The agent loop sketched as `(state, event) → new_state` with explicit termination conditions
+1. The operating point declared (`L0–L4 · O0–O2`) and the agent loop sketched as `(state, event) → new_state` with explicit termination conditions
 2. Decisions for each of the 9 layers — what's in scope for v1
 3. Cycle of Trust enforced for at least the top destructive actions
 4. Sub-agent boundaries defined (if applicable)

@@ -1,14 +1,15 @@
 ---
 name: 01-discover-transformation
 description: "Phase 0 orchestrator. Frames an AI transformation of a small or medium-sized business: defines measurable business Outcomes with an accountable owner, baseline or known baseline gap, target, horizon, constraints and non-goals, selects the Application Profiles (skill 36), and stops for Outcome approval (HG-OUTCOME). Use at the start of an engagement or when the Outcomes change. Produces the Transformation Intent with Outcome records, a Metric record per Outcome, and the profile and gate Decisions in the Decision and Assumption Log. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: orchestrator
-phase: "0"
-human_gate: true
-gates: [HG-OUTCOME]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: orchestrator
+  phase: "0"
+  human_gate: "true"
+  gates: "HG-OUTCOME"
 ---
 
 # Skill 01: Orchestrate Transformation Intent

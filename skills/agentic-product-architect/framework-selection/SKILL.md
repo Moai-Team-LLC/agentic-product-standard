@@ -1,6 +1,6 @@
 ---
 name: framework-selection
-description: Choose the right agentic framework — LangGraph, OpenAI Agents SDK, Claude Agent SDK, CrewAI, Pydantic AI, AutoGen/AG2, LlamaIndex Workflows, Semantic Kernel, Mastra, DSPy, mcp-agent — based on the team's dominant constraint, not hype. Use whenever the user asks "which framework should I use," compares any two of these, hits limits with their current framework, or is starting a new project and needs to pick the stack.
+description: Choose the right agentic framework — LangGraph, OpenAI Agents SDK, Claude Agent SDK, Google ADK, CrewAI, Pydantic AI, Microsoft Agent Framework (successor to AutoGen and Semantic Kernel), AG2, LlamaIndex Workflows, Mastra, DSPy, mcp-agent — based on the team's dominant constraint, not hype. Use whenever the user asks "which framework should I use," compares any two of these, hits limits with their current framework, or is starting a new project and needs to pick the stack.
 ---
 
 # Framework Selection
@@ -41,11 +41,11 @@ Find your **dominant constraint** — the one you'd sacrifice others to get. Pic
 | Multi-agent with explicit roles, fastest prototype | **CrewAI** | Role-based orchestration in ~20 LOC; lowest barrier to entry |
 | Type safety, FastAPI ergonomics, structured outputs | **Pydantic AI** | Typed signatures, 25+ providers, Temporal integration; built by the Pydantic team |
 | Document-heavy, RAG is the core job | **LlamaIndex Workflows** | First-class RAG primitives; event-driven workflow runtime |
-| .NET / Azure enterprise | **Semantic Kernel** | C# / Python / Java parity; Azure-native |
+| .NET / Azure enterprise | **Microsoft Agent Framework** | 1.0 GA (April 2026); supersedes AutoGen and Semantic Kernel (both in maintenance); C# and Python |
 | TypeScript full-stack | **Mastra** | TS-native; fits Next.js stacks |
 | Programmatic prompt optimization | **DSPy** | Compile prompts and weights against a metric; can layer on top of other frameworks |
 | MCP-native + Temporal | **mcp-agent (lastmile-ai)** | Anthropic's effective-agent patterns + MCP + Temporal first-class |
-| Conversation-first multi-agent research | **AutoGen / AG2** | Was the standard; AG2 is the community fork; Microsoft has moved on to Microsoft Agent Framework |
+| Conversation-first multi-agent research | **AG2** (community fork of AutoGen) | AutoGen itself is in maintenance mode — for new Microsoft-stack work use Microsoft Agent Framework |
 
 ## Profiles by framework
 
@@ -187,11 +187,11 @@ Beyond the dominant constraint, check these before committing:
 1. **Production deployments at known companies.** Demos prove ideas; production proves robustness.
 2. **Active maintenance.** Last 6 months of commits, issue response times, releases.
 3. **Documentation quality.** Especially examples close to your use case.
-4. **Observability integration.** OpenInference / OpenLLMetry support, or first-class tracing.
+4. **Observability integration.** Emits the OpenTelemetry GenAI semantic conventions — natively or through OpenInference / OpenLLMetry — so traces survive a vendor swap.
 5. **Escape hatch.** Can you drop down to raw SDK calls when the abstraction doesn't fit?
 6. **Lock-in.** What changes if you swap models? Swap memory? Swap orchestrator?
 
-> **On model lock-in specifically:** the *framework* question is separate from the *provider* question. To swap models or providers without touching agent code, put every call behind one OpenAI-compatible endpoint. The family's reference implementation of that plane is **[AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway)** — provider swap becomes config, not code, with eval-sourced routing and per-run/tenant cost ceilings (harness Layers 1 + 9). Vendor-neutral: keep LiteLLM / Portkey / raw Bifrost if you already run one (Principle 2). See the [`reference-stack`](../reference-stack/SKILL.md) skill.
+> **On model lock-in specifically:** the *framework* question is separate from the *provider* question. To swap models or providers without touching agent code, put every call behind one OpenAI-compatible endpoint. The family's reference implementation of that plane is **[AgenticGateway](https://github.com/Moai-Team-LLC/AgenticGateway)** — provider swap becomes config, not code, with eval-sourced routing and per-run/tenant cost ceilings (Stack 1 + harness Layer 9). Vendor-neutral: keep LiteLLM / Portkey / raw Bifrost if you already run one (Principle 2). See the [`reference-stack`](../reference-stack/SKILL.md) skill.
 
 ## Framework misuse patterns
 

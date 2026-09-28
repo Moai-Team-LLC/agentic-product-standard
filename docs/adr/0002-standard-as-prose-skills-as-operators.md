@@ -1,6 +1,6 @@
 # ADR-0002: Standard as prose, skills as operators
 
-- **Status:** Accepted
+- **Status:** Accepted — amended by [ADR-0003](0003-machine-readable-canon.md) (enumerable content moves to a machine-readable canon)
 - **Date:** 2026-05-30
 
 ## Context

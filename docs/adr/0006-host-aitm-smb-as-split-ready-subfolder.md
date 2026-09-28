@@ -1,4 +1,4 @@
-# ADR-0003: Host AITM-SMB as a split-ready subfolder
+# ADR-0006: Host AITM-SMB as a split-ready subfolder
 
 - **Status:** Accepted
 - **Date:** 2026-09-27
@@ -39,8 +39,9 @@ Host AITM-SMB in `aitm-smb/` as a **self-contained, split-ready** folder:
   attached.
 - The vocabulary collision is resolved by scoping, not renaming. `CONTEXT.md`
   stays authoritative for this standard's skills. AITM-SMB's L0–L5 is a business
-  *authority* ladder and this standard's L0–L4 is an *architecture* ladder. In
-  mixed contexts they are written AITM-L<n> / APS-L<n>. An informative crosswalk
+  *authority* ladder; this standard's operating point is autonomy L0–L4 ×
+  oversight O0–O2 (ADR-0004), and AITM authority corresponds to the oversight
+  axis. In mixed contexts they are written AITM-L<n> / APS-L<n> · APS-O<n>. An informative crosswalk
   (`aitm-smb/docs/crosswalk-agentic-product-standard.md`) maps the two and names
   the hand-off. It adds no requirements to either standard.
 - It is listed in `ECOSYSTEM.md` as a *related methodology*, not as a reference

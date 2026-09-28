@@ -1,0 +1,435 @@
+# The self-assessment scorecard — the Definition of Done as a binary maturity instrument.
+#
+# SCORECARD.md is generated from this file, and `tools/aps.py conformance` scores a product's
+# aps-conformance.yaml against it. Every item has a stable `id` (never reused), the maturity
+# `band` at which it becomes mandatory, the DoD items it evidences (`dod`), and an optional
+# `applies_if` condition over the product profile (see canon/dod.yaml for the vocabulary).
+# A section's `applies_if` is display-only (items repeat it); each item's own condition is
+# what the conformance tool evaluates.
+# Every DoD item must be evidenced by at least one scorecard item — `aps.py validate` checks.
+
+bands:
+  - id: M0
+    name: Prototype
+    envelope: any autonomy at O0 — no production claim
+    meaning: Works on a demo. No production claim.
+  - id: M1
+    name: Shippable
+    envelope: L0–L2 at O0
+    meaning: >-
+      Contracts, schemas, guardrails, an eval set, permissions in code, a declared operating
+      point. Every consequential action is human-approved. Safe to put in front of users behind
+      a workflow.
+  - id: M2
+    name: Production
+    envelope: up to L3; O1/O2 only with a Loop License
+    meaning: >-
+      Durable, observable, tenant-isolated, security-checked, identity-scoped, cost-bounded,
+      CI-gated on evals, on the current protocol baselines.
+  - id: M3
+    name: Autonomous-ready
+    envelope: L4 at any oversight mode
+    meaning: >-
+      Online evals, `pass^k` reliability, red-team kit run, full OTel trajectory observability.
+      Earns the right to an open-ended loop.
+
+# The band an operating point requires (first matching rule wins).
+envelope_rules:
+  - when: autonomy >= 4
+    label: L4 at any oversight mode
+    requires: M3
+  - when: autonomy >= 3 or oversight >= 1
+    label: L3, or any system at O1/O2
+    requires: M2
+  - when: "True"
+    label: everything else that ships
+    requires: M1
+
+sections:
+  - key: arch
+    title: Architecture & contracts
+    items:
+      - id: arch.operating-point
+        band: M1
+        text: The operating point is declared — autonomy level (L0–L4) and oversight mode (O0–O2) — and matches what runs in production.
+      - id: arch.least-autonomy
+        band: M1
+        text: The system uses the least autonomous architecture sufficient for the task.
+      - id: arch.contracts
+        band: M1
+        text: Every agent has an Agent Contract; every tool a Tool Contract.
+      - id: arch.hard-to-vary
+        band: M1
+        text: "Acceptance criteria are *hard-to-vary*: each names the single probe that falsifies it."
+      - id: arch.earned-autonomy
+        band: M2
+        text: Each climb in autonomy was earned by pass@1 ≥ 90% at the level below; each relaxation of oversight by the Loop License's pass^5 threshold.
+      - id: arch.orchestrator
+        band: M2
+        applies_if: multi_agent
+        text: Multi-agent is an orchestrator with isolated subagents — not a peer-to-peer bus.
+
+  - key: ctx
+    title: Context & state
+    items:
+      - id: ctx.budget
+        band: M1
+        dod: [1]
+        text: Context stays within a measured budget in a typical cycle (40% of the window until you have measured it).
+      - id: ctx.state
+        band: M1
+        dod: [2]
+        text: State is externalized — not held only in the context window or in a protocol session.
+      - id: ctx.compaction
+        band: M2
+        dod: [3]
+        text: Compaction is tested on long-running scenarios; sub-agent outputs are condensed.
+
+  - key: tools
+    title: Tools & permissions
+    items:
+      - id: tools.allowlist
+        band: M1
+        text: Tools are allow-listed; active count < 20 per agent (or RAG-over-tools).
+      - id: tools.permissions
+        band: M1
+        dod: [5]
+        text: Tool inputs are schema-validated; permissions enforced in **code**, not prompt.
+      - id: tools.approval
+        band: M1
+        dod: [4]
+        text: Consequential (P3+) actions require human approval — or, at O1+, stay inside the Loop License's declared blast radius; destructive (P6) actions require approval at every oversight mode.
+      - id: tools.sandbox
+        band: M2
+        dod: [6]
+        text: Tool execution is sandboxed (containers / OAuth scopes / least privilege).
+
+  - key: sec
+    title: Security & identity
+    items:
+      - id: sec.trifecta
+        band: M2
+        dod: [13]
+        text: Lethal-trifecta check performed and documented; if all three legs present, one is broken.
+      - id: sec.mcp-pinning
+        band: M2
+        dod: [14]
+        applies_if: mcp
+        text: MCP tool definitions pinned by hash with change alerts, re-verified whenever a cached tool list expires; servers from an allow-listed registry, version-pinned + signature-checked.
+      - id: sec.mcp-baseline
+        band: M2
+        dod: [26]
+        applies_if: mcp
+        text: Every MCP connection speaks revision 2026-07-28 (or carries a dated sunset); no state rides on a protocol session; no new use of Roots / Sampling / Logging; `requestState` is treated as untrusted input and integrity-protected wherever it influences authorization, resource access, or business logic.
+      - id: sec.mcp-auth
+        band: M2
+        dod: [26]
+        applies_if: mcp
+        text: MCP clients use pre-registration or Client ID Metadata Documents (Dynamic Client Registration only as a documented fallback), validate `iss` (RFC 9207), and bind stored client credentials to their issuer; servers never pass tokens through.
+      - id: sec.mcp-conformance
+        band: M2
+        dod: [26]
+        applies_if: mcp
+        text: The official MCP conformance suite runs in CI, at a pinned version and against what 2026-07-28 requires, for every MCP server and client you own; each baselined failure is an owned, dated gap.
+      - id: sec.tokens
+        band: M2
+        dod: [27]
+        text: OAuth 2.1 scoped, short-lived, audience-bound tokens; no token passthrough; no over-scoping.
+      - id: sec.identity
+        band: M2
+        dod: [27]
+        text: Each agent acts under its own least-privilege non-human identity — no shared service account; identity & tenant derived from auth, never the model.
+      - id: sec.attribution
+        band: M2
+        dod: [27]
+        text: Every action is attributable in traces to the agent identity that took it and to the human or system that delegated it.
+      - id: sec.indirect-injection
+        band: M3
+        text: Indirect prompt injection (poisoned docs / tool output) is in the threat model and red-team tested.
+
+  - key: tenant
+    title: Tenant isolation
+    condition: if multi-tenant
+    applies_if: multi_tenant
+    items:
+      - id: tenant.auth-derived
+        band: M2
+        dod: [32]
+        applies_if: multi_tenant
+        text: "`tenant_id` derived from auth only; no-tenant requests fail closed."
+      - id: tenant.below-llm
+        band: M2
+        dod: [32]
+        applies_if: multi_tenant
+        text: Isolation enforced below the LLM (RLS / repository layer); survives prompt injection.
+      - id: tenant.scoped-paths
+        band: M2
+        dod: [32]
+        applies_if: multi_tenant
+        text: Retrieval, memory, cache keys (including MCP `private`-scoped results), traces, sub-agent messages, and jobs are all tenant-scoped.
+      - id: tenant.leakage-eval
+        band: M2
+        dod: [32]
+        applies_if: multi_tenant
+        text: A code-asserted cross-tenant leakage eval runs in CI.
+
+  - key: cost
+    title: Cost
+    items:
+      - id: cost.ceiling
+        band: M2
+        dod: [15]
+        text: Per-run token/cost ceiling enforced in code (circuit breaker on runaway sessions).
+      - id: cost.caching
+        band: M2
+        dod: [15]
+        text: Prompt/KV caching enabled on stable prefixes; cost-per-task tracked in traces.
+      - id: cost.model-swap
+        band: M2
+        dod: [15]
+        text: Ceilings and routing are re-derived from measured cost per task whenever the model or provider changes.
+      - id: cost.multi-agent
+        band: M2
+        applies_if: multi_agent
+        text: For multi-agent, the task value justifies the ~15× token cost.
+
+  - key: rel
+    title: Reliability
+    items:
+      - id: rel.durable
+        band: M2
+        dod: [7]
+        text: "Durable execution: pause / resume / retry survives a killed process."
+      - id: rel.schema
+        band: M1
+        dod: [8]
+        text: Structured outputs validated by schema; assertions on the critical path.
+      - id: rel.guardrails
+        band: M1
+        dod: [9]
+        text: Guardrails (schema, PII, jailbreak, indirect-injection, egress) on input and output.
+
+  - key: eval
+    title: Evals & observability
+    items:
+      - id: eval.set
+        band: M1
+        dod: [10]
+        text: Eval set ≥ 50 examples per top-priority failure mode; built from real traces.
+      - id: eval.judges
+        band: M2
+        dod: [11]
+        applies_if: llm_judge
+        text: LLM judges are binary and calibrated against human labels (TPR/TNR tracked).
+      - id: eval.ci-gate
+        band: M2
+        dod: [12]
+        text: CI blocks deploy on eval regression; 100% of production runs traced.
+      - id: obs.telemetry-pinned
+        band: M2
+        dod: [29]
+        text: Telemetry follows the OTel GenAI semantic conventions at a pinned revision, with `invoke_agent` / `chat` / `execute_tool` spans; a schema test runs on exported traces, and a migration test precedes any pin bump.
+      - id: obs.no-content
+        band: M2
+        dod: [29]
+        text: Prompt and completion content is not captured in traces by default; capture is enabled by a written policy with retention and access limits.
+      - id: obs.trajectory
+        band: M3
+        text: Traces capture the **trajectory**, not just the final answer.
+      - id: eval.online
+        band: M3
+        text: Online evals run on completed production threads; failing traces feed the offline set.
+      - id: eval.pass-k
+        band: M3
+        text: Reliability tracked with `pass^k`, not only `pass@1`.
+
+  - key: loop
+    title: Operating without per-action approval — the Loop License
+    condition: if the system runs at O1 or O2 — stop conditions also at L3+
+    applies_if: autonomy >= 3 or oversight >= 1
+    items:
+      - id: loop.license
+        band: M2
+        dod: [16]
+        applies_if: oversight >= 1
+        text: "**Loop License** held: eval threshold (pass@1 **and** pass^5), regression gate, declared blast radius, cost cap, kill switch, and escalation path — all six declared, enforced in code, tested ([`templates/loop-license/CHECKLIST.md`](@/templates/loop-license/CHECKLIST.md))."
+      - id: loop.stop-conditions
+        band: M2
+        dod: [17]
+        applies_if: autonomy >= 3 or oversight >= 1
+        text: "Stop conditions declared in the Agent Contract and enforced by the runner: max iterations, token/time/spend budgets, timeout, escalation after N consecutive failures (also binds at L3+ under O0)."
+      - id: loop.verification
+        band: M2
+        dod: [18]
+        applies_if: oversight >= 1
+        text: "Independent verification: the producing model does not grade its own work; deterministic checks first; the LLM judge is calibrated and decorrelated from the writer."
+      - id: loop.checks-out-of-reach
+        band: M2
+        dod: [18, 30]
+        applies_if: oversight >= 1
+        text: The agent cannot modify its own tests, graders, eval sets, or thresholds — they sit outside its write scope.
+      - id: loop.ingestion
+        band: M2
+        dod: [16]
+        applies_if: oversight >= 1
+        text: '"Find work" treated as untrusted input — indirect-injection cases in the eval suite, instruction/data channel separation, least-privilege triggers (OWASP LLM01).'
+      - id: loop.supply-chain
+        band: M2
+        dod: [16]
+        applies_if: oversight >= 1
+        text: "Instruction supply chain governed: skills/prompts/instructions versioned, provenanced, eval-gated before deploy, regression-tested on update, trigger-collisions audited; skills validated against the Agent Skills specification and hash-locked (OWASP LLM03)."
+      - id: loop.economics
+        band: M2
+        dod: [19]
+        applies_if: oversight >= 1
+        text: "Loop economics: cost per run **and** cost per *verified* outcome tracked in traces; per-run/per-window caps declared."
+      - id: loop.declarations
+        band: M2
+        dod: [16]
+        applies_if: oversight >= 1
+        text: Memory model and determinism map were declared at architecture time (what is persisted, retention, provenance, replayability; which steps are deterministic vs. model-driven).
+      - id: loop.legitimacy
+        band: M2
+        dod: [30]
+        applies_if: oversight >= 2
+        text: At O2, a sample of successful runs is reviewed each release for illegitimate success; the legitimacy rate is published and gates promotion.
+
+  - key: meas
+    title: Measurement science & oversight
+    note: deepens Evals & observability
+    items:
+      - id: meas.judge-card
+        band: M2
+        dod: [20]
+        applies_if: llm_judge
+        text: "Any judge that gates O1+ operation / auto-apply / release has a current **Judge Card**: calibration (ECE/Brier) + anchored accuracy vs. a ground-truth sample within a recency window; an `uncalibrated`/`stale` judge gates nothing."
+      - id: meas.confidence
+        band: M2
+        dod: [20]
+        applies_if: llm_judge
+        text: Gating confidence uses validated self-consistency or swap-consistency — **not** raw verbalized confidence; pairwise judging randomizes order or applies a swap-consistency check.
+      - id: meas.retrieval
+        band: M2
+        dod: [21]
+        applies_if: retrieval
+        text: Retrieval / memory evaluated with **Recall@k + MRR** on a labeled set, separately from end-to-end evals; embedding/chunking/index changes pass a retrieval regression gate.
+      - id: meas.provenance
+        band: M2
+        dod: [22]
+        text: Golden sets declare **labeling provenance** (rubric version, labeler, date, agreement); unanchored sets back no license or gate; rubrics are versioned with judge re-baselining on change.
+      - id: meas.inter-judge
+        band: M2
+        dod: [22]
+        applies_if: llm_judge
+        text: Inter-judge agreement monitored; sustained near-perfect agreement triggers a decorrelation review, sustained low agreement a rubric review.
+      - id: meas.drift
+        band: M2
+        dod: [23]
+        text: Input and behavior **drift** monitored vs. the eval distribution with a declared refresh policy (behavior drift at autonomy ≥ L2).
+      - id: meas.canary
+        band: M3
+        text: Provider-hosted models are canaried on a cadence; a detected silent change triggers the eval regression gate before continued reliance.
+      - id: meas.automation-bias
+        band: M2
+        dod: [33]
+        text: Wherever a human approval counts as a control, override rate and approval latency (p50/p95) are tracked per queue, and a rubber-stamp alarm triggers a review.
+      - id: meas.oversight-plan
+        band: M2
+        dod: [33]
+        applies_if: oversight >= 1
+        text: "Human-oversight program: sampling schedule per oversight mode with automatic re-escalation on regression; reviews captured as stratified labeled data."
+
+  - key: graph
+    title: Composition (multi-agent)
+    condition: if more than one agent is composed
+    items:
+      - id: graph.license
+        band: M2
+        dod: [25]
+        applies_if: multi_agent and oversight >= 1
+        text: "**Graph License** held: the six gates at graph scope, the weakest-link bound on every action path, shared-state provenance, fan-in verification points, and every edge class marked enforced or declared ([`templates/graph-license/CHECKLIST.md`](@/templates/graph-license/CHECKLIST.md))."
+      - id: graph.poisoned-state
+        band: M2
+        dod: [25]
+        applies_if: multi_agent and oversight >= 1
+        text: The graph eval suite includes poisoned-state scenarios — a hijacked or hallucinating node writing to shared state — and downstream nodes do not act on it.
+      - id: graph.inter-agent-trust
+        band: M2
+        dod: [28]
+        applies_if: cross_boundary
+        text: Before delegating across a trust boundary, the peer's signed Agent Card is verified (JWS over the JCS-canonicalized card; keys from a trusted keystore or an allow-listed `jku`); a forged or unsigned card fails closed; delegated scope never exceeds the delegator's.
+
+  - key: gov
+    title: Governance & regulation
+    items:
+      - id: gov.classification
+        band: M1
+        dod: [31]
+        applies_if: regulated
+        text: A regulatory classification record exists — jurisdictions, role and risk class under each regime (EU AI Act — provider/deployer, Annex I/III, Art. 50), application dates — with an owner and a re-review trigger on any change of purpose, users, or model.
+
+  - key: fleet
+    title: Fleet operations
+    condition: if running a persistent fleet
+    applies_if: fleet
+    items:
+      - id: fleet.manifest
+        band: M2
+        applies_if: fleet
+        text: Each deployed agent is a versioned **runtime manifest** (resources, schedule, runtime + model, env interpolation), distinct from its Agent Contract; the same manifest runs in dev and prod, with agent-logic split from the platform prompt injected at run time.
+      - id: fleet.scheduling
+        band: M2
+        applies_if: fleet
+        text: Scheduled / triggered runs are coordinated by a lock (fire-once across replicas); missed runs (misfires) are detected and handled, not silently dropped.
+      - id: fleet.backlog
+        band: M2
+        applies_if: fleet
+        text: Overflow work queues in a durable backlog that survives a restart — no in-memory-only work queue.
+      - id: fleet.lifecycle
+        band: M2
+        applies_if: fleet
+        text: Per-agent isolation + resource limits; runs terminate gracefully (drain, then SIGINT→SIGKILL); deploy / start / stop / restart are operations, not full redeploys.
+      - id: fleet.observability
+        band: M3
+        applies_if: fleet
+        text: "Fleet observability: per-agent health/heartbeat + topology, plus an append-only operational audit (lifecycle / auth / tool-call events), on top of the per-run traces above."
+      - id: fleet.call-matrix
+        band: M3
+        applies_if: fleet
+        text: Inter-agent calls follow an explicit "who-may-call-whom" matrix (default deny); coordination prefers an event bus over hard-wired calls.
+
+  - key: model
+    title: Model & provider
+    condition: if calls fan out over multiple models/providers
+    applies_if: multi_provider
+    items:
+      - id: model.abstraction
+        band: M2
+        applies_if: multi_provider
+        text: All model calls go through one provider-abstraction point; adding a provider is config, not code.
+      - id: model.eval-sourced
+        band: M2
+        applies_if: multi_provider
+        text: Model selection per task class is sourced from measured eval results, and the source eval run is recorded.
+      - id: model.one-credential
+        band: M2
+        applies_if: multi_provider
+        text: Clients hold exactly one credential; upstream provider keys are vaulted and never reach clients or logs.
+      - id: model.tenant-scoped
+        band: M3
+        applies_if: multi_provider and multi_tenant
+        text: Tenant-scoped budgets, cache, and routing with a cross-tenant leakage test in CI.
+
+  - key: maint
+    title: Maintenance discipline
+    items:
+      - id: maint.gate-integrity
+        band: M1
+        dod: [24]
+        text: No safety-class gate is disabled repo-wide to pass CI (correctness test, type-safety / `no-unsafe-*` / `no-explicit-any`, security lint, coverage/mutation floor); false positives are scoped to a file/glob with a named reason, and the gate is re-proven to still fire (Canon 5, *gate-integrity invariant*).
+      - id: maint.anti-criteria
+        band: M2
+        text: Every forbidden action has a code-asserted anti-criterion (not prose alone).
+      - id: maint.bitter-pill
+        band: M3
+        text: Rules are tagged anti-fragile vs. fragile; fragile scaffolding is re-tested each model upgrade (bitter-pill).

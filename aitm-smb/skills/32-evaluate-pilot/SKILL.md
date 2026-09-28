@@ -1,14 +1,15 @@
 ---
 name: 32-evaluate-pilot
 description: "Evaluates a pilot against its pre-registered Evaluation Plan: checks the plan was fixed before execution and the pilot is valid, appends the result fields (actual, conclusion, limitations, Evidence) of each Evaluation record to the plan's results section with layers kept separate, derives the pilot result (PROMOTE, REVISE, REPEAT, STOP, INSUFFICIENT_EVIDENCE) from the pre-defined success and stop criteria, and updates Execution Gate D. Use in Phase 7 when a pilot has run. PROMOTE, or a promotion proposed despite unmet criteria, is a recommendation: the skill stops for the HG-PROMOTION decision. Produces results in artifacts/evaluation-plan.md. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: execution-governance
-phase: "7"
-human_gate: true
-gates: [HG-PROMOTION]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: execution-governance
+  phase: "7"
+  human_gate: "true"
+  gates: "HG-PROMOTION"
 ---
 
 # Skill 32: Evaluate Pilot

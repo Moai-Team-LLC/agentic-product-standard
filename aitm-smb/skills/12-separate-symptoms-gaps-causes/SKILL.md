@@ -1,13 +1,14 @@
 ---
 name: 12-separate-symptoms-gaps-causes
 description: "Converts raw observations about a business into evidenced Observations and Symptoms, links them to Outcomes, Capabilities and CURRENT States, forms Gaps between current and required behavior, and generates competing cause Hypotheses classified by cause class and confidence. Use in Phase 2 (diagnosis), usually invoked by skill 03, before root causes are validated (skill 16) and before any solution is considered. Produces Diagnostic Records, Gap records in the Capability Diagnosis, cause Hypotheses in the Decision and Assumption Log, and Evidence Register entries. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: diagnostic-specialist
-phase: "2"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: diagnostic-specialist
+  phase: "2"
+  human_gate: "false"
 ---
 
 # Skill 12: Separate Symptoms, Gaps, and Causes

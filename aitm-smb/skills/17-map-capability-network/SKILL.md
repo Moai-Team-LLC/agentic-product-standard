@@ -1,13 +1,14 @@
 ---
 name: 17-map-capability-network
 description: "Maps the smallest set of dependencies between business Capabilities needed to reason about the transformation: relation type and direction, criticality, failure and capacity effects, and shared capabilities. Use in Phase 5 under the Standard profile or above, invoked by skill 06, or when a change to one Capability may shift work, information or constraints to another. Produces a Capability Network with Capability Dependency records. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: design-specialist
-phase: "5"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: design-specialist
+  phase: "5"
+  human_gate: "false"
 ---
 
 # Skill 17: Map Capability Network

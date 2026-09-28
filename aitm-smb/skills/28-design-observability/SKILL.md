@@ -1,13 +1,14 @@
 ---
 name: 28-design-observability
 description: "Designs the Observability Plan for a transformed Capability: signals per observability layer including decision signals, the operation-trace fields captured, trace depth proportional to authority, risk, impact and irreversibility, answers to the minimum observable questions, alerts that open incidents, review cadence and owner, and a dark-automation check whose findings block rollout. Use in Phase 7 before AI-enabled or automated work runs in a pilot or rollout stage. Produces the observability record per artifacts/observability-plan.md. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: execution-governance
-phase: "7"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: execution-governance
+  phase: "7"
+  human_gate: "false"
 ---
 
 # Skill 28: Design Observability

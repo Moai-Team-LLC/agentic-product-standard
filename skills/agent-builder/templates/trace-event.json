@@ -2,6 +2,8 @@
   "trace_id": "uuid",
   "run_id": "uuid",
   "agent_id": "{agent}",
+  "agent_principal": "{the agent's own non-human identity}",
+  "delegated_by": "{user or upstream system that delegated the task}",
   "event_type": "agent.started | context.selected | llm.called | tool.called | guardrail.checked | approval.requested | agent.completed | agent.failed",
   "timestamp": "ISO-8601",
   "input_summary": {},

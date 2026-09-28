@@ -1,13 +1,14 @@
 ---
 name: 27-build-eval-dataset
 description: "Builds or extends the evaluation dataset for an AI component: a representative composition (common, rare, edge, policy-sensitive, ambiguous, high-impact cases, historical failures, adversarial cases), every case with task, input, expected and unacceptable behavior, risk class and source, with personal and confidential content minimized, leakage tracked, and maintenance triggers applied. Use in Phase 6 before an AI component is piloted or evaluated, and again when a maintenance trigger or incident requires new cases. Produces eval_dataset records in the datasets section of artifacts/evaluation-plan.md. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: execution-governance
-phase: "6"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: execution-governance
+  phase: "6"
+  human_gate: "false"
 ---
 
 # Skill 27: Build Evaluation Dataset

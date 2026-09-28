@@ -15,7 +15,8 @@
 ## Checklist
 
 - [ ] Edited the relevant `STANDARD.md` section and/or matching `skills/.../SKILL.md`
-- [ ] Kept the English and Russian standards in sync (or noted what still needs syncing)
-- [ ] No code templates added (the skill set teaches judgment, not boilerplate)
+- [ ] Enumerable changes made in `canon/`, rendered with `python3 tools/aps.py render`; `python3 tools/aps.py check` passes
+- [ ] Hand-written guidance updated in both `STANDARD.md` and the matching `skills/.../SKILL.md`
+- [ ] No framework boilerplate added to the skills (framework-neutral gates belong in `templates/`)
 - [ ] Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/)
 - [ ] For `aitm-smb/` changes: from inside `aitm-smb/`, `python3 tools/validate.py` and `python3 tools/validate.py --engagement examples/compact-scenario-b` pass; the VERSIONING class is stated; no incompatible change to a `PUBLIC_API.md` item; `aitm-smb/CHANGELOG.md` updated (renamed fields in the release notes' migration table); no named companies or vendors in the normative core (see [`aitm-smb/CONTRIBUTING.md`](../aitm-smb/CONTRIBUTING.md))

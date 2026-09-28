@@ -40,9 +40,11 @@ SKILL_CATEGORIES = {
     "orchestrator", "diagnostic-specialist", "design-specialist",
     "execution-governance", "framework-operations",
 }
-SKILL_REQUIRED_KEYS = (
-    "name", "description", "version", "minimum_framework_version",
-    "framework", "status", "category", "phase", "human_gate",
+# Agent Skills specification (agentskills.io): only these keys at the top level;
+# AITM-SMB's own fields live under `metadata`, as strings.
+SPEC_FIELDS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
+SKILL_METADATA_KEYS = (
+    "framework", "version", "minimum_framework_version", "status", "category", "phase", "human_gate",
 )
 SKILL_REQUIRED_HEADINGS = ("Purpose", "Required inputs", "Produces", "Procedure", "Handoff")
 
@@ -366,35 +368,38 @@ def check_skills(version, gates, rep):
         if fm is None:
             rep.error(relpath, "missing frontmatter")
             continue
-        for key in SKILL_REQUIRED_KEYS:
+        for key in ("name", "description"):
             if fm.get(key) in (None, ""):
                 rep.error(relpath, "frontmatter missing `%s`" % key)
+        check_spec_fields(relpath, fm, rep)
+        meta = fm.get("metadata") if isinstance(fm.get("metadata"), dict) else {}
+        for key in SKILL_METADATA_KEYS:
+            if meta.get(key) in (None, ""):
+                rep.error(relpath, "frontmatter missing `metadata.%s`" % key)
         if fm.get("name") != name:
             rep.error(relpath, "name `%s` does not match directory `%s`" % (fm.get("name"), name))
         desc = fm.get("description") or ""
         if isinstance(desc, str) and len(desc) > 1024:
             rep.error(relpath, "description longer than 1024 characters")
-        if fm.get("framework") != "AITM-SMB":
-            rep.error(relpath, "framework must be AITM-SMB")
-        if fm.get("category") not in SKILL_CATEGORIES:
-            rep.error(relpath, "unknown category `%s`" % fm.get("category"))
-        mfv = semver(fm.get("minimum_framework_version"))
+        if meta.get("framework") != "AITM-SMB":
+            rep.error(relpath, "metadata.framework must be AITM-SMB")
+        if meta.get("category") not in SKILL_CATEGORIES:
+            rep.error(relpath, "unknown metadata.category `%s`" % meta.get("category"))
+        mfv = semver(meta.get("minimum_framework_version"))
         if not mfv:
             rep.error(relpath, "minimum_framework_version is not semver")
         elif version and mfv > version:
             rep.error(relpath, "minimum_framework_version is newer than the framework")
-        gate_flag = str(fm.get("human_gate")).lower()
-        skill_gates = fm.get("gates") or []
-        if isinstance(skill_gates, str):
-            skill_gates = [skill_gates]
+        gate_flag = str(meta.get("human_gate")).lower()
+        skill_gates = [g.strip() for g in str(meta.get("gates") or "").split(",") if g.strip()]
         if gate_flag == "true":
             if not skill_gates:
-                rep.error(relpath, "human_gate is true but `gates` is empty")
+                rep.error(relpath, "metadata.human_gate is true but metadata.gates is empty")
         elif gate_flag == "false":
             if skill_gates:
-                rep.error(relpath, "human_gate is false but `gates` is set")
+                rep.error(relpath, "metadata.human_gate is false but metadata.gates is set")
         else:
-            rep.error(relpath, "human_gate must be true or false")
+            rep.error(relpath, "metadata.human_gate must be \"true\" or \"false\"")
         for g in skill_gates:
             if g not in gates:
                 rep.error(relpath, "gate `%s` is not declared in STANDARD.md" % g)
@@ -402,7 +407,7 @@ def check_skills(version, gates, rep):
         for h in SKILL_REQUIRED_HEADINGS:
             if not any(x == h or x.startswith(h) for x in heads):
                 rep.error(relpath, "missing section `## %s`" % h)
-        if fm.get("category") == "orchestrator" and not any(x.startswith("Specialist skills") for x in heads):
+        if meta.get("category") == "orchestrator" and not any(x.startswith("Specialist skills") for x in heads):
             rep.error(relpath, "orchestrator missing `## Specialist skills`")
         m = re.match(r"^(\d{2})-", name)
         if not m:
@@ -426,7 +431,20 @@ def check_skills(version, gates, rep):
             rep.error("SKILL.md", "name must be `aitm-smb`")
         if not fm.get("description"):
             rep.error("SKILL.md", "missing description")
+        check_spec_fields("SKILL.md", fm, rep)
     return numbers
+
+
+def check_spec_fields(relpath, fm, rep):
+    """Frontmatter keys and `metadata` values as the Agent Skills specification allows."""
+    for key in sorted(set(map(str, fm)) - SPEC_FIELDS):
+        rep.error(relpath, "frontmatter field `%s` is not in the Agent Skills spec (put it under `metadata`)" % key)
+    meta = fm.get("metadata")
+    if meta is not None and not (isinstance(meta, dict) and all(isinstance(v, str) for v in meta.values())):
+        rep.error(relpath, "`metadata` must map keys to string values")
+    desc = fm.get("description")
+    if isinstance(desc, str) and len(desc) > 1024:
+        rep.error(relpath, "description longer than 1024 characters")
 
 
 def section(text, title):

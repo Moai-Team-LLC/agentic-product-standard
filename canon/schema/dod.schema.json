@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Moai-Team-LLC/agentic-product-standard/canon/schema/dod.schema.json",
+  "title": "Definition of Done (canon/dod.yaml)",
+  "type": "object",
+  "required": ["groups", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "groups": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["key", "title"],
+        "additionalProperties": false,
+        "properties": { "key": { "type": "string", "pattern": "^[a-z]+$" }, "title": { "type": "string" } }
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["n", "key", "group", "title", "since", "text", "audit", "crosswalk"],
+        "additionalProperties": false,
+        "properties": {
+          "n": { "type": "integer", "minimum": 1 },
+          "key": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+          "group": { "type": "string" },
+          "title": { "type": "string", "maxLength": 60 },
+          "since": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+          "changed": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+          "binds": { "type": "string" },
+          "binds_short": { "type": "string", "maxLength": 30 },
+          "applies_if": { "type": "string" },
+          "text": { "type": "string", "minLength": 10 },
+          "audit": {
+            "type": "object",
+            "required": ["checks", "why", "gap"],
+            "additionalProperties": false,
+            "properties": {
+              "checks": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+              "why": { "type": "string" },
+              "gap": { "type": "string" }
+            }
+          },
+          "crosswalk": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "eu_ai_act": { "type": "array", "items": { "type": "string" } },
+              "owasp_asi": { "type": "array", "items": { "type": "string", "pattern": "^ASI(0[1-9]|10)$" } },
+              "nist_ai_rmf": { "type": "array", "items": { "type": "string", "pattern": "^(GOVERN|MAP|MEASURE|MANAGE) [0-9]$" } },
+              "imda": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 4 } }
+            }
+          }
+        },
+        "dependentRequired": { "applies_if": ["binds", "binds_short"] }
+      }
+    }
+  }
+}

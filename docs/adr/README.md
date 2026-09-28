@@ -15,5 +15,8 @@ ADR to one decision and one page.
 | ADR | Title | Status |
 | --- | --- | --- |
 | [0001](0001-master-skill-with-sub-skill-routing.md) | Master skill with sub-skill routing | Accepted |
-| [0002](0002-standard-as-prose-skills-as-operators.md) | Standard as prose, skills as operators | Accepted |
-| [0003](0003-host-aitm-smb-as-split-ready-subfolder.md) | Host AITM-SMB as a split-ready subfolder | Accepted |
+| [0002](0002-standard-as-prose-skills-as-operators.md) | Standard as prose, skills as operators | Accepted (amended by 0003) |
+| [0003](0003-machine-readable-canon.md) | A machine-readable canon, and prose generated from it | Accepted |
+| [0004](0004-autonomy-and-oversight-axes.md) | Autonomy and oversight are two axes; the Loop License binds on oversight | Accepted |
+| [0005](0005-layer-and-stack-numbering.md) | "Layer N" is the harness; Part II sections are "Stack N" | Accepted |
+| [0006](0006-host-aitm-smb-as-split-ready-subfolder.md) | Host AITM-SMB as a split-ready subfolder | Accepted |

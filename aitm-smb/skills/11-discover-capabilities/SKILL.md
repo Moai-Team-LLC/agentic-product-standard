@@ -1,13 +1,14 @@
 ---
 name: 11-discover-capabilities
 description: "Discovers the stable business Capabilities that materially affect the approved Outcomes, normalizes their boundaries with the granularity test, assigns CAP identifiers, and records each Capability's CURRENT State with evidence and confidence. Use in Phase 1 (current-system mapping), usually invoked by skill 02, or whenever a Capability in scope is missing from the Capability Map. Produces Capability and CURRENT State records in the Capability Map and Evidence Register entries. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: diagnostic-specialist
-phase: "1"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: diagnostic-specialist
+  phase: "1"
+  human_gate: "false"
 ---
 
 # Skill 11: Discover Business Capabilities

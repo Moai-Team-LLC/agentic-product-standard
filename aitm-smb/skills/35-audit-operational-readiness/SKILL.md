@@ -1,13 +1,14 @@
 ---
 name: 35-audit-operational-readiness
 description: "Verifies before each rollout stage that the rollout gates hold: pilot success criteria met (or waived in the promotion Decision) and promotion, failure modes, active monitoring without dark automation, ownership, support path and incident path, explicit role changes, rollback or recovery, operating governance controls, autonomy level approved and within the Authority Ceiling, eval coverage, and cost envelope. Use in Phase 7 before a rollout stage starts. Records the result on the stage's Execution Gate E per artifacts/execution-gate.md (Governed) and returns blocking gaps as findings. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: execution-governance
-phase: "7"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: execution-governance
+  phase: "7"
+  human_gate: "false"
 ---
 
 # Skill 35: Audit Operational Readiness

@@ -1,14 +1,15 @@
 ---
 name: 07-build-roadmap
 description: "Phase 6 orchestrator. Turns the approved target into an executable transition: sequences Initiatives, designs operable Transition States (skill 21), Transformation Slices, decision and execution gates, rollback, the Transformation Portfolio under the Portfolio profile (skill 22), and, where material uncertainty remains, Pilots with pre-registered evaluation and evaluation datasets (skills 25, 26, 27); stops for budget approval (HG-BUDGET). Use after the target system is approved, before operationalization. Produces the Transformation Roadmap, Transition States, Pilot and Evaluation Plans, Execution Gate records and the Portfolio. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: orchestrator
-phase: "6"
-human_gate: true
-gates: [HG-BUDGET]
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: orchestrator
+  phase: "6"
+  human_gate: "true"
+  gates: "HG-BUDGET"
 ---
 
 # Skill 07: Orchestrate Transformation Roadmap

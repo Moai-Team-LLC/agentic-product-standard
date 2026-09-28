@@ -6,6 +6,8 @@
 
 This pattern is distilled (vendor-neutral) from Descope's MCP-server design and OAuth 2.1; see Sources.
 
+**Where it applies.** This is the write path at oversight **O0**, where a human approves each consequential action. At **O1/O2** the Loop License is the elevation for P3–P5 actions inside its declared blast radius. The license's gates replace the per-action confirmation, its stop conditions replace the auto-revoke, and the audit trail stays the same. An action outside the declared blast radius re-enters this workflow. **P6 always does**, at every oversight mode.
+
 ---
 
 ## The core stance: read-only by default, writes are elevated
@@ -26,7 +28,7 @@ A session starts with **no write capability**. Reads (P0) are always available; 
 
 ## The five-step write workflow
 
-Every P3+ action follows the same sequence, so there are no silent mutations:
+Every P3+ action that needs a human's approval follows the same sequence, so there are no silent mutations. That means every P3+ action at O0; at O1/O2, any action outside the license and every P6 action:
 
 1. **Identify** — the agent names the operation and why it's needed.
 2. **Build arguments** — it assembles the exact parameters.

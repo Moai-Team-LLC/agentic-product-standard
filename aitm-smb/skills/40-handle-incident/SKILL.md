@@ -1,13 +1,14 @@
 ---
 name: 40-handle-incident
 description: "Records and triages an incident of an AI-enabled or transformed capability: class and severity, impact and affected state, containment and recovery, root cause and corrective action, and the feedback updates it requires (policy, evaluation dataset, workflow, knowledge, permissions, authority, observability, training, Capability Target State or Target Operating Architecture). Applies immediate authority demotion when a demotion trigger fires; restoring authority is a promotion handed to skill 34 (HG-AUTHORITY). Use in Phase 7 or 8 whenever an alert, report, or review reveals an incident. Produces an INC record per artifacts/incident-record.md. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: execution-governance
-phase: "7-8"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: execution-governance
+  phase: "7-8"
+  human_gate: "false"
 ---
 
 # Skill 40: Handle Incident

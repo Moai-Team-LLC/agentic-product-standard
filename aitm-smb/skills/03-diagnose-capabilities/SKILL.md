@@ -1,13 +1,14 @@
 ---
 name: 03-diagnose-capabilities
 description: "Phase 2 orchestrator. Diagnoses why current Capabilities do not produce the required Outcomes: separates observations and symptoms from Gaps (skill 12), generates competing cause Hypotheses and tests them against evidence (skill 16), and decides which Gaps are intervention-ready. Use after the current system is mapped and before any intervention is designed. Produces the Capability Diagnosis, Diagnostic Records and cause Hypotheses in the Decision and Assumption Log. Part of AITM-SMB; paths are relative to the AITM-SMB root."
-version: 1.1.0
-minimum_framework_version: 1.1.0
-framework: AITM-SMB
-status: active
-category: orchestrator
-phase: "2"
-human_gate: false
+metadata:
+  framework: AITM-SMB
+  version: "1.1.0"
+  minimum_framework_version: "1.1.0"
+  status: active
+  category: orchestrator
+  phase: "2"
+  human_gate: "false"
 ---
 
 # Skill 03: Orchestrate Capability Diagnosis

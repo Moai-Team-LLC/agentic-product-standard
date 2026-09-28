@@ -40,7 +40,7 @@ In 1.0.0, [`STANDARD.md`](../STANDARD.md) §8 listed nine triggers for explicit 
 
 3. Rules in [`STANDARD.md`](../STANDARD.md) §8: a gate applies whenever its trigger occurs, in any phase; approval is a Decision ([`artifacts/decision-assumption-log.md`](../artifacts/decision-assumption-log.md)) with `gate:` set and `approved_by:` naming the human; an agent that reaches an open gate stops with `HUMAN_DECISION_REQUIRED` and lists the gate in `open_gates` ([`AGENT_OUTPUT_STANDARD.md`](../AGENT_OUTPUT_STANDARD.md)); reducing AI authority (demotion) never needs a gate.
 4. Materiality gets one definition, [`STANDARD.md`](../STANDARD.md) §16: an item is material when being wrong about it could change an approved Outcome or create customer, financial, legal, security, or AI-authority exposure that the accountable Outcome owner would expect to decide personally. The owner MAY record thresholds as a Phase 0 Decision; unclear means material; agents MUST NOT classify an item as immaterial to avoid a gate.
-5. Skills declare the gates their output requires in frontmatter (`human_gate`, `gates`; [`skills/INDEX.md`](../skills/INDEX.md) §4). Phase files and [`EXECUTION_MODEL.md`](../EXECUTION_MODEL.md) §2 name the gates that typically occur. [`tools/validate.py`](../tools/validate.py) rejects any gate ID not declared in [`STANDARD.md`](../STANDARD.md) §8.
+5. Skills declare the gates their output requires in frontmatter (`metadata.human_gate`, `metadata.gates`; [`skills/INDEX.md`](../skills/INDEX.md) §4). Phase files and [`EXECUTION_MODEL.md`](../EXECUTION_MODEL.md) §2 name the gates that typically occur. [`tools/validate.py`](../tools/validate.py) rejects any gate ID not declared in [`STANDARD.md`](../STANDARD.md) §8.
 
 ## Consequences
 
