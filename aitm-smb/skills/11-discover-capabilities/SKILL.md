@@ -1,44 +1,53 @@
 ---
 name: 11-discover-capabilities
-version: 1.0.0
-minimum_framework_version: 1.0.0
+description: "Discovers the stable business Capabilities that materially affect the approved Outcomes, normalizes their boundaries with the granularity test, assigns CAP identifiers, and records each Capability's CURRENT State with evidence and confidence. Use in Phase 1 (current-system mapping), usually invoked by skill 02, or whenever a Capability in scope is missing from the Capability Map. Produces Capability and CURRENT State records in the Capability Map and Evidence Register entries. Part of AITM-SMB; paths are relative to the AITM-SMB root."
+version: 1.1.0
+minimum_framework_version: 1.1.0
 framework: AITM-SMB
 status: active
 category: diagnostic-specialist
+phase: "1"
+human_gate: false
 ---
 
-# Skill: Discover Business Capabilities
+# Skill 11: Discover Business Capabilities
+
+## Purpose
+
+Identify the stable organizational abilities that produce the approved Outcomes and describe how each operates today, so that Gaps can be diagnosed against a CURRENT State. Invoked by `skills/02-map-current-system/SKILL.md`.
 
 ## Required inputs
 
-- approved Outcome scope
-- value-stream/process evidence
+- approved Outcomes (Transformation Intent, `HG-OUTCOME` closed);
+- value-stream and process Evidence (Evidence Register, interviews, system data).
+
+## Normative sources
+
+- `diagnostics/CAPABILITY_DISCOVERY.md` (granularity test §4)
+- `CORE_MODEL.md` §2 (Capability), §3 (State)
 
 ## Produces
 
-- `artifacts/capability-map.md`
+- `artifacts/capability-map.md` — Capability records (`CAP-###`) and their CURRENT States (`STA-###`, `type: CURRENT`)
+- `artifacts/evidence-register.md` — Evidence and Evidence Debt
 
 ## Procedure
 
-1. Start from each approved Outcome.
-2. Identify value streams materially affecting that Outcome.
-3. Extract stable organizational abilities from activities.
-4. Normalize capability boundaries using the granularity test.
-5. Remove tool names, department names, and task-level artifacts where they do not represent stable abilities.
-6. Assign stable CAP identifiers and record evidence/confidence.
+1. Start from each approved Outcome and follow the discovery sequence (`diagnostics/CAPABILITY_DISCOVERY.md` §2).
+2. Name and bound candidates (§3); apply the granularity test (§4); decompose only per §5.
+3. Assign a new `CAP-###` when a candidate is accepted (§7); record `outcome_ids`, `value_stream_ids`, owner, `evidence_ids`, and the Capability Map extensions `dependencies` (§6), `confidence`, `boundary_notes`.
+4. For each Capability in scope, record one CURRENT State across the relevant dimensions (`CORE_MODEL.md` §3) and set `current_state_id`.
+5. Back each State with `evidence_ids`, or with `assumption_ids` and `[ASSUMPTION]` labels (`AGENTS.md` §3); record missing Evidence as Evidence Debt.
+6. Validate against the `artifacts/capability-map.md` Validation.
+7. Stop with `INSUFFICIENT_EVIDENCE` when a Capability or State would require invented business facts; with `BLOCKED` while `HG-OUTCOME` is open; with `HUMAN_DECISION_REQUIRED` when any `STANDARD.md` §8 gate is reached.
 
-## Mandatory controls
+## MUST NOT
 
-- Separate evidence from inference.
-- Preserve stable AITM identifiers.
-- Do not silently widen scope.
-- Surface uncertainty.
-- Do not recommend AI before simpler intervention classes are considered.
-
-## Stop conditions
-
-Stop when proceeding would require invented business facts or when a human gate is reached.
+- invent business facts, present inference as Evidence, or hide uncertainty;
+- put a target-state solution into a CURRENT State;
+- widen scope beyond the approved Outcomes silently, or renumber or reuse stable IDs;
+- recommend AI or any other intervention (that is Phase 3).
 
 ## Handoff
 
-Use `AGENT_OUTPUT_STANDARD.md`.
+Emit the `aitm_output` block defined in `AGENT_OUTPUT_STANDARD.md`.

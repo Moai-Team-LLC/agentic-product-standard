@@ -18,19 +18,23 @@ Technical / Process Change
 
 ---
 
-## 3. Example structure
+## 3. Record
 
 ```yaml
 benefit_chain:
   initiative_id:
-  change:
+  change:                     # technical / process change delivered
   expected_behavior_change:
-  capability_metric:
-  outcome_metric:
+  capability_metric:          # MET-###
+  outcome_metric:             # MET-###
   economic_effect:
-  evidence_ids: []
-  attribution_confidence:
+  evidence_ids: []            # Evidence for each link of the chain
+  attribution_confidence:     # LOW | MEDIUM | HIGH (measurement/VALUE_REALIZATION.md §4)
 ```
+
+Instances: the `benefit_chain` of a Value Realization record (`artifacts/value-realization-report.md`). Required with the Measured profile (`APPLICATION_PROFILES.md`).
+
+A link without Evidence stays visible as a missing link (`TRACEABILITY.md` §4).
 
 ---
 

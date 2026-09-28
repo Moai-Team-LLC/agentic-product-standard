@@ -1,5 +1,7 @@
 # AITM-SMB Evaluation Rubric
 
+**Status:** Informative (`NORMATIVE_INDEX.md` tier 13). Not the engagement Evaluation System (`evaluation/`); conformance is judged by `CONFORMANCE.md`. Typical use: `skills/10-audit-aitm-engagement/SKILL.md`.
+
 Use this rubric to review an engagement, artifact set, or agent output.
 
 ## A. Outcome integrity
@@ -16,7 +18,7 @@ Use this rubric to review an engagement, artifact set, or agent output.
 
 ## D. Architecture integrity
 - Is target behavior defined before vendors?
-- Are authority and trust boundaries explicit?
+- Are authority, data-access, and tool-access boundaries explicit (`artifacts/ai-governance-canvas.md`)?
 
 ## E. Evidence integrity
 - Can material conclusions be traced to evidence?
@@ -34,4 +36,4 @@ Use this rubric to review an engagement, artifact set, or agent output.
 
 ## Failure condition
 
-A polished artifact that cannot answer these questions is not a valid AITM-SMB output.
+A polished artifact that cannot answer these questions should be revised before approval.

@@ -14,38 +14,25 @@ proof that the model can respond
 
 It must test business-system behavior.
 
+Pilots are designed in Phase 6 with a pre-registered evaluation, and run, evaluated and decided in Phase 7 (`EXECUTION_MODEL.md` §1).
+
 ---
 
-## 2. Pilot contract
+## 2. Pilot record
 
-```yaml
-pilot:
-  id: PLT-###
-  initiative_id:
-  hypothesis_ids: []
-  capability_ids: []
-  target_outcomes: []
-  scope:
-  participants:
-  duration_or_volume:
-  baseline:
-  intervention:
-  control_or_comparison:
-  metrics: []
-  risks: []
-  guardrails: []
-  rollback:
-  success_criteria: []
-  stop_criteria: []
-  evidence_plan:
-  owner:
-```
+Record contract: `artifacts/pilot-plan.md` (`PLT-###`).
+
+A pilot states the Initiative and Hypotheses it tests, its type (§3) and autonomy level, its scope (§4), baseline and comparison, metrics, risks and guardrails, rollback, success and stop criteria, evidence plan, and owner.
+
+Its evaluations are pre-registered in the Evaluation Plan (`artifacts/evaluation-plan.md`, `evaluation/EVALUATION_SYSTEM.md`) before the pilot runs.
 
 ---
 
 ## 3. Pilot types
 
 ### Shadow Pilot
+
+`pilot_type: shadow`
 
 New behavior runs without controlling production action.
 
@@ -61,15 +48,27 @@ policy compliance
 
 ### Assisted Pilot
 
+`pilot_type: assisted`
+
 AI or new system assists humans while humans retain authority.
 
 ### Controlled Execution Pilot
+
+`pilot_type: controlled_execution`
 
 System executes within a small bounded domain with explicit approval or policy.
 
 ### Limited Autonomous Pilot
 
+`pilot_type: limited_autonomous`
+
 Agentic execution is allowed within narrow permissions and strong observability.
+
+### Authority in pilots
+
+The pilot type does not set authority; the pilot's autonomy level does (`diagnostics/AUTONOMY_SUITABILITY.md` §2).
+
+A pilot MUST NOT exceed the approved Authority Ceiling (`diagnostics/AUTONOMY_SUITABILITY.md` §6). Running a pilot above the currently approved level is an authority increase: it follows `governance/AUTHORITY_ESCALATION_MODEL.md` and requires `HG-AUTHORITY` (`STANDARD.md` §8) before the pilot starts.
 
 ---
 
@@ -113,3 +112,7 @@ REPEAT
 STOP
 INSUFFICIENT_EVIDENCE
 ```
+
+These are result values, not agent statuses (`PUBLIC_API.md` §8). The result is recorded as `pilot_result` in the Evaluation Plan.
+
+PROMOTE is a recommendation. Promoting a material pilot to rollout requires `HG-PROMOTION` (`STANDARD.md` §8); Governed: Execution Gate D (`execution/EXECUTION_GATE_MODEL.md`).

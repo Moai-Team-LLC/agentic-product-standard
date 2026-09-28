@@ -13,6 +13,14 @@ Observation
 
 This prevents automating symptoms.
 
+Definitions:
+
+- **Cause** — a condition explaining why a Gap exists (`CORE_MODEL.md` §5).
+- **Cause Hypothesis** — a proposed explanation for a Gap. It MUST NOT be treated as validated truth.
+- **Validated Cause** — a Cause Hypothesis supported by sufficient Evidence to justify intervention design (§7 `validated`).
+
+Every Cause is recorded as a Hypothesis (`HYP-###`, `kind: cause`); its ID is unchanged when it is validated.
+
 ---
 
 ## 2. Root-cause ladder
@@ -72,6 +80,8 @@ AI is not a cause class.
 
 "Lack of AI" is generally not a valid root cause.
 
+A failure of an existing AI component is classified by its underlying condition, e.g. CONTROL (unverified output), MEASUREMENT (no evaluation), KNOWLEDGE or INFORMATION (missing context), OWNERSHIP (shadow AI).
+
 ---
 
 ## 4. Evidence test
@@ -124,18 +134,22 @@ A single AI assistant may improve only one cause.
 
 ---
 
-## 7. Root-cause confidence
+## 7. Root-cause record
 
-```yaml
-cause:
-  hypothesis_id:
-  gap_id:
-  cause_class:
-  statement:
-  evidence_for: []
-  evidence_against: []
-  alternative_causes: []
-  validation_method:
-  confidence: low | medium | high
-  status: hypothesized | tested | validated | rejected
+Record contract: the Hypothesis record in `artifacts/decision-assumption-log.md`, with `kind: cause`, `cause_class` from §3, competing hypotheses in `alternative_hypothesis_ids`, and the validation method in `test`.
+
+`confidence` describes evidence strength (`diagnostics/DIAGNOSTIC_MODEL.md` §5).
+
+Status meaning:
+
+```text
+hypothesized          proposed; not yet tested
+testing               its test is under way
+accepted_as_testable  explicitly accepted for intervention design as a testable
+                      hypothesis; its test states how it will be confirmed or rejected
+validated             a Validated Cause (§1): the §4 evidence test was applied and
+                      evidence_for cites the Evidence (EVD-###)
+rejected              Evidence contradicts it, or a competing hypothesis explains the Gap
 ```
+
+The Gap's `cause_status` summarizes the status of its cause Hypotheses (`CORE_MODEL.md` §4). A Gap is intervention-ready only when a cause is `validated` or `accepted_as_testable` (`diagnostics/DIAGNOSTIC_MODEL.md` §6).

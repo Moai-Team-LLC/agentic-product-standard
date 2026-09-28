@@ -25,22 +25,22 @@ CONSTRAINS
 ENABLES
 ```
 
+Direction: a dependency reads source RELATION target (record fields `source_capability_id`, `target_capability_id`).
+
+```text
+SUPPLIES_*_TO          the target depends on the source
+REQUIRES_*_FROM        the source depends on the target
+SHARES_*_WITH          mutual; record once
+CONSTRAINS, ENABLES    the target depends on the source, which limits it or makes it possible
+```
+
+Record each dependency once, with one relation. Each dependency record realizes the trace relation `Capability DEPENDS_ON Capability` (`TRACEABILITY.md` §2).
+
 ---
 
 ## 3. Capability dependency record
 
-```yaml
-dependency:
-  id: DEP-###
-  source_capability:
-  relation:
-  target_capability:
-  criticality: low | medium | high
-  evidence_ids: []
-  failure_effect:
-  capacity_effect:
-  notes:
-```
+Capability Network (`CPN-###`) and Capability Dependency (`DEP-###`) records: record contract `artifacts/capability-network.md`.
 
 ---
 

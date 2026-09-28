@@ -1,5 +1,7 @@
 # Execution Readiness Rubric
 
+**Status:** Informative (`NORMATIVE_INDEX.md` tier 13). A review aid before pilots and rollout; the gates are normative in `execution/EXECUTION_GATE_MODEL.md` and `execution/ROLLOUT_MODEL.md` §3. Typical use: `skills/35-audit-operational-readiness/SKILL.md`.
+
 ## Initiative
 
 - Is the Initiative bounded?

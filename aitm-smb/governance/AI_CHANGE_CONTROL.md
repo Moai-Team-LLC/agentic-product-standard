@@ -28,9 +28,13 @@ memory behavior
 
 Small reversible change with low business impact.
 
+Default handling (SHOULD): owner approval; spot-check after release.
+
 ### Medium
 
 Change that may affect quality, cost, or workflow behavior.
+
+Default handling (SHOULD): re-run the affected evaluations before release; owner approval.
 
 ### High
 
@@ -46,6 +50,12 @@ legal exposure
 high-risk process
 ```
 
+Default handling (SHOULD): evaluation before release, staged rollout (`execution/ROLLOUT_MODEL.md`), and explicit human approval.
+
+An authority increase follows `governance/AUTHORITY_ESCALATION_MODEL.md` and requires `HG-AUTHORITY`; accepting material risk requires `HG-RISK` (`STANDARD.md` §8).
+
+The governance owner MAY set stricter handling per Capability.
+
 ---
 
 ## 3. Change record
@@ -53,16 +63,24 @@ high-risk process
 ```yaml
 ai_change:
   id: CHG-###
-  component:
-  class:
+  capability_id:
+  component:                # a §1 item
+  class: low | medium | high   # §2
   reason:
   expected_effect:
   evaluation_required:
+  evaluation_ids: []        # EVL-### run for this change
   rollout_required:
   approval_required:
+  approver:                 # human who approves the change
+  decision_id:              # DEC-### when a STANDARD.md §8 gate applies
   rollback:
-  evidence:
+  evidence_ids: []
+  owner:
+  status: proposed | approved | rejected | released | rolled_back
 ```
+
+Instances: the `changes` section of `artifacts/ai-governance-canvas.md`.
 
 ---
 

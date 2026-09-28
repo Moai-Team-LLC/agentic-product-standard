@@ -23,18 +23,9 @@ CREATE_NEW
 
 ## 3. Role transition record
 
-```yaml
-role_transition:
-  role:
-  current_responsibilities: []
-  target_responsibilities: []
-  removed_tasks: []
-  new_tasks: []
-  decision_right_changes: []
-  skill_changes: []
-  performance_metric_changes: []
-  risks: []
-```
+Record contract: the `role_transitions` section of `artifacts/adoption-plan.md`.
+
+A role transition record states, per affected role, current and target responsibilities, the §2 disposition of each affected task, removed and new tasks, decision-right changes, skill changes, performance-metric changes, and risks.
 
 ---
 
@@ -57,3 +48,5 @@ incident response
 AITM-SMB SHOULD make role changes explicit before rollout.
 
 Hidden role redesign creates adoption failure.
+
+Decision-right changes MUST match the Decision Rights Map (`artifacts/decision-rights-map.md`) where one exists; changing material Decision Rights requires `HG-DECISION-RIGHTS` (`STANDARD.md` §8).

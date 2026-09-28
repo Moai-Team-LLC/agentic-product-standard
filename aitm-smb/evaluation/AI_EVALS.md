@@ -4,6 +4,8 @@
 
 AI components require explicit evaluation before and during operation.
 
+This covers the AI Task Quality, Human-AI Interaction and Technical Reliability layers of the engagement evaluation system (`evaluation/EVALUATION_SYSTEM.md` §2). Cases: `evaluation/EVALUATION_DATASET.md`.
+
 ---
 
 ## 2. Evaluation dimensions
@@ -87,3 +89,5 @@ policy compliance
 state integrity
 and outcome safety
 ```
+
+Evaluation evidence feeds the authority promotion criteria (`governance/AUTHORITY_ESCALATION_MODEL.md` §3).

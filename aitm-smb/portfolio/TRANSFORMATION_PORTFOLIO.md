@@ -10,23 +10,17 @@ The portfolio exists to optimize system-level outcomes, not initiative count.
 
 ## 2. Portfolio record
 
-```yaml
-portfolio:
-  id: PTF-###
-  outcome_ids: []
-  initiatives: []
-  current_constraint:
-  major_dependencies: []
-  shared_enablers: []
-  shared_risks: []
-  resource_constraints: []
-  governance_gates: []
-  metric_ids: []
-```
+Transformation Portfolio records (`PTF-###`): record contract `artifacts/transformation-portfolio.md`.
+
+The record classifies each Initiative by a §3 category (`initiative_categories`) and holds the WIP limit (§5) and change capacity (`portfolio/PORTFOLIO_PRIORITIZATION.md` §4).
+
+Required by the Portfolio profile (`APPLICATION_PROFILES.md`).
 
 ---
 
 ## 3. Portfolio categories
+
+Record values: `CONSTRAINT | ENABLER | CAPABILITY | RISK | LEARNING`.
 
 ### Constraint initiatives
 
@@ -65,6 +59,6 @@ capability changes that compete for the same scarce resource
 
 ## 5. WIP rule
 
-AITM-SMB SHOULD make transformation Work In Progress explicit.
+AITM-SMB SHOULD make transformation Work In Progress explicit: a WIP limit (`wip_limit`) on concurrently active Initiatives.
 
 SMBs often fail transformation by opening too many initiatives rather than by lacking ideas.

@@ -1,5 +1,7 @@
 # Pilot Quality Rubric
 
+**Status:** Informative (`NORMATIVE_INDEX.md` tier 13). Pilot validity is normative in `execution/PILOT_MODEL.md`; Gates C and D in `execution/EXECUTION_GATE_MODEL.md`. Typical use: `skills/25-design-pilot/SKILL.md`, `skills/32-evaluate-pilot/SKILL.md`.
+
 A strong Pilot answers:
 
 ```text

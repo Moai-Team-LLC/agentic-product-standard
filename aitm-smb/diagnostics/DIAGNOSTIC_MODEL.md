@@ -24,6 +24,8 @@ Symptom
 → AI solution
 ```
 
+Records: Observations and Symptoms in the Diagnostic Record (`artifacts/diagnostic-record.md`); Gaps in the Capability Diagnosis (`artifacts/capability-diagnosis.md`); Cause Hypotheses as Hypothesis records (`artifacts/decision-assumption-log.md`); Evidence and Evidence Debt in the Evidence Register (`artifacts/evidence-register.md`). Agents follow `AGENT_DIAGNOSTIC_PROTOCOL.md`.
+
 ---
 
 ## 2. Diagnostic object types
@@ -63,7 +65,7 @@ A Symptom MAY be supported by one or more Observations.
 
 ### Gap
 
-A difference between current capability behavior and required capability behavior.
+A material difference between current Capability behavior and required behavior (`CORE_MODEL.md` §4).
 
 Example:
 
@@ -78,7 +80,7 @@ without founder participation.
 
 ### Cause Hypothesis
 
-A proposed explanation for a Gap.
+A proposed explanation for a Gap (defined in `diagnostics/ROOT_CAUSE_ANALYSIS.md` §1).
 
 Examples:
 
@@ -94,7 +96,7 @@ A Cause Hypothesis MUST NOT be treated as validated truth.
 
 ### Validated Cause
 
-A cause supported by sufficient evidence to justify intervention design.
+A cause supported by sufficient evidence to justify intervention design (`diagnostics/ROOT_CAUSE_ANALYSIS.md` §1). It keeps its `HYP-###` ID.
 
 ---
 
@@ -130,28 +132,13 @@ tool
 
 ## 4. Diagnostic dimensions
 
-Every capability diagnosis SHOULD inspect:
-
-```text
-1. Demand
-2. Flow
-3. Decisions
-4. Roles
-5. Information
-6. Knowledge
-7. Applications
-8. Automation
-9. AI
-10. Controls
-11. Economics
-12. Feedback
-```
-
-These dimensions are defined in `DIAGNOSTIC_DIMENSIONS.md`.
+Every capability diagnosis SHOULD inspect the twelve dimensions defined in `diagnostics/DIAGNOSTIC_DIMENSIONS.md`, as far as they are relevant to the transformation boundary.
 
 ---
 
 ## 5. Confidence levels
+
+These levels apply to every `confidence: low | medium | high` field in AITM-SMB records (Hypotheses, Evidence, Gaps, Capabilities, uncertainties).
 
 ### Low
 
@@ -159,11 +146,11 @@ Evidence is weak, indirect, contradictory, or based primarily on stakeholder int
 
 ### Medium
 
-Multiple evidence points support the hypothesis, but alternative causes remain plausible.
+Multiple evidence points support the hypothesis or claim, but alternative explanations remain plausible.
 
 ### High
 
-Evidence consistently supports the cause and competing explanations have been materially reduced.
+Evidence consistently supports the cause or claim and competing explanations have been materially reduced.
 
 Confidence SHOULD describe evidence strength, not analyst conviction.
 
@@ -187,4 +174,6 @@ AND
 cause is validated OR explicitly accepted as a testable hypothesis
 ```
 
-If not, continue diagnosis or design an experiment rather than a transformation initiative.
+The last condition holds when the Gap's `cause_status` is `validated` or `accepted_as_testable` (`CORE_MODEL.md` §4; status meaning: `diagnostics/ROOT_CAUSE_ANALYSIS.md` §7).
+
+If not, continue diagnosis or design an experiment rather than a transformation initiative, and record the missing Evidence as Evidence Debt (`evidence/EVIDENCE_STANDARD.md` §5).

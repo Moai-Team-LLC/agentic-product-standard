@@ -1,50 +1,53 @@
 ---
 name: 18-identify-system-constraint
-version: 1.0.0
-minimum_framework_version: 1.0.0
+description: "Identifies the current System Constraint, the condition that most limits the business system from improving a target Outcome: lists material bottlenecks, applies the constraint test, separates local bottlenecks from the system constraint, and predicts the likely Constraint Migration and how to monitor it. Use in Phase 5 under the Standard profile or above, invoked by skill 06, or when evidence suggests the constraint has moved. Produces a System Constraint record. Part of AITM-SMB; paths are relative to the AITM-SMB root."
+version: 1.1.0
+minimum_framework_version: 1.1.0
 framework: AITM-SMB
 status: active
-category: system-design
+category: design-specialist
+phase: "5"
+human_gate: false
 ---
 
-# Skill: Identify System Constraint
+# Skill 18: Identify System Constraint
+
+## Purpose
+
+Find the one condition that limits the target Outcome, so that investment goes to the limiting part of the system first. Invoked by `skills/06-design-target-system/SKILL.md`.
 
 ## Required inputs
 
-- Capability Network
-- metrics
-- diagnostic evidence
+- approved Outcomes and their Metrics;
+- Capability Network, where it exists;
+- diagnostic Evidence (Capability Diagnosis, Diagnostic Records, Evidence Register).
+
+## Normative sources
+
+- `design/CONSTRAINT_ANALYSIS.md`
 
 ## Produces
 
-- `artifacts/system-constraint.md`
+- `artifacts/system-constraint.md` — System Constraint (`CST-###`)
 
 ## Procedure
 
-1. List material bottlenecks and limiting conditions.
-2. Test which condition most limits the target Outcome.
-3. Distinguish local bottlenecks from the system constraint.
-4. Record evidence and uncertainty.
-5. Estimate likely Constraint Migration after improvement.
+1. List material bottlenecks and limiting conditions for the target Outcome.
+2. Apply the constraint test (`design/CONSTRAINT_ANALYSIS.md` §3) to each; separate local bottlenecks (§4); check the false constraint patterns (§7).
+3. Record the System Constraint (`system_constraint` record) with its `type` (§2), the constraint-test result in `why_system_limiting`, `evidence_ids`, and `confidence` (`artifacts/_ARTIFACT_CONTRACT.md` §5); record material uncertainty as `UNC-###` in the Evidence Register.
+4. Predict the likely Constraint Migration (§5) in `likely_next_constraint`, with `monitoring_metric_ids`; link the `intervention_ids` that relax it.
+5. When the constraint changes a Phase 4 priority (§6), report it in `risks` and `decisions_needed` (`HG-INITIATIVE`).
+6. When the constraint has moved, record a new `CST-###` and mark the old one `status: superseded`. Validate against the contract's Validation.
+7. Stop with `INSUFFICIENT_EVIDENCE` when the constraint test cannot be run without invented facts (record Evidence Debt); with `HUMAN_DECISION_REQUIRED` when any `STANDARD.md` §8 gate is reached.
 
-## System-level controls
+## MUST NOT
 
-- Optimize target Outcomes, not isolated metrics.
-- Surface dependency effects.
-- Surface likely Constraint Migration.
-- Keep ownership and decision rights explicit.
-- Do not increase AI authority implicitly.
-- Prefer bounded, operable transition states.
-
-## Validation
-
-- [ ] Outcome linkage preserved
-- [ ] capability dependencies considered
-- [ ] local optimization risk checked
-- [ ] system constraint considered
-- [ ] ownership explicit
-- [ ] evidence/assumptions separated
+- label every bottleneck a System Constraint;
+- optimize a local metric instead of the target Outcome;
+- hide likely Constraint Migration;
+- invent business facts, present inference as Evidence, or hide uncertainty;
+- widen scope silently, or renumber or reuse stable IDs.
 
 ## Handoff
 
-Use `AGENT_OUTPUT_STANDARD.md`.
+Emit the `aitm_output` block defined in `AGENT_OUTPUT_STANDARD.md`.

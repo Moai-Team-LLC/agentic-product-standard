@@ -6,6 +6,8 @@ Use experiments when uncertainty is high and a full pilot is unnecessary.
 
 Experiments answer one bounded question.
 
+A test whose result is the evidence for promoting an Initiative to rollout is recorded as a Pilot (`PLT-###`, `execution/PILOT_MODEL.md`), so that pilot validity and the promotion decision apply; otherwise use an Experiment (`EXP-###`).
+
 ---
 
 ## 2. Experiment examples
@@ -25,8 +27,9 @@ Does the new workflow reduce cycle time?
 ```yaml
 experiment:
   id: EXP-###
+  initiative_id:            # INI-###, where the experiment serves a selected Initiative
   question:
-  hypothesis:
+  hypothesis:               # HYP-### or statement
   linked_gap_ids: []
   linked_intervention_ids: []
   method:
@@ -35,7 +38,9 @@ experiment:
   threshold:
   result:
   limitations:
+  evidence_ids: []
   next_decision:
+  owner:
 ```
 
 ---

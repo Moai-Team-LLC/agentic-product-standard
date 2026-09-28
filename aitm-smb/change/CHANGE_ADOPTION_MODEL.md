@@ -26,19 +26,9 @@ Support
 
 ## 3. Adoption record
 
-```yaml
-adoption:
-  capability_id:
-  affected_roles: []
-  behavior_changes: []
-  skills_required: []
-  training_required: []
-  incentive_changes: []
-  trust_risks: []
-  support_model:
-  feedback_channel:
-  adoption_metrics: []
-```
+Record contract: `artifacts/adoption-plan.md`.
+
+An adoption record states, per Capability, the affected roles and behavior changes, required skills and training, incentive changes, trust and workflow-fit risks, support model, feedback channel, and adoption metrics. It SHOULD address every §2 dimension that the change touches.
 
 ---
 

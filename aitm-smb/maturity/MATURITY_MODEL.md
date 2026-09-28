@@ -1,27 +1,39 @@
 # AITM-SMB Maturity Model
 
-Maturity is descriptive, not a score of organizational worth.
+**Status:** Informative. Not an assessment instrument, a score, a target, or an input to any profile, conformance check, or gate.
 
-## Level 0 — Manual
-Business execution depends primarily on human effort and tacit knowledge.
+The levels describe how deeply AI is integrated into one Capability. They are descriptive per Capability, not a measure of organizational progress or worth.
 
-## Level 1 — AI-Assisted
-Individuals use general AI tools, but AI is not embedded in the operating system.
+## M0 — No AI
 
-## Level 2 — AI-Embedded
-AI capabilities are embedded in specific products or workflows.
+The Capability uses no AI. Its work may be manual or fully deterministic (software, automation). Where AI is not justified, M0 is a valid and often correct end state (INV-05).
 
-## Level 3 — AI-Orchestrated
+## M1 — AI-Assisted
+
+Individuals use general AI tools, but AI is not embedded in how the Capability operates.
+
+## M2 — AI-Embedded
+
+AI components are embedded in specific products or workflows of the Capability.
+
+## M3 — AI-Orchestrated
+
 AI coordinates information and actions across multiple business systems with explicit controls.
 
-## Level 4 — AI-Native
-Capabilities are intentionally redesigned around human + AI collaboration.
+## M4 — AI-Native
 
-## Level 5 — Bounded Agentic
+The Capability is intentionally redesigned around human + AI collaboration.
+
+## M5 — Bounded Agentic
+
 Agents pursue bounded business objectives with explicit permissions, verification, observability, escalation, and governance.
 
-## Rule
+## Rules
 
-Higher maturity is not automatically better.
+Higher maturity is not automatically better. No level is a target in itself.
 
-The target level is determined by business value, risk, economics, and organizational capacity.
+The appropriate level for a Capability follows from its diagnosed Gaps, the intervention challenge (`STANDARD.md` §5), business value, risk, economics, and organizational capacity.
+
+M-levels are not autonomy levels and grant no authority. AI authority is set per action class by the autonomy ladder L0–L5 (`diagnostics/AUTONOMY_SUITABILITY.md` §2) and granted only through `HG-AUTHORITY` (`STANDARD.md` §8).
+
+Autonomy is a revocable operating privilege, not a permanent maturity achievement (`governance/AUTHORITY_ESCALATION_MODEL.md`).

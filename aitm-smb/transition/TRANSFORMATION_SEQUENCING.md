@@ -38,7 +38,18 @@ Prefer:
 7. optimize secondary capabilities
 ```
 
-This is a default reasoning pattern, not a mandatory recipe.
+Also prefer high learning value, reversible decisions, bounded scope, short evidence loops, and vertical business slices (`execution/DELIVERY_SLICE.md`).
+
+Avoid:
+
+```text
+big-bang migration
+infrastructure-first work without capability effect
+autonomy before observability
+scale before proof
+```
+
+This is a default reasoning pattern, not a mandatory recipe. System Constraint as sequencing input: `design/CONSTRAINT_ANALYSIS.md` §6.
 
 ---
 
@@ -63,6 +74,8 @@ B is possible, but A should be tested first to reduce uncertainty.
 ### Capacity dependency
 
 B would overload a downstream capability until A changes capacity.
+
+Initiative `dependencies` hold the INI-### ids an Initiative depends on (`CORE_MODEL.md` §7). Where the type matters for sequencing, record it in the Transformation Roadmap `dependency_types` (`artifacts/transformation-roadmap.md`). Capability dependencies are a different record (`DEP-###`, `design/CAPABILITY_NETWORK.md`).
 
 ---
 

@@ -1,50 +1,51 @@
 ---
 name: 17-map-capability-network
-version: 1.0.0
-minimum_framework_version: 1.0.0
+description: "Maps the smallest set of dependencies between business Capabilities needed to reason about the transformation: relation type and direction, criticality, failure and capacity effects, and shared capabilities. Use in Phase 5 under the Standard profile or above, invoked by skill 06, or when a change to one Capability may shift work, information or constraints to another. Produces a Capability Network with Capability Dependency records. Part of AITM-SMB; paths are relative to the AITM-SMB root."
+version: 1.1.0
+minimum_framework_version: 1.1.0
 framework: AITM-SMB
 status: active
-category: system-design
+category: design-specialist
+phase: "5"
+human_gate: false
 ---
 
-# Skill: Map Capability Network
+# Skill 17: Map Capability Network
+
+## Purpose
+
+Show how the Capabilities in scope depend on one another, so that constraint analysis and system-effect checks see beyond one Capability. Invoked by `skills/06-design-target-system/SKILL.md`.
 
 ## Required inputs
 
-- Capability Map
-- Outcome scope
-- current-state evidence
+- Capability Map with CURRENT States;
+- approved Outcomes and selected Initiatives;
+- Business System Map and current-state Evidence, where they exist.
+
+## Normative sources
+
+- `design/CAPABILITY_NETWORK.md`
 
 ## Produces
 
-- `artifacts/capability-network.md`
+- `artifacts/capability-network.md` — Capability Network (`CPN-###`) with Capability Dependency records (`DEP-###`)
 
 ## Procedure
 
-1. Identify inputs and outputs of each relevant Capability.
-2. Map information, work, knowledge, decision, control, resource, and system dependencies.
-3. Mark criticality and failure effects.
-4. Identify shared capabilities.
-5. Limit the graph to dependencies relevant to target Outcomes.
+1. Bound the network to Capabilities relevant to the target Outcomes and selected Initiatives (`design/CAPABILITY_NETWORK.md` §7); list them in the CPN `capability_ids`.
+2. For each Capability, answer the dependency questions (§5).
+3. Record each dependency once as a `DEP-###` with `source_capability_id`, one §2 `relation`, and `target_capability_id`, in the §2 direction convention; add its `criticality` (§4), `failure_effect`, `capacity_effect`, and `evidence_ids`.
+4. Mark shared capabilities (§6).
+5. Validate against the `artifacts/capability-network.md` Validation.
+6. Stop with `INSUFFICIENT_EVIDENCE` when a dependency would have to be invented (record it as an Assumption or Evidence Debt instead); with `HUMAN_DECISION_REQUIRED` when any `STANDARD.md` §8 gate is reached.
 
-## System-level controls
+## MUST NOT
 
-- Optimize target Outcomes, not isolated metrics.
-- Surface dependency effects.
-- Surface likely Constraint Migration.
-- Keep ownership and decision rights explicit.
-- Do not increase AI authority implicitly.
-- Prefer bounded, operable transition states.
-
-## Validation
-
-- [ ] Outcome linkage preserved
-- [ ] capability dependencies considered
-- [ ] local optimization risk checked
-- [ ] system constraint considered
-- [ ] ownership explicit
-- [ ] evidence/assumptions separated
+- map the whole company, or widen scope silently;
+- hide dependency effects on the target Outcomes;
+- invent business facts, present inference as Evidence, or hide uncertainty;
+- renumber or reuse stable IDs.
 
 ## Handoff
 
-Use `AGENT_OUTPUT_STANDARD.md`.
+Emit the `aitm_output` block defined in `AGENT_OUTPUT_STANDARD.md`.

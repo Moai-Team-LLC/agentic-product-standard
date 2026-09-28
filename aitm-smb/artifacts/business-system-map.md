@@ -1,28 +1,26 @@
 ---
 artifact_type: business-system-map
-framework_version: 1.0.0
+framework_version: 1.1.0
 status: canonical
+owner_module: ontology/ONTOLOGY.md
+produced_by: [02-map-current-system]
 ---
 
 # Business System Map
 
 ## Purpose
 
-Describe how value is currently produced as a system.
+Describe how value is currently produced as a system: the business-system entities around the Capabilities in scope and their relations. Required from the Standard profile (`APPLICATION_PROFILES.md`).
 
-## Scope
+## Record
 
-The map is outcome-scoped.
-
-It is not a complete enterprise inventory.
-
-## Structure
+Entity semantics: `ontology/ONTOLOGY.md`.
 
 ```yaml
 system_map:
   outcome_ids: []
-  value_streams: []
-  capabilities: []
+  value_streams: []        # Value Stream names; these are the values of value_stream_ids
+  capabilities: []         # CAP-### (records in artifacts/capability-map.md)
   roles: []
   decisions: []
   processes: []
@@ -34,9 +32,13 @@ system_map:
   dependencies: []
 ```
 
-## Required relations
+How each Capability operates today is its CURRENT State in the Capability Map; this map shows how the Capabilities connect.
 
-At minimum:
+## Rules
+
+The map is outcome-scoped. It is not a complete enterprise inventory. Only model elements relevant to the transformation boundary.
+
+Required relations, at minimum:
 
 ```text
 Value Stream → uses → Capability
@@ -47,6 +49,9 @@ Decision → uses → Data / Knowledge
 Capability → supported by → Application
 ```
 
-## Rule
+## Validation
 
-Only model elements relevant to the transformation boundary.
+- [ ] every element relates to an in-scope Outcome
+- [ ] the required relations are present
+- [ ] Capabilities are referenced by `CAP-###`, not redefined
+- [ ] the map describes the current system only, with no target-state solutions

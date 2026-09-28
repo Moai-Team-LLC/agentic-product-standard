@@ -1,16 +1,20 @@
 # Application Profile Selection
 
+Subordinate to `APPLICATION_PROFILES.md` (`NORMATIVE_INDEX.md` tier 8), which defines each profile and its "Use when" list. This file only orders the questions. Executed by `skills/36-select-application-profile/SKILL.md`.
+
 ## 1. Scoreless selection
 
 AITM-SMB does not require a universal numeric score.
 
-Use the following decision tree.
+Answer §2 and §3 in order. §2 always returns a base profile; each §3 question is evaluated independently of the base and of the other add-ons.
+
+Materiality: `STANDARD.md` §16.
 
 ---
 
-## 2. Start
+## 2. Base profile
 
-### Is the transformation bounded to one or two capabilities with low authority and high reversibility?
+### Does every Compact "Use when" condition (`APPLICATION_PROFILES.md` §3) hold?
 
 If yes:
 
@@ -18,35 +22,37 @@ If yes:
 Compact
 ```
 
-Else continue.
-
-### Does the transformation involve several dependent capabilities or several systems?
-
-If yes:
+Otherwise:
 
 ```text
 Standard
 ```
 
-### Is customer, financial, legal, security, or sensitive-data impact material?
+---
 
-Add:
+## 3. Add-ons
+
+### Does any Governed "Use when" condition (`APPLICATION_PROFILES.md` §5) hold?
+
+The list includes high AI authority and irreversible actions, not only material customer, financial, legal, security, or data impact.
+
+If yes, add:
 
 ```text
 Governed
 ```
 
-### Are multiple initiatives coordinated across value streams?
+### Does the transformation span what the Portfolio "Use when" list (`APPLICATION_PROFILES.md` §6) describes, such as several Initiatives coordinated across value streams or competing for shared enablers?
 
-Add:
+If yes, add:
 
 ```text
 Portfolio
 ```
 
-### Must realized economic/business value be formally evidenced?
+### Must realized economic or business value be formally evidenced (`APPLICATION_PROFILES.md` §7)?
 
-Add:
+If yes, add:
 
 ```text
 Measured
@@ -54,7 +60,7 @@ Measured
 
 ---
 
-## 3. Default
+## 4. Default
 
 When uncertain:
 
@@ -64,18 +70,28 @@ Standard + Measured
 
 is the preferred default for meaningful SMB transformation.
 
+At Phase 0, answer from what the Outcome owner knows; use the default where an answer is unknown.
+
 ---
 
-## 4. Profile may change
+## 5. Recording
 
-An engagement MAY escalate profile when new evidence reveals higher complexity or risk.
+The selected profiles, the rationale per question, and the triggers that would change them are recorded as a Decision (DEC-###, `artifacts/decision-assumption-log.md`) and confirmed with HG-OUTCOME (`STANDARD.md` §8).
+
+Until approved, the selection is provisional (`AGENT_CONTEXT_POLICY.md`).
+
+---
+
+## 6. Profile may change
+
+An engagement MAY escalate or de-escalate profiles when new Evidence changes an answer in §2 or §3. It SHOULD re-check them once at the Phase 1 exit, when Capabilities and systems are mapped.
 
 Example:
 
 ```text
 Compact
-→ discovery reveals material financial authority
+→ discovery reveals sensitive data in scope
 → Compact + Governed
 ```
 
-Profile escalation SHOULD be recorded as a Decision.
+A change is recorded as a new Decision that supersedes the previous one (§5).

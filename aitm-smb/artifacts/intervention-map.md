@@ -1,61 +1,50 @@
 ---
 artifact_type: intervention-map
-framework_version: 1.0.0
+framework_version: 1.1.0
 status: canonical
 entity: Intervention
 id_prefix: INT
+owner_module: design/INTERVENTION_PATTERNS.md
+produced_by: [04-design-interventions, 05-prioritize-initiatives]
 ---
 
 # Intervention Map
 
 ## Purpose
 
-Map candidate interventions against diagnosed Capability Gaps.
+Map candidate Interventions of every family against diagnosed Capability Gaps and their causes, including the candidates rejected and why.
 
 AI interventions are a subset of interventions.
 
-## Contract
+## Record
+
+Record contract: Intervention `CORE_MODEL.md` §6. `type` is one `PUBLIC_API.md` §6 family (definitions: `design/INTERVENTION_PATTERNS.md`; challenge order: `STANDARD.md` §5).
+
+Extends `intervention` with:
 
 ```yaml
 intervention:
-  id: INT-###
-  gap_ids: []
-  type:
-  description:
-  expected_effect:
-  simpler_alternatives_considered: []
-  non_ai_alternative:
   required_context:
   required_actions:
   required_permissions:
   verification:
-  risks: []
-  assumptions: []
+  status_rationale:        # why selected, deferred, or rejected
 ```
 
-## Intervention types
+For an `AI_*` candidate, the non-AI alternative and the AI fit are recorded in its AI Suitability Assessment (`artifacts/ai-suitability-assessment.md`); its authority in the Autonomy Assessment (`artifacts/autonomy-assessment.md`).
 
-```text
-ELIMINATE
-SIMPLIFY
-STANDARDIZE
-INSTRUMENT
-INTEGRATE
-PROCESS
-ROLE
-DECISION
-DATA
-KNOWLEDGE
-SOFTWARE
-AUTOMATION
-AI_ASSIST
-AI_AUTOMATE
-AI_AUGMENT
-AI_AUTONOMIZE
-CONTROL
-FEEDBACK
-```
-
-## Rule
+## Rules
 
 An AI intervention MUST NOT be selected before plausible simpler intervention classes are considered.
+
+An `AI_*` type names the kind of AI contribution; authority is set only by the autonomy level.
+
+`status: selected` is set in Phase 4, after `HG-INITIATIVE` where the selection is material (`STANDARD.md` §8). Skill 05 changes only `status` and `status_rationale`.
+
+## Validation
+
+- [ ] every Intervention links at least one intervention-ready Gap (`gap_ids`) and the causes it addresses (`hypothesis_ids`)
+- [ ] `type` is one `PUBLIC_API.md` §6 family
+- [ ] simpler alternatives are recorded in `simpler_alternatives_considered`
+- [ ] every `AI_*` candidate has an AI Suitability Assessment and an Autonomy Assessment
+- [ ] rejected and deferred candidates carry a `status_rationale`

@@ -1,6 +1,6 @@
 # AITM-SMB Standard
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** Stable
 
 AITM-SMB is an open, domain-neutral, agent-readable methodology for AI transformation of small and medium-sized businesses.
@@ -81,6 +81,8 @@ Facts, Evidence, Assumptions, Hypotheses, Decisions, and Open Questions MUST rem
 
 An intervention may be process, role, decision, data, knowledge, software, deterministic automation, AI, control, or feedback redesign.
 
+Intervention families: `PUBLIC_API.md` §6, defined in `design/INTERVENTION_PATTERNS.md`.
+
 ### INV-06 — AI usefulness is separate from AI authority
 
 A strong AI fit does not imply that AI should act autonomously.
@@ -148,22 +150,28 @@ The methodology models only what is necessary for the transformation boundary.
 
 ## 5. Intervention logic
 
+The challenge order over the intervention families (`PUBLIC_API.md` §6; definitions: `design/INTERVENTION_PATTERNS.md`).
+
 Before recommending AI, consider:
 
 ```text
-Eliminate
-→ Simplify
-→ Standardize
-→ Instrument
-→ Integrate
-→ Deterministic Automation
-→ AI Assist
-→ AI Automate
-→ AI Augment
-→ AI Autonomize
+ELIMINATE
+→ SIMPLIFY
+→ STANDARDIZE
+→ INSTRUMENT
+→ INTEGRATE
+→ AUTOMATION (deterministic)
+→ AI_ASSIST
+→ AI_AUTOMATE
+→ AI_AUGMENT
+→ AI_AUTONOMIZE
 ```
 
 This is a challenge sequence, not a mandatory implementation sequence.
+
+PROCESS, ROLE, DECISION, DATA, KNOWLEDGE, SOFTWARE, CONTROL, and FEEDBACK have no position in this order; consider them wherever the diagnosed Cause points to them (INV-05).
+
+Challenge questions: `DECISION_MODEL.md` §1.
 
 ---
 
@@ -177,6 +185,16 @@ L3 — Execute with explicit approval
 L4 — Execute within bounded policy
 L5 — Pursue bounded objective and escalate exceptions
 ```
+
+Authority definitions per level: `diagnostics/AUTONOMY_SUITABILITY.md` §2.
+
+The level is assessed per action class of a Capability, not per system.
+
+These are authority levels. They are not maturity levels (`maturity/MATURITY_MODEL.md` uses M0–M5) and not software-architecture levels. Where another ladder is in use, write `AITM-L<n>` (crosswalk: `docs/crosswalk-agentic-product-standard.md`).
+
+An `AI_*` intervention family names the kind of AI contribution; authority is set only by the autonomy level.
+
+Granting or increasing authority requires HG-AUTHORITY (§8).
 
 Higher autonomy requires stronger:
 
@@ -210,19 +228,29 @@ These concepts MUST NOT be merged.
 
 ## 8. Human decision gates
 
-Explicit human approval is required before:
+Explicit human approval is required at each gate:
 
-```text
-approving transformation Outcomes
-selecting material Initiatives
-approving Target Operating Architecture
-changing material Decision Rights
-increasing AI authority
-accepting material security / legal / financial risk
-committing material budget
-promoting a material pilot to rollout
-declaring value realized
-```
+| Gate ID | Human approval is required before |
+|---|---|
+| `HG-OUTCOME` | approving transformation Outcomes |
+| `HG-INITIATIVE` | selecting material Initiatives |
+| `HG-TOA` | approving the Target Operating Architecture (in Compact: the Capability Target States) |
+| `HG-DECISION-RIGHTS` | changing material Decision Rights |
+| `HG-AUTHORITY` | granting or increasing AI authority (any autonomy level above L0, including an Authority Ceiling) |
+| `HG-RISK` | accepting material customer, financial, security, legal, or operational risk |
+| `HG-BUDGET` | committing material budget |
+| `HG-PROMOTION` | promoting a material pilot to rollout |
+| `HG-VALUE` | declaring value realized (value state REALIZED or SUSTAINED) |
+
+Rules:
+
+- A gate applies whenever its trigger occurs, in any phase.
+- Approval is recorded as a Decision (`DEC-###`, `artifacts/decision-assumption-log.md`) with `gate:` set and `approved_by:` naming the human.
+- An agent that reaches an open gate stops with status `HUMAN_DECISION_REQUIRED` (`PUBLIC_API.md` §8) and lists the gate in `open_gates`.
+- Reducing AI authority (demotion) never requires a gate and MAY be done immediately by the operating owner.
+- Materiality: §16.
+
+Other files reference gates by ID and MUST NOT restate this list.
 
 ---
 
@@ -230,7 +258,7 @@ declaring value realized
 
 Every material Initiative MUST define at least one business or capability metric.
 
-AITM-SMB distinguishes:
+AITM-SMB distinguishes these metric classes (defined in `METRICS.md`):
 
 ```text
 Business Outcome Metrics
@@ -247,7 +275,7 @@ Lower-level metrics explain performance but do not replace business Outcomes.
 
 ## 10. Execution
 
-The preferred implementation unit is a **Vertical Transformation Slice**:
+The preferred implementation unit is a vertical **Transformation Slice** (`SLC-###`; `execution/DELIVERY_SLICE.md`):
 
 ```text
 bounded behavior change
@@ -265,15 +293,17 @@ Technical components MAY be delivered separately when they are explicit prerequi
 
 ## 11. Value realization
 
-AITM-SMB distinguishes:
+AITM-SMB distinguishes value states (defined in `measurement/VALUE_REALIZATION.md` §2):
 
 ```text
-Hypothesized Value
-→ Observed Effect
-→ Attributed Effect
-→ Realized Value
-→ Sustained Value
+HYPOTHESIZED
+→ OBSERVED
+→ ATTRIBUTED
+→ REALIZED
+→ SUSTAINED
 ```
+
+Declaring REALIZED or SUSTAINED requires HG-VALUE (§8).
 
 A transformation is not complete merely because a system is deployed or adopted.
 
@@ -304,21 +334,24 @@ AITM-SMB Core MUST NOT depend on:
 ```text
 a specific company
 a specific industry
+a specific product
 a specific cloud
 a specific AI provider
 a specific software stack
 a specific consulting engagement
 ```
 
-Specialization belongs in Extensions.
+Specialization belongs in Extensions (`EXTENSION_MODEL.md`).
 
 ---
 
 ## 14. Conformance
 
-An application conforms to AITM-SMB only when it preserves the core semantic chain and selected profile requirements.
+An application conforms to AITM-SMB only when it preserves the core semantic chain (§2), the MUST invariants (§3), and the selected profile requirements (`CONFORMANCE.md` §3).
 
 Template completion alone is not conformance.
+
+Waiving a §3 MUST makes the application non-conforming for that invariant; the waiver is recorded as an exception (`CONFORMANCE.md` §6).
 
 See `CONFORMANCE.md`.
 
@@ -335,11 +368,23 @@ AGENTS.md
 AGENT_OUTPUT_STANDARD.md
 ```
 
-Agents MUST NOT silently convert inference into business fact or cross a human decision gate.
+Agents MUST NOT silently convert inference into business fact or cross a human decision gate (§8).
 
 ---
 
-## 16. Normative language
+## 16. Materiality
+
+An item is **material** when being wrong about it could change an approved Outcome, or could create customer, financial, legal, security, or AI-authority exposure that the accountable Outcome owner would expect to decide personally.
+
+The Outcome owner MAY record explicit materiality thresholds as a Decision in Phase 0.
+
+When materiality is unclear, treat the item as material.
+
+Agents MUST NOT classify an item as immaterial to avoid a gate.
+
+---
+
+## 17. Normative language
 
 ```text
 MUST      mandatory

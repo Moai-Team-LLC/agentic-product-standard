@@ -14,6 +14,8 @@ Context
 Memory
 ```
 
+In ontology terms (`ontology/ONTOLOGY.md`): Data and Information are held in Data Assets; Knowledge and persisted Memory are Knowledge Assets; Context is a per-task selection, not an asset.
+
 ---
 
 ## 2. Data

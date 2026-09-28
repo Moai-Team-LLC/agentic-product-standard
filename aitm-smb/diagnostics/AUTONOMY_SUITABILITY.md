@@ -25,6 +25,23 @@ L4 — Execute within bounded policy
 L5 — Pursue bounded objective and escalate exceptions
 ```
 
+This file is the only place where the authority of each level is defined:
+
+| Level | Authority |
+|---|---|
+| L0 | No AI component in the decision or action path. |
+| L1 | AI produces recommendations or insights; a human decides and performs the action. |
+| L2 | AI produces a draft work product; a human reviews, edits if needed, and releases it; nothing takes effect without human release. |
+| L3 | AI prepares a specific action; the system executes it only after a human approves that action. |
+| L4 | AI executes actions without per-action approval inside an explicit, written policy (action types, limits, scope); out-of-policy cases escalate; actions are observable and reversible or recoverable. |
+| L5 | AI plans and executes multi-step work toward an approved, bounded objective within bounded permissions, budget, and time; exceptions escalate; humans supervise outcomes, not each step. |
+
+The level is assessed per action class of a Capability, not per system.
+
+These are authority levels. They are not maturity levels (`maturity/MATURITY_MODEL.md` uses M0–M5) and not software-architecture levels. Where another ladder is in use, such as the Agentic Product Standard's architecture levels, write `AITM-L3` versus `APS-L3` (crosswalk: `docs/crosswalk-agentic-product-standard.md`).
+
+Any level above L0 is granted only through `HG-AUTHORITY` (`STANDARD.md` §8).
+
 ---
 
 ## 3. Autonomy dimensions
@@ -37,6 +54,7 @@ Financial Impact
 Customer Impact
 Legal Impact
 Security Impact
+Safety Impact
 Decision Ambiguity
 Policy Clarity
 Observability
@@ -45,6 +63,8 @@ Exception Detectability
 Recovery Quality
 Identity / Permission Precision
 ```
+
+Rate each dimension `low | medium | high` with a short note. Each dimension has one field in the record (§7).
 
 ---
 
@@ -84,35 +104,22 @@ exceptions are common
 
 ## 6. Authority ceiling
 
-Each capability SHOULD define an authority ceiling:
+An Authority Ceiling is the highest autonomy level, with its prohibited actions, approval requirements, escalation conditions, and accountable owner, approved for an action class of a Capability.
 
-```yaml
-authority_ceiling:
-  capability_id:
-  max_autonomy_level:
-  prohibited_actions: []
-  approval_required: []
-  rationale:
-  owner:
-```
+Each Capability in which AI is used or proposed SHOULD have one. Where an `AI_*` Intervention is selected, an approved Authority Ceiling is required in every profile (`APPLICATION_PROFILES.md`).
 
-No technical implementation may exceed the approved ceiling.
+Rules:
+
+- Setting or raising a ceiling is an authority increase: `HG-AUTHORITY` (`STANDARD.md` §8). Lowering it is a demotion and needs no gate.
+- No technical implementation, pilot, rollout stage, or promotion may exceed the approved ceiling.
+- A recommended or operating level above the ceiling requires re-assessing the ceiling first.
+
+Record: the ceiling fields of the Autonomy Assessment (`artifacts/autonomy-assessment.md`).
 
 ---
 
 ## 7. Autonomy assessment
 
-```yaml
-autonomy_assessment:
-  intervention_id:
-  recommended_level:
-  max_allowed_level:
-  reversibility:
-  impact:
-  policy_clarity:
-  observability:
-  verification:
-  recoverability:
-  escalation:
-  rationale:
-```
+One assessment per `AI_*` Intervention and action class. It records the §3 dimensions, the recommended level, the Authority Ceiling (§6), and, after promotion or demotion reviews (`governance/AUTHORITY_ESCALATION_MODEL.md`), the level in operation.
+
+Record contract: `artifacts/autonomy-assessment.md`.

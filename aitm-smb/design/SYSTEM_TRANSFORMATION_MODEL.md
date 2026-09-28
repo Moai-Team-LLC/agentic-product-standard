@@ -14,7 +14,7 @@ Therefore the target transformation model is:
 Outcome System
 → Capability Network
 → Dependency Structure
-→ Constraint / Bottleneck
+→ System Constraint
 → Coordinated Interventions
 → Target Operating Architecture
 → Transition States
@@ -73,7 +73,7 @@ If this Capability improves,
 where does the next constraint appear?
 ```
 
-Examples:
+Examples of overload that may follow:
 
 ```text
 Faster lead qualification
@@ -89,25 +89,25 @@ Automated support intake
 → overloaded expert escalation
 ```
 
-AITM-SMB calls this **Constraint Migration**.
+When the overload passes the constraint test, the System Constraint has moved: Constraint Migration (`design/CONSTRAINT_ANALYSIS.md` §5). Otherwise it is a local bottleneck.
 
 ---
 
 ## 4. Transformation design object
 
-A system transformation SHOULD define:
+A system transformation SHOULD make the following explicit. It is a view with no record of its own; each element is held by the record named:
 
-```yaml
-system_transformation:
-  outcome_ids: []
-  capability_ids: []
-  critical_dependencies: []
-  current_constraint:
-  expected_constraint_migration:
-  coordinated_interventions: []
-  target_operating_architecture:
-  transition_states: []
-  system_metrics: []
+```text
+Outcomes                        Outcome (OUT)
+Capabilities, critical
+  dependencies                  Capability Network (CPN, DEP): artifacts/capability-network.md
+current constraint, expected
+  Constraint Migration          System Constraint (CST): artifacts/system-constraint.md
+coordinated interventions       Initiatives (INI) and their Interventions (INT)
+target operating architecture   TOA: artifacts/target-operating-architecture.md
+transition states               Transition States (STA, type TRANSITION): artifacts/transition-state.md
+system metrics                  Metrics (MET) in the TOA metric_ids
+system effects                  System Effect Assessments (SFX): artifacts/system-effect-assessment.md
 ```
 
 ---
@@ -130,7 +130,7 @@ What happens to the rest of the system if it improves?
 
 ## 6. Required system checks
 
-Before approving a Target Operating Architecture verify:
+Before approving a Target Operating Architecture (`HG-TOA`, `STANDARD.md` §8) verify:
 
 1. downstream capacity;
 2. upstream information quality;

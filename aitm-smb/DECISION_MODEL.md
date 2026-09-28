@@ -1,6 +1,6 @@
 # AITM-SMB Decision Model
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 AITM-SMB separates three decisions:
 
@@ -16,7 +16,7 @@ These decisions MUST NOT be collapsed into one.
 
 ## 1. Intervention challenge
 
-For a diagnosed Gap, evaluate in this order:
+For a diagnosed Gap, evaluate in this order (challenge order: `STANDARD.md` §5; families: `design/INTERVENTION_PATTERNS.md`):
 
 ```text
 Can the work be eliminated?
@@ -62,16 +62,20 @@ Detailed assessment: `diagnostics/AI_SUITABILITY.md`.
 
 ## 3. Autonomy
 
-```text
-L0 No AI
-L1 Suggest
-L2 Draft
-L3 Execute with approval
-L4 Execute within bounded policy
-L5 Pursue bounded objective
-```
+Autonomy levels L0–L5 (labels and authority per level): `diagnostics/AUTONOMY_SUITABILITY.md` §2.
 
 Authority is a business architecture decision, not a technical consequence.
+
+Before recommending autonomy, ask:
+
+```text
+Why is assistance insufficient?
+Why is explicit approval insufficient?
+What is the maximum safe authority (Authority Ceiling)?
+How is authority bounded?
+How is failure detected?
+How is action recovered?
+```
 
 Detailed assessment: `diagnostics/AUTONOMY_SUITABILITY.md`.
 
@@ -94,21 +98,12 @@ commit
 
 does not grant permission to do so.
 
+Granting such permission to AI is an authority increase (HG-AUTHORITY, `STANDARD.md` §8).
+
 ---
 
 ## 5. Decision record
 
-Material decisions SHOULD record:
+Material decisions SHOULD be recorded as Decisions (`DEC-###`). Record contract: `artifacts/decision-assumption-log.md`.
 
-```yaml
-decision:
-  id: DEC-###
-  statement:
-  owner:
-  alternatives: []
-  rationale:
-  evidence_ids: []
-  assumptions: []
-  consequences: []
-  review_trigger:
-```
+`DEC-###` records engagement decisions about the transformation. Decision rights over operational business decisions are `BDS-###` (`design/DECISION_RIGHTS_ARCHITECTURE.md`).

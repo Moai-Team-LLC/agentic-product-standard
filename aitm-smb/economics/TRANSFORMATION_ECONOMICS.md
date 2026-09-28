@@ -75,16 +75,28 @@ successfully resolved customer issues
 
 ```yaml
 economic_hypothesis:
-  initiative_id:
+  initiative_id:        # INI-###, set when the Initiative is selected (Phase 4)
+  intervention_ids: []  # INT-### it concerns before an Initiative exists
   current_cost:
   expected_future_cost:
-  expected_value:
+  expected_value:       # estimate and its §3 value class(es)
   implementation_cost:
   operational_cost:
-  key_assumptions: []
+  key_assumptions: []   # ASM-###
   downside_case:
   evidence_needed:
+  metric_ids: []        # Economic Metrics (METRICS.md §8) that will test it, preferably cost per successful outcome (§4)
 ```
+
+Use across the lifecycle:
+
+```text
+Phase 3  economic assumptions of candidate Interventions (ASM-###)
+Phase 4  economic hypothesis of each material candidate, prepared before HG-BUDGET
+Phase 8  hypothesis evaluated against measured cost and value
+```
+
+Before `HG-BUDGET` (`STANDARD.md` §8), every material candidate carries an economic hypothesis. The Decision closing `HG-BUDGET` cites it: the `INI-###` or `INT-###` it concerns in `subject_ids`, its `key_assumptions` in `assumption_ids`, and its `downside_case` in `rationale`.
 
 ---
 

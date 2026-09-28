@@ -3,6 +3,9 @@
 ## Status
 Accepted
 
+## Date
+Not recorded; accepted no later than the 1.0.0 release.
+
 ## Context
 AI transformation is frequently framed as a portfolio of AI use cases.
 

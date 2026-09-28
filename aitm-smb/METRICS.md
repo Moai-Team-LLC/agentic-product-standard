@@ -1,22 +1,31 @@
 # AITM-SMB Metrics Model
 
-## 1. Metric hierarchy
+## 1. Metric classes
 
-AITM-SMB distinguishes:
+AITM-SMB distinguishes a hierarchy:
 
 ```text
-Business Outcome Metrics
+Business Outcome Metrics      class: outcome
         ↓
-Capability Metrics
+Capability Metrics            class: capability
         ↓
-Operating Metrics
+Operating Metrics             class: operating
         ↓
-AI Evaluation Metrics
+AI Evaluation Metrics         class: ai_evaluation
+```
+
+and, alongside the hierarchy:
+
+```text
+Economic Metrics              class: economic          (§8)
+Risk / Governance Metrics     class: risk_governance   (§9)
 ```
 
 Lower-level metrics explain performance.
 
 They do not replace higher-level outcomes.
+
+Economic and Risk / Governance Metrics qualify an effect; they do not replace business Outcome metrics either.
 
 ---
 
@@ -95,17 +104,19 @@ human correction rate
 metric:
   id: MET-###
   name:
-  class:
+  class: outcome | capability | operating | ai_evaluation | economic | risk_governance
   owner:
   definition:
   source:
   baseline:
   target:
   cadence:
-  linked_outcomes: []
-  linked_capabilities: []
-  linked_initiatives: []
+  outcome_ids: []
+  capability_ids: []
+  initiative_ids: []
 ```
+
+Instances: `artifacts/transformation-scorecard.md`.
 
 ---
 
@@ -130,3 +141,37 @@ Avoid:
 ```
 
 unless they explain a higher-level outcome.
+
+---
+
+## 8. Economic Metrics
+
+Measure the cost and economic effect of the transformation. Economic lenses and the economic hypothesis: `economics/TRANSFORMATION_ECONOMICS.md`.
+
+Examples:
+
+```text
+implementation cost
+operating cost
+cost per successful business outcome
+human oversight cost
+failure cost
+payback against the economic hypothesis
+```
+
+---
+
+## 9. Risk / Governance Metrics
+
+Measure whether risk and AI authority stay within approved bounds.
+
+Examples:
+
+```text
+incidents by severity
+policy or permission violations
+escalations and their resolution time
+human overrides of AI actions
+actions outside the Authority Ceiling
+time to detect and recover
+```

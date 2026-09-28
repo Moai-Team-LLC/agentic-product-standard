@@ -1,50 +1,53 @@
 ---
 name: 24-audit-local-optimization
-version: 1.0.0
-minimum_framework_version: 1.0.0
+description: "Audits a selected Initiative or a Target Operating Architecture for local optimization (INV-09): upstream, downstream, shared-resource, incentive and Constraint Migration effects, which role absorbs new exceptions, and whether the change improves the target Outcome or only a local metric. Use in Phase 5, or whenever a local improvement may degrade the wider operating system. Updates the existing SFX record per artifacts/system-effect-assessment.md, or creates one where none exists. Part of AITM-SMB; paths are relative to the AITM-SMB root."
+version: 1.1.0
+minimum_framework_version: 1.1.0
 framework: AITM-SMB
 status: active
-category: system-design
+category: design-specialist
+phase: "5"
+human_gate: false
 ---
 
-# Skill: Audit Local Optimization Risk
+# Skill 24: Audit Local Optimization Risk
+
+## Purpose
+
+Challenge a design against the system-effect questions so that a local gain does not degrade the wider system. It audits and completes the System Effect Assessment that `skills/19-assess-system-effects/SKILL.md` produces. Invoked by `skills/06-design-target-system/SKILL.md`.
 
 ## Required inputs
 
-- Initiative or Target Operating Architecture
-- Capability Network
+- selected Initiative (INI) or Target Operating Architecture (TOA);
+- the existing System Effect Assessment for the same Initiative or TOA, if any;
+- Capability Network and System Constraint, where the profile requires them.
+
+## Normative sources
+
+- `design/LOCAL_OPTIMIZATION_GUARD.md`
+- `design/CONSTRAINT_ANALYSIS.md` (§5 Constraint Migration)
 
 ## Produces
 
-- `artifacts/system-effect-assessment.md`
+- `artifacts/system-effect-assessment.md` — the SFX record for the Initiative (`initiative_id`) or TOA (`toa_id`): updated if it exists, created otherwise.
 
 ## Procedure
 
-1. Identify throughput increases created by the change.
-2. Identify downstream capacity risks.
-3. Identify exception-load shifts.
-4. Identify shared-resource contention.
-5. Identify KPI gaming or incentive risks.
-6. Determine whether the initiative improves system Outcome or only a local metric.
+1. Find the SFX for the same `initiative_id` or `toa_id`; update it, never create a second one (`design/LOCAL_OPTIMIZATION_GUARD.md` §4).
+2. Answer every §2 question: upstream support, downstream demand and capacity, shared-resource contention, incentive and KPI-gaming risk, likely Constraint Migration (`design/CONSTRAINT_ANALYSIS.md` §5), and the role that absorbs new exceptions (`operational_risks`).
+3. Compare the design with the common failures in §3 (throughput increases, exception-load shifts).
+4. Set `system_verdict`: does the change improve the target Outcome or only a local metric; add mitigations or sequencing changes for material negative effects.
+5. Report a `local_only` or `degrades_outcome` verdict in `risks`; where it changes a Phase 4 priority, the selection returns to the Phase 4 gate (§5).
+6. Validate against the Validation of `artifacts/system-effect-assessment.md`; review aid: `rubrics/SYSTEM_DESIGN_RUBRIC.md` (Local optimization).
+7. Stop with `INSUFFICIENT_EVIDENCE` when an effect cannot be assessed without invented facts (record Evidence Debt), or `BLOCKED` when a required input is missing.
 
-## System-level controls
+## MUST NOT
 
-- Optimize target Outcomes, not isolated metrics.
-- Surface dependency effects.
-- Surface likely Constraint Migration.
-- Keep ownership and decision rights explicit.
-- Do not increase AI authority implicitly.
-- Prefer bounded, operable transition states.
-
-## Validation
-
-- [ ] Outcome linkage preserved
-- [ ] capability dependencies considered
-- [ ] local optimization risk checked
-- [ ] system constraint considered
-- [ ] ownership explicit
-- [ ] evidence/assumptions separated
+- create a second SFX for an Initiative or TOA that already has one;
+- accept a local KPI improvement as a system improvement;
+- skip any of the five INV-09 effects;
+- invent business facts; renumber or reuse stable IDs.
 
 ## Handoff
 
-Use `AGENT_OUTPUT_STANDARD.md`.
+Emit the `aitm_output` block defined in `AGENT_OUTPUT_STANDARD.md`.

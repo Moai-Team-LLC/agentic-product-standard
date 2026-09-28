@@ -27,23 +27,17 @@ HUMAN_PROCESS
 
 ## 3. Incident record
 
-```yaml
-incident:
-  id: INC-###
-  capability_id:
-  initiative_id:
-  class:
-  severity:
-  detected_at:
-  impact:
-  affected_state:
-  containment:
-  recovery:
-  root_cause:
-  corrective_action:
-  eval_case_added:
-  owner:
+Record contract: `artifacts/incident-record.md` (`INC-###`).
+
+Severity:
+
+```text
+high     material exposure (STANDARD.md §16), or any AUTHORITY or SECURITY incident
+medium   business impact without material exposure
+low      no business impact beyond the affected case
 ```
+
+An organization MAY use its own severity scale if it maps each level to one of these. A high-severity incident is material; when materiality is unclear, treat the incident as material (`STANDARD.md` §16).
 
 ---
 
@@ -57,10 +51,13 @@ evaluation dataset
 prompt / workflow
 knowledge base
 permissions
+AI authority level or Authority Ceiling
 observability
 training
 target architecture
 ```
+
+When an incident matches a demotion trigger, authority MAY be reduced immediately; restoring it requires `HG-AUTHORITY` (`governance/AUTHORITY_ESCALATION_MODEL.md` §4).
 
 ---
 

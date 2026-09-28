@@ -1,5 +1,9 @@
 # AITM-SMB Diagnostic Dimensions
 
+The dimensions a capability diagnosis inspects (rule: `diagnostics/DIAGNOSTIC_MODEL.md` §4).
+
+They are the diagnostic lens over the `STANDARD.md` §4 system model: People → Roles; Decision Rights → Decisions; Process → Demand and Flow; Data → Information; Metrics → Feedback; the other dimensions share their names.
+
 ## 1. Demand
 
 Questions:

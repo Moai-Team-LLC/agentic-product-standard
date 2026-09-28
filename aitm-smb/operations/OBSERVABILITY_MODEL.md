@@ -6,6 +6,8 @@ A transformed capability must be observable as a business system.
 
 AITM-SMB observability is broader than technical monitoring.
 
+Record contract: `artifacts/observability-plan.md` (one plan per transformed Capability).
+
 ---
 
 ## 2. Observability layers
@@ -62,7 +64,7 @@ operation_trace:
   cost:
   latency:
   policy_events: []
-  linked_business_outcome:
+  linked_business_outcome:  # OUT-###
 ```
 
 ---
@@ -96,3 +98,11 @@ untracked agent tool actions
 unowned failures
 silent retries changing state
 ```
+
+Each pattern found is a blocking gap for rollout.
+
+---
+
+## 7. Alerts and incidents
+
+Alerts on policy events, failed or unowned state-changing actions, and breaches of approved authority SHOULD open an Incident (`INC-###`, `operations/INCIDENT_MODEL.md`), in proportion to §5.

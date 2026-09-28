@@ -1,13 +1,21 @@
 # AITM-SMB Release Readiness
 
-Before a stable release verify:
+**Status:** Informative (`NORMATIVE_INDEX.md` tier 13). The judgment part of the release checks in `MAINTENANCE.md` §2, which govern. The automated part is `python3 tools/validate.py`; this list does not repeat what it checks (references, registries, versions, deprecated content, identifiers, gates). The 1.0.0 record: `releases/1.0.0-release-checklist.md`. Typical use: `skills/39-audit-framework-integrity/SKILL.md`.
+
+Before a release verify:
+
+## Automated
+
+- [ ] `python3 tools/validate.py` passes with 0 errors
+- [ ] `python3 tools/validate.py --engagement examples/compact-scenario-b` passes
+- [ ] orphan warnings resolved
 
 ## Canonical Core
 
 - [ ] Core files have no semantic contradictions
-- [ ] Core concepts have one canonical definition
+- [ ] Core concepts have one canonical definition (`CANONICAL_CONCEPTS.md`)
 - [ ] normative precedence is explicit
-- [ ] method flow matches phase semantics
+- [ ] method flow matches phase semantics (`METHOD_FLOW.md`, `EXECUTION_MODEL.md`)
 
 ## Profiles
 
@@ -16,19 +24,17 @@ Before a stable release verify:
 - [ ] Governed profile covers authority/risk escalation
 - [ ] Portfolio profile handles multi-initiative coordination
 - [ ] Measured profile closes value realization
+- [ ] every `APPLICATION_PROFILES.md` item resolves to an artifact contract, module, or skill
 
 ## Agent Execution
 
-- [ ] minimum context bundle is sufficient
+- [ ] Core bundle and Task bundle (`AGENT_CONTEXT_POLICY.md`) are sufficient
 - [ ] skills reference existing artifacts
 - [ ] skills reference existing modules
-- [ ] handoff format is consistent
-- [ ] human gates are preserved
+- [ ] handoff format is consistent (`AGENT_OUTPUT_STANDARD.md`)
+- [ ] human gates are preserved (`STANDARD.md` §8)
 
 ## Repository
 
-- [ ] MANIFEST version correct
-- [ ] CHANGELOG complete
-- [ ] no broken references
-- [ ] deprecated content marked
-- [ ] no dangerous duplicate definitions
+- [ ] CHANGELOG and release notes complete, including the migration table for any field rename (`VERSIONING.md` §9)
+- [ ] no dangerous duplicate definitions (`MAINTENANCE.md` §4)

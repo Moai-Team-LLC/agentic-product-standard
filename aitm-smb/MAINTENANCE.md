@@ -1,5 +1,7 @@
 # AITM-SMB Repository Maintenance
 
+Framework governance (`NORMATIVE_INDEX.md`): rules for changing this repository, not for engagements. Change classes: `VERSIONING.md`. Contribution process: `CONTRIBUTING.md`.
+
 ## 1. Purpose
 
 AITM-SMB is agent-readable.
@@ -8,37 +10,42 @@ Documentation drift is therefore a methodology defect.
 
 ---
 
-## 2. Repository maintenance rules
+## 2. Release checks
 
-Every release SHOULD verify:
+Every release passes, in order:
 
 ```text
-all normative links resolve
-all skill references resolve
-all artifact references resolve
-no duplicate canonical definition exists
-deprecated rules are marked
-MANIFEST version matches release
-CHANGELOG updated
+1. python3 tools/validate.py                                   0 errors
+2. python3 tools/validate.py --engagement examples/compact-scenario-b   0 errors
+3. skills/39-audit-framework-integrity/SKILL.md                no unresolved finding
+4. orphan check: every validator orphan warning resolved
+5. CHANGELOG.md section for the version, and release notes (`releases/<version>.md`) with the migration table for any field rename
+6. rubrics/RELEASE_READINESS.md reviewed                       informative
 ```
+
+Steps 1–2 MUST pass (CI runs them on every change and before a tagged release); steps 3–6 SHOULD be completed.
+
+Step 1 verifies that all normative, skill, and artifact references resolve; skill and artifact contracts are well-formed and listed in their registries; identifier prefixes and gate IDs are registered; deprecated content is marked and does not leak into active files; versions align (`VERSIONING.md` §8), including that the MANIFEST version matches the release and CHANGELOG.md is updated.
+
+Step 3 covers what a script cannot judge: no duplicate canonical definition exists (§3, §4), semantics are consistent, and the §5 audits hold.
+
+Orphan check: a file with no inbound reference may never be loaded under bounded context loading (`AGENT_CONTEXT_POLICY.md`). Reference it from where it is used, or remove it.
+
+Record the result in the release notes (`releases/`). Tagging and publication: `VERSIONING.md` §10. The 1.0.0 record: `releases/1.0.0-release-checklist.md`.
+
+A material methodology change, and every MAJOR change, SHOULD be recorded as an ADR (`decisions/README.md`; template `decisions/ADR-0000-template.md`).
 
 ---
 
 ## 3. Single-definition rule
 
-A core concept SHOULD have one canonical definition.
+Each record shape is defined exactly once; `CANONICAL_CONCEPTS.md` names where.
 
-Other files SHOULD reference it.
+Modules own meaning and rules; the record contract owns field names.
 
-Examples:
+Files that hold instances reference the record contract and MAY add fields only where they say so explicitly ("extends <record> with: …").
 
-```text
-Capability → ontology/ONTOLOGY.md + CORE_MODEL.md
-Traceability → TRACEABILITY.md
-AI Suitability → diagnostics/AI_SUITABILITY.md
-Autonomy → diagnostics/AUTONOMY_SUITABILITY.md
-Transition State → transition/TRANSITION_STATE_MODEL.md
-```
+A concept SHOULD have one canonical definition; other files SHOULD reference it. Where each concept is defined: `CANONICAL_CONCEPTS.md` §1–§2. Example: Capability — semantics and record `CORE_MODEL.md` §2; instances `artifacts/capability-map.md`.
 
 ---
 
@@ -52,19 +59,45 @@ Short reminders or summaries.
 
 Two normative definitions that may diverge.
 
-Dangerous duplication SHOULD be removed or replaced with links.
+Dangerous duplication SHOULD be removed or replaced with a reference to the canonical source.
 
 ---
 
 ## 5. Release audit
 
-Before a 1.0 release perform:
+Before every MINOR or MAJOR release, also perform (skill 39 procedure; step 1 of §2 where automated):
 
 ```text
-semantic consistency audit
-broken-reference audit
-duplicate-definition audit
-profile completeness audit
-skill dependency audit
-artifact completeness audit
+semantic consistency audit     Core, modules, contracts and skills agree (NORMATIVE_INDEX.md)
+broken-reference audit         automated
+duplicate-definition audit     §3, §4; includes artifact-versus-module field parity
+profile completeness audit     every APPLICATION_PROFILES.md item resolves to an artifact
+                               contract (MINIMUM_ARTIFACT_SET.md), module, or skill
+skill dependency audit         every skill input is produced upstream; every orchestrator's
+                               specialists exist; no skill is unreachable
+artifact completeness audit    every contract has a producing skill; produced_by, the
+                               artifacts/INDEX.md column and the skills' Produces sections
+                               name the same set; uniform shape (artifacts/_ARTIFACT_CONTRACT.md)
+scenario walk-through          changed methodology still works for every scenario in
+                               validation/ABSTRACT_SCENARIOS.md and the worked example
 ```
+
+---
+
+## 6. Splitting AITM-SMB into its own repository
+
+AITM-SMB is split-ready: every path is relative to the AITM root, and every command runs from inside it.
+
+```text
+1. from the host root:  git subtree split --prefix=aitm-smb -b aitm-smb-standalone
+2. push that branch as main of the new repository
+3. .github/ in the AITM root becomes the repository's .github/: workflows/validate.yml
+   (replaces the host's aitm-smb workflow), ISSUE_TEMPLATE/ (config.yml,
+   method_correction.yml, method_change_proposal.yml) and PULL_REQUEST_TEMPLATE.md
+4. copy only CODEOWNERS and the commit-message lint from the host .github/ and adapt them
+5. tag releases vX.Y.Z from then on (VERSIONING.md §10); host tags are not carried over
+6. update host-repository URLs and references in README.md, CITATION.cff, SECURITY.md,
+   CODE_OF_CONDUCT.md, CONTRIBUTING.md and .github/ISSUE_TEMPLATE/config.yml
+```
+
+While co-hosted, keep the AITM root's `.github/workflows/validate.yml` in step with the host workflow.

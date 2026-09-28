@@ -1,8 +1,10 @@
-# Vertical Transformation Slice
+# Transformation Slice
 
 ## 1. Purpose
 
-A Delivery Slice is the smallest implementation unit that changes a real business behavior and can be evaluated.
+A Transformation Slice (`SLC-###`) is the smallest implementation unit that changes a real business behavior and can be evaluated.
+
+It is vertical: it crosses every layer needed to change that behavior (`execution/EXECUTION_PRINCIPLES.md` §2). Also called a vertical slice or delivery slice.
 
 ---
 
@@ -19,7 +21,9 @@ slice:
   role_changes: []
   decision_changes: []
   data_changes: []
+  knowledge_changes: []
   application_changes: []
+  automation_changes: []
   ai_changes: []
   control_changes: []
   metric_ids: []
@@ -28,6 +32,8 @@ slice:
   rollback:
   owner:
 ```
+
+Only the layers the slice changes need content.
 
 ---
 

@@ -2,6 +2,7 @@
 artifact_type: target-architecture
 status: deprecated
 deprecated_since: 0.7.0
+removal_target: 2.0.0
 replacement:
   - artifacts/capability-target-state.md
   - artifacts/target-operating-architecture.md

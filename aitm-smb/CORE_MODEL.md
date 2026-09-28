@@ -1,8 +1,12 @@
 # AITM-SMB Core Model
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 This document defines the primary semantic objects of AITM-SMB.
+
+§1–§4, §6, and §7 are the record contracts for their objects; every other record contract is named in `CANONICAL_CONCEPTS.md`. Files that hold instances reference the record contract and MAY add fields only where they say so explicitly ("extends <record> with: …").
+
+Identifiers: `ontology/ONTOLOGY.md`. Materiality: `STANDARD.md` §16. Missing links: `TRACEABILITY.md` §4.
 
 ---
 
@@ -20,7 +24,12 @@ outcome:
   horizon:
   metric_ids: []
   evidence_ids: []
+  status: proposed | approved | retired
 ```
+
+Instances: `artifacts/transformation-intent.md`.
+
+`status: approved` requires a Decision closing HG-OUTCOME (`STANDARD.md` §8).
 
 Invalid Outcome definitions include:
 
@@ -47,10 +56,15 @@ capability:
   owner:
   outcome_ids: []
   value_stream_ids: []
-  current_state_id:
-  target_state_id:
+  current_state_id:   # STA-### (type CURRENT)
+  target_state_id:    # STA-### (type TARGET)
   metric_ids: []
+  evidence_ids: []
 ```
+
+Instances: `artifacts/capability-map.md`. Discovery and granularity test: `diagnostics/CAPABILITY_DISCOVERY.md`.
+
+How the Capability operates (people, decision rights, process, data, knowledge, applications, automation, AI, controls, metrics, economics, feedback) is recorded in its States (§3), not in this record. Design Constraints (`ontology/ONTOLOGY.md`) are recorded in the `constraints` fields of target designs; Risks in Intervention `risks` or as Risk records (`RSK-###`, `artifacts/decision-assumption-log.md`).
 
 A Capability is not:
 
@@ -67,28 +81,35 @@ an AI use case
 
 A structured description of how a Capability operates at a point in time.
 
-Types:
-
-```text
-CURRENT
-TRANSITION
-TARGET
+```yaml
+state:
+  id: STA-###
+  type: CURRENT | TRANSITION | TARGET
+  capability_id: CAP-###
+  as_of:              # observation date (CURRENT) or intended horizon (TRANSITION, TARGET)
+  people:
+  decision_rights:
+  process:
+  data:
+  knowledge:
+  applications:
+  automation:
+  ai:
+  controls:
+  metric_ids: []
+  economics:
+  feedback:
+  evidence_ids: []
+  assumption_ids: []
 ```
 
-A State SHOULD consider:
+The dimensions are the `STANDARD.md` §4 system model. A State SHOULD consider them; only dimensions relevant to the transformation boundary need content.
 
-```text
-People
-Decisions
-Process
-Data
-Knowledge
-Applications
-Automation
-AI
-Controls
-Metrics
-```
+Instances:
+
+- CURRENT: `artifacts/capability-map.md`;
+- TARGET: `artifacts/capability-target-state.md` (extends this record);
+- TRANSITION: `artifacts/transition-state.md` (extends this record).
 
 ---
 
@@ -99,13 +120,19 @@ A material difference between current Capability behavior and required behavior.
 ```yaml
 gap:
   id: GAP-###
-  capability_id:
+  capability_id: CAP-###
+  current_state_id:   # STA-### (type CURRENT)
   current_condition:
   required_condition:
   business_impact:
-  cause_status:
+  cause_status: unknown | hypothesized | accepted_as_testable | validated
+  hypothesis_ids: []
   evidence_ids: []
 ```
+
+Instances: `artifacts/capability-diagnosis.md`.
+
+`cause_status` summarizes the Gap's Cause Hypotheses (`hypothesis_ids`, §5).
 
 ---
 
@@ -113,9 +140,11 @@ gap:
 
 A condition explaining why a Gap exists.
 
-A Cause begins as a Hypothesis unless Evidence justifies stronger status.
+A Cause begins as a Hypothesis (`HYP-###`) unless Evidence justifies stronger status. The ID is unchanged when the Cause is validated.
 
 Canonical diagnostic logic is defined in `diagnostics/ROOT_CAUSE_ANALYSIS.md`.
+
+Record contract: Hypothesis record in `artifacts/decision-assumption-log.md`.
 
 ---
 
@@ -127,13 +156,19 @@ A bounded design choice intended to close one or more Gaps.
 intervention:
   id: INT-###
   gap_ids: []
-  type:
+  hypothesis_ids: []          # causes this intervention addresses
+  type:                       # one PUBLIC_API §6 family
   description:
   expected_effect:
   simpler_alternatives_considered: []
   risks: []
-  assumptions: []
+  assumption_ids: []
+  status: candidate | selected | deferred | rejected
 ```
+
+Instances: `artifacts/intervention-map.md` (extends this record).
+
+Family definitions: `design/INTERVENTION_PATTERNS.md`. Challenge order: `STANDARD.md` §5.
 
 AI is one intervention family among several.
 
@@ -146,17 +181,25 @@ An executable change package implementing one or more Interventions.
 ```yaml
 initiative:
   id: INI-###
+  name:
   capability_ids: []
   intervention_ids: []
   owner:
-  entry_state:
-  exit_state:
+  scope:
+  entry_state_id:             # STA-###
+  exit_state_id:              # STA-###
   expected_outcome_ids: []
   success_metric_ids: []
-  dependencies: []
-  decision_gates: []
+  evidence_ids: []
+  dependencies: []            # INI-### ids this Initiative depends on
+  decision_gates: []          # HG-* and/or GAT-### ids
   rollback_or_recovery:
+  status: proposed | approved | active | paused | stopped | completed
 ```
+
+Instances: `artifacts/transformation-roadmap.md` (extends this record).
+
+An Initiative record is created no later than its selection (Phase 4). `status: approved` for a material Initiative requires a Decision closing HG-INITIATIVE (`STANDARD.md` §8).
 
 A Capability is the unit of transformation.
 
@@ -168,7 +211,7 @@ An Initiative is the unit of coordinated delivery.
 
 A defined measurable signal used to evaluate an Outcome, Capability, Initiative, AI component, economic effect, or risk.
 
-Canonical semantics are defined in `METRICS.md`.
+Canonical semantics and record contract: `METRICS.md` (record: §6).
 
 ---
 
@@ -176,7 +219,7 @@ Canonical semantics are defined in `METRICS.md`.
 
 A verifiable source supporting a claim.
 
-Canonical semantics are defined in `evidence/EVIDENCE_STANDARD.md`.
+Canonical semantics and record contract: `evidence/EVIDENCE_STANDARD.md` (Evidence: §3; Evidence Debt: §5). Instances: `artifacts/evidence-register.md`.
 
 ---
 
@@ -192,19 +235,17 @@ Canonical semantics are defined in `design/CAPABILITY_NETWORK.md`.
 
 The condition that most limits improvement of the target Outcome.
 
+Not a design Constraint (`ontology/ONTOLOGY.md`).
+
 Canonical semantics are defined in `design/CONSTRAINT_ANALYSIS.md`.
 
 ---
 
 ## 12. Capability Target State
 
-The required future behavior of one Capability.
+The required future behavior of one Capability: a State (§3) of type TARGET.
 
-Artifact:
-
-```text
-artifacts/capability-target-state.md
-```
+Record contract: `artifacts/capability-target-state.md` (extends §3).
 
 ---
 
@@ -218,7 +259,9 @@ Canonical semantics are defined in `design/TARGET_OPERATING_ARCHITECTURE.md`.
 
 ## 14. Transition State
 
-An independently operable intermediate State between Current and Target.
+An independently operable intermediate State between Current and Target: a State (§3) of type TRANSITION.
+
+A Transition State MAY change several Capabilities at once; its contract (`artifacts/transition-state.md`) says how it extends the State record for that case.
 
 Canonical semantics are defined in `transition/TRANSITION_STATE_MODEL.md`.
 
@@ -234,7 +277,7 @@ Canonical semantics are defined in `execution/PILOT_MODEL.md`.
 
 ## 16. Evaluation
 
-A structured test of business, capability, operating, AI, technical, economic, or governance performance.
+A structured test of business, capability, operating, human-AI interaction, AI, technical, economic, or governance performance.
 
 Canonical semantics are defined in `evaluation/EVALUATION_SYSTEM.md`.
 

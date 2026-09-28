@@ -1,5 +1,7 @@
 # Diagnostic Quality Rubric
 
+**Status:** Informative (`NORMATIVE_INDEX.md` tier 13). A review aid for Phase 2 outputs; the diagnostic chain is normative in `diagnostics/DIAGNOSTIC_MODEL.md` and `diagnostics/ROOT_CAUSE_ANALYSIS.md`. Typical use: `skills/03-diagnose-capabilities/SKILL.md`, `skills/16-validate-root-cause/SKILL.md`.
+
 A diagnosis is strong when it can answer:
 
 ## Evidence

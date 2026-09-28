@@ -88,9 +88,9 @@ Resource Allocation
 Avoid:
 
 ```text
-Salesforce Management
-ChatGPT Usage
-Excel Reporting
+CRM Administration
+Chatbot Usage
+Spreadsheet Reporting
 Marketing Department
 ```
 
@@ -150,19 +150,14 @@ depends on:
 
 Dependencies matter because changing one capability may move the bottleneck elsewhere.
 
+Record them in the Capability's `dependencies`; where a Capability Network is used, as Capability Dependencies (`DEP-###`, `artifacts/capability-network.md`).
+
 ---
 
-## 7. Agent output
+## 7. Capability record
 
-```yaml
-capability_candidate:
-  name:
-  purpose:
-  linked_outcomes: []
-  linked_value_streams: []
-  owner:
-  dependencies: []
-  evidence:
-  confidence:
-  boundary_notes:
-```
+Record each accepted Capability in the Capability Map (`artifacts/capability-map.md`; record contract `CORE_MODEL.md` §2 with the Capability Map extensions: `dependencies`, `confidence`, `boundary_notes`).
+
+A candidate not yet accepted MAY be recorded without an `id`. The `CAP-###` ID is assigned when the candidate is accepted into the Capability Map and never reused.
+
+Each accepted Capability in scope gets a CURRENT State (`CORE_MODEL.md` §3) in Phase 1.

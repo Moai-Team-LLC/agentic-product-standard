@@ -1,40 +1,52 @@
 ---
 name: 37-build-context-bundle
-version: 1.0.0
-minimum_framework_version: 1.0.0
+description: "Builds the bounded context an agent needs for one skill: the Core bundle, the active profiles from the approved profile Decision, the relevant phase file, the skill with its normative sources and artifact contracts, the modules the profiles activate for it, and only the upstream engagement records and Evidence the task needs, with personal data minimized. Use before any orchestrator or specialist step that needs context, and when a new agent session joins an engagement. Produces no persistent artifact; returns the loaded files, the active profiles, and any missing normative dependency in findings. Part of AITM-SMB; paths are relative to the AITM-SMB root."
+version: 1.1.0
+minimum_framework_version: 1.1.0
 framework: AITM-SMB
 status: active
 category: framework-operations
+phase: "any"
+human_gate: false
 ---
 
-# Skill: Build Agent Context Bundle
+# Skill 37: Build Agent Context Bundle
+
+## Purpose
+
+Load enough to follow the methodology, and no more: excess context causes instruction conflict, semantic drift, and invented dependencies. Invoked by `skills/01-discover-transformation/SKILL.md` and before any step that needs context.
 
 ## Required inputs
 
-- selected profile
-- requested skill
-- upstream artifacts
+- the requested skill (directory name) and task;
+- the engagement workspace location;
+- the profile Decision, if one exists.
+
+## Normative sources
+
+- `AGENT_CONTEXT_POLICY.md`
+- `NORMATIVE_INDEX.md` (Canonical Core)
+- `MODULE_CATALOG.md` (modules each profile activates)
 
 ## Produces
 
-- no persistent artifact required; return findings through `AGENT_OUTPUT_STANDARD.md`
+- no persistent artifact; `findings` lists the files loaded, the active profiles and whether they are provisional, and any missing normative dependency.
 
 ## Procedure
 
-1. Load canonical Core files.
-2. Load selected profile.
-3. Load only the relevant methodology/module documents.
-4. Load relevant artifact contract and skill.
-5. Load upstream approved artifacts and evidence.
-6. Verify normative dependencies are present.
+1. Load the Core bundle (`AGENT_CONTEXT_POLICY.md`); load further Canonical Core files (`NORMATIVE_INDEX.md`) only when the requested skill depends on them.
+2. Load the active profiles as `AGENT_CONTEXT_POLICY.md` (Profile) prescribes; if no profile Decision exists, run `skills/36-select-application-profile/SKILL.md` first.
+3. Load the phase file (`EXECUTION_MODEL.md` §1), the requested skill, its Normative sources, the artifact contracts it produces, and the modules the active profiles activate for it (`MODULE_CATALOG.md` §3).
+4. Load approved upstream records and required Evidence from the engagement workspace by reference; minimize and redact personal data.
+5. Verify every normative dependency named by the loaded files is present; load a missing one rather than infer it.
+6. Stop with `BLOCKED` when a required file or record cannot be found.
 
-## Controls
+## MUST NOT
 
-- Follow `NORMATIVE_INDEX.md`.
-- Preserve Core semantics.
-- Do not activate modules without profile justification.
-- Record deviations explicitly.
+- load the full repository merely because it exists;
+- load engagement data beyond the task, or copy personal or confidential content into context;
+- write anything into the AITM root.
 
 ## Handoff
 
-Use `AGENT_OUTPUT_STANDARD.md`.
+Emit the `aitm_output` block defined in `AGENT_OUTPUT_STANDARD.md`.

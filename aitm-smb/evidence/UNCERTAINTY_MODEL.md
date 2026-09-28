@@ -57,12 +57,14 @@ simulation
 
 ```yaml
 uncertainty:
-  id:
-  type:
+  id: UNC-###
+  type:                 # one §2 class: FACTUAL | CAUSAL | TECHNICAL | ECONOMIC | BEHAVIORAL | ORGANIZATIONAL | REGULATORY | MODEL_PERFORMANCE
   statement:
   impact:
-  current_confidence:
-  resolution_method:
+  current_confidence: low | medium | high   # diagnostics/DIAGNOSTIC_MODEL.md §5
+  resolution_method:    # one §3 choice: ACCEPT | REDUCE | TEST | DEFER | AVOID; for TEST, name the experiment (§4)
   owner:
-  gate:
+  gate:                 # HG-*, GAT-###, or phase exit by which it must be resolved
 ```
+
+Record material uncertainties only (INV-15). Instances: the Evidence Register (`artifacts/evidence-register.md`).

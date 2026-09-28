@@ -16,11 +16,13 @@ Hypothesis
 → Scale / Revise / Stop
 ```
 
+Decision vocabularies used in the loop: pilot result `execution/PILOT_MODEL.md` §6; evaluation conclusion `evaluation/EVALUATION_SYSTEM.md` §5; value conclusion `measurement/VALUE_REALIZATION.md` §6.
+
 ---
 
 ## 2. Vertical transformation slice
 
-The preferred unit of implementation is a **Vertical Transformation Slice**.
+The preferred unit of implementation is a vertical **Transformation Slice** (`SLC-###`; record: `execution/DELIVERY_SLICE.md`).
 
 A valid slice crosses the layers required to change one bounded business behavior.
 
@@ -88,6 +90,15 @@ STOPPED
 ```
 
 State changes SHOULD have explicit gates.
+
+These states refine the Initiative `status` (`CORE_MODEL.md` §7) between approval and completion. They are read from the Initiative's gates and need no separate field. Typical gates (`execution/EXECUTION_GATE_MODEL.md` §2):
+
+```text
+DESIGNED              → READY_FOR_PILOT        Gate C
+EVALUATING            → APPROVED_FOR_ROLLOUT   Gate D (HG-PROMOTION for a material pilot)
+APPROVED_FOR_ROLLOUT  → ROLLING_OUT            Gate E, before each stage
+ROLLING_OUT           → OPERATING              Gate F
+```
 
 ---
 

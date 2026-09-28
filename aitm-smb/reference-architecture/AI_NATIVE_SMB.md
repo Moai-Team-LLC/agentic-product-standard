@@ -1,6 +1,6 @@
 # Reference Architecture — AI-Native SMB
 
-This is a logical reference architecture, not a required technology stack.
+**Status:** Informative. A logical reference architecture, not a required technology stack.
 
 ```text
 BUSINESS OUTCOMES
@@ -9,18 +9,18 @@ BUSINESS CAPABILITIES
         │
 VALUE STREAMS / PROCESSES
         │
-┌───────┴───────────────────────────┐
+┌───────┴──────────────────────────┐
 │ HUMAN SYSTEM                     │
 │ roles / decisions / approvals    │
-└───────┬───────────────────────────┘
+└───────┬──────────────────────────┘
         │
 EXPERIENCE & APPLICATION LAYER
         │
-┌───────┼───────────────┐
-│       │               │
-Copilots  Workflows    Agents
-│       │               │
-└───────┼───────────────┘
+┌───────┴───────────┬─────────────────────────┐
+│                   │                         │
+AI Assistance       Deterministic Automation  Agents
+│                   │                         │
+└───────┬───────────┴─────────────────────────┘
         │
 AI CAPABILITY LAYER
 models / gateway / retrieval / memory /
@@ -38,6 +38,8 @@ GOVERNANCE & ECONOMICS
 authority / audit / risk / cost / SLOs
 ```
 
+The AI Capability Layer and the Agents branch are present only where a selected Intervention justifies AI (INV-05). A Capability without AI (`maturity/MATURITY_MODEL.md` M0) runs on the human system, applications, deterministic automation, and the data and platform layers alone.
+
 ## Principle
 
-The reference architecture is decomposed by responsibility so that implementations can remain portable across GCP, AWS, Azure, SaaS, and hybrid environments.
+The reference architecture is decomposed by responsibility so that implementations can remain portable across cloud providers, SaaS, on-premises, and hybrid environments.

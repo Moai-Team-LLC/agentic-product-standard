@@ -1,24 +1,41 @@
 # AITM-SMB Module Catalog
 
-## Core
+Registry (`NORMATIVE_INDEX.md`): it enumerates modules and the other top-level directories and defines no semantics. Precedence of everything listed here: `NORMATIVE_INDEX.md`.
 
-Defines identity, semantics, flow, traceability, execution rules, and conformance.
+## 1. Canonical Core
 
-```text
-STANDARD.md
-CORE_MODEL.md
-METHOD_FLOW.md
-TRACEABILITY.md
-EXECUTION_MODEL.md
-DECISION_MODEL.md
-CONFORMANCE.md
-AGENTS.md
-ontology/
-```
+Always normative, whatever the profile.
+
+File list: `MANIFEST.md` `canonical_core` (readable copy: `NORMATIVE_INDEX.md` §Canonical Core). This catalog does not repeat it.
 
 ---
 
-## Diagnostics Module
+## 2. Always active with the Core
+
+Whatever the profile:
+
+```text
+methodology/                       phase files 00–08; refine EXECUTION_MODEL.md and MUST agree with it
+canonical concept sources          the Semantics source named in CANONICAL_CONCEPTS.md for every
+                                   concept in use (CANONICAL_CONCEPTS.md §3); in every engagement
+                                   at least:
+  METRICS.md                         Metric
+  evidence/EVIDENCE_STANDARD.md      Evidence, Evidence Debt, Assumption
+  diagnostics/ROOT_CAUSE_ANALYSIS.md Cause / Hypothesis
+  design/INTERVENTION_PATTERNS.md    intervention families
+  design/LOCAL_OPTIMIZATION_GUARD.md system-effect check (INV-09)
+AGENT_DIAGNOSTIC_PROTOCOL.md       whenever an agent diagnoses
+```
+
+A concept source is normative for its definitions; its further procedures follow the module activation in §3.
+
+---
+
+## 3. Modules
+
+A module becomes normative for an engagement when a selected profile requires it or a documented Decision activates it (`NORMATIVE_INDEX.md` §Modules). A profile activates the owning module of each artifact contract it requires (mapping: `MINIMUM_ARTIFACT_SET.md`; owners: `artifacts/INDEX.md`) and the module files named in its `APPLICATION_PROFILES.md` section. The lists below are derived from those files; on conflict they win. Rows labeled Compact apply to every application, since Compact is the floor (`APPLICATION_PROFILES.md` §3).
+
+### 3.1 Diagnostics Module
 
 Use to understand why current capabilities fail.
 
@@ -26,6 +43,21 @@ Use to understand why current capabilities fail.
 diagnostics/
 evidence/
 economics/
+```
+
+Agent procedure: `AGENT_DIAGNOSTIC_PROTOCOL.md`, active whenever an agent diagnoses (§2).
+
+Activated by:
+
+```text
+Compact    diagnostics/CAPABILITY_DISCOVERY.md, diagnostics/DIAGNOSTIC_MODEL.md,
+           diagnostics/DIAGNOSTIC_DIMENSIONS.md (Capability Map, Capability Diagnosis);
+           evidence/UNCERTAINTY_MODEL.md where uncertainty is recorded;
+           diagnostics/AI_SUITABILITY.md and diagnostics/AUTONOMY_SUITABILITY.md where an
+           AI_* Intervention is proposed (Governance minimum);
+           economics/TRANSFORMATION_ECONOMICS.md §5 for each material candidate before
+           HG-BUDGET; in full where cost or economic effect informs a decision
+Governed   diagnostics/AUTONOMY_SUITABILITY.md §6 for every Capability in which AI is used
 ```
 
 Core questions:
@@ -39,7 +71,7 @@ How confident are we?
 
 ---
 
-## Transformation Design Module
+### 3.2 Transformation Design Module
 
 Use to define the future business system.
 
@@ -49,25 +81,48 @@ transition/
 portfolio/
 ```
 
+Activated by:
+
+```text
+Compact    design/TARGET_STATE_DESIGN.md (Capability Target State)
+Standard   design/ in full (Capability Network, System Constraint, System Effect Assessment,
+           Decision Rights, Target Operating Architecture, information and application design);
+           transition/ (Transition States, sequencing)
+Portfolio  portfolio/; design/CAPABILITY_NETWORK.md and transition/TRANSFORMATION_SEQUENCING.md
+           (cross-capability dependency analysis)
+```
+
 Core questions:
 
 ```text
 What should change?
 How do capabilities interact?
 What is the system constraint?
-What should the target operating model be?
+What should the Target Operating Architecture be?
 How do we transition?
 ```
 
 ---
 
-## Execution Module
+### 3.3 Execution Module
 
 Use to turn design into operational change.
 
 ```text
 execution/
 evaluation/
+```
+
+Activated by:
+
+```text
+Standard   execution/EXECUTION_PRINCIPLES.md, execution/DELIVERY_SLICE.md;
+           where a pilot or experiment is required: execution/EXPERIMENT_MODEL.md,
+           execution/PILOT_MODEL.md, evaluation/EVALUATION_SYSTEM.md,
+           evaluation/AI_EVALS.md (AI components);
+           where rolling out: execution/ROLLOUT_MODEL.md
+Governed   execution/EXECUTION_GATE_MODEL.md (GAT records);
+           evaluation/EVALUATION_DATASET.md (AI components)
 ```
 
 Core questions:
@@ -80,13 +135,24 @@ When may we scale?
 
 ---
 
-## Operations & Governance Module
+### 3.4 Operations & Governance Module
 
 Use for production operation and authority control.
 
 ```text
 operations/
 governance/
+```
+
+Activated by:
+
+```text
+Compact    where an AI_* Intervention is selected: governance/GOVERNANCE_OPERATING_MODEL.md
+           (Governance minimum fields); governance/AUTHORITY_ESCALATION_MODEL.md when AI
+           authority is granted, promoted, or demoted
+Standard   operations/OBSERVABILITY_MODEL.md
+Governed   governance/ in full (incl. governance/AI_CHANGE_CONTROL.md);
+           operations/INCIDENT_MODEL.md
 ```
 
 Core questions:
@@ -100,12 +166,18 @@ How does authority change?
 
 ---
 
-## Change Module
+### 3.5 Change Module
 
 Use when human roles and workflows materially change.
 
 ```text
 change/
+```
+
+Activated by:
+
+```text
+Standard   change/CHANGE_ADOPTION_MODEL.md, change/ROLE_TRANSITION_MODEL.md (Adoption Plan)
 ```
 
 Core questions:
@@ -118,12 +190,20 @@ Why might adoption fail?
 
 ---
 
-## Measurement Module
+### 3.6 Measurement Module
 
 Use to prove effect.
 
 ```text
 measurement/
+```
+
+Activated by:
+
+```text
+Standard   measurement/VALUE_REALIZATION.md (value state + Evidence)
+Measured   measurement/BENEFIT_EVIDENCE_CHAIN.md; measurement/VALUE_REALIZATION.md §4–§5
+           (also with Compact + Measured)
 ```
 
 Core questions:
@@ -133,3 +213,28 @@ Did the business improve?
 Was the effect caused by the transformation?
 Did it persist?
 ```
+
+---
+
+## 4. Other directories and files
+
+Not modules. Tiers: `NORMATIVE_INDEX.md`.
+
+| Path | Role | Status |
+|---|---|---|
+| `artifacts/` | artifact contracts; registry `artifacts/INDEX.md`; instances live in the engagement workspace | normative for the records they own (tier 11) |
+| `skills/` | agent procedures; registry `skills/INDEX.md` | normative procedures (tier 12) |
+| `PROFILE_SELECTION.md`, `MINIMUM_ARTIFACT_SET.md` | profile selection order; profile-to-contract map | subordinate to `APPLICATION_PROFILES.md` (tier 8) |
+| `rubrics/` | framework QA rubrics for judging AITM-SMB outputs and this repository; not the engagement `evaluation/` module | informative |
+| `maturity/` | descriptive maturity levels M0–M5; not autonomy levels | informative |
+| `reference-architecture/` | logical reference architecture; not a required stack | informative |
+| `validation/` | abstract scenarios for testing the method's generality (`MAINTENANCE.md`) | informative |
+| `docs/` | documentation, e.g. `docs/crosswalk-agentic-product-standard.md`; not an extension | informative |
+| `examples/` | fictional worked examples, e.g. `examples/compact-scenario-b/` | informative |
+| `README.md`, `QUICKSTART.md`, `GLOSSARY.md`, `SKILL.md` | entry points; `SKILL.md` is the Agent Skills adapter | informative |
+| `tools/` | `tools/validate.py` (integrity), `tools/build_dist.py` (distributions) | framework tooling |
+| `releases/` | release notes and release checklists | informative; project record |
+| `audits/` | historical audit reports | informative; project record |
+| `decisions/` | maintainer ADRs (`decisions/README.md`) | framework governance |
+| `VERSIONING.md`, `EXTENSION_MODEL.md`, `MAINTENANCE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `CHANGELOG.md`, `REPO_STRUCTURE.md`, `LICENSE`, `CITATION.cff` | framework governance and project files | not engagement rules |
+| `.github/` | standalone CI for after a split (`MAINTENANCE.md` §6) | project file |

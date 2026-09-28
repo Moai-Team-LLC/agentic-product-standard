@@ -2,6 +2,7 @@
 artifact_type: ai-opportunity-map
 status: deprecated
 deprecated_since: 0.7.0
+removal_target: 2.0.0
 replacement:
   - artifacts/intervention-map.md
   - artifacts/ai-suitability-assessment.md

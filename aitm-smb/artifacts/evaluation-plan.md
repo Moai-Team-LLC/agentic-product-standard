@@ -1,21 +1,58 @@
 ---
 artifact_type: evaluation-plan
-framework_version: 1.0.0
+framework_version: 1.1.0
 status: canonical
+entity: Evaluation
+id_prefix: EVL
+owner_module: evaluation/EVALUATION_SYSTEM.md
+produced_by: [07-build-roadmap, 08-design-operating-model, 09-measure-evolution, 26-design-evaluation, 27-build-eval-dataset, 32-evaluate-pilot]
 ---
 
 # Evaluation Plan
 
+## Purpose
+
+Pre-register how a pilot, rollout, or operating Capability will be evaluated across the evaluation layers, then record the results against that registration. Holds the Evaluation records (`EVL-###`) and, for AI components, the evaluation datasets.
+
+## Record
+
+Record contracts: Evaluation `evaluation/EVALUATION_SYSTEM.md` §4; evaluation dataset `evaluation/EVALUATION_DATASET.md` §3.
+
 ```yaml
 evaluation_plan:
-  initiative_id:
-  business_evaluations: []
-  capability_evaluations: []
-  operating_evaluations: []
-  ai_evaluations: []
-  economic_evaluations: []
-  governance_evaluations: []
-  datasets: []
-  thresholds: []
-  owners: []
+  initiative_id:            # INI-###
+  pilot_id:                 # PLT-###, when the plan evaluates a pilot
+  rollout_id:               # ROL-###, when it evaluates a rollout
+  owner:
+  registered_on:            # date the plan fields were fixed, before execution
+  evaluations: []           # EVL records, plan fields only (layer, metric_ids, method, sample, threshold, owner)
+  datasets: []              # eval_dataset records, for AI components
+
+results: []                 # append-only; written after execution
+  # - evaluation_id:        # EVL-### from `evaluations`
+  #   actual:
+  #   conclusion:           # PASS | PASS_WITH_LIMITATIONS | FAIL | INSUFFICIENT_EVIDENCE
+  #   limitations:
+  #   evidence_ids: []
+  #   recorded_on:          # extension: date the result was recorded
+
+pilot_result:               # PROMOTE | REVISE | REPEAT | STOP | INSUFFICIENT_EVIDENCE (execution/PILOT_MODEL.md §6); pilots only
 ```
+
+A `results` entry holds the result fields of one EVL record; the record is its planned entry plus its result entry.
+
+## Rules
+
+Plan fields are fixed before execution and MUST NOT be changed after results are known (`execution/PILOT_MODEL.md` §5). Results are appended, never overwritten; a repeated evaluation gets a new EVL record.
+
+`pilot_result` is derived from the results against the pilot's pre-defined success and stop criteria. PROMOTE is a recommendation until a Decision closes `HG-PROMOTION` (`STANDARD.md` §8).
+
+A passing AI evaluation does not imply a passing business evaluation (`evaluation/EVALUATION_SYSTEM.md` §5).
+
+## Validation
+
+- [ ] linked to an Initiative, and to the pilot or rollout it evaluates
+- [ ] every relevant layer of `evaluation/EVALUATION_SYSTEM.md` §2 has at least one evaluation with a threshold, or is marked not relevant; where AI is used this includes human-AI interaction and technical reliability
+- [ ] plan fields were registered before execution and are unchanged in the results
+- [ ] every result states actual, conclusion, limitations, and Evidence
+- [ ] Governed: each AI component has a dataset covering `evaluation/EVALUATION_DATASET.md` §2, with leakage tracked per its §4

@@ -6,6 +6,8 @@ AITM-SMB transforms an operating system through explicit intermediate states.
 
 The target state is rarely reachable safely in one step.
 
+A Transition State is a State of type TRANSITION (`CORE_MODEL.md` §3, §14): an intermediate state of the Capabilities it changes. The last state of a sequence reaches their Capability Target States; where a Target Operating Architecture exists, it is the system-level target.
+
 ---
 
 ## 2. State sequence
@@ -15,7 +17,7 @@ Current State
 → Transition State 1
 → Transition State 2
 → ...
-→ Target State
+→ Capability Target States (integrated in the Target Operating Architecture, where one exists)
 ```
 
 Each Transition State MUST be independently operable.
@@ -24,25 +26,9 @@ Each Transition State MUST be independently operable.
 
 ## 3. Transition State contract
 
-```yaml
-transition_state:
-  id: STA-###
-  name:
-  predecessor:
-  successor:
-  capability_changes: []
-  role_changes: []
-  decision_right_changes: []
-  process_changes: []
-  data_changes: []
-  application_changes: []
-  ai_changes: []
-  governance_changes: []
-  evidence_to_collect: []
-  entry_conditions: []
-  exit_conditions: []
-  rollback_or_recovery:
-```
+Record contract: `artifacts/transition-state.md` (extends the State record, `CORE_MODEL.md` §3).
+
+Besides the State dimensions, a Transition State records its name, the Capabilities it changes, its predecessor and successor, an accountable owner, its mode (§5, §6), the changes it introduces, the evidence to collect, entry and exit conditions, and rollback or recovery.
 
 ---
 
@@ -63,7 +49,7 @@ safe under partial adoption
 
 ## 5. Shadow State
 
-For high uncertainty, introduce a shadow state:
+For high uncertainty, introduce a shadow state (`mode: SHADOW`):
 
 ```text
 AI / new process runs
@@ -86,7 +72,7 @@ before authority increases.
 
 ## 6. Parallel State
 
-Old and new systems may temporarily coexist.
+Old and new systems may temporarily coexist (`mode: PARALLEL`).
 
 This is justified when:
 
@@ -97,22 +83,27 @@ behavior requires comparison
 rollback must remain possible
 ```
 
-Parallel operation has cost and SHOULD be time-bounded.
+Parallel operation has cost and SHOULD be time-bounded (`time_bound`).
 
 ---
 
 ## 7. Authority transition
 
-Authority MAY increase across states:
+Authority MAY increase across states, for example:
 
 ```text
-L1 Suggest
-→ L2 Draft
-→ L3 Execute with approval
-→ L4 Bounded execution
+L1 — Suggest
+→ L2 — Draft
+→ L3 — Execute with explicit approval
+→ L4 — Execute within bounded policy
 ```
 
-Authority SHOULD NOT jump directly to the maximum technically possible level.
+Level labels and authority: `diagnostics/AUTONOMY_SUITABILITY.md` §2. The path is illustrative; every step follows the same rules:
+
+- Authority SHOULD NOT jump directly to the maximum technically possible level.
+- Each increase meets the promotion criteria in `governance/AUTHORITY_ESCALATION_MODEL.md` §3 and requires `HG-AUTHORITY` (`STANDARD.md` §8).
+- No state exceeds the approved Authority Ceiling (`diagnostics/AUTONOMY_SUITABILITY.md` §6).
+- Record each authority change in `ai_changes` with the Autonomy Assessment and the levels before and after.
 
 ---
 

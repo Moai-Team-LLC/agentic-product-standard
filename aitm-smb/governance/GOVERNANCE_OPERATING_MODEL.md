@@ -4,6 +4,8 @@
 
 AITM-SMB governance ensures the transformed operating system remains safe, effective, owned, and economically rational.
 
+Records: AI controls per AI-enabled Capability in the AI Governance Canvas (`artifacts/ai-governance-canvas.md`); ownership and cadence in the Operating Model (`artifacts/operating-model.md`). Authority changes: `governance/AUTHORITY_ESCALATION_MODEL.md`. Changes to AI components: `governance/AI_CHANGE_CONTROL.md`.
+
 ---
 
 ## 2. Governance objects
@@ -73,6 +75,8 @@ decision record
 review trigger
 ```
 
+Decisions are recorded as `DEC-###` (`artifacts/decision-assumption-log.md`); human gates: `STANDARD.md` §8.
+
 ---
 
 ## 6. Governance review triggers
@@ -80,7 +84,7 @@ review trigger
 Review SHOULD occur when:
 
 ```text
-autonomy increases
+an autonomy increase is proposed
 model/provider changes materially
 data access expands
 new tool permissions are added
