@@ -54,13 +54,13 @@ Phase: [`EXECUTION_MODEL.md`](../EXECUTION_MODEL.md) §1. Human gates: [`STANDAR
 | 22 | `22-build-transformation-portfolio` | build the portfolio and bound transformation WIP | 6 | HG-INITIATIVE, HG-BUDGET | transformation-portfolio |
 | 23 | `23-design-decision-rights` | design current and target authority for material decisions | 5 | HG-DECISION-RIGHTS | decision-rights-map |
 | 24 | `24-audit-local-optimization` | audit an Initiative or TOA for local optimization | 5 | — | system-effect-assessment |
-| 25 | `25-design-pilot` | design a bounded pilot with pre-defined success and stop criteria | 6 | HG-RISK, HG-AUTHORITY | pilot-plan, execution-gate (C) |
+| 25 | `25-design-pilot` | design a bounded pilot with pre-defined success and stop criteria | 6 | HG-RISK | pilot-plan, execution-gate (C) |
 | 26 | `26-design-evaluation` | pre-register evaluations; add new ones when needed (results: 32, 09) | 6-8 | — | evaluation-plan (plan) |
 | 27 | `27-build-eval-dataset` | build the evaluation dataset for an AI component | 6 | — | evaluation-plan (datasets) |
 | 28 | `28-design-observability` | make AI and automated work observable | 7 | — | observability-plan |
-| 29 | `29-plan-rollout` | plan a staged rollout after an approved promotion | 7 | HG-AUTHORITY, HG-RISK | rollout-plan |
+| 29 | `29-plan-rollout` | plan a staged rollout after an approved promotion | 7 | HG-RISK | rollout-plan |
 | 30 | `30-design-adoption` | plan adoption, role transitions, training, and support | 7 | — | adoption-plan |
-| 31 | `31-operationalize-governance` | make AI governance executable | 7 | HG-RISK, HG-AUTHORITY | ai-governance-canvas |
+| 31 | `31-operationalize-governance` | make AI governance executable | 7 | HG-RISK | ai-governance-canvas |
 | 32 | `32-evaluate-pilot` | evaluate a pilot against its pre-registered criteria | 7 | HG-PROMOTION | evaluation-plan (results), execution-gate (D) |
 | 33 | `33-assess-value-realization` | assess value state and value conclusion | 8 | HG-VALUE | value-realization-report, execution-gate (G) |
 | 34 | `34-manage-authority-promotion` | promote, retain, or demote AI authority from evidence | 7-8 | HG-AUTHORITY | autonomy-assessment, ai-governance-canvas (changes) |
@@ -69,7 +69,7 @@ Phase: [`EXECUTION_MODEL.md`](../EXECUTION_MODEL.md) §1. Human gates: [`STANDAR
 | 37 | `37-build-context-bundle` | build the bounded context for a skill | any | — | none (loaded files in the handoff) |
 | 38 | `38-audit-conformance` | audit conformance; write the conformance declaration | any | — | transformation-intent (`conformance`) |
 | 39 | `39-audit-framework-integrity` | check the AITM-SMB repository's integrity before a release | maintenance | — | none (findings) |
-| 40 | `40-handle-incident` | record and triage incidents; demote authority when a trigger fires | 7-8 | HG-AUTHORITY | incident-record |
+| 40 | `40-handle-incident` | record and triage incidents; demote authority when a trigger fires | 7-8 | — | incident-record |
 
 "Human gates" lists the gates a skill's output requires (`human_gate: true`); the skill records each as a proposed gate Decision in the decision-assumption-log, and the named human's approval updates it ([`AGENTS.md`](../AGENTS.md) §4). Every skill still stops at any other gate whose trigger occurs. Each skill's frontmatter and `## Produces` are authoritative; report any drift from this table (skill 39).
 
@@ -111,7 +111,7 @@ A first Compact engagement, step by step: [`QUICKSTART.md`](../QUICKSTART.md).
 
 ## 4. Conventions
 
-Paths: every path in a skill is relative to the AITM root, the directory containing [`MANIFEST.md`](../MANIFEST.md) ([`AGENT_CONTEXT_POLICY.md`](../AGENT_CONTEXT_POLICY.md)). Skills are not self-contained: they need the whole AITM root. Install it as one skill through the root [`SKILL.md`](../SKILL.md); do not copy single skills out.
+Paths: every path written as text in a skill (in backticks or as a link's visible text) is relative to the AITM root; a Markdown link target is relative to the file that contains it. The AITM root is the directory containing [`MANIFEST.md`](../MANIFEST.md) ([`AGENT_CONTEXT_POLICY.md`](../AGENT_CONTEXT_POLICY.md)). Skills are not self-contained: they need the whole AITM root. Install it as one skill through the root [`SKILL.md`](../SKILL.md); do not copy single skills out.
 
 Context: every skill assumes the Core bundle and the active profiles are loaded ([`AGENT_CONTEXT_POLICY.md`](../AGENT_CONTEXT_POLICY.md)).
 
@@ -132,7 +132,7 @@ human_gate                  true | false
 gates                       only when human_gate is true: the STANDARD.md §8 gate IDs
 ```
 
-`human_gate: true` means the skill's output requires a [`STANDARD.md`](../STANDARD.md) §8 approval before downstream use; `gates` names those gates. The skill then records each gate as a proposed Decision and stops with `HUMAN_DECISION_REQUIRED` until the named human approves it ([`AGENTS.md`](../AGENTS.md) §4). `human_gate: false` does not exempt a skill from any gate whose trigger occurs.
+`human_gate: true` means the skill's output requires a [`STANDARD.md`](../STANDARD.md) §8 approval before downstream use; `gates` names the gates the skill itself records. `HG-AUTHORITY` is recorded only by skill 14 (Authority Ceiling) and skill 34 (every grant); skills that need a grant hand off to 34. The skill then records each gate as a proposed Decision and stops with `HUMAN_DECISION_REQUIRED` until the named human approves it ([`AGENTS.md`](../AGENTS.md) §4). `human_gate: false` does not exempt a skill from any gate whose trigger occurs.
 
 Status at gates, for every skill: a gate reached, or a required upstream gate still open, yields `HUMAN_DECISION_REQUIRED` unless a higher-precedence status applies, and the gate is always listed in `open_gates`; `BLOCKED` is only for a missing input or an unresolved normative conflict ([`PUBLIC_API.md`](../PUBLIC_API.md) §8).
 

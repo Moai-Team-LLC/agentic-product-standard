@@ -101,7 +101,7 @@ A canonical concept source is normative for its concept whenever that concept is
 ## Distributions
 
 ```text
-Core  Canonical Core + Registries + LICENSE + CHANGELOG.md
+Core  Canonical Core + Registries + LICENSE + CHANGELOG.md (links from Core files to modules, skills and contracts resolve only in the Full distribution)
       read, implement, or integrate against the stable semantic contract
 Full  the whole AITM root
       execute the methodology

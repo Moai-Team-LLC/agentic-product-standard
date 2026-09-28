@@ -41,7 +41,7 @@ Evidence and Evidence Debt are appended as any skill may ([`artifacts/_ARTIFACT_
 ## Procedure
 
 1. Load the active profiles ([`AGENT_CONTEXT_POLICY.md`](../../AGENT_CONTEXT_POLICY.md)), [`methodology/02-capability-diagnosis.md`](../../methodology/02-capability-diagnosis.md), and [`AGENT_DIAGNOSTIC_PROTOCOL.md`](../../AGENT_DIAGNOSTIC_PROTOCOL.md).
-2. Verify the phase's Required inputs; stop with `BLOCKED` when one is missing.
+2. Verify the phase's Required inputs; while an upstream gate they depend on (`HG-OUTCOME`) is open, stop with `HUMAN_DECISION_REQUIRED` (gate in `open_gates`); stop with `BLOCKED` only when an input is missing.
 3. Execute the phase Activities: skill 12, then skill 16.
 4. Merge specialist outputs into the phase instances; set each Gap's `cause_status` from its Hypotheses (skill 16 findings), `accepted_as_testable` only once an approved Decision of the Capability or Outcome owner lists the `HYP-###` ([`diagnostics/ROOT_CAUSE_ANALYSIS.md`](../../diagnostics/ROOT_CAUSE_ANALYSIS.md) §7; propose it in `decisions_needed`); keep stable IDs and the [`TRACEABILITY.md`](../../TRACEABILITY.md) §4 trace.
 5. Validate the phase Exit condition ([`EXECUTION_MODEL.md`](../../EXECUTION_MODEL.md) §2) and the Validation of each produced contract; review aid: [`rubrics/DIAGNOSTIC_QUALITY_RUBRIC.md`](../../rubrics/DIAGNOSTIC_QUALITY_RUBRIC.md).

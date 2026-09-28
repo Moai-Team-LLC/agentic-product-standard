@@ -121,7 +121,7 @@ Standard   execution/EXECUTION_PRINCIPLES.md, execution/DELIVERY_SLICE.md;
            execution/PILOT_MODEL.md, evaluation/EVALUATION_SYSTEM.md,
            evaluation/AI_EVALS.md (AI components);
            where rolling out: execution/ROLLOUT_MODEL.md
-Governed   execution/EXECUTION_GATE_MODEL.md (GAT records);
+Governed   execution/EXECUTION_GATE_MODEL.md (GAT records; in every profile its §4 waiver content applies when unmet pilot criteria are waived at HG-PROMOTION);
            evaluation/EVALUATION_DATASET.md (AI components)
 ```
 

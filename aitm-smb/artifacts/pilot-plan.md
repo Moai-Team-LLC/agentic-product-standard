@@ -58,7 +58,7 @@ Governed: Execution Gate C ([`artifacts/execution-gate.md`](execution-gate.md)) 
 ## Validation
 
 - [ ] linked to one Initiative, the Hypotheses it tests, its Capabilities, and its Outcomes
-- [ ] pilot type and autonomy level stated; the level is within the Authority Ceiling and approved
+- [ ] pilot type and autonomy level stated; the level is within the Authority Ceiling; a level above AUT `current_level` has an approved `HG-AUTHORITY` Decision before the pilot starts
 - [ ] baseline (or Evidence Debt for its absence) and comparison method stated
 - [ ] success and stop criteria and the Evaluation Plan are fixed before execution
 - [ ] none of the invalidity conditions in [`execution/PILOT_MODEL.md`](../execution/PILOT_MODEL.md) §5 holds

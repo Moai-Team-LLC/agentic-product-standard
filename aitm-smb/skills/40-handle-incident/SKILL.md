@@ -1,14 +1,13 @@
 ---
 name: 40-handle-incident
-description: "Records and triages an incident of an AI-enabled or transformed capability: class and severity, impact and affected state, containment and recovery, root cause and corrective action, and the feedback updates it requires (policy, evaluation dataset, workflow, knowledge, permissions, authority, observability, training, Capability Target State or Target Operating Architecture). Applies immediate authority demotion when a demotion trigger fires; restoring authority stops for HG-AUTHORITY. Use in Phase 7 or 8 whenever an alert, report, or review reveals an incident. Produces an INC record per artifacts/incident-record.md. Part of AITM-SMB; paths are relative to the AITM-SMB root."
+description: "Records and triages an incident of an AI-enabled or transformed capability: class and severity, impact and affected state, containment and recovery, root cause and corrective action, and the feedback updates it requires (policy, evaluation dataset, workflow, knowledge, permissions, authority, observability, training, Capability Target State or Target Operating Architecture). Applies immediate authority demotion when a demotion trigger fires; restoring authority is a promotion handed to skill 34 (HG-AUTHORITY). Use in Phase 7 or 8 whenever an alert, report, or review reveals an incident. Produces an INC record per artifacts/incident-record.md. Part of AITM-SMB; paths are relative to the AITM-SMB root."
 version: 1.1.0
 minimum_framework_version: 1.1.0
 framework: AITM-SMB
 status: active
 category: execution-governance
 phase: "7-8"
-human_gate: true
-gates: [HG-AUTHORITY]
+human_gate: false
 ---
 
 # Skill 40: Handle Incident
@@ -43,11 +42,8 @@ Treat incidents as transformation governance, not only IT support: contain them,
 5. For a material incident, record each update made under [`operations/INCIDENT_MODEL.md`](../../operations/INCIDENT_MODEL.md) §4 in `feedback_updates`; hand a new evaluation case to [`skills/27-build-eval-dataset/SKILL.md`](../27-build-eval-dataset/SKILL.md) and record its ID in `eval_case_added`. Changes to AI components follow [`governance/AI_CHANGE_CONTROL.md`](../../governance/AI_CHANGE_CONTROL.md).
 6. Set `status: closed` only when root cause and corrective action are stated.
 7. Validate against the Validation of [`artifacts/incident-record.md`](../../artifacts/incident-record.md).
-8. Stop with `INSUFFICIENT_EVIDENCE` when the cause cannot be established without invented facts (keep the incident open; record Evidence Debt), or `BLOCKED` when a required input is missing.
-
-## Human gates
-
-Stop with status `HUMAN_DECISION_REQUIRED` at `HG-AUTHORITY` before any reduced authority is restored; restoring is a promotion handled by skill 34, which records the gate as a DEC with `gate:` set and `status: proposed` ([`AGENTS.md`](../../AGENTS.md) §4), listing the AUT-### in `subject_ids` and stating the level and scope; the named human's approval updates it to `approved`.
+8. Restoring reduced authority is a promotion: do not restore it here; hand off to [`skills/34-manage-authority-promotion/SKILL.md`](../34-manage-authority-promotion/SKILL.md), which records the `HG-AUTHORITY` Decision (listing the AUT-### and stating level and scope).
+9. Stop with `INSUFFICIENT_EVIDENCE` when the cause cannot be established without invented facts (keep the incident open; record Evidence Debt), or `BLOCKED` when a required input is missing.
 
 ## MUST NOT
 

@@ -13,7 +13,7 @@ gates: [HG-...]                       # present only when human_gate is true
 
 # Skill NN: <Title>
 
-Conventions for paths, `Produces`, the engagement workspace, and frontmatter: [`skills/INDEX.md`](INDEX.md) §4. Keep a skill short (typically 25–60 lines) and add no methodology semantics.
+Conventions for paths, `Produces`, the engagement workspace, and frontmatter: `skills/INDEX.md` §4. Keep a skill short (typically 25–60 lines) and add no methodology semantics.
 
 ## Purpose
 
@@ -28,14 +28,14 @@ Orchestrators point to the Required inputs of their phase file instead of listin
 
 ## Normative sources
 
-- the module or core files that define the concepts used ([`CANONICAL_CONCEPTS.md`](../CANONICAL_CONCEPTS.md)); orchestrators: their phase file.
+- the module or core files that define the concepts used (`CANONICAL_CONCEPTS.md`); orchestrators: their phase file.
 
 ## Produces
 
-- the artifact contract(s) the output conforms to, with the records created or updated: exactly the contracts whose `produced_by` lists this skill ([`artifacts/_ARTIFACT_CONTRACT.md`](../artifacts/_ARTIFACT_CONTRACT.md) §2);
+- the artifact contract(s) the output conforms to, with the records created or updated: exactly the contracts whose `produced_by` lists this skill (`artifacts/_ARTIFACT_CONTRACT.md` §2);
 - or: no persistent artifact; results go to `findings` in the handoff.
 
-Appends that any skill MAY make ([`artifacts/_ARTIFACT_CONTRACT.md`](../artifacts/_ARTIFACT_CONTRACT.md) §2) are not listed.
+Appends that any skill MAY make (`artifacts/_ARTIFACT_CONTRACT.md` §2) are not listed.
 
 ## Specialist skills
 
@@ -45,11 +45,11 @@ Orchestrators only: each specialist with the condition under which it runs.
 
 1. Numbered steps that apply the normative sources by reference (`<file>` §n); do not restate definitions, dimension lists, or class lists.
 2. Validate the output against the Validation of its artifact contract.
-3. Stop with `INSUFFICIENT_EVIDENCE` when proceeding would require invented business facts (record Evidence Debt); with `HUMAN_DECISION_REQUIRED` at a gate or while a required upstream gate is open (gate in `open_gates`); with `BLOCKED` only when a required input is missing or a normative conflict is unresolved ([`PUBLIC_API.md`](../PUBLIC_API.md) §8).
+3. Stop with `INSUFFICIENT_EVIDENCE` when proceeding would require invented business facts (record Evidence Debt); with `HUMAN_DECISION_REQUIRED` at a gate or while a required upstream gate is open (gate in `open_gates`); with `BLOCKED` only when a required input is missing or a normative conflict is unresolved (`PUBLIC_API.md` §8).
 
 ## Human gates
 
-Gated skills only: Stop with status `HUMAN_DECISION_REQUIRED` at `HG-…`; record the gate as a DEC with `gate:` set and `status: proposed`, listing the gated IDs in `subject_ids` ([`AGENTS.md`](../AGENTS.md) §4); the named human's approval updates it to `approved`.
+Gated skills only: Stop with status `HUMAN_DECISION_REQUIRED` at `HG-…`; record the gate as a DEC with `gate:` set and `status: proposed`, listing the gated IDs in `subject_ids` (`AGENTS.md` §4); the named human's approval updates it to `approved`.
 
 ## MUST NOT
 
@@ -62,4 +62,4 @@ Gated skills only: Stop with status `HUMAN_DECISION_REQUIRED` at `HG-…`; recor
 
 ## Handoff
 
-Emit the `aitm_output` block defined in [`AGENT_OUTPUT_STANDARD.md`](../AGENT_OUTPUT_STANDARD.md).
+Emit the `aitm_output` block defined in `AGENT_OUTPUT_STANDARD.md`.

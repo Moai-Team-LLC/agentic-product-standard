@@ -53,6 +53,6 @@ Readiness is verified before each stage (skill 35; Governed: Gate E).
 
 - [ ] linked to one Initiative and, where a pilot preceded it, to that pilot, its evaluations, and the promotion Decision
 - [ ] every stage names its dimensions and scope, and the [`execution/ROLLOUT_MODEL.md`](../execution/ROLLOUT_MODEL.md) §3 gates are verified before it starts
-- [ ] no stage exceeds the Authority Ceiling; a stage above the approved level has an `HG-AUTHORITY` Decision
+- [ ] no stage exceeds the Authority Ceiling; a stage above the approved level has an approved `HG-AUTHORITY` Decision before it starts
 - [ ] rollback or recovery is stated for each material stage ([`execution/ROLLOUT_MODEL.md`](../execution/ROLLOUT_MODEL.md) §5)
 - [ ] completion criteria cover [`execution/ROLLOUT_MODEL.md`](../execution/ROLLOUT_MODEL.md) §6

@@ -821,13 +821,23 @@ def run_engagement(target, rep, extra_prefixes=()):
         return int(m.group(1)) if m else 0
 
     for ident, rec in by_prefix.get("AUT", []):
-        if max(level(rec.get("maximum_allowed_level")), level(rec.get("current_level"))) > 0:
-            dec_id, dec = gate_decision("HG-AUTHORITY", ident)
-            if not dec:
-                rep.error(defined[ident][1], "%s grants AI authority above L0 but no Decision closes HG-AUTHORITY for it"
-                          % ident)
-            elif str(dec.get("status")).strip() != "approved":
-                rep.warn(defined[dec_id][1], "%s (HG-AUTHORITY for %s) is not approved yet" % (dec_id, ident))
+        ceiling, current = level(rec.get("maximum_allowed_level")), level(rec.get("current_level"))
+        if max(ceiling, current) == 0:
+            continue
+        approved = [d for d, r in decisions
+                    if r.get("gate") == "HG-AUTHORITY" and ident in ids_in(r.get("subject_ids"))
+                    and str(r.get("status")).strip() == "approved"]
+        proposed = [d for d, r in decisions
+                    if r.get("gate") == "HG-AUTHORITY" and ident in ids_in(r.get("subject_ids"))]
+        if current > 0 and not approved:
+            # AI is operating above L0: the grant must already be approved.
+            rep.error(defined[ident][1], "%s operates at L%d but no approved Decision closes HG-AUTHORITY for it"
+                      % (ident, current))
+        elif not proposed:
+            rep.error(defined[ident][1], "%s sets an Authority Ceiling above L0 but no Decision closes HG-AUTHORITY for it"
+                      % ident)
+        elif not approved:
+            rep.warn(defined[ident][1], "%s: its HG-AUTHORITY Decision is still proposed" % ident)
     for ident, rec in by_prefix.get("RSK", []):
         if str(rec.get("status", "")).strip() == "accepted":
             dec_ids = [i for i in ids_in(rec.get("acceptance_decision_id")) if i in defined]

@@ -8,6 +8,7 @@ name: aitm-smb
 # Release: push a tag aitm-smb-vX.Y.Z matching aitm-smb/MANIFEST.md. The
 # release notes are the matching aitm-smb/CHANGELOG.md section; the Core and
 # Full distributions are attached. Path filters do not apply to tag pushes.
+# --latest=false keeps the host standard's own release marked Latest.
 
 on:
   push:
@@ -91,5 +92,5 @@ jobs:
           set -euo pipefail
           python3 tools/build_dist.py
           gh release create "$GITHUB_REF_NAME" \
-            --title "AITM-SMB $VERSION" --notes-file notes.md --verify-tag \
+            --title "AITM-SMB $VERSION" --notes-file notes.md --verify-tag --latest=false \
             dist/aitm-smb-core-"$VERSION".zip dist/aitm-smb-full-"$VERSION".zip

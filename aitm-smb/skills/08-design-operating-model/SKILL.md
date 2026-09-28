@@ -54,7 +54,7 @@ Only what the active profile requires ([`APPLICATION_PROFILES.md`](../../APPLICA
 ## Procedure
 
 1. Load the active profiles ([`AGENT_CONTEXT_POLICY.md`](../../AGENT_CONTEXT_POLICY.md)) and [`methodology/07-operating-model-governance.md`](../../methodology/07-operating-model-governance.md).
-2. Verify the phase's Required inputs; stop with `BLOCKED` when one is missing.
+2. Verify the phase's Required inputs; while an upstream gate they depend on (`HG-TOA` or `HG-BUDGET`) is open, stop with `HUMAN_DECISION_REQUIRED` (gate in `open_gates`); stop with `BLOCKED` only when an input is missing.
 3. Make the system operable: assign ownership and invoke 28, 30, and 31 (phase Activities 1–8). In Compact, the result MAY be recorded as the Initiative `operation`, `adoption` included ([`artifacts/transformation-roadmap.md`](../../artifacts/transformation-roadmap.md)).
 4. For each pilot: before it starts, grant any level above the currently approved one through 34 ([`governance/AUTHORITY_ESCALATION_MODEL.md`](../../governance/AUTHORITY_ESCALATION_MODEL.md) §3 (a)); after it runs, evaluate it with 32; for a material pilot stop at `HG-PROMOTION`.
 5. After promotion: plan the rollout with 29; before each stage, pre-register new evaluations with 26 where its scope is not covered, raise a level only through 34, and verify readiness with 35.

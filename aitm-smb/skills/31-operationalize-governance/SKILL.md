@@ -8,7 +8,7 @@ status: active
 category: execution-governance
 phase: "7"
 human_gate: true
-gates: [HG-RISK, HG-AUTHORITY]
+gates: [HG-RISK]
 ---
 
 # Skill 31: Operationalize Governance
@@ -48,7 +48,7 @@ Turn authority decisions into controls that operate: who may do what, who approv
 
 ## Human gates
 
-Stop with status `HUMAN_DECISION_REQUIRED` at `HG-RISK` when the canvas accepts material customer, financial, security, legal, or operational risk; record the gate as a DEC with `gate:` set and `status: proposed` ([`AGENTS.md`](../../AGENTS.md) §4), listing the accepted RSK-### in `subject_ids`; the named human's approval updates it to `approved`. Stop at `HG-AUTHORITY` when the canvas would grant AI permissions beyond the currently approved level (AUT `current_level`); the grant goes through skill 34, whose Decision lists the AUT-### and states the new level and scope.
+Stop with status `HUMAN_DECISION_REQUIRED` at `HG-RISK` when the canvas accepts material customer, financial, security, legal, or operational risk; record the gate as a DEC with `gate:` set and `status: proposed` ([`AGENTS.md`](../../AGENTS.md) §4), listing the accepted RSK-### in `subject_ids`; the named human's approval updates it to `approved`. Permissions beyond the currently approved level (AUT `current_level`) are not granted here: they stay out of the canvas until skill 34 records the `HG-AUTHORITY` Decision (listing the AUT-### and stating the new level and scope) and it is approved; set `next_skill` to 34.
 
 ## MUST NOT
 

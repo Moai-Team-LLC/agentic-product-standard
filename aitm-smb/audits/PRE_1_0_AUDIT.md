@@ -1,6 +1,6 @@
 # AITM-SMB Pre-1.0 Integrity Audit
 
-> Historical record, produced with internal pre-publication tooling that is not part of this repository. Its counts describe the 1.0.0 tree, not the current one. Reproducible checks: [`tools/validate.py`](../tools/validate.py) and [`skills/39-audit-framework-integrity/SKILL.md`](../skills/39-audit-framework-integrity/SKILL.md) (see [`MAINTENANCE.md`](../MAINTENANCE.md)). Findings from the 1.1.0 release review are summarized in [`audits/1.1_RELEASE_AUDIT.md`](1.1_RELEASE_AUDIT.md).
+> Historical record, produced with internal pre-publication tooling that is not part of this repository. Its counts describe the pre-1.0 (0.7.0) tree, not the current one. Reproducible checks: [`tools/validate.py`](../tools/validate.py) and [`skills/39-audit-framework-integrity/SKILL.md`](../skills/39-audit-framework-integrity/SKILL.md) (see [`MAINTENANCE.md`](../MAINTENANCE.md)). Findings from the 1.1.0 release review are summarized in [`audits/1.1_RELEASE_AUDIT.md`](1.1_RELEASE_AUDIT.md).
 
 ## Result
 

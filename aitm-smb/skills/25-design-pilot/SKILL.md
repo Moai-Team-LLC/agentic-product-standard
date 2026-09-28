@@ -8,7 +8,7 @@ status: active
 category: execution-governance
 phase: "6"
 human_gate: true
-gates: [HG-RISK, HG-AUTHORITY]
+gates: [HG-RISK]
 ---
 
 # Skill 25: Design Pilot

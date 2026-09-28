@@ -6,7 +6,7 @@ AITM-SMB is designed for bounded context loading.
 
 ## Path resolution
 
-All paths in AITM-SMB files are relative to the AITM root: the directory containing [`MANIFEST.md`](MANIFEST.md). Resolve every path against the AITM root, never against the citing file.
+All paths in AITM-SMB files are relative to the AITM root: the directory containing [`MANIFEST.md`](MANIFEST.md). Resolve every path written as text (in backticks or as a link's visible text) against the AITM root, never against the citing file. A Markdown link target, in parentheses, is relative to the file that contains it; following either gives the same file.
 
 Keep the AITM root intact when installing it, for example as one skill through the root [`SKILL.md`](SKILL.md). Do not copy single skills out of it; their references would break.
 

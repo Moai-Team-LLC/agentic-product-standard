@@ -19,7 +19,7 @@ Separate projected from realized value, so that deployment or adoption is never 
 
 ## Required inputs
 
-- Outcome and Metric records with measured baselines ([`artifacts/transformation-intent.md`](../../artifacts/transformation-intent.md), [`artifacts/transformation-scorecard.md`](../../artifacts/transformation-scorecard.md));
+- Outcome and Metric records with baselines, or recorded baseline gaps as Evidence Debt ([`artifacts/transformation-intent.md`](../../artifacts/transformation-intent.md), [`artifacts/transformation-scorecard.md`](../../artifacts/transformation-scorecard.md));
 - post-rollout or operating Evidence and EVL results ([`artifacts/evaluation-plan.md`](../../artifacts/evaluation-plan.md));
 - cost data and the Initiative's `economic_hypothesis` ([`artifacts/transformation-roadmap.md`](../../artifacts/transformation-roadmap.md); record: [`economics/TRANSFORMATION_ECONOMICS.md`](../../economics/TRANSFORMATION_ECONOMICS.md) §5);
 - Incident records (INC-###) and risk and governance evaluations, where they exist.

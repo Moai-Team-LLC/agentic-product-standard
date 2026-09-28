@@ -9,13 +9,13 @@ This guide is informative ([`NORMATIVE_INDEX.md`](NORMATIVE_INDEX.md), tier 13).
 ### Prerequisites
 
 - **An accountable Outcome owner** who decides personally about the result and can approve the human decision gates (IDs `HG-*`, [`STANDARD.md`](STANDARD.md) §8).
-- **Time:** typically 2–4 weeks of part-time work to reach an approved roadmap for one or two Capabilities. Running a pilot and measuring its effect take as long as the evidence period needs.
+- **Time:** typically 4–8 weeks of part-time work to reach an approved roadmap for one or two Capabilities. Running a pilot and measuring its effect take as long as the evidence period needs.
 - **Access** to the people who do the work, and to system data (exports, logs, tickets, reports) that can serve as Evidence.
 - **A workspace** outside this folder (below).
 
 ### Is Compact the right profile?
 
-Compact fits only when every "Use when" condition in [`APPLICATION_PROFILES.md`](APPLICATION_PROFILES.md) §3 holds. If one fails or you do not know yet, the default is Standard + Measured, and a Governed condition you cannot answer counts as holding unless the Outcome owner records otherwise ([`PROFILE_SELECTION.md`](PROFILE_SELECTION.md) §4). A profile can change later; see [Escalating](#escalating-to-standard-or-governed).
+Compact fits only when every "Use when" condition in [`APPLICATION_PROFILES.md`](APPLICATION_PROFILES.md) §3 holds. If one fails, the base is Standard; where you do not know yet, the default is Standard + Measured, and a Governed condition you cannot answer counts as holding unless the Outcome owner records otherwise ([`PROFILE_SELECTION.md`](PROFILE_SELECTION.md) §4). A profile can change later; see [Escalating](#escalating-to-standard-or-governed).
 
 ### Lay out the engagement workspace
 

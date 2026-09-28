@@ -8,7 +8,7 @@ status: active
 category: execution-governance
 phase: "7"
 human_gate: true
-gates: [HG-AUTHORITY, HG-RISK]
+gates: [HG-RISK]
 ---
 
 # Skill 29: Plan Progressive Rollout
