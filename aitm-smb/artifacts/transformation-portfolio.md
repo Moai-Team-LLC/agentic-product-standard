@@ -19,6 +19,7 @@ Coordinate several Initiatives toward system-level Outcomes: their categories, s
 ```yaml
 portfolio:
   id: PTF-###
+  owner:                      # portfolio owner: role accountable for the portfolio; approves stop-condition overrides
   outcome_ids: []
   current_constraint:         # CST-###
   initiatives: []             # INI-###
@@ -35,12 +36,12 @@ portfolio:
 
 ## Rules
 
-No Initiative is added while a stop condition in `portfolio/PORTFOLIO_PRIORITIZATION.md` §5 holds, unless a Decision records the override.
+No Initiative is added while a stop condition in [`portfolio/PORTFOLIO_PRIORITIZATION.md`](../portfolio/PORTFOLIO_PRIORITIZATION.md) §5 holds, unless an approved Decision of the portfolio owner (`owner`) records the override and its reason.
 
 ## Validation
 
 - [ ] every Initiative is listed and categorized (`initiative_categories`)
-- [ ] every enabler Initiative links a business Outcome (`portfolio/TRANSFORMATION_PORTFOLIO.md` §4)
+- [ ] every enabler Initiative links a business Outcome ([`portfolio/TRANSFORMATION_PORTFOLIO.md`](../portfolio/TRANSFORMATION_PORTFOLIO.md) §4)
 - [ ] transformation WIP is explicit (`wip_limit`), and active Initiatives do not exceed it
 - [ ] change saturation, resource contention, and shared risks are visible
-- [ ] no Initiative added while a stop condition holds, unless a Decision records the override
+- [ ] no Initiative added while a stop condition holds, unless an approved Decision of the portfolio owner records the override

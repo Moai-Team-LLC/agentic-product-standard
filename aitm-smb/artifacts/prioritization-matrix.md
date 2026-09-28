@@ -20,7 +20,7 @@ For each candidate:
 candidate:
   intervention_ids: []        # INT-### assessed together as one candidate
   initiative_id:              # INI-###, created when decision is select (CORE_MODEL.md §7)
-  assessment: {}              # dimension → {value, rationale}; ordinal values, only the dimensions used
+  assessment: {}              # every dimension below → {value, rationale}: an ordinal value, or not_relevant with the reason
   decision: select | defer | reject | investigate
   rationale:
   evidence_ids: []
@@ -33,7 +33,7 @@ candidate:
 Dimensions (`assessment` keys):
 
 ```text
-Business Value            cite the economic hypothesis where one exists (economics/TRANSFORMATION_ECONOMICS.md §5)
+Business Value            cite the Initiative's economic_hypothesis where one exists (economics/TRANSFORMATION_ECONOMICS.md §5)
 Strategic Relevance
 Frequency / Volume
 Evidence Strength
@@ -51,17 +51,17 @@ portfolio criteria        Portfolio profile (portfolio/PORTFOLIO_PRIORITIZATION.
 
 AITM-SMB does not require a universal weighted formula.
 
-Every material candidate carries an economic hypothesis (`economics/TRANSFORMATION_ECONOMICS.md` §5) before `HG-BUDGET`; its Business Value rationale cites it.
+Every material Initiative carries an economic hypothesis (`economic_hypothesis` in [`artifacts/transformation-roadmap.md`](transformation-roadmap.md); [`economics/TRANSFORMATION_ECONOMICS.md`](../economics/TRANSFORMATION_ECONOMICS.md) §5) before `HG-BUDGET`; its candidate's Business Value rationale cites it.
 
 A numeric score MAY support discussion but MUST NOT conceal judgment.
 
-`investigate` means the evidence is insufficient to decide; the rationale names the Evidence Debt or Experiment that will resolve it.
+`investigate` means the evidence is insufficient to decide: the Interventions stay `status: candidate`, an Evidence Debt item names what must be learned, and the rationale names it or the Experiment that will resolve it.
 
 ## Validation
 
 - [ ] every candidate names its Interventions and a `decision` with written rationale
-- [ ] assessed dimensions carry ordinal values with rationale; no score replaces judgment
-- [ ] every `select` has an Initiative record (`initiative_id`) and, when material, an approved `HG-INITIATIVE` Decision (`decision_id`)
-- [ ] every `investigate` names the Evidence Debt or Experiment that resolves it
-- [ ] before `HG-BUDGET`, every material candidate has an economic hypothesis, cited in its Business Value rationale
-- [ ] Constraint Relevance assessed where a System Constraint exists; Portfolio: stop condition checked (`portfolio/PORTFOLIO_PRIORITIZATION.md` §5)
+- [ ] every dimension assessed with an ordinal value and rationale, or marked `not_relevant` with a reason; no score replaces judgment
+- [ ] every `select` has an Initiative record (`initiative_id`) with its System Effect Assessment ([`artifacts/system-effect-assessment.md`](system-effect-assessment.md)) and, when material, an approved `HG-INITIATIVE` Decision (`decision_id`)
+- [ ] every `investigate` keeps its Interventions at `status: candidate` and names the Evidence Debt or Experiment that resolves it
+- [ ] before `HG-BUDGET`, every material Initiative has an economic hypothesis, cited in its Business Value rationale
+- [ ] Constraint Relevance assessed where a System Constraint exists; Portfolio: stop condition checked, any override approved by the portfolio owner ([`portfolio/PORTFOLIO_PRIORITIZATION.md`](../portfolio/PORTFOLIO_PRIORITIZATION.md) §5)

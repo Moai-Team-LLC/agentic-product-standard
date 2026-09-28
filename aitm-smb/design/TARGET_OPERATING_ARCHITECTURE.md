@@ -4,7 +4,7 @@
 
 The Target Operating Architecture (`TOA-###`) describes how the transformed business system operates across capabilities.
 
-It composes the Capability Target States of the Capabilities in scope. The two levels MUST NOT be merged (`STANDARD.md` §7). In the Compact profile, the Capability Target States stand in for the TOA (`EXECUTION_MODEL.md` §2).
+It composes the Capability Target States of the Capabilities in scope. The two levels MUST NOT be merged ([`STANDARD.md`](../STANDARD.md) §7). In the Compact profile, the Capability Target States stand in for the TOA ([`EXECUTION_MODEL.md`](../EXECUTION_MODEL.md) §2).
 
 It integrates:
 
@@ -41,17 +41,17 @@ Layer 9 — Controls & Governance
 Layer 10 — Metrics & Economics
 ```
 
-Layers are numbered, not labeled `L<n>`: `L0`–`L5` are autonomy levels (`STANDARD.md` §6).
+Layers are numbered, not labeled `L<n>`: `L0`–`L5` are autonomy levels ([`STANDARD.md`](../STANDARD.md) §6).
 
 ---
 
 ## 3. Target Operating Architecture record
 
-Record contract: `artifacts/target-operating-architecture.md`.
+Record contract: [`artifacts/target-operating-architecture.md`](../artifacts/target-operating-architecture.md).
 
 The record holds the §2 layers as fields, the Capability Target States it composes (`target_state_ids`), the System Constraints it addresses, and the system-level Metrics.
 
-Approval: `HG-TOA` (`STANDARD.md` §8), after the pre-approval system checks in `design/SYSTEM_TRANSFORMATION_MODEL.md` §6.
+Approval: `HG-TOA` ([`STANDARD.md`](../STANDARD.md) §8), after the pre-approval system checks in [`design/SYSTEM_TRANSFORMATION_MODEL.md`](SYSTEM_TRANSFORMATION_MODEL.md) §6.
 
 ---
 
@@ -63,7 +63,7 @@ Every material responsibility has an owner.
 
 ### Decision consistency
 
-Every material decision has one clear authority model (`design/DECISION_RIGHTS_ARCHITECTURE.md` §3).
+Every material decision has one clear authority model ([`design/DECISION_RIGHTS_ARCHITECTURE.md`](DECISION_RIGHTS_ARCHITECTURE.md) §3).
 
 ### Information consistency
 
@@ -79,7 +79,7 @@ Systems have defined responsibilities and boundaries.
 
 ### AI consistency
 
-AI does not receive authority beyond approved governance: no level exceeds the approved Authority Ceiling (`diagnostics/AUTONOMY_SUITABILITY.md` §6).
+AI does not receive authority beyond approved governance: no level exceeds the approved Authority Ceiling ([`diagnostics/AUTONOMY_SUITABILITY.md`](../diagnostics/AUTONOMY_SUITABILITY.md) §6).
 
 ### Metric consistency
 

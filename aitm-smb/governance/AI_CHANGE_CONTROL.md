@@ -50,9 +50,9 @@ legal exposure
 high-risk process
 ```
 
-Default handling (SHOULD): evaluation before release, staged rollout (`execution/ROLLOUT_MODEL.md`), and explicit human approval.
+Default handling (SHOULD): evaluation before release, staged rollout ([`execution/ROLLOUT_MODEL.md`](../execution/ROLLOUT_MODEL.md)), and explicit human approval.
 
-An authority increase follows `governance/AUTHORITY_ESCALATION_MODEL.md` and requires `HG-AUTHORITY`; accepting material risk requires `HG-RISK` (`STANDARD.md` §8).
+An authority increase follows [`governance/AUTHORITY_ESCALATION_MODEL.md`](AUTHORITY_ESCALATION_MODEL.md) and requires `HG-AUTHORITY`; accepting material risk requires `HG-RISK` ([`STANDARD.md`](../STANDARD.md) §8).
 
 The governance owner MAY set stricter handling per Capability.
 
@@ -80,7 +80,7 @@ ai_change:
   status: proposed | approved | rejected | released | rolled_back
 ```
 
-Instances: the `changes` section of `artifacts/ai-governance-canvas.md`.
+Instances: the `changes` section of [`artifacts/ai-governance-canvas.md`](../artifacts/ai-governance-canvas.md).
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: 04-design-interventions
-description: "Phase 3 orchestrator. Designs candidate Interventions for each intervention-ready Gap across all intervention families, from eliminating and simplifying work to AI, with simpler alternatives considered before AI; assesses AI suitability (skill 13) and autonomy (skill 14) for AI candidates. Use after diagnosis, before prioritization. Produces the Intervention Map, AI Suitability Assessments and Autonomy Assessments with proposed Authority Ceilings. Part of AITM-SMB; paths are relative to the AITM-SMB root."
+description: "Phase 3 orchestrator. Designs candidate Interventions for each intervention-ready Gap across all intervention families, from eliminating and simplifying work to AI, with simpler alternatives considered before AI; assesses AI suitability (skill 13) for AI candidates and autonomy (skill 14) for those proposed for selection. Use after diagnosis, before prioritization. Produces the Intervention Map, AI Suitability Assessments and Autonomy Assessments with proposed Authority Ceilings. Part of AITM-SMB; paths are relative to the AITM-SMB root."
 version: 1.1.0
 minimum_framework_version: 1.1.0
 framework: AITM-SMB
@@ -18,36 +18,36 @@ Design intervention alternatives for diagnosed Gaps; use AI only where justified
 
 ## Required inputs
 
-The Required inputs of `methodology/03-intervention-design.md` (intervention-ready Gaps and their cause Hypotheses, constraints, Evidence).
+The Required inputs of [`methodology/03-intervention-design.md`](../../methodology/03-intervention-design.md) (intervention-ready Gaps and their cause Hypotheses, constraints, Evidence).
 
 ## Normative sources
 
-- `methodology/03-intervention-design.md` and the modules in its Method
+- [`methodology/03-intervention-design.md`](../../methodology/03-intervention-design.md) and the modules in its Method
 
 ## Produces
 
-- `artifacts/intervention-map.md` — candidate Interventions (`INT-###`), including rejected ones with rationale
-- `artifacts/ai-suitability-assessment.md` — one per `AI_*` candidate (skill 13)
-- `artifacts/autonomy-assessment.md` — one per `AI_*` candidate and action class, with the proposed Authority Ceiling (skill 14)
+- [`artifacts/intervention-map.md`](../../artifacts/intervention-map.md) — candidate Interventions (`INT-###`), including rejected ones with rationale
+- [`artifacts/ai-suitability-assessment.md`](../../artifacts/ai-suitability-assessment.md) — one per `AI_*` candidate (skill 13)
+- [`artifacts/autonomy-assessment.md`](../../artifacts/autonomy-assessment.md) — one per action class of each `AI_*` candidate proposed for selection, with the proposed Authority Ceiling (skill 14)
 
 ## Specialist skills
 
 No specialist writes the candidate Interventions: this skill does (Procedure 3 and 5; phase Activities 1–2 and 5–7). The specialists apply only to `AI_*` candidates:
 
-- `skills/13-assess-ai-suitability/SKILL.md` — for each candidate whose `type` is `AI_*`
-- `skills/14-assess-autonomy/SKILL.md` — for each `AI_*` candidate: recommends levels and proposes the Authority Ceiling
+- [`skills/13-assess-ai-suitability/SKILL.md`](../13-assess-ai-suitability/SKILL.md) — for each candidate whose `type` is `AI_*`
+- [`skills/14-assess-autonomy/SKILL.md`](../14-assess-autonomy/SKILL.md) — for each `AI_*` candidate proposed for selection, i.e. carried into Phase 4 (classes A–C, or D with a recorded justification, [`diagnostics/AI_SUITABILITY.md`](../../diagnostics/AI_SUITABILITY.md) §5; never E, which is rejected): recommends levels and proposes the Authority Ceiling
 
 ## Procedure
 
-1. Load the active profiles (`AGENT_CONTEXT_POLICY.md`) and `methodology/03-intervention-design.md`.
+1. Load the active profiles ([`AGENT_CONTEXT_POLICY.md`](../../AGENT_CONTEXT_POLICY.md)) and [`methodology/03-intervention-design.md`](../../methodology/03-intervention-design.md).
 2. Verify the phase's Required inputs; stop with `BLOCKED` when no intervention-ready Gap exists.
-3. Write the candidate Interventions yourself (phase Activities 1–2): apply `DECISION_MODEL.md` §1 and the families of `design/INTERVENTION_PATTERNS.md`; each candidate links `gap_ids` and the causes it addresses (`hypothesis_ids`).
-4. For `AI_*` candidates, invoke skill 13, then skill 14; carry their open gates into the handoff.
+3. Write the candidate Interventions yourself (phase Activities 1–2): apply [`DECISION_MODEL.md`](../../DECISION_MODEL.md) §1 and the families of [`design/INTERVENTION_PATTERNS.md`](../../design/INTERVENTION_PATTERNS.md); each candidate links `gap_ids` and the causes it addresses (`hypothesis_ids`).
+4. For `AI_*` candidates, invoke skill 13; for those proposed for selection, then skill 14; carry the proposed `HG-AUTHORITY` Decisions into the handoff (`open_gates`).
 5. Complete each candidate's required context, actions, permissions, verification, and risks; record uncertainties, economic assumptions, and rejected candidates with their rationale (phase Activities 5–7).
-6. Keep stable IDs and the `TRACEABILITY.md` §4 trace; validate the phase Exit condition (`EXECUTION_MODEL.md` §2) and each produced contract.
-7. Stop with `INSUFFICIENT_EVIDENCE` when a candidate would rest on invented business facts (record Evidence Debt); with `HUMAN_DECISION_REQUIRED` at any `STANDARD.md` §8 gate whose trigger occurs.
+6. Keep stable IDs and the [`TRACEABILITY.md`](../../TRACEABILITY.md) §4 trace; validate the phase Exit condition ([`EXECUTION_MODEL.md`](../../EXECUTION_MODEL.md) §2) and each produced contract.
+7. Stop with `INSUFFICIENT_EVIDENCE` when a candidate would rest on invented business facts (record Evidence Debt); with `HUMAN_DECISION_REQUIRED` at any [`STANDARD.md`](../../STANDARD.md) §8 gate whose trigger occurs.
 
-A proposed Authority Ceiling takes effect only after `HG-AUTHORITY` (skill 14); no downstream step relies on it before then.
+A proposed Authority Ceiling takes effect only after `HG-AUTHORITY` (skill 14). The phase MAY exit while that gate is open, but the `AI_*` Intervention is not selected in Phase 4 before its ceiling is approved ([`EXECUTION_MODEL.md`](../../EXECUTION_MODEL.md) §2).
 
 ## MUST NOT
 
@@ -57,4 +57,4 @@ A proposed Authority Ceiling takes effect only after `HG-AUTHORITY` (skill 14); 
 
 ## Handoff
 
-Emit the `aitm_output` block defined in `AGENT_OUTPUT_STANDARD.md`.
+Emit the `aitm_output` block defined in [`AGENT_OUTPUT_STANDARD.md`](../../AGENT_OUTPUT_STANDARD.md).

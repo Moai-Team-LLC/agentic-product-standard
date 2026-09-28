@@ -81,7 +81,7 @@ Facts, Evidence, Assumptions, Hypotheses, Decisions, and Open Questions MUST rem
 
 An intervention may be process, role, decision, data, knowledge, software, deterministic automation, AI, control, or feedback redesign.
 
-Intervention families: `PUBLIC_API.md` §6, defined in `design/INTERVENTION_PATTERNS.md`.
+Intervention families: [`PUBLIC_API.md`](PUBLIC_API.md) §6, defined in [`design/INTERVENTION_PATTERNS.md`](design/INTERVENTION_PATTERNS.md).
 
 ### INV-06 — AI usefulness is separate from AI authority
 
@@ -150,7 +150,7 @@ The methodology models only what is necessary for the transformation boundary.
 
 ## 5. Intervention logic
 
-The challenge order over the intervention families (`PUBLIC_API.md` §6; definitions: `design/INTERVENTION_PATTERNS.md`).
+The challenge order over the intervention families ([`PUBLIC_API.md`](PUBLIC_API.md) §6; definitions: [`design/INTERVENTION_PATTERNS.md`](design/INTERVENTION_PATTERNS.md)).
 
 Before recommending AI, consider:
 
@@ -171,7 +171,7 @@ This is a challenge sequence, not a mandatory implementation sequence.
 
 PROCESS, ROLE, DECISION, DATA, KNOWLEDGE, SOFTWARE, CONTROL, and FEEDBACK have no position in this order; consider them wherever the diagnosed Cause points to them (INV-05).
 
-Challenge questions: `DECISION_MODEL.md` §1.
+Challenge questions: [`DECISION_MODEL.md`](DECISION_MODEL.md) §1.
 
 ---
 
@@ -186,11 +186,11 @@ L4 — Execute within bounded policy
 L5 — Pursue bounded objective and escalate exceptions
 ```
 
-Authority definitions per level: `diagnostics/AUTONOMY_SUITABILITY.md` §2.
+Authority definitions per level: [`diagnostics/AUTONOMY_SUITABILITY.md`](diagnostics/AUTONOMY_SUITABILITY.md) §2.
 
 The level is assessed per action class of a Capability, not per system.
 
-These are authority levels. They are not maturity levels (`maturity/MATURITY_MODEL.md` uses M0–M5) and not software-architecture levels. Where another ladder is in use, write `AITM-L<n>` (crosswalk: `docs/crosswalk-agentic-product-standard.md`).
+These are authority levels. They are not maturity levels ([`maturity/MATURITY_MODEL.md`](maturity/MATURITY_MODEL.md) uses M0–M5) and not software-architecture levels. Where another ladder is in use, write `AITM-L<n>` (crosswalk: [`docs/crosswalk-agentic-product-standard.md`](docs/crosswalk-agentic-product-standard.md)).
 
 An `AI_*` intervention family names the kind of AI contribution; authority is set only by the autonomy level.
 
@@ -245,12 +245,13 @@ Explicit human approval is required at each gate:
 Rules:
 
 - A gate applies whenever its trigger occurs, in any phase.
-- Approval is recorded as a Decision (`DEC-###`, `artifacts/decision-assumption-log.md`) with `gate:` set and `approved_by:` naming the human.
-- An agent that reaches an open gate stops with status `HUMAN_DECISION_REQUIRED` (`PUBLIC_API.md` §8) and lists the gate in `open_gates`.
+- Approval is recorded as a Decision (`DEC-###`, [`artifacts/decision-assumption-log.md`](artifacts/decision-assumption-log.md)) with `gate:` set and `approved_by:` naming the human. A gate reached but not yet approved is recorded as that Decision with `status: proposed` and `approved_by:` empty; the human's approval updates it.
+- An agent that reaches a gate that is not approved, or needs an upstream gate that is still open, stops and lists the gate in `open_gates`. It reports `HUMAN_DECISION_REQUIRED` unless `BLOCKED` or `INSUFFICIENT_EVIDENCE` takes precedence ([`PUBLIC_API.md`](PUBLIC_API.md) §8).
+- Expanding the scope in which an approved autonomy level operates (more users, cases, or volume) with the same action class, level, and Authority Ceiling is governed as rollout (`HG-PROMOTION`, [`execution/ROLLOUT_MODEL.md`](execution/ROLLOUT_MODEL.md) §3), not as an authority increase.
 - Reducing AI authority (demotion) never requires a gate and MAY be done immediately by the operating owner.
 - Materiality: §16.
 
-Other files reference gates by ID and MUST NOT restate this list.
+Normative files reference gates by ID and MUST NOT restate this list. Informative summaries (e.g. [`README.md`](README.md)) MAY list the gate IDs with one-line triggers when they name this section as the binding text.
 
 ---
 
@@ -258,7 +259,7 @@ Other files reference gates by ID and MUST NOT restate this list.
 
 Every material Initiative MUST define at least one business or capability metric.
 
-AITM-SMB distinguishes these metric classes (defined in `METRICS.md`):
+AITM-SMB distinguishes these metric classes (defined in [`METRICS.md`](METRICS.md)):
 
 ```text
 Business Outcome Metrics
@@ -275,7 +276,7 @@ Lower-level metrics explain performance but do not replace business Outcomes.
 
 ## 10. Execution
 
-The preferred implementation unit is a vertical **Transformation Slice** (`SLC-###`; `execution/DELIVERY_SLICE.md`):
+The preferred implementation unit is a vertical **Transformation Slice** (`SLC-###`; [`execution/DELIVERY_SLICE.md`](execution/DELIVERY_SLICE.md)):
 
 ```text
 bounded behavior change
@@ -293,7 +294,7 @@ Technical components MAY be delivered separately when they are explicit prerequi
 
 ## 11. Value realization
 
-AITM-SMB distinguishes value states (defined in `measurement/VALUE_REALIZATION.md` §2):
+AITM-SMB distinguishes value states (defined in [`measurement/VALUE_REALIZATION.md`](measurement/VALUE_REALIZATION.md) §2):
 
 ```text
 HYPOTHESIZED
@@ -323,7 +324,7 @@ Measured
 
 Profile depth is determined by complexity, risk, authority, and change load—not by employee count alone.
 
-See `APPLICATION_PROFILES.md`.
+See [`APPLICATION_PROFILES.md`](APPLICATION_PROFILES.md).
 
 ---
 
@@ -341,19 +342,19 @@ a specific software stack
 a specific consulting engagement
 ```
 
-Specialization belongs in Extensions (`EXTENSION_MODEL.md`).
+Specialization belongs in Extensions ([`EXTENSION_MODEL.md`](EXTENSION_MODEL.md)).
 
 ---
 
 ## 14. Conformance
 
-An application conforms to AITM-SMB only when it preserves the core semantic chain (§2), the MUST invariants (§3), and the selected profile requirements (`CONFORMANCE.md` §3).
+An application conforms to AITM-SMB only when it preserves the core semantic chain (§2), the MUST invariants (§3), and the selected profile requirements ([`CONFORMANCE.md`](CONFORMANCE.md) §3).
 
 Template completion alone is not conformance.
 
-Waiving a §3 MUST makes the application non-conforming for that invariant; the waiver is recorded as an exception (`CONFORMANCE.md` §6).
+Waiving a §3 MUST makes the application non-conforming for that invariant; the waiver is recorded as an exception ([`CONFORMANCE.md`](CONFORMANCE.md) §6).
 
-See `CONFORMANCE.md`.
+See [`CONFORMANCE.md`](CONFORMANCE.md).
 
 ---
 

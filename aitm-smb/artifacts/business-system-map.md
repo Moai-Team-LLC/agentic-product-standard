@@ -10,11 +10,11 @@ produced_by: [02-map-current-system]
 
 ## Purpose
 
-Describe how value is currently produced as a system: the business-system entities around the Capabilities in scope and their relations. Required from the Standard profile (`APPLICATION_PROFILES.md`).
+Describe how value is currently produced as a system: the business-system entities around the Capabilities in scope and their relations. Required from the Standard profile ([`APPLICATION_PROFILES.md`](../APPLICATION_PROFILES.md)).
 
 ## Record
 
-Entity semantics: `ontology/ONTOLOGY.md`.
+Entity semantics: [`ontology/ONTOLOGY.md`](../ontology/ONTOLOGY.md).
 
 ```yaml
 system_map:
@@ -30,6 +30,7 @@ system_map:
   automations: []
   controls: []
   dependencies: []
+  relations: []            # {from, relation, to}: from/to name elements above; relation as named in Rules (e.g. performed by)
 ```
 
 How each Capability operates today is its CURRENT State in the Capability Map; this map shows how the Capabilities connect.
@@ -38,7 +39,7 @@ How each Capability operates today is its CURRENT State in the Capability Map; t
 
 The map is outcome-scoped. It is not a complete enterprise inventory. Only model elements relevant to the transformation boundary.
 
-Required relations, at minimum:
+Relations are recorded in `relations`. Required relations, at minimum:
 
 ```text
 Value Stream → uses → Capability
@@ -52,6 +53,6 @@ Capability → supported by → Application
 ## Validation
 
 - [ ] every element relates to an in-scope Outcome
-- [ ] the required relations are present
+- [ ] the required relations are present in `relations`
 - [ ] Capabilities are referenced by `CAP-###`, not redefined
 - [ ] the map describes the current system only, with no target-state solutions

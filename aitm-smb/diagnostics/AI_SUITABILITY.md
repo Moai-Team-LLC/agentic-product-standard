@@ -19,7 +19,7 @@ than process redesign, deterministic software, or automation?
 
 ## 2. Suitability dimensions
 
-Assess each candidate Intervention of an `AI_*` type (`PUBLIC_API.md` §6) across:
+Assess each candidate Intervention of an `AI_*` type ([`PUBLIC_API.md`](../PUBLIC_API.md) §6) across:
 
 ```text
 Semantic Load
@@ -38,7 +38,7 @@ Execution Risk
 Economic Frequency
 ```
 
-Rate each dimension `low | medium | high` with a short note; mark a dimension that does not apply as not relevant, with the reason. Each dimension has one field in the record (§6).
+Rate each dimension `low | medium | high` with a short note; mark a dimension that does not apply `not_relevant`, with the reason in the note. Each dimension has one field in the record (§6).
 
 ---
 
@@ -102,19 +102,19 @@ Risk, determinism requirements, or verification limits make AI unsuitable.
 
 ### What each class implies for selection
 
-- A — AI MAY be selected. Authority is assessed separately (`diagnostics/AUTONOMY_SUITABILITY.md`).
+- A — AI MAY be selected. Authority is assessed separately ([`diagnostics/AUTONOMY_SUITABILITY.md`](AUTONOMY_SUITABILITY.md)).
 - B — AI MAY be selected for the part that needs it; the rest uses deterministic logic. Authority is assessed separately.
 - C — AI MAY be selected only with a recorded rationale for why it beats the non-AI alternative; otherwise select the non-AI alternative.
-- D — AI SHOULD NOT be selected; selecting it requires an explicit, recorded justification (`STANDARD.md` §17).
+- D — AI SHOULD NOT be selected; selecting it requires an explicit, recorded justification ([`STANDARD.md`](../STANDARD.md) §17).
 - E — AI MUST NOT be selected. Record the candidate as a rejected Intervention with the classification as its rationale.
 
-A class is a finding about fit, not an approval. Interventions are selected in Phase 4 (material selection: `HG-INITIATIVE`); AI authority above L0 needs `HG-AUTHORITY` (`STANDARD.md` §8).
+A class is a finding about fit, not an approval. Interventions are selected in Phase 4 (material selection: `HG-INITIATIVE`); AI authority above L0 needs `HG-AUTHORITY` ([`STANDARD.md`](../STANDARD.md) §8).
 
 ---
 
 ## 6. Assessment record
 
-Record contract: `artifacts/ai-suitability-assessment.md`.
+Record contract: [`artifacts/ai-suitability-assessment.md`](../artifacts/ai-suitability-assessment.md).
 
 ---
 

@@ -17,7 +17,7 @@ This artifact previously mixed two different abstraction levels:
 
 Use:
 
-- `artifacts/capability-target-state.md` for a single Capability Target State;
-- `artifacts/target-operating-architecture.md` for the integrated system-level architecture.
+- [`artifacts/capability-target-state.md`](capability-target-state.md) for a single Capability Target State;
+- [`artifacts/target-operating-architecture.md`](target-operating-architecture.md) for the integrated system-level architecture.
 
 No new AITM-SMB execution should produce this artifact.

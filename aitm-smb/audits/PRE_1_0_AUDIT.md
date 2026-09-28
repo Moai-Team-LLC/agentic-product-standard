@@ -1,6 +1,6 @@
 # AITM-SMB Pre-1.0 Integrity Audit
 
-> Historical record, produced with internal pre-publication tooling that is not part of this repository. Its counts describe the 1.0.0 tree, not the current one. Reproducible checks: `tools/validate.py` and `skills/39-audit-framework-integrity/SKILL.md` (see `MAINTENANCE.md`). Findings from the 1.1.0 release review are summarized in `audits/1.1_RELEASE_AUDIT.md`.
+> Historical record, produced with internal pre-publication tooling that is not part of this repository. Its counts describe the 1.0.0 tree, not the current one. Reproducible checks: [`tools/validate.py`](../tools/validate.py) and [`skills/39-audit-framework-integrity/SKILL.md`](../skills/39-audit-framework-integrity/SKILL.md) (see [`MAINTENANCE.md`](../MAINTENANCE.md)). Findings from the 1.1.0 release review are summarized in [`audits/1.1_RELEASE_AUDIT.md`](1.1_RELEASE_AUDIT.md).
 
 ## Result
 
@@ -22,8 +22,8 @@
 - Capability Target State and Target Operating Architecture are now separate canonical abstraction levels.
 - `AI Opportunity Map` is deprecated in favor of the general `Intervention Map`.
 - Deprecated artifacts remain as redirect stubs for compatibility.
-- Canonical concept ownership is explicit in `CANONICAL_CONCEPTS.md`.
-- The root `MANIFEST.md` now contains a small canonical core instead of an accumulated list of all modules.
+- Canonical concept ownership is explicit in [`CANONICAL_CONCEPTS.md`](../CANONICAL_CONCEPTS.md).
+- The root [`MANIFEST.md`](../MANIFEST.md) now contains a small canonical core instead of an accumulated list of all modules.
 
 ## Broken references
 

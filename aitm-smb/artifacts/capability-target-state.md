@@ -14,11 +14,11 @@ produced_by: [06-design-target-system, 15-design-target-state]
 
 Describe the required future behavior of one Business Capability: its State of type TARGET.
 
-This artifact is capability-scoped. It MUST NOT be used as a substitute for the system-level Target Operating Architecture (`STANDARD.md` §7).
+This artifact is capability-scoped. It MUST NOT be used as a substitute for the system-level Target Operating Architecture ([`STANDARD.md`](../STANDARD.md) §7).
 
 ## Record
 
-Record contract: State `CORE_MODEL.md` §3, with `type: TARGET` and `as_of` set to the intended horizon. One per selected Capability, referenced by the Capability's `target_state_id`.
+Record contract: State [`CORE_MODEL.md`](../CORE_MODEL.md) §3, with `type: TARGET` and `as_of` set to the intended horizon. One per selected Capability, referenced by the Capability's `target_state_id`.
 
 Extends `state` with:
 
@@ -41,13 +41,13 @@ state:
       verification: []
 ```
 
-Fill the State dimensions as `design/TARGET_STATE_DESIGN.md` §3 describes. `people` includes ownership of target work; `applications` includes system boundaries (`design/APPLICATION_BOUNDARIES.md`); `ai` describes the AI role.
+Fill the State dimensions as [`design/TARGET_STATE_DESIGN.md`](../design/TARGET_STATE_DESIGN.md) §3 describes. `people` includes ownership of target work; `applications` includes system boundaries ([`design/APPLICATION_BOUNDARIES.md`](../design/APPLICATION_BOUNDARIES.md)); `ai` describes the AI role.
 
 ## Rules
 
-`target_level` MUST NOT exceed the approved `maximum_allowed_level` of the referenced Autonomy Assessment (`artifacts/autonomy-assessment.md`), and `prohibited_actions` include the ceiling's. A level above the ceiling requires re-assessing the ceiling first (`diagnostics/AUTONOMY_SUITABILITY.md` §6).
+`target_level` MUST NOT exceed the approved `maximum_allowed_level` of the referenced Autonomy Assessment ([`artifacts/autonomy-assessment.md`](autonomy-assessment.md)), and `prohibited_actions` include the ceiling's. A level above the ceiling requires re-assessing the ceiling first ([`diagnostics/AUTONOMY_SUITABILITY.md`](../diagnostics/AUTONOMY_SUITABILITY.md) §6).
 
-A target level is a design. AI authority takes effect only through `HG-AUTHORITY` (`STANDARD.md` §8).
+A target level is a design. AI authority takes effect only through `HG-AUTHORITY` ([`STANDARD.md`](../STANDARD.md) §8).
 
 In the Compact profile, approval of the Capability Target States closes `HG-TOA`.
 
@@ -55,6 +55,6 @@ In the Compact profile, approval of the Capability Target States closes `HG-TOA`
 
 - [ ] `type: TARGET`, one `capability_id`, and that Capability's `target_state_id` points to this record
 - [ ] linked to at least one Outcome (`outcome_ids`) and closes at least one diagnosed Gap (`gap_ids`)
-- [ ] complete per `design/TARGET_STATE_DESIGN.md` §6, including `statement`, ownership, decision rights, required information and knowledge, and system boundaries
+- [ ] complete per [`design/TARGET_STATE_DESIGN.md`](../design/TARGET_STATE_DESIGN.md) §6, including `statement`, ownership, decision rights, required information and knowledge, and system boundaries
 - [ ] where AI is present, every action class has an `ai_authority` entry whose `target_level` is within the approved Authority Ceiling
 - [ ] Metrics explicit (`metric_ids`)

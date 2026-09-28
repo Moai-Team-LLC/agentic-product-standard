@@ -10,7 +10,7 @@ produced_by: [08-design-operating-model, 28-design-observability]
 
 ## Purpose
 
-Make one transformed Capability observable as a business system, with trace depth proportional to its authority and risk (`operations/OBSERVABILITY_MODEL.md`).
+Make one transformed Capability observable as a business system, with trace depth proportional to its authority and risk ([`operations/OBSERVABILITY_MODEL.md`](../operations/OBSERVABILITY_MODEL.md)).
 
 ## Record
 
@@ -37,7 +37,7 @@ observability:
 ## Validation
 
 - [ ] every relevant layer has at least one signal, and each material state change is logged
-- [ ] the minimum observable questions (`operations/OBSERVABILITY_MODEL.md` §3) can be answered for production AI-enabled work
-- [ ] trace depth is justified by authority, risk, and impact (`operations/OBSERVABILITY_MODEL.md` §5)
-- [ ] no dark-automation pattern remains (`operations/OBSERVABILITY_MODEL.md` §6)
+- [ ] the minimum observable questions ([`operations/OBSERVABILITY_MODEL.md`](../operations/OBSERVABILITY_MODEL.md) §3) can be answered for production AI-enabled work
+- [ ] trace depth is justified by authority, risk, and impact ([`operations/OBSERVABILITY_MODEL.md`](../operations/OBSERVABILITY_MODEL.md) §5)
+- [ ] no dark-automation pattern remains ([`operations/OBSERVABILITY_MODEL.md`](../operations/OBSERVABILITY_MODEL.md) §6)
 - [ ] alerts, review cadence, and an owner are set

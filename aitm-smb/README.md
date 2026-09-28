@@ -17,7 +17,7 @@ AITM-SMB starts from a measurable business Outcome and the Capability that must 
 
 - **A method from Outcome to evidence.** Every selected change traces back to an Outcome through a Capability, a diagnosed Gap and its Cause. The canonical chain is defined once, in [`STANDARD.md`](STANDARD.md) §2; the minimum valid path is [`EXECUTION_MODEL.md`](EXECUTION_MODEL.md) §6.
 - **AI-optional by design.** Eighteen intervention families, four of them AI ([`PUBLIC_API.md`](PUBLIC_API.md) §6); simpler fixes are challenged first ([`STANDARD.md`](STANDARD.md) §5).
-- **Human-gated.** Nine human decision gates that no agent may cross ([`STANDARD.md`](STANDARD.md) §8).
+- **Human-gated.** Nine human decision gates ([`STANDARD.md`](STANDARD.md) §8) that no agent may cross, identified `HG-*` (human gate), e.g. `HG-TOA` for the Target Operating Architecture (TOA).
 - **Proportional.** Composable profiles, from a Compact engagement to a governed, measured portfolio.
 - **Agent-readable.** Stable identifiers, record contracts, 40 skills with a router, and a machine-readable handoff block.
 
@@ -39,7 +39,7 @@ local KPI improvement = system improvement
 
 ## Who it is for
 
-- **SMB owners and operators** who want AI to change a business result, not only a tool list.
+- **Owners and operators of small and medium-sized businesses (SMBs)** who want AI to change a business result, not only a tool list.
 - **Transformation consultants and facilitators** who need a repeatable, auditable engagement method.
 - **AI-agent builders** who need a business-level method that decides whether, where, and with how much authority an agent should act.
 
@@ -62,7 +62,7 @@ Nine phases ([`EXECUTION_MODEL.md`](EXECUTION_MODEL.md) §1). Each phase has one
 | 0 Frame | [`methodology/00-intent.md`](methodology/00-intent.md) | [`01-discover-transformation`](skills/01-discover-transformation/SKILL.md) | `HG-OUTCOME` |
 | 1 Observe | [`methodology/01-current-system.md`](methodology/01-current-system.md) | [`02-map-current-system`](skills/02-map-current-system/SKILL.md) | — |
 | 2 Diagnose | [`methodology/02-capability-diagnosis.md`](methodology/02-capability-diagnosis.md) | [`03-diagnose-capabilities`](skills/03-diagnose-capabilities/SKILL.md) | — |
-| 3 Design Interventions | [`methodology/03-intervention-design.md`](methodology/03-intervention-design.md) | [`04-design-interventions`](skills/04-design-interventions/SKILL.md) | — |
+| 3 Design Interventions | [`methodology/03-intervention-design.md`](methodology/03-intervention-design.md) | [`04-design-interventions`](skills/04-design-interventions/SKILL.md) | `HG-AUTHORITY` |
 | 4 Decide | [`methodology/04-prioritization.md`](methodology/04-prioritization.md) | [`05-prioritize-initiatives`](skills/05-prioritize-initiatives/SKILL.md) | `HG-INITIATIVE`, `HG-BUDGET` |
 | 5 Design Target System | [`methodology/05-target-system-design.md`](methodology/05-target-system-design.md) | [`06-design-target-system`](skills/06-design-target-system/SKILL.md) | `HG-TOA`, `HG-DECISION-RIGHTS` |
 | 6 Design Transition | [`methodology/06-roadmap.md`](methodology/06-roadmap.md) | [`07-build-roadmap`](skills/07-build-roadmap/SKILL.md) | `HG-BUDGET` |
@@ -70,7 +70,7 @@ Nine phases ([`EXECUTION_MODEL.md`](EXECUTION_MODEL.md) §1). Each phase has one
 | 8 Measure & Evolve | [`methodology/08-measurement-evolution.md`](methodology/08-measurement-evolution.md) | [`09-measure-evolution`](skills/09-measure-evolution/SKILL.md) | `HG-VALUE`, `HG-AUTHORITY` |
 | any | — | [`10-audit-aitm-engagement`](skills/10-audit-aitm-engagement/SKILL.md) | — |
 
-"Typical" is a reading aid: any gate applies whenever its trigger occurs, in any phase. For example, `HG-AUTHORITY` applies in phase 3 when an Authority Ceiling is set.
+"Typical" is a reading aid: any gate applies whenever its trigger occurs, in any phase. For example, `HG-RISK` applies in phase 6 when a pilot would accept material risk.
 
 ## Profiles
 
@@ -79,16 +79,16 @@ Composable. A base profile (Compact or Standard) plus any add-ons. Content per p
 | Profile | Use it when | Adds |
 |---|---|---|
 | Compact | one or two Capabilities, low or moderate risk, reversible change | the floor that every application provides |
-| Standard | several interdependent Capabilities or systems | system map, network, constraint, target architecture, transition states, pilots, operating model, value report |
+| Standard | several interdependent Capabilities or systems | system map, network, constraint, Target Operating Architecture, transition states, pilots, operating model, value report |
 | Governed | material customer, financial, legal, or security exposure; sensitive data; regulated or irreversible actions; high AI authority | complete AI governance, Authority Ceilings, AI change control, incident handling, evaluation datasets, execution gates, explicit risk ownership |
 | Portfolio | several Initiatives across value streams or shared enablers | portfolio, WIP limits, cross-capability dependencies |
 | Measured | realized value must be demonstrated | benefit evidence chain, attribution confidence, sustained-value review |
 
-Default when uncertain: **Standard + Measured**. Typical with material customer, financial, security, legal, or autonomy risk: Standard + Governed + Measured. The selected profiles are recorded as a Decision; an application that declares none is evaluated as Compact.
+Default when uncertain: **Standard + Measured**; an unknown Governed condition counts as holding unless the Outcome owner records otherwise ([`PROFILE_SELECTION.md`](PROFILE_SELECTION.md) §4). Typical with material customer, financial, security, legal, or autonomy risk: Standard + Governed + Measured. The selected profiles are recorded as a Decision, approved with `HG-OUTCOME`; an application that declares none is evaluated as Compact, and one that declares only add-ons as Standard plus those add-ons.
 
 ## Human decision gates
 
-Summary only; the binding list and its rules are [`STANDARD.md`](STANDARD.md) §8. An agent that reaches an open gate stops with `HUMAN_DECISION_REQUIRED`; the approval is a recorded Decision naming the human who gave it.
+IDs and one-line triggers; binding text [`STANDARD.md`](STANDARD.md) §8. An agent that reaches an open gate records it as a proposed Decision and stops with `HUMAN_DECISION_REQUIRED`; the approval updates that Decision with the name of the human who gave it.
 
 | Gate | Human approval before |
 |---|---|
@@ -137,6 +137,7 @@ cp -R agentic-product-standard/aitm-smb ~/.claude/skills/aitm-smb
 # B. personal install, symlinked (follows git pull)
 ln -s "$PWD/agentic-product-standard/aitm-smb" ~/.claude/skills/aitm-smb
 # C. one project only
+mkdir -p <project>/.claude/skills
 cp -R agentic-product-standard/aitm-smb <project>/.claude/skills/aitm-smb
 ```
 
@@ -156,11 +157,11 @@ python3 tools/validate.py --engagement examples/compact-scenario-b   # trace int
 python3 tools/build_dist.py                                      # Core and Full zips in dist/
 ```
 
-Point `--engagement` at your own workspace to check its trace before claiming conformance. Each release attaches the Core and Full zips. This folder is the Full distribution; Core and Full are defined in [`NORMATIVE_INDEX.md`](NORMATIVE_INDEX.md) §Distributions.
+Point `--engagement` at your own workspace to check its trace before claiming conformance. Each release attaches the Core and Full zips. The whole folder is the Full distribution; the Core distribution is defined in [`NORMATIVE_INDEX.md`](NORMATIVE_INDEX.md) §Distributions and has no `tools/`, so these commands need Full.
 
 ## Relation to the Agentic Product Standard
 
-AITM-SMB decides *whether and how much* AI a business change should use: the Intervention type, the authority level, the Authority Ceiling, and the pilot evidence. The [Agentic Product Standard](https://github.com/Moai-Team-LLC/agentic-product-standard), which hosts this folder, decides *how to build and license* the AI component. The two use unrelated ladders: AITM-SMB L0–L5 is a business authority ladder, APS L0–L4 an architecture ladder; write `AITM-L3` or `APS-L3` when both appear. The informative [crosswalk](docs/crosswalk-agentic-product-standard.md) maps the ladders, the artifacts, and the hand-off. It adds no requirement to either standard.
+AITM-SMB decides *whether and how much* AI a business change should use: the Intervention type, the authority level, the Authority Ceiling, and the pilot evidence. The [Agentic Product Standard](https://github.com/Moai-Team-LLC/agentic-product-standard) (APS), which hosts this folder, decides *how to build and license* the AI component. The two use unrelated ladders: AITM-SMB L0–L5 is a business authority ladder, APS L0–L4 an architecture ladder; write `AITM-L3` or `APS-L3` when both appear. The informative [crosswalk](docs/crosswalk-agentic-product-standard.md) maps the ladders, the artifacts, and the hand-off. It adds no requirement to either standard.
 
 ## Versioning and stability
 

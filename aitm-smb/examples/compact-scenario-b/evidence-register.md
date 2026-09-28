@@ -8,16 +8,16 @@ artifact:
   upstream: []
   downstream: [01-intent.md, 02-capabilities-and-current-state.md, 03-diagnosis.md, 04-interventions.md, 05-target-and-roadmap.md, 06-scorecard.md]
   evidence: [EVD-001, EVD-002, EVD-003, EVD-004, EVD-005, EVD-006, EVD-007, EVD-008, EVD-009]
-  assumptions: [ASM-001, ASM-002]
-  decisions: []
-  open_questions: [MET-001 reading after the June finance close]
+  assumptions: [ASM-001, ASM-002, ASM-003]
+  decisions: [DEC-003, DEC-006, DEC-009, DEC-010, DEC-011]
+  open_questions: [MET-001 and MET-008 readings after the June finance close (open Evidence Debt)]
 ```
 
 # Evidence Register
 
-Fictional, informative example (see `examples/compact-scenario-b/README.md`). Contract: `artifacts/evidence-register.md`; records: Evidence and Evidence Debt, `evidence/EVIDENCE_STANDARD.md` §3 and §5. Sources are referenced, not copied; interview content stays with the Order Desk Lead (`evidence/EVIDENCE_STANDARD.md` §8).
+Fictional, informative example (see [`examples/compact-scenario-b/README.md`](README.md)). Contract: [`artifacts/evidence-register.md`](../../artifacts/evidence-register.md); records: Evidence and Evidence Debt, [`evidence/EVIDENCE_STANDARD.md`](../../evidence/EVIDENCE_STANDARD.md) §3 and §5. Sources are referenced, not copied; interview content stays with the Order Desk Lead ([`evidence/EVIDENCE_STANDARD.md`](../../evidence/EVIDENCE_STANDARD.md) §8).
 
-The diagnosis is triangulated (`evidence/EVIDENCE_STANDARD.md` §4): system data (EVD-001, EVD-004, EVD-005), observed work (EVD-002) and interviews (EVD-003). The interviews alone pointed at the wrong cause.
+The diagnosis is triangulated ([`evidence/EVIDENCE_STANDARD.md`](../../evidence/EVIDENCE_STANDARD.md) §4): system data (EVD-001, EVD-004, EVD-005), observed work (EVD-002) and interviews (EVD-003). The interviews alone pointed at the wrong cause.
 
 ## Evidence
 
@@ -49,8 +49,8 @@ evidence:
     83% were handled by the two senior clerks; 8 of 124 emails (about one in
     fifteen) were ambiguous even to the senior clerks; 36 of 212 exceptions waited
     for an outside answer; 9 ambiguous notes were re-keyed differently by
-    different clerks; handling and re-pick time for MET-001. HYP-001, HYP-003,
-    against HYP-002 and HYP-004.
+    different clerks; handling and re-pick time of about 2,100 CU a week for
+    MET-001 (validates ASM-003). HYP-001, HYP-003, against HYP-002 and HYP-004.
   limitations: two weeks in one season; clerks knew they were observed
   confidence: medium
 ```
@@ -94,7 +94,7 @@ evidence:
   source: finance records of credit notes and re-delivery freight coded "order error", 2025-12-01 to 2026-02-20, from the Finance Lead
   date: 2026-03-03
   scope: 12 weeks, 37,200 CU in total
-  claim_supported: 3,100 CU per week of the MET-001 baseline; 60 to 400 CU per wrong delivery (AUT-002, RSK-001)
+  claim_supported: 3,100 CU per week of the MET-001 baseline; 60 to 400 CU per wrong delivery (AIS-002, RSK-001)
   limitations: 8% of credit notes carry no reason code; freight attributed by reason code
   confidence: medium
 ```
@@ -106,7 +106,7 @@ evidence:
   source: warehouse pick-wave and dispatch logs, 12 weeks to 2026-04-10, from the Warehouse Lead
   date: 2026-04-14
   scope: afternoon pick wave and releases after the 14.00 cut-off
-  claim_supported: afternoon wave at 84% of capacity on average and 95% on Mondays; about 22 orders a week released after the cut-off (SFX-001)
+  claim_supported: afternoon wave at 84% of capacity on average and 95% on Mondays; about 22 orders a week released after the cut-off (SFX-001, refined in Phase 5)
   limitations: capacity measured in order lines, not labour hours
   confidence: medium
 ```
@@ -118,7 +118,7 @@ evidence:
   source: AI drafts for 60 historical key-account exception emails compared with the clerks' actual corrections, run by the IT support contractor
   date: 2026-05-20
   scope: 60 emails from February 2026
-  claim_supported: reason code matched in 50 of 60; 44 of 60 drafts needed no material edit; input to DEC-009 and AUT-001
+  claim_supported: reason code matched in 50 of 60; 44 of 60 drafts needed no material edit; input to DEC-010 and AUT-001
   limitations: small, historical, key accounts only; no clerk behaviour observed
   confidence: low
 ```
@@ -156,14 +156,32 @@ evidence:
 
 ## Evidence Debt
 
-Visible, as `evidence/EVIDENCE_STANDARD.md` §5 requires. It is also listed in the last handoff (`examples/compact-scenario-b/README.md`).
+Visible, as [`evidence/EVIDENCE_STANDARD.md`](../../evidence/EVIDENCE_STANDARD.md) §5 requires. Settled debt is kept with `status: resolved` and the Evidence that settled it; only open debt is repeated in a handoff ([`examples/compact-scenario-b/README.md`](README.md)).
 
 ```yaml
 evidence_debt:
+  - claim: ASM-003 - the handling and re-pick part of the MET-001 baseline, about 2,100 CU a week
+    decision_affected: HG-OUTCOME for OUT-001 (DEC-003); the MET-001 baseline
+    missing_evidence: timed order-desk handling and warehouse re-pick times per exception
+    risk_if_wrong: the cost baseline and target of OUT-001 are misstated
+    validation_plan: two-week timed observation of exception handling and re-picks in Phase 1 (skills 02, 11)
+    deadline_or_gate: Phase 1 exit
+    status: resolved
+    resolved_by: [EVD-002]
+  - claim: effect of faster exception releases on the afternoon pick wave (SFX-001 downstream and shared-resource effects)
+    decision_affected: HG-INITIATIVE for INI-001 (DEC-006); HG-TOA (DEC-009)
+    missing_evidence: pick-wave load and releases after the 14.00 cut-off, from the warehouse logs
+    risk_if_wrong: faster releases overload the afternoon pick wave and delay dispatch, working against OUT-001
+    validation_plan: the Warehouse Lead exports 12 weeks of pick-wave and dispatch logs; skill 19 refines SFX-001 in Phase 5
+    deadline_or_gate: before HG-TOA
+    status: resolved
+    resolved_by: [EVD-006]
   - claim: MET-001 (weekly exception cost) and MET-008 (cost per resolved exception) for evidence period 1
-    decision_affected: effect conclusion for OUT-001 in 06-scorecard.md; any future HG-VALUE request; context for DEC-010
+    decision_affected: effect conclusion for OUT-001 in 06-scorecard.md; any future HG-VALUE request; context for DEC-011
     missing_evidence: June credit notes and re-delivery freight by reason code (finance month-end close)
     risk_if_wrong: the cost Outcome may move less than exception rate and time did, for example if the remaining exceptions are the costly ones
     validation_plan: the Finance Lead exports June credit notes and freight by reason code after the close; MET-001 and MET-008 are recomputed on the baseline definition (EVD-005)
     deadline_or_gate: 2026-07-17, and before any HG-VALUE request
+    status: open
+    resolved_by: []
 ```

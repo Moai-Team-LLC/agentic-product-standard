@@ -15,7 +15,7 @@ Represent what the organization must be capable of doing, independently of the c
 
 ## Record
 
-Record contracts: Capability `CORE_MODEL.md` §2; State `CORE_MODEL.md` §3, `type: CURRENT` (one per Capability in scope, referenced by `current_state_id`).
+Record contracts: Capability [`CORE_MODEL.md`](../CORE_MODEL.md) §2; State [`CORE_MODEL.md`](../CORE_MODEL.md) §3, `type: CURRENT` (one per Capability in scope, referenced by `current_state_id`).
 
 Extends `capability` with:
 
@@ -26,7 +26,7 @@ capability:
   boundary_notes:
 ```
 
-Discovery method and granularity test: `diagnostics/CAPABILITY_DISCOVERY.md`. `target_state_id` stays empty until Phase 5.
+Discovery method and granularity test: [`diagnostics/CAPABILITY_DISCOVERY.md`](../diagnostics/CAPABILITY_DISCOVERY.md). `target_state_id` stays empty until Phase 5.
 
 ## Rules
 
@@ -45,5 +45,5 @@ A CURRENT State describes the present only; it MUST NOT contain target-state sol
 - [ ] every Capability links at least one approved Outcome (`outcome_ids`)
 - [ ] every Capability passes the granularity test and is not named after a tool or department
 - [ ] every Capability has an owner
-- [ ] every Capability in scope has a CURRENT State backed by Evidence (`evidence_ids`) or labeled Assumptions (`assumption_ids`)
+- [ ] every Capability in scope has a CURRENT State backed by Evidence (`evidence_ids`) or by Assumptions (`assumption_ids`) a named business owner stated or accepted ([`AGENTS.md`](../AGENTS.md) §3)
 - [ ] no CURRENT State contains a target-state solution

@@ -31,13 +31,13 @@ SUSTAINED     realized value persists across the stated sustainability period (�
 
 A baseline must be measured before a state can move beyond HYPOTHESIZED.
 
-Declaring REALIZED or SUSTAINED requires `HG-VALUE` (`STANDARD.md` §8).
+Declaring REALIZED or SUSTAINED requires `HG-VALUE` ([`STANDARD.md`](../STANDARD.md) §8). Its Decision lists the Value Realization Report (`VRL-###`) in `subject_ids`. Where no report exists (e.g. Compact without Measured), it lists the Initiative (`INI-###`) and the Outcome Metrics (`MET-###`) whose effect is declared, states the value state in `statement`, and cites the scorecard Evidence ([`artifacts/transformation-scorecard.md`](../artifacts/transformation-scorecard.md)) in `evidence_ids`. The entry criteria above apply either way.
 
 ---
 
 ## 3. Value record
 
-Record contract: `artifacts/value-realization-report.md` (`VRL-###`).
+Record contract: [`artifacts/value-realization-report.md`](../artifacts/value-realization-report.md) (`VRL-###`).
 
 A value record ties one Initiative and Outcome metric to its baseline, target and observed value, its business, capability and economic effect, implementation and operating cost, realized value, attribution confidence, sustainability period, value state (§2), and value conclusion (§6), with Evidence.
 
@@ -88,4 +88,4 @@ AND governance remains effective
 AND effect is sufficiently sustained
 ```
 
-The value conclusion is distinct from the effect conclusion of the Transformation Scorecard (`artifacts/transformation-scorecard.md`), which states whether metrics moved. These are result values, not agent statuses (`PUBLIC_API.md` §8).
+The value conclusion is distinct from the effect conclusion of the Transformation Scorecard ([`artifacts/transformation-scorecard.md`](../artifacts/transformation-scorecard.md)), which states whether metrics moved. These are result values, not agent statuses ([`PUBLIC_API.md`](../PUBLIC_API.md) §8).

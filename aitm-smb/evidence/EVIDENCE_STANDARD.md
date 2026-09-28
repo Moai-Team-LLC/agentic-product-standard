@@ -6,7 +6,7 @@ AITM-SMB must remain evidence-backed without becoming enterprise bureaucracy.
 
 Evidence exists to support transformation decisions.
 
-Instances of the records below live in the Evidence Register (`artifacts/evidence-register.md`). Evidence labels in artifacts and agent output: `AGENTS.md` §3.
+Instances of the records below live in the Evidence Register ([`artifacts/evidence-register.md`](../artifacts/evidence-register.md)). Evidence labels in artifacts and agent output: [`AGENTS.md`](../AGENTS.md) §3.
 
 ---
 
@@ -80,13 +80,17 @@ evidence_debt:
   risk_if_wrong:
   validation_plan:
   deadline_or_gate:
+  status: open | resolved
+  resolved_by: []       # EVD-### that resolved it
 ```
 
 Evidence debt is allowed.
 
 Hidden evidence debt is not.
 
-Agents also list open Evidence Debt in `aitm_output.evidence_debt` (`AGENT_OUTPUT_STANDARD.md`).
+An Evidence Debt record has no ID; it is identified by its `claim`. When Evidence settles the claim, set `status: resolved` and list that Evidence in `resolved_by`; keep the record.
+
+Agents also list open Evidence Debt in `aitm_output.evidence_debt` ([`AGENT_OUTPUT_STANDARD.md`](../AGENT_OUTPUT_STANDARD.md)).
 
 ---
 
@@ -112,7 +116,9 @@ architecture lock-in
 
 An Assumption is a statement accepted without sufficient Evidence so that work can proceed.
 
-A material Assumption is recorded as `ASM-###` (`artifacts/decision-assumption-log.md`) with its impact if wrong and its validation path. It stays an Assumption until Evidence validates or invalidates it; it is never silently promoted to fact (`AGENTS.md` §3).
+A material Assumption is recorded as `ASM-###` ([`artifacts/decision-assumption-log.md`](../artifacts/decision-assumption-log.md)) with its impact if wrong and its validation path. It stays an Assumption until Evidence validates or invalidates it (listed in its `evidence_ids`); it is never silently promoted to fact ([`AGENTS.md`](../AGENTS.md) §3).
+
+An Assumption about business reality has as `owner` a named business role who stated or accepted it. Agent inference is labeled `[HYPOTHESIS]`, not `[ASSUMPTION]`. A State, Gap, or Outcome baseline resting only on agent inference does not satisfy a phase exit; the agent stops with `INSUFFICIENT_EVIDENCE` and records Evidence Debt ([`AGENTS.md`](../AGENTS.md) §3).
 
 ---
 
@@ -120,4 +126,4 @@ A material Assumption is recorded as `ASM-###` (`artifacts/decision-assumption-l
 
 Evidence often comes from confidential or personal sources (interviews, financial records, customer cases).
 
-Reference such a source by its Evidence ID and a description in `source`; do not copy personal or confidential content into records. Engagement data handling: `AGENT_CONTEXT_POLICY.md` (Engagement workspace).
+Reference such a source by its Evidence ID and a description in `source`; do not copy personal or confidential content into records. Engagement data handling: [`AGENT_CONTEXT_POLICY.md`](../AGENT_CONTEXT_POLICY.md) (Engagement workspace).

@@ -53,11 +53,11 @@ VRL-### Value Realization
 | Initiative | MEASURED_BY | Metric | Initiative `success_metric_ids`; Metric `initiative_ids` |
 | Outcome | MEASURED_BY | Metric | Outcome `metric_ids`; Metric `outcome_ids` |
 | Claim | SUPPORTED_BY | Evidence | `evidence_ids` of the claiming record; Evidence `claim_supported` |
-| Capability | DEPENDS_ON | Capability | Capability Dependency `DEP-###` (`artifacts/capability-network.md`) |
+| Capability | DEPENDS_ON | Capability | Capability Dependency `DEP-###` ([`artifacts/capability-network.md`](artifacts/capability-network.md)) |
 | Target States | COMPOSE_INTO | Target Operating Architecture | TOA `target_state_ids`; each Capability's `target_state_id` points to the same STA records |
 | Decision | DECIDES | any registered object | Decision `subject_ids` |
 
-Record contracts: `CORE_MODEL.md` §1–§7 and the sources named in `CANONICAL_CONCEPTS.md`.
+Record contracts: [`CORE_MODEL.md`](CORE_MODEL.md) §1–§7 and the sources named in [`CANONICAL_CONCEPTS.md`](CANONICAL_CONCEPTS.md).
 
 ---
 
@@ -93,13 +93,13 @@ trace:
   other_ids: []         # any other registered IDs (ontology/ONTOLOGY.md)
 ```
 
-The agent handoff carries this record as `aitm_output.trace` (`AGENT_OUTPUT_STANDARD.md`).
+The agent handoff carries this record as `aitm_output.trace` ([`AGENT_OUTPUT_STANDARD.md`](AGENT_OUTPUT_STANDARD.md)).
 
 Missing links MUST remain visible:
 
 - An empty list means no applicable link.
 - A required link that is not yet established is recorded as the entry `MISSING:<reason>` in the list that should hold it (e.g. `evidence_ids: ["MISSING:no baseline data yet"]`); a required single-value field holds `MISSING:<reason>` the same way.
-- When the missing link is Evidence, it is also recorded as Evidence Debt (`evidence/EVIDENCE_STANDARD.md` §5).
+- When the missing link is Evidence, it is also recorded as Evidence Debt ([`evidence/EVIDENCE_STANDARD.md`](evidence/EVIDENCE_STANDARD.md) §5).
 
 ---
 
@@ -107,4 +107,4 @@ Missing links MUST remain visible:
 
 Entity identifiers SHOULD remain stable across artifact revisions and framework upgrades.
 
-Identifier format, uniqueness, allocation, and supersession: `ontology/ONTOLOGY.md`.
+Identifier format, uniqueness, allocation, and supersession: [`ontology/ONTOLOGY.md`](ontology/ONTOLOGY.md).

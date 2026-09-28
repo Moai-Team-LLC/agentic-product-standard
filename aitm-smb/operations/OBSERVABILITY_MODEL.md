@@ -6,7 +6,7 @@ A transformed capability must be observable as a business system.
 
 AITM-SMB observability is broader than technical monitoring.
 
-Record contract: `artifacts/observability-plan.md` (one plan per transformed Capability).
+Record contract: [`artifacts/observability-plan.md`](../artifacts/observability-plan.md) (one plan per transformed Capability).
 
 ---
 
@@ -105,4 +105,4 @@ Each pattern found is a blocking gap for rollout.
 
 ## 7. Alerts and incidents
 
-Alerts on policy events, failed or unowned state-changing actions, and breaches of approved authority SHOULD open an Incident (`INC-###`, `operations/INCIDENT_MODEL.md`), in proportion to §5.
+Alerts on policy events, failed or unowned state-changing actions, and breaches of approved authority SHOULD open an Incident (`INC-###`, [`operations/INCIDENT_MODEL.md`](INCIDENT_MODEL.md)), in proportion to §5.

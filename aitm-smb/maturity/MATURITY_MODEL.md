@@ -32,8 +32,8 @@ Agents pursue bounded business objectives with explicit permissions, verificatio
 
 Higher maturity is not automatically better. No level is a target in itself.
 
-The appropriate level for a Capability follows from its diagnosed Gaps, the intervention challenge (`STANDARD.md` §5), business value, risk, economics, and organizational capacity.
+The appropriate level for a Capability follows from its diagnosed Gaps, the intervention challenge ([`STANDARD.md`](../STANDARD.md) §5), business value, risk, economics, and organizational capacity.
 
-M-levels are not autonomy levels and grant no authority. AI authority is set per action class by the autonomy ladder L0–L5 (`diagnostics/AUTONOMY_SUITABILITY.md` §2) and granted only through `HG-AUTHORITY` (`STANDARD.md` §8).
+M-levels are not autonomy levels and grant no authority. AI authority is set per action class by the autonomy ladder L0–L5 ([`diagnostics/AUTONOMY_SUITABILITY.md`](../diagnostics/AUTONOMY_SUITABILITY.md) §2) and granted only through `HG-AUTHORITY` ([`STANDARD.md`](../STANDARD.md) §8).
 
-Autonomy is a revocable operating privilege, not a permanent maturity achievement (`governance/AUTHORITY_ESCALATION_MODEL.md`).
+Autonomy is a revocable operating privilege, not a permanent maturity achievement ([`governance/AUTHORITY_ESCALATION_MODEL.md`](../governance/AUTHORITY_ESCALATION_MODEL.md)).

@@ -2,39 +2,39 @@
 
 ## Core entities
 
-Transformation objects (Outcome, Capability, State, Gap, Cause / Hypothesis, Intervention, Initiative, Metric, Evidence) are defined in `CORE_MODEL.md`. The entries below point there and add the business-system entities.
+Transformation objects (Outcome, Capability, State, Gap, Cause / Hypothesis, Intervention, Initiative, Metric, Evidence) are defined in [`CORE_MODEL.md`](../CORE_MODEL.md). The entries below point there and add the business-system entities.
 
 ### Outcome
-See `CORE_MODEL.md` §1.
+See [`CORE_MODEL.md`](../CORE_MODEL.md) §1.
 
 ### Capability
-See `CORE_MODEL.md` §2.
+See [`CORE_MODEL.md`](../CORE_MODEL.md) §2.
 
 ### State
-See `CORE_MODEL.md` §3.
+See [`CORE_MODEL.md`](../CORE_MODEL.md) §3.
 
 ### Gap
-See `CORE_MODEL.md` §4.
+See [`CORE_MODEL.md`](../CORE_MODEL.md) §4.
 
 ### Cause / Hypothesis
-See `CORE_MODEL.md` §5.
+See [`CORE_MODEL.md`](../CORE_MODEL.md) §5.
 
 ### Intervention
-See `CORE_MODEL.md` §6.
+See [`CORE_MODEL.md`](../CORE_MODEL.md) §6.
 
 ### Initiative
-See `CORE_MODEL.md` §7.
+See [`CORE_MODEL.md`](../CORE_MODEL.md) §7.
 
 ### Metric
-See `CORE_MODEL.md` §8.
+See [`CORE_MODEL.md`](../CORE_MODEL.md) §8.
 
 ### Evidence
-See `CORE_MODEL.md` §9.
+See [`CORE_MODEL.md`](../CORE_MODEL.md) §9.
 
 ### Value Stream
 An end-to-end flow that produces value for a customer or stakeholder.
 
-Value Streams have no registered identifier in 1.x; `value_stream_ids` fields hold the Value Stream names used in the Business System Map (`artifacts/business-system-map.md`).
+Value Streams have no registered identifier in 1.x; `value_stream_ids` fields hold the Value Stream names used in the Business System Map ([`artifacts/business-system-map.md`](../artifacts/business-system-map.md)). In Compact, which has no Business System Map, they hold the names used in the Transformation Intent or Capability Map.
 
 ### Process
 A repeatable sequence of activities.
@@ -45,7 +45,7 @@ A human or machine responsibility inside the system.
 ### Decision
 A choice that changes system state or directs action.
 
-This is an operational business decision; decision rights over it are recorded as `BDS-###` (`design/DECISION_RIGHTS_ARCHITECTURE.md`). Engagement decisions about the transformation itself are `DEC-###` (`DECISION_MODEL.md`).
+This is an operational business decision; decision rights over it are recorded as `BDS-###` ([`design/DECISION_RIGHTS_ARCHITECTURE.md`](../design/DECISION_RIGHTS_ARCHITECTURE.md)). Engagement decisions about the transformation itself are `DEC-###` ([`DECISION_MODEL.md`](../DECISION_MODEL.md)).
 
 ### Data Asset
 Structured information used by the system.
@@ -71,12 +71,12 @@ A mechanism constraining risk, authority, access, or behavior.
 ### Constraint
 A limit that the architecture must respect.
 
-A design limit; not the System Constraint (`CST-###`, `CORE_MODEL.md` §11), which is the condition that most limits improvement of a target Outcome. Design Constraints are recorded in `constraints` fields.
+A design limit; not the System Constraint (`CST-###`, [`CORE_MODEL.md`](../CORE_MODEL.md) §11), which is the condition that most limits improvement of a target Outcome. Design Constraints are recorded in `constraints` fields.
 
 ### Risk
 A potential failure with impact and likelihood.
 
-A Risk record (`RSK-###`; record contract: `artifacts/decision-assumption-log.md`) names one owner. A Risk MAY stay a statement in Intervention `risks` until it needs an owner, controls, or acceptance. Accepting a material Risk requires HG-RISK (`STANDARD.md` §8); the Risk record cites the accepting Decision in `acceptance_decision_id`.
+A Risk record (`RSK-###`; record contract: [`artifacts/decision-assumption-log.md`](../artifacts/decision-assumption-log.md)) names one owner. A Risk MAY stay a statement in Intervention `risks` until it needs an owner, controls, or acceptance. Accepting a material Risk requires HG-RISK ([`STANDARD.md`](../STANDARD.md) §8); the Risk record cites the accepting Decision in `acceptance_decision_id`.
 
 ## Key relations
 
@@ -100,17 +100,17 @@ Metric MEASURES Outcome
 Evidence SUPPORTS Claim
 ```
 
-Trace relations between transformation objects and the fields that record them: `TRACEABILITY.md` §2.
+Trace relations between transformation objects and the fields that record them: [`TRACEABILITY.md`](../TRACEABILITY.md) §2.
 
 ## Capability record
 
-Record contract: `CORE_MODEL.md` §2.
+Record contract: [`CORE_MODEL.md`](../CORE_MODEL.md) §2.
 
-System-dimension detail (people, decision rights, processes, data, knowledge, applications, automation, AI, controls, metrics, economics, feedback) and its evidence are recorded in the Capability's State records (`CORE_MODEL.md` §3), not in the Capability record. Where design Constraints and Risks are recorded: `CORE_MODEL.md` §2.
+System-dimension detail (people, decision rights, processes, data, knowledge, applications, automation, AI, controls, metrics, economics, feedback) and its evidence are recorded in the Capability's State records ([`CORE_MODEL.md`](../CORE_MODEL.md) §3), not in the Capability record. Where design Constraints and Risks are recorded: [`CORE_MODEL.md`](../CORE_MODEL.md) §2.
 
 ## Canonical identifiers
 
-This is the complete identifier registry. The 1.x stable subset is `PUBLIC_API.md` §3; every other prefix below is reserved and MUST NOT be repurposed within 1.x. Where each record shape is defined: `CANONICAL_CONCEPTS.md`.
+This is the complete identifier registry. The 1.x stable subset is [`PUBLIC_API.md`](../PUBLIC_API.md) §3; every other prefix below is reserved and MUST NOT be repurposed within 1.x. Where each record shape is defined: [`CANONICAL_CONCEPTS.md`](../CANONICAL_CONCEPTS.md).
 
 ### Core
 

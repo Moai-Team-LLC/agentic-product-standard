@@ -1,6 +1,6 @@
 # AITM-SMB Versioning Policy
 
-Framework governance (`NORMATIVE_INDEX.md`). Compatibility promise: `PUBLIC_API.md` §9.
+Framework governance ([`NORMATIVE_INDEX.md`](NORMATIVE_INDEX.md)). Compatibility promise: [`PUBLIC_API.md`](PUBLIC_API.md) §9.
 
 ## 1. Version format
 
@@ -21,7 +21,8 @@ core ontology changes incompatibly
 canonical method flow changes materially
 required traceability changes
 artifact semantics become incompatible
-skill contracts require migration
+a skill's purpose, outputs or gates change meaning incompatibly
+  (frontmatter additions and field renames per §9 are MINOR)
 a stable PUBLIC_API.md item changes meaning or is removed
 a value is added to an enumeration agents must handle exhaustively
   (agent statuses PUBLIC_API.md §8, autonomy levels §7)
@@ -48,6 +49,8 @@ diagnostic/design method expanded compatibly
 new identifier prefix registered (ontology/ONTOLOGY.md)
 new intervention family or subtype added
 field renamed to match its canonical record contract (§9)
+skill directory slug renamed; skill number unchanged (skill numbers are
+  the stable skill identifiers; renames listed in the release notes)
 ```
 
 ---
@@ -77,7 +80,7 @@ replacement: []          # AITM-root-relative paths
 removal_target:          # next MAJOR, e.g. 2.0.0
 ```
 
-Deprecated artifact contracts MUST carry all four; other deprecated files SHOULD. Redirect guidance stays for the whole major line (`PUBLIC_API.md` §9); removal happens no earlier than `removal_target`.
+Deprecated artifact contracts MUST carry all four; other deprecated files SHOULD. Redirect guidance stays for the whole major line ([`PUBLIC_API.md`](PUBLIC_API.md) §9); removal happens no earlier than `removal_target`.
 
 ---
 
@@ -119,13 +122,13 @@ must remain stable across document revisions.
 
 Framework version changes do not invalidate engagement identifiers.
 
-Full registry and rules: `ontology/ONTOLOGY.md`; stable subset: `PUBLIC_API.md` §3.
+Full registry and rules: [`ontology/ONTOLOGY.md`](ontology/ONTOLOGY.md); stable subset: [`PUBLIC_API.md`](PUBLIC_API.md) §3.
 
 ---
 
 ## 8. Version alignment
 
-`MANIFEST.md` `framework.version` is the release version. These MUST equal it:
+[`MANIFEST.md`](MANIFEST.md) `framework.version` is the release version. These MUST equal it:
 
 ```text
 every **Version:** header
@@ -140,7 +143,7 @@ CHANGELOG.md MUST have a section for it. Skill `minimum_framework_version` MUST 
 
 ## 9. Field renames in a MINOR release
 
-A MINOR release MAY rename a field only to align it with its canonical record contract (`CANONICAL_CONCEPTS.md`). Each rename is listed in the migration table of the release notes (`releases/<version>.md`, linked from `CHANGELOG.md`): record, old name, new name. No alias fields are kept; the table is the compatibility path. Meanings of `PUBLIC_API.md` items never change in a MINOR release.
+A MINOR release MAY rename a field only to align it with its canonical record contract ([`CANONICAL_CONCEPTS.md`](CANONICAL_CONCEPTS.md)). Each rename is listed in the migration table of the release notes (`releases/<version>.md`, linked from [`CHANGELOG.md`](CHANGELOG.md)): record, old name, new name. No alias fields are kept; the table is the compatibility path. Meanings of [`PUBLIC_API.md`](PUBLIC_API.md) items never change in a MINOR release.
 
 ---
 
@@ -151,7 +154,7 @@ inside the host repository   aitm-smb-vX.Y.Z
 standalone (after a split)   vX.Y.Z
 ```
 
-The tag MUST match `MANIFEST.md`. Pushing it publishes a GitHub release whose notes are the matching CHANGELOG.md section and which attaches the Core and Full distributions (`tools/build_dist.py`, `NORMATIVE_INDEX.md` §Distributions). Release procedure: `MAINTENANCE.md` §2.
+The tag MUST match [`MANIFEST.md`](MANIFEST.md). Pushing it publishes a GitHub release whose notes are the matching CHANGELOG.md section and which attaches the Core and Full distributions ([`tools/build_dist.py`](tools/build_dist.py), [`NORMATIVE_INDEX.md`](NORMATIVE_INDEX.md) §Distributions). Release procedure: [`MAINTENANCE.md`](MAINTENANCE.md) §2.
 
 ---
 

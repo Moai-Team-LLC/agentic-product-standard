@@ -23,7 +23,7 @@ CREATE_NEW
 
 ## 3. Role transition record
 
-Record contract: the `role_transitions` section of `artifacts/adoption-plan.md`.
+Record contract: the `role_transitions` section of [`artifacts/adoption-plan.md`](../artifacts/adoption-plan.md).
 
 A role transition record states, per affected role, current and target responsibilities, the §2 disposition of each affected task, removed and new tasks, decision-right changes, skill changes, performance-metric changes, and risks.
 
@@ -49,4 +49,4 @@ AITM-SMB SHOULD make role changes explicit before rollout.
 
 Hidden role redesign creates adoption failure.
 
-Decision-right changes MUST match the Decision Rights Map (`artifacts/decision-rights-map.md`) where one exists; changing material Decision Rights requires `HG-DECISION-RIGHTS` (`STANDARD.md` §8).
+Decision-right changes MUST match the Decision Rights Map ([`artifacts/decision-rights-map.md`](../artifacts/decision-rights-map.md)) where one exists; changing material Decision Rights requires `HG-DECISION-RIGHTS` ([`STANDARD.md`](../STANDARD.md) §8).

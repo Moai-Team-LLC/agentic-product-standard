@@ -6,7 +6,7 @@ Use experiments when uncertainty is high and a full pilot is unnecessary.
 
 Experiments answer one bounded question.
 
-A test whose result is the evidence for promoting an Initiative to rollout is recorded as a Pilot (`PLT-###`, `execution/PILOT_MODEL.md`), so that pilot validity and the promotion decision apply; otherwise use an Experiment (`EXP-###`).
+A test whose result is the evidence for promoting an Initiative to rollout is recorded as a Pilot (`PLT-###`, [`execution/PILOT_MODEL.md`](PILOT_MODEL.md)), so that pilot validity and the promotion decision apply; otherwise use an Experiment (`EXP-###`).
 
 ---
 
@@ -42,6 +42,8 @@ experiment:
   next_decision:
   owner:
 ```
+
+Instances: the `experiments` section of [`artifacts/transformation-roadmap.md`](../artifacts/transformation-roadmap.md), unless the Pilot Plan ([`artifacts/pilot-plan.md`](../artifacts/pilot-plan.md)) the experiment serves holds it.
 
 ---
 

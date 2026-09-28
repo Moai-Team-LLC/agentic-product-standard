@@ -24,7 +24,7 @@ intent:
   owner:                     # accountable Outcome owner
   horizon:
   outcomes: []               # Outcome records, CORE_MODEL.md §1
-  baseline_metric_ids: []    # MET-### carrying the Outcome baselines, where measured (METRICS.md §6)
+  baseline_metric_ids: []    # MET-### carrying the Outcome baselines, one or more per Outcome (METRICS.md §6)
   constraints: []
   non_goals: []
   known_risks: []
@@ -34,7 +34,7 @@ intent:
   conformance:               # CONFORMANCE.md §5 declaration; written by skill 38
 ```
 
-Record contracts: Outcome `CORE_MODEL.md` §1; Metric `METRICS.md` §6 (records held in the Transformation Scorecard); conformance declaration `CONFORMANCE.md` §5. A baseline not yet measured is stated as a known baseline gap in the Outcome `baseline` and recorded as Evidence Debt (`evidence/EVIDENCE_STANDARD.md` §5).
+Record contracts: Outcome [`CORE_MODEL.md`](../CORE_MODEL.md) §1; Metric [`METRICS.md`](../METRICS.md) §6 (records held in the Transformation Scorecard); conformance declaration [`CONFORMANCE.md`](../CONFORMANCE.md) §5. Every Outcome has a Metric. A baseline not yet measured is stated as a known baseline gap in the Outcome `baseline`, the Metric's `baseline` holds `MISSING:<reason>` ([`METRICS.md`](../METRICS.md) §7), and the gap is recorded as Evidence Debt ([`evidence/EVIDENCE_STANDARD.md`](../evidence/EVIDENCE_STANDARD.md) §5).
 
 ## Required questions
 
@@ -56,14 +56,14 @@ build agents
 increase AI adoption
 ```
 
-Such goals are means, not Outcomes (`CORE_MODEL.md` §1).
+Such goals are means, not Outcomes ([`CORE_MODEL.md`](../CORE_MODEL.md) §1).
 
-Outcomes are approved only by a Decision closing `HG-OUTCOME` (`STANDARD.md` §8) that lists their `OUT-###` IDs and the profile Decision in `subject_ids`.
+Outcomes are approved only by a Decision closing `HG-OUTCOME` ([`STANDARD.md`](../STANDARD.md) §8) that lists their `OUT-###` IDs in `subject_ids`. The profile Decision stays `status: proposed` until approved with it: listed in the same `subject_ids`, or approved by a separate Decision.
 
 ## Validation
 
-- [ ] every Outcome has an owner, a baseline or known baseline gap, a target, and a horizon
+- [ ] every Outcome has an owner, a Metric (`metric_ids`), a baseline or known baseline gap, a target, and a horizon
 - [ ] no Outcome is a means (adopt AI, deploy agents, automate more, use a vendor)
 - [ ] constraints and non-goals are recorded
-- [ ] the profile Decision is referenced
+- [ ] the profile Decision is referenced and approved with `HG-OUTCOME`
 - [ ] Outcomes are approved through `HG-OUTCOME` before downstream use

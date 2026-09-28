@@ -23,7 +23,7 @@ ai_suitability:
   gap_ids: []
   simpler_alternatives_considered: []  # INT-### or short statements
   non_ai_alternative:                  # the best non-AI option and why it is or is not enough
-  # dimensions (diagnostics/AI_SUITABILITY.md §2): low | medium | high, with a note
+  # dimensions (diagnostics/AI_SUITABILITY.md §2): low | medium | high | not_relevant, with a note (for not_relevant: the reason)
   semantic_load:
   input_variability:
   judgment_requirement:
@@ -37,22 +37,22 @@ ai_suitability:
   context_readiness:                   # Context Availability
   data_sensitivity:
   execution_risk:
-  economics:                           # Economic Frequency
+  economic_frequency:                  # economic value goes in rationale
   classification: A | B | C | D | E
   rationale:
   evidence_ids: []
   assumption_ids: []
 ```
 
-Classes and what each implies for selection: `diagnostics/AI_SUITABILITY.md` §5.
+Classes and what each implies for selection: [`diagnostics/AI_SUITABILITY.md`](../diagnostics/AI_SUITABILITY.md) §5.
 
 ## Rules
 
-This assessment does not set authority; autonomy is assessed separately (`artifacts/autonomy-assessment.md`).
+This assessment does not set authority; autonomy is assessed separately ([`artifacts/autonomy-assessment.md`](autonomy-assessment.md)).
 
 ## Validation
 
 - [ ] linked to one `AI_*` Intervention and its Gaps
-- [ ] every dimension (`diagnostics/AI_SUITABILITY.md` §2) is rated, or marked not relevant with a reason
+- [ ] every dimension ([`diagnostics/AI_SUITABILITY.md`](../diagnostics/AI_SUITABILITY.md) §2) is rated, or marked `not_relevant` with a reason
 - [ ] simpler alternatives and the non-AI alternative are recorded
-- [ ] `rationale` explains the classification, and its consequence (`diagnostics/AI_SUITABILITY.md` §5) is respected: C and D need a recorded justification; E is rejected
+- [ ] `rationale` explains the classification, and its consequence ([`diagnostics/AI_SUITABILITY.md`](../diagnostics/AI_SUITABILITY.md) §5) is respected: C and D need a recorded justification; E is rejected

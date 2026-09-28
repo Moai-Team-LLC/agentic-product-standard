@@ -16,7 +16,7 @@ These decisions MUST NOT be collapsed into one.
 
 ## 1. Intervention challenge
 
-For a diagnosed Gap, evaluate in this order (challenge order: `STANDARD.md` §5; families: `design/INTERVENTION_PATTERNS.md`):
+For a diagnosed Gap, evaluate in this order (challenge order: [`STANDARD.md`](STANDARD.md) §5; families: [`design/INTERVENTION_PATTERNS.md`](design/INTERVENTION_PATTERNS.md)):
 
 ```text
 Can the work be eliminated?
@@ -33,36 +33,15 @@ Does autonomy add material value beyond assistance?
 
 ## 2. AI suitability
 
-AI becomes more suitable when work depends on:
+AI-positive and AI-negative signals: [`diagnostics/AI_SUITABILITY.md`](diagnostics/AI_SUITABILITY.md) §3–§4.
 
-```text
-unstructured information
-semantic interpretation
-generation
-classification under ambiguity
-prediction
-knowledge retrieval
-contextual reasoning
-natural-language interaction
-```
-
-AI becomes less suitable when work requires:
-
-```text
-exact arithmetic
-strict deterministic rules
-transaction consistency
-simple validation
-fully reproducible output
-```
-
-Detailed assessment: `diagnostics/AI_SUITABILITY.md`.
+Detailed assessment: [`diagnostics/AI_SUITABILITY.md`](diagnostics/AI_SUITABILITY.md).
 
 ---
 
 ## 3. Autonomy
 
-Autonomy levels L0–L5 (labels and authority per level): `diagnostics/AUTONOMY_SUITABILITY.md` §2.
+Autonomy levels L0–L5 (labels and authority per level): [`diagnostics/AUTONOMY_SUITABILITY.md`](diagnostics/AUTONOMY_SUITABILITY.md) §2.
 
 Authority is a business architecture decision, not a technical consequence.
 
@@ -77,7 +56,7 @@ How is failure detected?
 How is action recovered?
 ```
 
-Detailed assessment: `diagnostics/AUTONOMY_SUITABILITY.md`.
+Detailed assessment: [`diagnostics/AUTONOMY_SUITABILITY.md`](diagnostics/AUTONOMY_SUITABILITY.md).
 
 ---
 
@@ -98,12 +77,12 @@ commit
 
 does not grant permission to do so.
 
-Granting such permission to AI is an authority increase (HG-AUTHORITY, `STANDARD.md` §8).
+Granting such permission to AI is an authority increase (HG-AUTHORITY, [`STANDARD.md`](STANDARD.md) §8).
 
 ---
 
 ## 5. Decision record
 
-Material decisions SHOULD be recorded as Decisions (`DEC-###`). Record contract: `artifacts/decision-assumption-log.md`.
+Material decisions SHOULD be recorded as Decisions (`DEC-###`) that record `alternatives`, `rationale`, `evidence_ids`, `assumption_ids`, `consequences`, and a `review_trigger`. Record contract: [`artifacts/decision-assumption-log.md`](artifacts/decision-assumption-log.md).
 
-`DEC-###` records engagement decisions about the transformation. Decision rights over operational business decisions are `BDS-###` (`design/DECISION_RIGHTS_ARCHITECTURE.md`).
+`DEC-###` records engagement decisions about the transformation. Decision rights over operational business decisions are `BDS-###` ([`design/DECISION_RIGHTS_ARCHITECTURE.md`](design/DECISION_RIGHTS_ARCHITECTURE.md)).

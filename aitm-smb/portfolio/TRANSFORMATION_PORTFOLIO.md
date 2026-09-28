@@ -10,11 +10,11 @@ The portfolio exists to optimize system-level outcomes, not initiative count.
 
 ## 2. Portfolio record
 
-Transformation Portfolio records (`PTF-###`): record contract `artifacts/transformation-portfolio.md`.
+Transformation Portfolio records (`PTF-###`): record contract [`artifacts/transformation-portfolio.md`](../artifacts/transformation-portfolio.md).
 
-The record classifies each Initiative by a §3 category (`initiative_categories`) and holds the WIP limit (§5) and change capacity (`portfolio/PORTFOLIO_PRIORITIZATION.md` §4).
+The record classifies each Initiative by a §3 category (`initiative_categories`) and holds the WIP limit (§5) and change capacity ([`portfolio/PORTFOLIO_PRIORITIZATION.md`](PORTFOLIO_PRIORITIZATION.md) §4).
 
-Required by the Portfolio profile (`APPLICATION_PROFILES.md`).
+Required by the Portfolio profile ([`APPLICATION_PROFILES.md`](../APPLICATION_PROFILES.md)).
 
 ---
 

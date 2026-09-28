@@ -4,7 +4,7 @@
 
 A Transformation Slice (`SLC-###`) is the smallest implementation unit that changes a real business behavior and can be evaluated.
 
-It is vertical: it crosses every layer needed to change that behavior (`execution/EXECUTION_PRINCIPLES.md` §2). Also called a vertical slice or delivery slice.
+It is vertical: it crosses every layer needed to change that behavior ([`execution/EXECUTION_PRINCIPLES.md`](EXECUTION_PRINCIPLES.md) §2). Also called a vertical slice or delivery slice.
 
 ---
 
@@ -34,6 +34,8 @@ slice:
 ```
 
 Only the layers the slice changes need content.
+
+Instances: the `slices` section of [`artifacts/transformation-roadmap.md`](../artifacts/transformation-roadmap.md), unless the Pilot Plan ([`artifacts/pilot-plan.md`](../artifacts/pilot-plan.md)) that runs the slice holds it.
 
 ---
 

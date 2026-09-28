@@ -10,7 +10,7 @@ produced_by: [08-design-operating-model, 30-design-adoption]
 
 ## Purpose
 
-Make the human side of the transformation explicit: the behavior each affected role must change, what it needs to do so, and how each role's tasks, responsibilities, and decision rights move (`change/CHANGE_ADOPTION_MODEL.md`, `change/ROLE_TRANSITION_MODEL.md`).
+Make the human side of the transformation explicit: the behavior each affected role must change, what it needs to do so, and how each role's tasks, responsibilities, and decision rights move ([`change/CHANGE_ADOPTION_MODEL.md`](../change/CHANGE_ADOPTION_MODEL.md), [`change/ROLE_TRANSITION_MODEL.md`](../change/ROLE_TRANSITION_MODEL.md)).
 
 ## Record
 
@@ -46,18 +46,18 @@ role_transitions:           # one per affected role
     risks: []
 ```
 
-Dispositions: `change/ROLE_TRANSITION_MODEL.md` §2. Adoption dimensions: `change/CHANGE_ADOPTION_MODEL.md` §2.
+Dispositions: [`change/ROLE_TRANSITION_MODEL.md`](../change/ROLE_TRANSITION_MODEL.md) §2. Adoption dimensions: [`change/CHANGE_ADOPTION_MODEL.md`](../change/CHANGE_ADOPTION_MODEL.md) §2.
 
 ## Rules
 
-Role changes are explicit before rollout (`change/ROLE_TRANSITION_MODEL.md` §5). Material `decision_right_changes` require `HG-DECISION-RIGHTS` (`STANDARD.md` §8).
+Role changes are explicit before rollout ([`change/ROLE_TRANSITION_MODEL.md`](../change/ROLE_TRANSITION_MODEL.md) §5). Material `decision_right_changes` require `HG-DECISION-RIGHTS` ([`STANDARD.md`](../STANDARD.md) §8).
 
-Adoption metrics do not substitute for Outcome metrics. Resistance is evidence, not only a people problem (`change/CHANGE_ADOPTION_MODEL.md` §5).
+Adoption metrics do not substitute for Outcome metrics. Resistance is evidence, not only a people problem ([`change/CHANGE_ADOPTION_MODEL.md`](../change/CHANGE_ADOPTION_MODEL.md) §5).
 
 ## Validation
 
 - [ ] every affected role has a role transition with task dispositions
 - [ ] decision-right changes match the Decision Rights Map where one exists, and material ones are approved through `HG-DECISION-RIGHTS`
-- [ ] every `change/CHANGE_ADOPTION_MODEL.md` §2 dimension the change touches is addressed, including trust and workflow-fit risks
+- [ ] every [`change/CHANGE_ADOPTION_MODEL.md`](../change/CHANGE_ADOPTION_MODEL.md) §2 dimension the change touches is addressed, including trust and workflow-fit risks
 - [ ] training, support model, feedback channel, and owner are defined
 - [ ] adoption metrics are Metric records and sit alongside, not in place of, Outcome metrics

@@ -8,16 +8,16 @@ artifact:
   upstream: [01-intent.md, 05-target-and-roadmap.md, evidence-register.md]
   downstream: []
   evidence: [EVD-001, EVD-002, EVD-004, EVD-005, EVD-008, EVD-009]
-  assumptions: [ASM-001]
-  decisions: [DEC-003, DEC-007, DEC-010]
+  assumptions: [ASM-001, ASM-002, ASM-003]
+  decisions: [DEC-003, DEC-008, DEC-010, DEC-011]
   open_questions:
-    - HG-PROMOTION for PLT-001 (DEC-010 proposed)
+    - HG-PROMOTION for PLT-001 (DEC-011 proposed)
     - MET-001 and MET-008 readings after the June finance close (Evidence Debt)
 ```
 
 # Transformation Scorecard
 
-Fictional, informative example (see `examples/compact-scenario-b/README.md`). Contracts: `artifacts/transformation-scorecard.md` (Metric record `METRICS.md` §6) and `artifacts/evaluation-plan.md` (Evaluation record `evaluation/EVALUATION_SYSTEM.md` §4). The baselines MET-001 and MET-002 were recorded in Phase 0 (skill 01); the other Metrics were appended when defined; the observations and the effect conclusion were written by skill 09 on 2026-07-01; the pilot results by skill 32 on 2026-06-24.
+Fictional, informative example (see [`examples/compact-scenario-b/README.md`](README.md)). Contracts: [`artifacts/transformation-scorecard.md`](../../artifacts/transformation-scorecard.md) (Metric record [`METRICS.md`](../../METRICS.md) §6) and [`artifacts/evaluation-plan.md`](../../artifacts/evaluation-plan.md) (Evaluation record [`evaluation/EVALUATION_SYSTEM.md`](../../evaluation/EVALUATION_SYSTEM.md) §4). Skill 01 recorded the Outcome's Metrics in Phase 0 (MET-001 cost, MET-002 delay), before `HG-OUTCOME`; the other Metrics were appended when defined. The evaluations were registered by skill 26 on 2026-04-24, the pilot results written by skill 32 on 2026-06-24, and the observations and the effect conclusion by skill 09 on 2026-07-01.
 
 ## Metrics
 
@@ -29,10 +29,13 @@ metric:
   owner: Operations Director
   definition: >-
     Credit notes and re-delivery freight coded "order error", plus order-desk
-    handling time and warehouse re-pick time for exceptions valued at a loaded
-    rate of 35 CU an hour; CU per week.
+    handling time and warehouse re-pick time for exceptions valued at the Finance
+    Lead's loaded rate of 35 CU an hour; CU per week.
   source: finance credit-note and freight records (EVD-005); exception log (EVD-001); handling and re-pick times (EVD-002)
-  baseline: 5,200 CU per week, 12 weeks to 2026-02-20 (3,100 measured; 2,100 of time components estimated)
+  baseline: >-
+    5,200 CU per week, 12 weeks to 2026-02-20 - 3,100 from finance records
+    (EVD-005) and 2,100 of handling and re-pick time from the Phase 1 timed
+    observation (EVD-002), which validated the Phase 0 estimate ASM-003
   target: at most 2,600 CU per week by 2026-12-31
   cadence: monthly, after the finance close
   outcome_ids: [OUT-001]
@@ -112,7 +115,7 @@ metric:
   owner: Order Desk Lead
   definition: share of AI drafts released with the same reason code and no changed order field, read from the draft-and-release log
   source: draft-and-release log
-  baseline: none - no AI component before the pilot (explicit baseline gap)
+  baseline: none (no AI component existed before the pilot, so there is no prior value; EVL-001 gives the first reading)
   target: at least 80%
   cadence: weekly
   outcome_ids: []
@@ -131,7 +134,7 @@ metric:
     dispatch or by the customer) per 100 corrected emails; plus the count of AI
     actions outside the AUT-001 ceiling, from the access log.
   source: exception log, customer complaints, access log of the AI component
-  baseline: 2.1 per 100 manual email corrections (EVD-004); out-of-ceiling actions not applicable before AI
+  baseline: 2.1 per 100 manual email corrections (EVD-004); out-of-ceiling actions none (no AI component before the pilot)
   target: not above the manual baseline; zero out-of-ceiling actions
   cadence: weekly
   outcome_ids: [OUT-001]
@@ -155,9 +158,25 @@ metric:
   initiative_ids: [INI-001]
 ```
 
+```yaml
+metric:
+  id: MET-009
+  name: Structured-field use
+  class: operating
+  owner: Order Desk Lead
+  definition: orders with delivery instructions whose instructions are entered in the structured fields, divided by all orders with delivery instructions, per week
+  source: order-system export (the validation path of ASM-001)
+  baseline: none (the structured fields did not exist before SLC-001, so there is no prior value)
+  target: at least 70% within 8 weeks after SLC-001 starts holding orders (ASM-001; decision point 2026-07-06)
+  cadence: weekly
+  outcome_ids: []
+  capability_ids: [CAP-001]
+  initiative_ids: [INI-001]
+```
+
 ## Pilot evaluation plan and results
 
-Registered on 2026-04-24, before PLT-001 started; the plan fields were not changed afterwards. Layers not evaluated in the pilot: business outcome and economics, because 163 emails over four weeks are too few for a cost or late-dispatch reading; both are read at Initiative level in the scorecard below (MET-001, MET-002, MET-008).
+Registered by skill 26 on 2026-04-24, before PLT-001 started; the plan fields, including the layers left out and why, were not changed afterwards. Every layer of [`evaluation/EVALUATION_SYSTEM.md`](../../evaluation/EVALUATION_SYSTEM.md) §2 has an evaluation with a threshold or a `not_evaluated` entry; human-AI interaction and technical reliability are evaluated because AI is used. The evaluations inherit `initiative_id` from the plan.
 
 ```yaml
 evaluation_plan:
@@ -167,7 +186,6 @@ evaluation_plan:
   registered_on: 2026-04-24
   evaluations:
     - id: EVL-001
-      initiative_id: INI-001
       layer: ai_task
       metric_ids: [MET-006]
       method: compare each AI draft with the released version (reason code and order fields)
@@ -175,7 +193,6 @@ evaluation_plan:
       threshold: at least 80% released without material edit
       owner: Order Desk Lead
     - id: EVL-002
-      initiative_id: INI-001
       layer: human_ai
       metric_ids: [MET-006]
       method: weekly sample of 20 released drafts - source email opened before release (log), wrong drafts edited, escalation conditions honoured
@@ -183,7 +200,6 @@ evaluation_plan:
       threshold: at least 95% of sampled releases show the source email opened; every sampled email meeting an escalation condition escalated
       owner: Order Desk Lead
     - id: EVL-003
-      initiative_id: INI-001
       layer: operating
       metric_ids: [MET-005]
       method: median active minutes per email from ticket and order time stamps, pilot inbox against the general inbox in the same weeks
@@ -191,7 +207,6 @@ evaluation_plan:
       threshold: at most 9 minutes in the pilot inbox
       owner: Order Desk Lead
     - id: EVL-004
-      initiative_id: INI-001
       layer: capability
       metric_ids: [MET-004]
       method: median resolution time of email-originated exceptions, pilot inbox against the general inbox in the same weeks
@@ -199,7 +214,6 @@ evaluation_plan:
       threshold: at most 6 working hours in the pilot inbox
       owner: Operations Director
     - id: EVL-005
-      initiative_id: INI-001
       layer: risk_governance
       metric_ids: [MET-007]
       method: trace every escape found at pick, at dispatch or by customers to its draft; review the access log weekly for any write or send by the AI component
@@ -207,13 +221,17 @@ evaluation_plan:
       threshold: at most 2.1 escapes per 100 and zero actions outside the ceiling
       owner: Order Desk Lead
     - id: EVL-006
-      initiative_id: INI-001
       layer: technical
       metric_ids: []
       method: time from mailbox receipt to draft in the ticket; fallbacks to manual handling logged
       sample: all pilot emails
       threshold: draft within 2 minutes for at least 98% of emails
       owner: Order Desk Lead
+  not_evaluated:
+    - layer: business_outcome
+      reason: about 150 emails over four weeks are too few for a late-dispatch or cost reading; OUT-001 is read at Initiative level in the scorecard (MET-001, MET-002)
+    - layer: economics
+      reason: the run cost and cost per resolved exception of one inbox over four weeks would not be comparable with the baseline; read at Initiative level (MET-008)
   datasets: []   # Compact: no evaluation dataset required; the 60 emails of the offline check (EVD-007) are not a registered dataset
 ```
 
@@ -258,7 +276,7 @@ results:
 pilot_result: PROMOTE
 ```
 
-`PROMOTE` is a recommendation. Promotion to all exception emails waits for `HG-PROMOTION` (DEC-010, proposed).
+`PROMOTE` is derived from the pre-registered criteria: every success criterion was met and no stop criterion was reached, so no waiver is needed. It is a recommendation; skill 32 recorded DEC-011 (`HG-PROMOTION`) as `proposed` on 2026-06-24, and promotion to all exception emails waits for the Operations Director.
 
 ## Scorecard, evidence period 1
 
@@ -270,7 +288,7 @@ scorecard:
   evidence_period: 2026-05-11 to 2026-06-26 (7 weeks with SLC-001 holding orders; PLT-001 ran 2026-05-25 to 2026-06-19)
   outcome_metric_ids: [MET-001, MET-002]
   capability_metric_ids: [MET-003, MET-004]
-  operating_metric_ids: [MET-005]
+  operating_metric_ids: [MET-005, MET-009]
   ai_evaluation_metric_ids: [MET-006]
   economic_metric_ids: [MET-008]
   risk_governance_metric_ids: [MET-007]
@@ -307,12 +325,16 @@ scorecard:
       observed: "MISSING:depends on the MET-001 reading"
       as_of: 2026-06-26
       evidence_ids: ["MISSING:see MET-001"]
+    - metric_id: MET-009
+      observed: 58% in week 7; target 70% by week 8 (ASM-001)
+      as_of: 2026-06-26
+      evidence_ids: [EVD-009]
   unexpected_effects:
     - Pack-size rules wrongly held 14 orders from two customers whose contracts allow broken packs; the rule table was corrected in week 2. Rule upkeep took about 5 hours in the first month instead of the planned 2.
     - Releases after the 14.00 pick cut-off rose from 22 to 31 a week, inside the range SFX-001 predicted; Mondays are watched.
-    - Structured fields were used on 58% of orders with delivery instructions in week 7, against the 70% ASM-001 assumes.
+    - Structured fields were used on 58% of orders with delivery instructions in week 7 (MET-009), against the 70% ASM-001 assumes.
   evidence_ids: [EVD-008, EVD-009]
   conclusion: PARTIAL_EFFECT
 ```
 
-Why `PARTIAL_EFFECT` and not more: the capability metrics and one outcome metric (MET-002) moved clearly against the baseline, but none has reached its target, the cost Outcome metric MET-001 cannot be read yet, and the AI slice ran only in one inbox. The two changes overlap in time; the pilot's same-period comparison (EVL-003, EVL-004) separates the AI slice's share only for email exceptions. The baseline is winter and the evidence period early summer (EVD-009), so seasonality is a competing explanation that evidence period 2 has to check. This is an effect conclusion, not a value conclusion: no value is declared, and declaring it REALIZED would need the cost reading, attribution and `HG-VALUE` (`measurement/VALUE_REALIZATION.md` §2).
+Why `PARTIAL_EFFECT` and not more: the capability metrics and one outcome metric (MET-002) moved clearly against the baseline, but none has reached its target, the cost Outcome metric MET-001 cannot be read yet, and the AI slice ran only in one inbox. The two changes overlap in time; the pilot's same-period comparison (EVL-003, EVL-004) separates the AI slice's share only for email exceptions. The baseline is winter and the evidence period early summer (EVD-009), so seasonality is a competing explanation that evidence period 2 has to check. This is an effect conclusion, not a value conclusion: no value is declared, and declaring it REALIZED would need the cost reading, attribution and `HG-VALUE` ([`measurement/VALUE_REALIZATION.md`](../../measurement/VALUE_REALIZATION.md) §2).

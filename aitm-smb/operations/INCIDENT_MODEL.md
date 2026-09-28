@@ -27,7 +27,7 @@ HUMAN_PROCESS
 
 ## 3. Incident record
 
-Record contract: `artifacts/incident-record.md` (`INC-###`).
+Record contract: [`artifacts/incident-record.md`](../artifacts/incident-record.md) (`INC-###`).
 
 Severity:
 
@@ -37,7 +37,7 @@ medium   business impact without material exposure
 low      no business impact beyond the affected case
 ```
 
-An organization MAY use its own severity scale if it maps each level to one of these. A high-severity incident is material; when materiality is unclear, treat the incident as material (`STANDARD.md` §16).
+An organization MAY use its own severity scale if it maps each level to one of these. A high-severity incident is material; when materiality is unclear, treat the incident as material ([`STANDARD.md`](../STANDARD.md) §16).
 
 ---
 
@@ -54,10 +54,10 @@ permissions
 AI authority level or Authority Ceiling
 observability
 training
-target architecture
+Capability Target State or Target Operating Architecture
 ```
 
-When an incident matches a demotion trigger, authority MAY be reduced immediately; restoring it requires `HG-AUTHORITY` (`governance/AUTHORITY_ESCALATION_MODEL.md` §4).
+When an incident matches a demotion trigger, authority MAY be reduced immediately; restoring it requires `HG-AUTHORITY` ([`governance/AUTHORITY_ESCALATION_MODEL.md`](../governance/AUTHORITY_ESCALATION_MODEL.md) §4).
 
 ---
 

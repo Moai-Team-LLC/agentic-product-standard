@@ -4,12 +4,14 @@
 
 Determine whether the transformation created sustained business value and evolve the system based on evidence.
 
+Evolution is revising the diagnosis, target, roadmap, or AI authority from Phase 8 Evidence.
+
 ## Required inputs
 
-- Outcome and Metric records with baselines (`artifacts/transformation-intent.md`, `artifacts/transformation-scorecard.md`);
+- Outcome and Metric records with baselines ([`artifacts/transformation-intent.md`](../artifacts/transformation-intent.md), [`artifacts/transformation-scorecard.md`](../artifacts/transformation-scorecard.md)); an unmeasured baseline is Evidence Debt, and the value state stays HYPOTHESIZED ([`measurement/VALUE_REALIZATION.md`](../measurement/VALUE_REALIZATION.md) §2);
 - Evaluation Plans with Phase 7 results and pilot results, where piloted;
 - Rollout Plans and operating data from the Observability Plan, where rolled out;
-- cost data;
+- cost data, and each Initiative's `economic_hypothesis` ([`artifacts/transformation-roadmap.md`](../artifacts/transformation-roadmap.md)), where recorded;
 - incident history (`INC-###`), where incidents occurred;
 - Autonomy Assessments with current levels and Authority Ceilings, where AI is used;
 - Evidence Register; Decision & Assumption Log.
@@ -18,14 +20,14 @@ Determine whether the transformation created sustained business value and evolve
 
 Use:
 
-1. `evaluation/EVALUATION_SYSTEM.md`
-2. `evaluation/AI_EVALS.md`
-3. `METRICS.md`
-4. `economics/TRANSFORMATION_ECONOMICS.md`
-5. `measurement/VALUE_REALIZATION.md`
-6. `measurement/BENEFIT_EVIDENCE_CHAIN.md` (Measured)
-7. `operations/INCIDENT_MODEL.md`
-8. `governance/AUTHORITY_ESCALATION_MODEL.md`
+1. [`evaluation/EVALUATION_SYSTEM.md`](../evaluation/EVALUATION_SYSTEM.md)
+2. [`evaluation/AI_EVALS.md`](../evaluation/AI_EVALS.md)
+3. [`METRICS.md`](../METRICS.md)
+4. [`economics/TRANSFORMATION_ECONOMICS.md`](../economics/TRANSFORMATION_ECONOMICS.md)
+5. [`measurement/VALUE_REALIZATION.md`](../measurement/VALUE_REALIZATION.md)
+6. [`measurement/BENEFIT_EVIDENCE_CHAIN.md`](../measurement/BENEFIT_EVIDENCE_CHAIN.md) (Measured)
+7. [`operations/INCIDENT_MODEL.md`](../operations/INCIDENT_MODEL.md)
+8. [`governance/AUTHORITY_ESCALATION_MODEL.md`](../governance/AUTHORITY_ESCALATION_MODEL.md)
 
 ## Activities
 
@@ -43,25 +45,26 @@ Use:
 
 ## Outputs
 
-- Transformation Scorecard (`artifacts/transformation-scorecard.md`): Metric records, observations, effect conclusion;
-- Value Realization Report (`VRL-###`, `artifacts/value-realization-report.md`): value state, value conclusion, and, under Measured, the benefit chain; where the profile requires it;
-- updated Evaluation records (`artifacts/evaluation-plan.md`);
-- Autonomy Assessment updates after promotion or demotion (`artifacts/autonomy-assessment.md`), where AI is used;
-- Execution Gate G (`artifacts/execution-gate.md`), Governed;
-- revised assumptions and decisions (`artifacts/decision-assumption-log.md`), including gate Decisions;
+- Transformation Scorecard ([`artifacts/transformation-scorecard.md`](../artifacts/transformation-scorecard.md)): Metric records, observations, effect conclusion;
+- Value Realization Report (`VRL-###`, [`artifacts/value-realization-report.md`](../artifacts/value-realization-report.md)): value state, value conclusion, and, under Measured, the benefit chain; where the profile requires it;
+- updated Evaluation records, and new pre-registered evaluations for post-rollout measurement ([`artifacts/evaluation-plan.md`](../artifacts/evaluation-plan.md));
+- Autonomy Assessment updates after promotion or demotion ([`artifacts/autonomy-assessment.md`](../artifacts/autonomy-assessment.md)), where AI is used;
+- AI Change records (`CHG-###`) for those promotions or demotions ([`artifacts/ai-governance-canvas.md`](../artifacts/ai-governance-canvas.md)), where AI Change Control applies;
+- Execution Gate G ([`artifacts/execution-gate.md`](../artifacts/execution-gate.md)), Governed;
+- revised assumptions and decisions ([`artifacts/decision-assumption-log.md`](../artifacts/decision-assumption-log.md)), including gate Decisions;
 - Evidence Register updates;
 - architecture/roadmap updates where required.
 
 ## Human gates
 
-- `HG-VALUE` — before a value state REALIZED or SUSTAINED, or the conclusion `VALUE_CONFIRMED`, is declared.
-- `HG-AUTHORITY` — before AI authority is increased or restored.
+- `HG-VALUE` — before a value state REALIZED or SUSTAINED, or the conclusion `VALUE_CONFIRMED`, is declared; the Decision lists the `VRL-###` in `subject_ids`, or, without a Value Realization Report, the `INI-###` and Outcome `MET-###` ([`measurement/VALUE_REALIZATION.md`](../measurement/VALUE_REALIZATION.md) §2).
+- `HG-AUTHORITY` — before AI authority is increased or restored; the Decision lists the `AUT-###` in `subject_ids` and states the new level and scope ([`governance/AUTHORITY_ESCALATION_MODEL.md`](../governance/AUTHORITY_ESCALATION_MODEL.md) §3).
 
-Stop with `HUMAN_DECISION_REQUIRED` until a Decision closing the gate is recorded (`STANDARD.md` §8). Demotion needs no gate. Any other gate applies whenever its trigger occurs. Governed profile: Execution Gate G (`execution/EXECUTION_GATE_MODEL.md`).
+Record the gate Decision as `proposed` and stop with `HUMAN_DECISION_REQUIRED` until the human approves it ([`STANDARD.md`](../STANDARD.md) §8). Demotion needs no gate. Any other gate applies whenever its trigger occurs. Governed profile: Execution Gate G ([`execution/EXECUTION_GATE_MODEL.md`](../execution/EXECUTION_GATE_MODEL.md)).
 
 ## Exit condition
 
-Matches `EXECUTION_MODEL.md` §2:
+Matches [`EXECUTION_MODEL.md`](../EXECUTION_MODEL.md) §2:
 
 ```text
 effect evaluated against baseline
@@ -69,9 +72,9 @@ AND value state recorded with Evidence, where the profile requires a Value Reali
 AND diagnosis, target, roadmap and authority updated from Evidence
 ```
 
-An Initiative is value-confirmed only when the conditions in `measurement/VALUE_REALIZATION.md` §6 hold and `HG-VALUE` is approved.
+An Initiative is value-confirmed only when the conditions in [`measurement/VALUE_REALIZATION.md`](../measurement/VALUE_REALIZATION.md) §6 hold and `HG-VALUE` is approved.
 
-In addition, as in every phase: facts and assumptions are separated; every material conclusion is traceable to Evidence (`EVD-###`) or labeled `[ASSUMPTION]` or `[HYPOTHESIS]` (`AGENTS.md` §3); unresolved critical uncertainty is visible.
+In addition, as in every phase: facts and assumptions are separated; every material conclusion is traceable to Evidence (`EVD-###`) or labeled `[ASSUMPTION]` or `[HYPOTHESIS]` ([`AGENTS.md`](../AGENTS.md) §3); unresolved critical uncertainty is visible.
 
 ## Prohibited shortcut
 

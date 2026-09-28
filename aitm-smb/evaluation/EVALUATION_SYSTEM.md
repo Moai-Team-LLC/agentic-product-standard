@@ -12,9 +12,9 @@ AI-component quality
 
 These are separate but connected.
 
-This is the engagement evaluation system: it evaluates the transformed business system and its AI components. It is not `rubrics/`, which holds informative rubrics for judging AITM-SMB outputs themselves.
+This is the engagement evaluation system: it evaluates the transformed business system and its AI components. It is not [`rubrics/`](../rubrics/), which holds informative rubrics for judging AITM-SMB outputs themselves.
 
-Related: AI-component evaluation `evaluation/AI_EVALS.md`; evaluation datasets `evaluation/EVALUATION_DATASET.md`.
+Related: AI-component evaluation [`evaluation/AI_EVALS.md`](AI_EVALS.md); evaluation datasets [`evaluation/EVALUATION_DATASET.md`](EVALUATION_DATASET.md).
 
 ---
 
@@ -32,9 +32,9 @@ Layer                        layer value
 8 Risk / Governance          risk_governance
 ```
 
-Layer numbers are ordinals. They are not autonomy levels (L0–L5, `diagnostics/AUTONOMY_SUITABILITY.md` §2).
+Layer numbers are ordinals. They are not autonomy levels (L0–L5, [`diagnostics/AUTONOMY_SUITABILITY.md`](../diagnostics/AUTONOMY_SUITABILITY.md) §2).
 
-An evaluation covers the layers relevant to its scope. Where AI is used, human-AI interaction and technical reliability are relevant.
+An evaluation covers the layers relevant to its scope; a layer left out is recorded with its reason (`not_evaluated` in [`artifacts/evaluation-plan.md`](../artifacts/evaluation-plan.md)). Where AI is used, human-AI interaction and technical reliability are relevant.
 
 ---
 
@@ -95,7 +95,7 @@ evaluation:
 
 Plan fields (`layer` to `owner`) are fixed before execution and MUST NOT change after results are known. Result fields are added after execution. A repeated evaluation gets a new record.
 
-Instances: `artifacts/evaluation-plan.md`, which holds the plan fields as registered and appends the result fields in its results section, keyed by `evaluation_id`.
+Instances: [`artifacts/evaluation-plan.md`](../artifacts/evaluation-plan.md), which holds the plan fields as registered and appends the result fields in its results section, keyed by `evaluation_id`. Records in a plan inherit its `initiative_id`.
 
 ---
 
@@ -110,6 +110,6 @@ FAIL
 INSUFFICIENT_EVIDENCE
 ```
 
-These are result values, not agent statuses (`PUBLIC_API.md` §8).
+These are result values, not agent statuses ([`PUBLIC_API.md`](../PUBLIC_API.md) §8).
 
 A passing AI evaluation does not imply a passing business evaluation.

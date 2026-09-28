@@ -23,13 +23,13 @@ operating_model:
   human_ai_boundaries: []
   service_ownership: []
   support_model: []
-  change_ownership: []      # who approves AI changes (governance/AI_CHANGE_CONTROL.md)
-  governance_cadence: []    # governance/GOVERNANCE_OPERATING_MODEL.md §4, §6
+  change_ownership: []      # who approves AI changes, and each AI component's change class (governance/AI_CHANGE_CONTROL.md §2)
+  governance_cadence: []    # governance/GOVERNANCE_OPERATING_MODEL.md §4, §6; authority promotion and demotion path, and the role that may demote at once
   incident_ownership: []    # who records and handles incidents (operations/INCIDENT_MODEL.md)
   skill_requirements: []
 ```
 
-Role transitions are recorded in the Adoption Plan (`artifacts/adoption-plan.md`).
+Role transitions are recorded in the Adoption Plan ([`artifacts/adoption-plan.md`](adoption-plan.md)). In Compact, the Phase 7 operation minimum MAY sit on the Initiative as `operation:` in [`artifacts/transformation-roadmap.md`](transformation-roadmap.md) instead ([`methodology/07-operating-model-governance.md`](../methodology/07-operating-model-governance.md)).
 
 ## Required questions
 
@@ -43,8 +43,8 @@ Role transitions are recorded in the Adoption Plan (`artifacts/adoption-plan.md`
 
 ## Validation
 
-- [ ] every transformed Capability and material decision has an owner (`governance/GOVERNANCE_OPERATING_MODEL.md` §3; roles MAY be combined)
+- [ ] every transformed Capability and material decision has an owner ([`governance/GOVERNANCE_OPERATING_MODEL.md`](../governance/GOVERNANCE_OPERATING_MODEL.md) §3; roles MAY be combined)
 - [ ] human-AI boundaries match the Decision Rights Map and approved Authority Ceilings, where they exist
 - [ ] support model, change ownership, and incident ownership are explicit
 - [ ] governance cadence and review triggers are set
-- [ ] the owner of autonomy decisions is named; increases still require `HG-AUTHORITY`
+- [ ] the owner of autonomy decisions and the role that may demote at once are named; increases still require `HG-AUTHORITY`

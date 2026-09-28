@@ -116,7 +116,7 @@ metric:
   initiative_ids: []
 ```
 
-Instances: `artifacts/transformation-scorecard.md`.
+Instances: [`artifacts/transformation-scorecard.md`](artifacts/transformation-scorecard.md).
 
 ---
 
@@ -128,9 +128,13 @@ A metric MUST have:
 definition
 owner
 source
-baseline or explicit baseline gap
+baseline, explicit baseline gap, or none (no prior value)
 measurement cadence
 ```
+
+An unmeasured baseline does not remove the Metric: `baseline` holds `MISSING:<reason>` ([`TRACEABILITY.md`](TRACEABILITY.md) §4) and an Evidence Debt item is recorded ([`evidence/EVIDENCE_STANDARD.md`](evidence/EVIDENCE_STANDARD.md) §5).
+
+A Metric that structurally has no prior value (e.g. a quality measure of a new AI component, or the use of a field that did not exist) records `baseline: none` with the reason, as `none (<reason>)`. It needs no Evidence Debt; its first reading is the reference. It is not an unmeasured baseline: where a prior value existed but was not measured, use `MISSING:<reason>`.
 
 Avoid:
 
@@ -146,7 +150,7 @@ unless they explain a higher-level outcome.
 
 ## 8. Economic Metrics
 
-Measure the cost and economic effect of the transformation. Economic lenses and the economic hypothesis: `economics/TRANSFORMATION_ECONOMICS.md`.
+Measure the cost and economic effect of the transformation. Economic lenses and the economic hypothesis: [`economics/TRANSFORMATION_ECONOMICS.md`](economics/TRANSFORMATION_ECONOMICS.md).
 
 Examples:
 

@@ -37,7 +37,7 @@ capability_network:
 
 ## Validation
 
-- [ ] every dependency uses one `design/CAPABILITY_NETWORK.md` §2 relation, in the stated direction, recorded once
-- [ ] critical dependencies (`design/CAPABILITY_NETWORK.md` §4) are marked `criticality: high` with failure and capacity effects
-- [ ] shared capabilities are visible (`design/CAPABILITY_NETWORK.md` §6)
-- [ ] transformation boundary is limited to Capabilities relevant to the target Outcomes (`design/CAPABILITY_NETWORK.md` §7)
+- [ ] every dependency uses one [`design/CAPABILITY_NETWORK.md`](../design/CAPABILITY_NETWORK.md) §2 relation, in the stated direction, recorded once
+- [ ] critical dependencies ([`design/CAPABILITY_NETWORK.md`](../design/CAPABILITY_NETWORK.md) §4) are marked `criticality: high` with failure and capacity effects
+- [ ] shared capabilities are visible ([`design/CAPABILITY_NETWORK.md`](../design/CAPABILITY_NETWORK.md) §6)
+- [ ] transformation boundary is limited to Capabilities relevant to the target Outcomes ([`design/CAPABILITY_NETWORK.md`](../design/CAPABILITY_NETWORK.md) §7)

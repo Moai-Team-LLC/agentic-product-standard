@@ -67,4 +67,4 @@ uncertainty:
   gate:                 # HG-*, GAT-###, or phase exit by which it must be resolved
 ```
 
-Record material uncertainties only (INV-15). Instances: the Evidence Register (`artifacts/evidence-register.md`).
+Record material uncertainties only (INV-15). Instances: the Evidence Register ([`artifacts/evidence-register.md`](../artifacts/evidence-register.md)).

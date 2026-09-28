@@ -18,34 +18,34 @@ Move from observations and symptoms to evidence-backed Gaps and causes, so that 
 
 ## Required inputs
 
-The Required inputs of `methodology/02-capability-diagnosis.md` (approved Transformation Intent, Capability Map with CURRENT States).
+The Required inputs of [`methodology/02-capability-diagnosis.md`](../../methodology/02-capability-diagnosis.md) (approved Transformation Intent, Capability Map with CURRENT States).
 
 ## Normative sources
 
-- `methodology/02-capability-diagnosis.md` and the modules in its Method
-- `AGENT_DIAGNOSTIC_PROTOCOL.md` — agents follow it in this phase
+- [`methodology/02-capability-diagnosis.md`](../../methodology/02-capability-diagnosis.md) and the modules in its Method
+- [`AGENT_DIAGNOSTIC_PROTOCOL.md`](../../AGENT_DIAGNOSTIC_PROTOCOL.md) — agents follow it in this phase
 
 ## Produces
 
-- `artifacts/capability-diagnosis.md` — Gaps (`GAP-###`) with `cause_status`
-- `artifacts/diagnostic-record.md` — Diagnostic Records (`DIA-###`)
-- `artifacts/decision-assumption-log.md` — cause Hypotheses (`HYP-###`, `kind: cause`), Assumptions
+- [`artifacts/capability-diagnosis.md`](../../artifacts/capability-diagnosis.md) — Gaps (`GAP-###`) with `cause_status`
+- [`artifacts/diagnostic-record.md`](../../artifacts/diagnostic-record.md) — Diagnostic Records (`DIA-###`), Standard and above; in Compact, Observations and Symptoms MAY sit on the Gap instead
+- [`artifacts/decision-assumption-log.md`](../../artifacts/decision-assumption-log.md) — cause Hypotheses (`HYP-###`, `kind: cause`), Assumptions
 
-Evidence and Evidence Debt are appended as any skill may (`skills/INDEX.md` §4).
+Evidence and Evidence Debt are appended as any skill may ([`artifacts/_ARTIFACT_CONTRACT.md`](../../artifacts/_ARTIFACT_CONTRACT.md) §2).
 
 ## Specialist skills
 
-- `skills/12-separate-symptoms-gaps-causes/SKILL.md` — always: observations, symptoms, Gaps, competing cause Hypotheses
-- `skills/16-validate-root-cause/SKILL.md` — for the cause Hypotheses of each material Gap, before the Gap is declared intervention-ready
+- [`skills/12-separate-symptoms-gaps-causes/SKILL.md`](../12-separate-symptoms-gaps-causes/SKILL.md) — always: observations, symptoms, Gaps, competing cause Hypotheses
+- [`skills/16-validate-root-cause/SKILL.md`](../16-validate-root-cause/SKILL.md) — for the cause Hypotheses of each material Gap, before the Gap is declared intervention-ready
 
 ## Procedure
 
-1. Load the active profiles (`AGENT_CONTEXT_POLICY.md`), `methodology/02-capability-diagnosis.md`, and `AGENT_DIAGNOSTIC_PROTOCOL.md`.
+1. Load the active profiles ([`AGENT_CONTEXT_POLICY.md`](../../AGENT_CONTEXT_POLICY.md)), [`methodology/02-capability-diagnosis.md`](../../methodology/02-capability-diagnosis.md), and [`AGENT_DIAGNOSTIC_PROTOCOL.md`](../../AGENT_DIAGNOSTIC_PROTOCOL.md).
 2. Verify the phase's Required inputs; stop with `BLOCKED` when one is missing.
 3. Execute the phase Activities: skill 12, then skill 16.
-4. Merge specialist outputs into the phase instances; set each Gap's `cause_status` from its Hypotheses (skill 16 findings); keep stable IDs and the `TRACEABILITY.md` §4 trace.
-5. Validate the phase Exit condition (`EXECUTION_MODEL.md` §2) and the Validation of each produced contract; review aid: `rubrics/DIAGNOSTIC_QUALITY_RUBRIC.md`.
-6. Pass only intervention-ready Gaps to Phase 3; for the others, record Evidence Debt. Stop with `INSUFFICIENT_EVIDENCE` when no material Gap is ready without invented facts; with `HUMAN_DECISION_REQUIRED` at any `STANDARD.md` §8 gate whose trigger occurs.
+4. Merge specialist outputs into the phase instances; set each Gap's `cause_status` from its Hypotheses (skill 16 findings), `accepted_as_testable` only once an approved Decision of the Capability or Outcome owner lists the `HYP-###` ([`diagnostics/ROOT_CAUSE_ANALYSIS.md`](../../diagnostics/ROOT_CAUSE_ANALYSIS.md) §7; propose it in `decisions_needed`); keep stable IDs and the [`TRACEABILITY.md`](../../TRACEABILITY.md) §4 trace.
+5. Validate the phase Exit condition ([`EXECUTION_MODEL.md`](../../EXECUTION_MODEL.md) §2) and the Validation of each produced contract; review aid: [`rubrics/DIAGNOSTIC_QUALITY_RUBRIC.md`](../../rubrics/DIAGNOSTIC_QUALITY_RUBRIC.md).
+6. Pass only intervention-ready Gaps to Phase 3; for the others, record Evidence Debt. Stop with `INSUFFICIENT_EVIDENCE` when no material Gap is ready without invented facts; with `HUMAN_DECISION_REQUIRED` at any [`STANDARD.md`](../../STANDARD.md) §8 gate whose trigger occurs.
 
 ## MUST NOT
 
@@ -55,4 +55,4 @@ Evidence and Evidence Debt are appended as any skill may (`skills/INDEX.md` §4)
 
 ## Handoff
 
-Emit the `aitm_output` block defined in `AGENT_OUTPUT_STANDARD.md`.
+Emit the `aitm_output` block defined in [`AGENT_OUTPUT_STANDARD.md`](../../AGENT_OUTPUT_STANDARD.md).

@@ -16,7 +16,7 @@ Determine whether the transformation changed the intended business system. Holds
 
 ## Record
 
-Record contract: Metric `METRICS.md` §6.
+Record contract: Metric [`METRICS.md`](../METRICS.md) §6.
 
 ```yaml
 metrics: []                 # Metric records (MET-###)
@@ -44,18 +44,20 @@ scorecard:
 
 ## Rules
 
-Skill 01 records the baseline Metrics in Phase 0; any skill that defines a Metric MAY append its record to `metrics`.
+Skill 01 records a Metric for every Outcome in Phase 0 (an unmeasured baseline holds `MISSING:<reason>` with Evidence Debt, [`METRICS.md`](../METRICS.md) §7); besides the listed producers, skills append Metric records as [`artifacts/_ARTIFACT_CONTRACT.md`](_ARTIFACT_CONTRACT.md) §2 allows.
 
 Adoption alone cannot produce EFFECT_CONFIRMED.
 
-The scorecard carries the effect conclusion: whether the metrics moved against baseline in the evidence period. Whether that effect is attributable, sustained value is the value conclusion of the Value Realization Report (`measurement/VALUE_REALIZATION.md` §6). `INSUFFICIENT_EVIDENCE` is a result value, not an agent status (`PUBLIC_API.md` §8).
+The scorecard carries the effect conclusion: whether the metrics moved against baseline in the evidence period. Whether that effect is attributable, sustained value is the value conclusion of the Value Realization Report ([`measurement/VALUE_REALIZATION.md`](../measurement/VALUE_REALIZATION.md) §6). `INSUFFICIENT_EVIDENCE` is a result value, not an agent status ([`PUBLIC_API.md`](../PUBLIC_API.md) §8).
 
-Lower-level metrics explain performance but do not replace Outcome metrics (`STANDARD.md` §9).
+Lower-level metrics explain performance but do not replace Outcome metrics ([`STANDARD.md`](../STANDARD.md) §9).
+
+Where no Value Realization Report exists, an `HG-VALUE` Decision lists the Initiative and the Outcome Metrics whose effect is declared and cites this scorecard's Evidence ([`measurement/VALUE_REALIZATION.md`](../measurement/VALUE_REALIZATION.md) §2).
 
 ## Validation
 
-- [ ] every Metric has definition, owner, source, baseline or explicit baseline gap, and cadence (`METRICS.md` §7)
+- [ ] every Metric has definition, owner, source, baseline (a value, `MISSING:<reason>` with Evidence Debt, or `none (<reason>)`), and cadence ([`METRICS.md`](../METRICS.md) §7)
 - [ ] the scorecard links its Outcomes and Initiatives, and every listed metric resolves to a Metric record of that class
-- [ ] each material Initiative has at least one Outcome or Capability metric (`STANDARD.md` §9)
-- [ ] every observation cites Evidence, and missing readings stay visible (`TRACEABILITY.md` §4)
+- [ ] each material Initiative has at least one Outcome or Capability metric ([`STANDARD.md`](../STANDARD.md) §9)
+- [ ] every observation cites Evidence, and missing readings stay visible ([`TRACEABILITY.md`](../TRACEABILITY.md) §4)
 - [ ] the conclusion does not rest on adoption or AI-quality metrics alone

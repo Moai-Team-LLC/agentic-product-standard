@@ -6,9 +6,9 @@ AITM-SMB is designed for bounded context loading.
 
 ## Path resolution
 
-All paths in AITM-SMB files are relative to the AITM root: the directory containing `MANIFEST.md`. Resolve every path against the AITM root, never against the citing file.
+All paths in AITM-SMB files are relative to the AITM root: the directory containing [`MANIFEST.md`](MANIFEST.md). Resolve every path against the AITM root, never against the citing file.
 
-Keep the AITM root intact when installing it, for example as one skill through the root `SKILL.md`. Do not copy single skills out of it; their references would break.
+Keep the AITM root intact when installing it, for example as one skill through the root [`SKILL.md`](SKILL.md). Do not copy single skills out of it; their references would break.
 
 ## Core bundle
 
@@ -29,7 +29,7 @@ AGENT_OUTPUT_STANDARD.md
 ontology/ONTOLOGY.md
 ```
 
-The Core bundle is a loading set. It is not the Canonical Core (`NORMATIVE_INDEX.md`).
+The Core bundle is a loading set. It is not the Canonical Core ([`NORMATIVE_INDEX.md`](NORMATIVE_INDEX.md)).
 
 ## Task bundle
 
@@ -42,6 +42,7 @@ relevant module
 relevant artifact contract
 relevant skill
 approved upstream artifacts (engagement workspace)
+proposed gate Decisions and open Evidence Debt (engagement workspace)
 required Evidence
 ```
 
@@ -55,21 +56,21 @@ CONFORMANCE.md                conformance audits
 
 ## Profile
 
-The active profiles are recorded as an approved Decision (skill 36) in the engagement's Decision & Assumption Log, and confirmed with `HG-OUTCOME`.
+The active profiles are recorded as a Decision (skill 36) in the engagement's Decision & Assumption Log. It stays `status: proposed` until approved together with `HG-OUTCOME` (skill 01).
 
 To load a profile:
 
-1. read the approved, non-superseded profile Decision in the engagement workspace;
-2. load the `APPLICATION_PROFILES.md` sections for those profiles (artifact mapping: `MINIMUM_ARTIFACT_SET.md`);
-3. if no profile Decision exists, run `skills/36-select-application-profile/SKILL.md` before any step that needs a profile.
+1. read the non-superseded profile Decision in the engagement workspace: the approved one, or, while `HG-OUTCOME` is open, the proposed one;
+2. load the [`APPLICATION_PROFILES.md`](APPLICATION_PROFILES.md) sections for those profiles (artifact mapping: [`MINIMUM_ARTIFACT_SET.md`](MINIMUM_ARTIFACT_SET.md));
+3. if no profile Decision exists, run [`skills/36-select-application-profile/SKILL.md`](skills/36-select-application-profile/SKILL.md) before any step that needs a profile.
 
 Until that Decision is approved, the profile is provisional; say so in `status_reason`.
 
 ## Engagement workspace
 
-Engagement instances (filled artifacts, Evidence, Decisions, conformance declarations) live in an engagement workspace outside the AITM root (`artifacts/_ARTIFACT_CONTRACT.md`).
+Engagement instances (filled artifacts, Evidence, Decisions, conformance declarations) live in an engagement workspace outside the AITM root ([`artifacts/_ARTIFACT_CONTRACT.md`](artifacts/_ARTIFACT_CONTRACT.md)).
 
-Agents MUST NOT write engagement instances into the AITM root, including `artifacts/`, which holds contracts only. Paths in `artifacts_changed` are workspace paths.
+Agents MUST NOT write engagement instances into the AITM root, including [`artifacts/`](artifacts/), which holds contracts only. Paths in `artifacts_changed` are workspace paths.
 
 Load engagement data by reference and only as much as the task needs. Minimize and redact personal data before it enters agent context, evaluation datasets, or artifacts; reference sensitive sources by Evidence ID instead of copying them.
 

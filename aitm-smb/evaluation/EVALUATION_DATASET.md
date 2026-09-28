@@ -4,7 +4,7 @@
 
 Evaluation quality depends on representative cases.
 
-An evaluation dataset is the set of cases an AI component is evaluated against (`evaluation/EVALUATION_SYSTEM.md`, `evaluation/AI_EVALS.md`). Instances: the `datasets` of `artifacts/evaluation-plan.md`.
+An evaluation dataset is the set of cases an AI component is evaluated against ([`evaluation/EVALUATION_SYSTEM.md`](EVALUATION_SYSTEM.md), [`evaluation/AI_EVALS.md`](AI_EVALS.md)). Instances: the `datasets` of [`artifacts/evaluation-plan.md`](../artifacts/evaluation-plan.md).
 
 ---
 
@@ -51,7 +51,7 @@ eval_case:
   notes:
 ```
 
-Inputs taken from real cases follow `evidence/EVIDENCE_STANDARD.md` §8: minimize and redact personal or confidential content, or reference the source instead of copying it.
+Inputs taken from real cases follow [`evidence/EVIDENCE_STANDARD.md`](../evidence/EVIDENCE_STANDARD.md) §8: minimize and redact personal or confidential content, or reference the source instead of copying it.
 
 ---
 
@@ -74,4 +74,4 @@ tools change
 autonomy increases
 ```
 
-Material incidents are a main source of new cases (`operations/INCIDENT_MODEL.md` §4).
+Material incidents are a main source of new cases ([`operations/INCIDENT_MODEL.md`](../operations/INCIDENT_MODEL.md) §4).

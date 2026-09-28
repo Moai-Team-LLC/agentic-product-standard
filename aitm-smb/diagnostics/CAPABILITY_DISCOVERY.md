@@ -150,14 +150,14 @@ depends on:
 
 Dependencies matter because changing one capability may move the bottleneck elsewhere.
 
-Record them in the Capability's `dependencies`; where a Capability Network is used, as Capability Dependencies (`DEP-###`, `artifacts/capability-network.md`).
+Record them in the Capability's `dependencies`; where a Capability Network is used, as Capability Dependencies (`DEP-###`, [`artifacts/capability-network.md`](../artifacts/capability-network.md)).
 
 ---
 
 ## 7. Capability record
 
-Record each accepted Capability in the Capability Map (`artifacts/capability-map.md`; record contract `CORE_MODEL.md` §2 with the Capability Map extensions: `dependencies`, `confidence`, `boundary_notes`).
+Record each accepted Capability in the Capability Map ([`artifacts/capability-map.md`](../artifacts/capability-map.md); record contract [`CORE_MODEL.md`](../CORE_MODEL.md) §2 with the Capability Map extensions: `dependencies`, `confidence`, `boundary_notes`).
 
 A candidate not yet accepted MAY be recorded without an `id`. The `CAP-###` ID is assigned when the candidate is accepted into the Capability Map and never reused.
 
-Each accepted Capability in scope gets a CURRENT State (`CORE_MODEL.md` §3) in Phase 1.
+Each accepted Capability in scope gets a CURRENT State ([`CORE_MODEL.md`](../CORE_MODEL.md) §3) in Phase 1.

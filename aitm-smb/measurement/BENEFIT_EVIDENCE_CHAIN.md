@@ -32,9 +32,9 @@ benefit_chain:
   attribution_confidence:     # LOW | MEDIUM | HIGH (measurement/VALUE_REALIZATION.md §4)
 ```
 
-Instances: the `benefit_chain` of a Value Realization record (`artifacts/value-realization-report.md`). Required with the Measured profile (`APPLICATION_PROFILES.md`).
+Instances: the `benefit_chain` of a Value Realization record ([`artifacts/value-realization-report.md`](../artifacts/value-realization-report.md)). Required with the Measured profile ([`APPLICATION_PROFILES.md`](../APPLICATION_PROFILES.md)).
 
-A link without Evidence stays visible as a missing link (`TRACEABILITY.md` §4).
+A link without Evidence stays visible as a missing link ([`TRACEABILITY.md`](../TRACEABILITY.md) §4).
 
 ---
 

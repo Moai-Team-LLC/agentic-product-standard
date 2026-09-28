@@ -6,7 +6,7 @@ Transformation value is limited by the current System Constraint.
 
 AITM-SMB uses constraint analysis to prevent investment in non-limiting parts of the system.
 
-This module is the canonical source of System Constraint and Constraint Migration (`CANONICAL_CONCEPTS.md`). Record contract: `artifacts/system-constraint.md`.
+This module is the canonical source of System Constraint and Constraint Migration ([`CANONICAL_CONCEPTS.md`](../CANONICAL_CONCEPTS.md)). Record contract: [`artifacts/system-constraint.md`](../artifacts/system-constraint.md).
 
 ---
 
@@ -14,7 +14,7 @@ This module is the canonical source of System Constraint and Constraint Migratio
 
 A System Constraint (`CST-###`) is the condition that most limits the system's ability to improve a target Outcome.
 
-Not to be confused with a design Constraint (`ontology/ONTOLOGY.md`): a limit the architecture must respect, recorded in `constraints` fields.
+Not to be confused with a design Constraint ([`ontology/ONTOLOGY.md`](../ontology/ONTOLOGY.md)): a limit the architecture must respect, recorded in `constraints` fields.
 
 Common types (record `type`):
 
@@ -32,7 +32,7 @@ skill
 coordination
 ```
 
-A constraint type is not a cause class (`diagnostics/ROOT_CAUSE_ANALYSIS.md`); the two need not match.
+A constraint type is not a cause class ([`diagnostics/ROOT_CAUSE_ANALYSIS.md`](../diagnostics/ROOT_CAUSE_ANALYSIS.md)); the two need not match.
 
 ---
 
@@ -68,9 +68,9 @@ Constraint Migration is the movement of the System Constraint to another element
 
 A new overload is a migrated System Constraint only if it passes the constraint test (§3); otherwise it is a local bottleneck (§4).
 
-Predict the likely next constraint before a change is approved (INV-09; `design/LOCAL_OPTIMIZATION_GUARD.md` §2) and monitor it after the change. Record both in the System Constraint (`likely_next_constraint`, `monitoring_metric_ids`).
+Predict the likely next constraint before a change is approved (INV-09; [`design/LOCAL_OPTIMIZATION_GUARD.md`](LOCAL_OPTIMIZATION_GUARD.md) §2) and monitor it after the change. Record both in the System Constraint (`likely_next_constraint`, `monitoring_metric_ids`).
 
-When the constraint has moved, record the new System Constraint as a new `CST-###`; the old record gets `status: superseded` (`ontology/ONTOLOGY.md`).
+When the constraint has moved, record the new System Constraint as a new `CST-###`; the old record gets `status: superseded` ([`ontology/ONTOLOGY.md`](../ontology/ONTOLOGY.md)).
 
 ---
 
@@ -85,7 +85,7 @@ before optimizing non-constraining capabilities
 
 unless a prerequisite requires earlier work.
 
-Where a System Constraint has been identified, it is an input to Initiative selection (`methodology/04-prioritization.md`) and to sequencing (`transition/TRANSFORMATION_SEQUENCING.md`).
+Where a System Constraint has been identified, it is an input to Initiative selection ([`methodology/04-prioritization.md`](../methodology/04-prioritization.md)) and to sequencing ([`transition/TRANSFORMATION_SEQUENCING.md`](../transition/TRANSFORMATION_SEQUENCING.md)).
 
 ---
 

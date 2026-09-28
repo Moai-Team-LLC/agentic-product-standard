@@ -38,9 +38,13 @@ This file is the only place where the authority of each level is defined:
 
 The level is assessed per action class of a Capability, not per system.
 
-These are authority levels. They are not maturity levels (`maturity/MATURITY_MODEL.md` uses M0–M5) and not software-architecture levels. Where another ladder is in use, such as the Agentic Product Standard's architecture levels, write `AITM-L3` versus `APS-L3` (crosswalk: `docs/crosswalk-agentic-product-standard.md`).
+These are authority levels. They are not maturity levels ([`maturity/MATURITY_MODEL.md`](../maturity/MATURITY_MODEL.md) uses M0–M5) and not software-architecture levels. Where another ladder is in use, such as the Agentic Product Standard's architecture levels, write `AITM-L3` versus `APS-L3` (crosswalk: [`docs/crosswalk-agentic-product-standard.md`](../docs/crosswalk-agentic-product-standard.md)).
 
-Any level above L0 is granted only through `HG-AUTHORITY` (`STANDARD.md` §8).
+Any level above L0 is granted only through `HG-AUTHORITY` ([`STANDARD.md`](../STANDARD.md) §8). The currently approved level of an action class is its Autonomy Assessment `current_level`; the Authority Ceiling (§6) bounds it.
+
+Expanding the scope in which an approved level operates (more users, cases, or volume) with the same action class, level, and ceiling is rollout ([`execution/ROLLOUT_MODEL.md`](../execution/ROLLOUT_MODEL.md), `HG-PROMOTION`), not an authority increase.
+
+Profile selection classifies AI authority from these levels ([`APPLICATION_PROFILES.md`](../APPLICATION_PROFILES.md) §2).
 
 ---
 
@@ -64,7 +68,7 @@ Recovery Quality
 Identity / Permission Precision
 ```
 
-Rate each dimension `low | medium | high` with a short note. Each dimension has one field in the record (§7).
+Rate each dimension `low | medium | high` with a short note; mark a dimension that does not apply `not_relevant`, with the reason in the note. Each dimension has one field in the record (§7).
 
 ---
 
@@ -106,20 +110,22 @@ exceptions are common
 
 An Authority Ceiling is the highest autonomy level, with its prohibited actions, approval requirements, escalation conditions, and accountable owner, approved for an action class of a Capability.
 
-Each Capability in which AI is used or proposed SHOULD have one. Where an `AI_*` Intervention is selected, an approved Authority Ceiling is required in every profile (`APPLICATION_PROFILES.md`).
+Each Capability in which AI is used or proposed SHOULD have one. Where an `AI_*` Intervention is selected, an approved Authority Ceiling is required in every profile ([`APPLICATION_PROFILES.md`](../APPLICATION_PROFILES.md)).
 
 Rules:
 
-- Setting or raising a ceiling is an authority increase: `HG-AUTHORITY` (`STANDARD.md` §8). Lowering it is a demotion and needs no gate.
+- Setting or raising a ceiling is an authority increase: `HG-AUTHORITY` ([`STANDARD.md`](../STANDARD.md) §8). Lowering it is a demotion and needs no gate. An L0 ceiling grants nothing and needs no gate.
+- Every Decision closing `HG-AUTHORITY` lists the `AUT-###` in `subject_ids` (a `PLT-###` or `ROL-###` MAY be listed as context) and states the new level and its scope in `statement`. One Decision MAY both set the ceiling and raise `current_level` when its statement says both. Grants follow [`governance/AUTHORITY_ESCALATION_MODEL.md`](../governance/AUTHORITY_ESCALATION_MODEL.md) §3.
+- In Phase 3 the ceiling is proposed; `HG-AUTHORITY` is needed only for an `AI_*` candidate proposed for selection. An `AI_*` Intervention is not selected (Phase 4) before its ceiling is approved.
 - No technical implementation, pilot, rollout stage, or promotion may exceed the approved ceiling.
 - A recommended or operating level above the ceiling requires re-assessing the ceiling first.
 
-Record: the ceiling fields of the Autonomy Assessment (`artifacts/autonomy-assessment.md`).
+Record: the ceiling fields of the Autonomy Assessment ([`artifacts/autonomy-assessment.md`](../artifacts/autonomy-assessment.md)).
 
 ---
 
 ## 7. Autonomy assessment
 
-One assessment per `AI_*` Intervention and action class. It records the §3 dimensions, the recommended level, the Authority Ceiling (§6), and, after promotion or demotion reviews (`governance/AUTHORITY_ESCALATION_MODEL.md`), the level in operation.
+One assessment per `AI_*` Intervention and action class. It records the §3 dimensions, the recommended level, the Authority Ceiling (§6), and, after promotion or demotion reviews ([`governance/AUTHORITY_ESCALATION_MODEL.md`](../governance/AUTHORITY_ESCALATION_MODEL.md)), the level in operation.
 
-Record contract: `artifacts/autonomy-assessment.md`.
+Record contract: [`artifacts/autonomy-assessment.md`](../artifacts/autonomy-assessment.md).

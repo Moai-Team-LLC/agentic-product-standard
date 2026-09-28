@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-Target State Design defines how the transformed capability should behave: its Capability Target State, a State of type TARGET (`CORE_MODEL.md` §3, §12). Record contract: `artifacts/capability-target-state.md`.
+Target State Design defines how the transformed capability should behave: its Capability Target State, a State of type TARGET ([`CORE_MODEL.md`](../CORE_MODEL.md) §3, §12). Record contract: [`artifacts/capability-target-state.md`](../artifacts/capability-target-state.md).
 
 It is not a system diagram first.
 
@@ -129,7 +129,7 @@ Goal
 
 Use only when distinct bounded responsibilities justify additional coordination complexity.
 
-A pattern does not set authority. Authority is the autonomy level per action class (`diagnostics/AUTONOMY_SUITABILITY.md` §2), bounded by the approved Authority Ceiling.
+A pattern does not set authority. Authority is the autonomy level per action class ([`diagnostics/AUTONOMY_SUITABILITY.md`](../diagnostics/AUTONOMY_SUITABILITY.md) §2), bounded by the approved Authority Ceiling.
 
 ---
 
@@ -166,4 +166,4 @@ controls
 metrics
 ```
 
-The Validation of `artifacts/capability-target-state.md` applies this list.
+The Validation of [`artifacts/capability-target-state.md`](../artifacts/capability-target-state.md) applies this list.

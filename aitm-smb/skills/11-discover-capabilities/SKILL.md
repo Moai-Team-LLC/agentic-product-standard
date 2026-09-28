@@ -14,7 +14,7 @@ human_gate: false
 
 ## Purpose
 
-Identify the stable organizational abilities that produce the approved Outcomes and describe how each operates today, so that Gaps can be diagnosed against a CURRENT State. Invoked by `skills/02-map-current-system/SKILL.md`.
+Identify the stable organizational abilities that produce the approved Outcomes and describe how each operates today, so that Gaps can be diagnosed against a CURRENT State. Invoked by [`skills/02-map-current-system/SKILL.md`](../02-map-current-system/SKILL.md).
 
 ## Required inputs
 
@@ -23,23 +23,23 @@ Identify the stable organizational abilities that produce the approved Outcomes 
 
 ## Normative sources
 
-- `diagnostics/CAPABILITY_DISCOVERY.md` (granularity test §4)
-- `CORE_MODEL.md` §2 (Capability), §3 (State)
+- [`diagnostics/CAPABILITY_DISCOVERY.md`](../../diagnostics/CAPABILITY_DISCOVERY.md) (granularity test §4)
+- [`CORE_MODEL.md`](../../CORE_MODEL.md) §2 (Capability), §3 (State)
 
 ## Produces
 
-- `artifacts/capability-map.md` — Capability records (`CAP-###`) and their CURRENT States (`STA-###`, `type: CURRENT`)
-- `artifacts/evidence-register.md` — Evidence and Evidence Debt
+- [`artifacts/capability-map.md`](../../artifacts/capability-map.md) — Capability records (`CAP-###`) and their CURRENT States (`STA-###`, `type: CURRENT`)
+- [`artifacts/evidence-register.md`](../../artifacts/evidence-register.md) — Evidence and Evidence Debt
 
 ## Procedure
 
-1. Start from each approved Outcome and follow the discovery sequence (`diagnostics/CAPABILITY_DISCOVERY.md` §2).
+1. Start from each approved Outcome and follow the discovery sequence ([`diagnostics/CAPABILITY_DISCOVERY.md`](../../diagnostics/CAPABILITY_DISCOVERY.md) §2).
 2. Name and bound candidates (§3); apply the granularity test (§4); decompose only per §5.
 3. Assign a new `CAP-###` when a candidate is accepted (§7); record `outcome_ids`, `value_stream_ids`, owner, `evidence_ids`, and the Capability Map extensions `dependencies` (§6), `confidence`, `boundary_notes`.
-4. For each Capability in scope, record one CURRENT State across the relevant dimensions (`CORE_MODEL.md` §3) and set `current_state_id`.
-5. Back each State with `evidence_ids`, or with `assumption_ids` and `[ASSUMPTION]` labels (`AGENTS.md` §3); record missing Evidence as Evidence Debt.
-6. Validate against the `artifacts/capability-map.md` Validation.
-7. Stop with `INSUFFICIENT_EVIDENCE` when a Capability or State would require invented business facts; with `BLOCKED` while `HG-OUTCOME` is open; with `HUMAN_DECISION_REQUIRED` when any `STANDARD.md` §8 gate is reached.
+4. For each Capability in scope, record one CURRENT State across the relevant dimensions ([`CORE_MODEL.md`](../../CORE_MODEL.md) §3) and set `current_state_id`.
+5. Back each State with `evidence_ids`, or with `assumption_ids` of Assumptions a named business owner stated or accepted (`[ASSUMPTION]`, [`AGENTS.md`](../../AGENTS.md) §3); label agent inference `[HYPOTHESIS]`: it does not satisfy the phase exit. Record missing Evidence as Evidence Debt.
+6. Validate against the [`artifacts/capability-map.md`](../../artifacts/capability-map.md) Validation.
+7. Stop with `INSUFFICIENT_EVIDENCE` when a Capability or State would require invented business facts or rest only on agent inference; with `HUMAN_DECISION_REQUIRED` (gate in `open_gates`) while `HG-OUTCOME` is open or when any [`STANDARD.md`](../../STANDARD.md) §8 gate is reached.
 
 ## MUST NOT
 
@@ -50,4 +50,4 @@ Identify the stable organizational abilities that produce the approved Outcomes 
 
 ## Handoff
 
-Emit the `aitm_output` block defined in `AGENT_OUTPUT_STANDARD.md`.
+Emit the `aitm_output` block defined in [`AGENT_OUTPUT_STANDARD.md`](../../AGENT_OUTPUT_STANDARD.md).

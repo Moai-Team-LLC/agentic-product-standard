@@ -4,9 +4,9 @@
 
 These are not examples of how AITM-SMB must be applied.
 
-They exist only to test whether the methodology remains general enough to work across structurally different SMB contexts. A worked example built on Scenario B: `examples/compact-scenario-b/` (fictional, non-normative).
+They exist only to test whether the methodology remains general enough to work across structurally different SMB contexts. A worked example built on Scenario B: [`examples/compact-scenario-b/`](../examples/compact-scenario-b/) (fictional, non-normative).
 
-Each scenario names the profile it would likely select (`APPLICATION_PROFILES.md`) and what a correct application must not produce (named anti-patterns: `rubrics/ANTI_PATTERNS.md`).
+Each scenario names the profile it would likely select ([`APPLICATION_PROFILES.md`](../APPLICATION_PROFILES.md)) and what a correct application must not produce (named anti-patterns: [`rubrics/ANTI_PATTERNS.md`](../rubrics/ANTI_PATTERNS.md)).
 
 ## Scenario A — Expert-dependent service business
 
@@ -49,7 +49,7 @@ Characteristics:
 - outcomes are difficult to attribute;
 - network quality matters more than transaction volume.
 
-Likely profile: Standard + Measured. Must not produce: Metric substitution; value declared REALIZED without attribution (`measurement/VALUE_REALIZATION.md`).
+Likely profile: Standard + Measured. Must not produce: Metric substitution; value declared REALIZED without attribution ([`measurement/VALUE_REALIZATION.md`](../measurement/VALUE_REALIZATION.md)).
 
 ## Scenario E — High-authority, irreversible-action business
 
@@ -60,7 +60,7 @@ Characteristics:
 - external rules constrain the process;
 - pressure exists to let AI act without per-action approval.
 
-Likely profile: Governed (+ Measured). Must not produce: Autonomous-by-default. A correct application typically includes at least one AI candidate classified D or E (`diagnostics/AI_SUITABILITY.md` §5) and recorded as rejected, and Authority Ceilings approved through `HG-AUTHORITY`.
+Likely profile: Standard + Governed (+ Measured). Must not produce: Autonomous-by-default. A correct application typically includes at least one AI candidate classified D or E ([`diagnostics/AI_SUITABILITY.md`](../diagnostics/AI_SUITABILITY.md) §5) and recorded as rejected, and Authority Ceilings approved through `HG-AUTHORITY`.
 
 ## Validation use
 
@@ -68,4 +68,4 @@ A methodology component is stronger when it works across all scenarios without c
 
 If a phase, artifact, or skill only works for one scenario, it should be treated as an extension rather than core methodology.
 
-Walk a changed component through each scenario and check that it neither requires a core-definition change nor produces a listed anti-pattern. An application may also legitimately end with no AI selected, or with `INSUFFICIENT_EVIDENCE` (`PUBLIC_API.md` §8).
+Walk a changed component through each scenario and check that it neither requires a core-definition change nor produces a listed anti-pattern. An application may also legitimately end with no AI selected, or with `INSUFFICIENT_EVIDENCE` ([`PUBLIC_API.md`](../PUBLIC_API.md) §8).

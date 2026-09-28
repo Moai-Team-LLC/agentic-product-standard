@@ -1,8 +1,8 @@
 # AITM-SMB Skill Registry
 
-Skills are procedures that execute the methodology. They define no methodology semantics; modules and record contracts do (`NORMATIVE_INDEX.md`, `CANONICAL_CONCEPTS.md`).
+Skills are procedures that execute the methodology. They define no methodology semantics; modules and record contracts do ([`NORMATIVE_INDEX.md`](../NORMATIVE_INDEX.md), [`CANONICAL_CONCEPTS.md`](../CANONICAL_CONCEPTS.md)).
 
-Each skill lives at `skills/<directory>/SKILL.md`. Shape of a skill: `skills/_SKILL_TEMPLATE.md`.
+Each skill lives at `skills/<directory>/SKILL.md`. Shape of a skill: [`skills/_SKILL_TEMPLATE.md`](_SKILL_TEMPLATE.md).
 
 ---
 
@@ -26,29 +26,29 @@ If an orchestrator and a specialist conflict, the specialist procedure plus the 
 
 ## 2. Router
 
-Phase: `EXECUTION_MODEL.md` §1. Human gates: `STANDARD.md` §8. Produces: artifact contracts in `artifacts/` (§4).
+Phase: [`EXECUTION_MODEL.md`](../EXECUTION_MODEL.md) §1. Human gates: [`STANDARD.md`](../STANDARD.md) §8. Produces: artifact contracts in [`artifacts/`](../artifacts/) (§4).
 
 | No. | Directory | Purpose | Phase | Human gates | Produces |
 |---|---|---|---|---|---|
-| 01 | `01-discover-transformation` | frame Outcomes, owner, constraints; select profiles | 0 | HG-OUTCOME | transformation-intent, decision-assumption-log, transformation-scorecard (baseline Metrics) |
+| 01 | `01-discover-transformation` | frame Outcomes, owner, constraints; select profiles | 0 | HG-OUTCOME | transformation-intent, decision-assumption-log, transformation-scorecard (a Metric per Outcome) |
 | 02 | `02-map-current-system` | map Capabilities, their CURRENT States, and the current business system | 1 | — | business-system-map, capability-map, evidence-register |
 | 03 | `03-diagnose-capabilities` | turn symptoms into Gaps and tested cause Hypotheses | 2 | — | capability-diagnosis, diagnostic-record, decision-assumption-log |
 | 04 | `04-design-interventions` | design intervention candidates across all families; AI only where justified | 3 | — | intervention-map, ai-suitability-assessment, autonomy-assessment |
-| 05 | `05-prioritize-initiatives` | select, defer, reject, or investigate candidates; create Initiatives | 4 | HG-INITIATIVE, HG-BUDGET | prioritization-matrix, transformation-roadmap, intervention-map (status), decision-assumption-log |
-| 06 | `06-design-target-system` | design Capability Target States and, from Standard, the Target Operating Architecture | 5 | HG-TOA, HG-DECISION-RIGHTS | capability-target-state, capability-network, system-constraint, system-effect-assessment, target-operating-architecture, decision-rights-map, decision-assumption-log |
-| 07 | `07-build-roadmap` | sequence Initiatives through operable states, slices, gates, and pilots | 6 | HG-BUDGET | transformation-roadmap, transition-state, transformation-portfolio, pilot-plan, evaluation-plan, execution-gate (incl. C), decision-assumption-log |
-| 08 | `08-design-operating-model` | make the system operable and governed; evaluate pilots; roll out | 7 | HG-DECISION-RIGHTS, HG-AUTHORITY, HG-RISK, HG-PROMOTION | operating-model, observability-plan, adoption-plan, ai-governance-canvas, rollout-plan, evaluation-plan (results), execution-gate (D, E, F), autonomy-assessment, decision-assumption-log |
-| 09 | `09-measure-evolution` | measure effect and value; evolve design and authority from evidence | 8 | HG-VALUE, HG-AUTHORITY | transformation-scorecard, value-realization-report, evaluation-plan (results), execution-gate (G), autonomy-assessment, decision-assumption-log |
+| 05 | `05-prioritize-initiatives` | select, defer, reject, or investigate candidates; create Initiatives | 4 | HG-INITIATIVE, HG-BUDGET | prioritization-matrix, transformation-roadmap (INI, economic hypothesis), intervention-map (status), system-effect-assessment (draft, via 19), execution-gate (A), decision-assumption-log |
+| 06 | `06-design-target-system` | design Capability Target States and, from Standard, the Target Operating Architecture | 5 | HG-TOA, HG-DECISION-RIGHTS | capability-target-state, capability-network, system-constraint, system-effect-assessment (refined), target-operating-architecture, decision-rights-map, execution-gate (B), decision-assumption-log |
+| 07 | `07-build-roadmap` | sequence Initiatives through operable states, slices, gates, and pilots | 6 | HG-BUDGET | transformation-roadmap (incl. slices, experiments), transition-state, transformation-portfolio, pilot-plan, evaluation-plan, execution-gate (creates C–G), decision-assumption-log |
+| 08 | `08-design-operating-model` | make the system operable and governed; evaluate pilots; roll out | 7 | HG-DECISION-RIGHTS, HG-AUTHORITY, HG-RISK, HG-PROMOTION | transformation-roadmap (Compact `operation`), operating-model, observability-plan, adoption-plan, ai-governance-canvas, rollout-plan, evaluation-plan (results; new plans via 26), execution-gate (D, E, F), autonomy-assessment, decision-assumption-log |
+| 09 | `09-measure-evolution` | measure effect and value; evolve design and authority from evidence | 8 | HG-VALUE, HG-AUTHORITY | transformation-scorecard, value-realization-report, evaluation-plan (results), execution-gate (G), autonomy-assessment, ai-governance-canvas (changes), decision-assumption-log |
 | 10 | `10-audit-aitm-engagement` | audit an engagement's conformance | any | — | findings (skill 38 writes the conformance declaration) |
 | 11 | `11-discover-capabilities` | discover Capabilities for approved Outcomes and record their CURRENT States | 1 | — | capability-map, evidence-register |
 | 12 | `12-separate-symptoms-gaps-causes` | separate observations, symptoms, Gaps, and competing cause Hypotheses | 2 | — | capability-diagnosis, diagnostic-record, decision-assumption-log, evidence-register |
 | 13 | `13-assess-ai-suitability` | assess and classify AI fit of an `AI_*` candidate against non-AI alternatives | 3 | — | ai-suitability-assessment |
 | 14 | `14-assess-autonomy` | recommend autonomy levels and propose the Authority Ceiling per action class | 3 | HG-AUTHORITY | autonomy-assessment |
 | 15 | `15-design-target-state` | design one Capability Target State | 5 | — | capability-target-state |
-| 16 | `16-validate-root-cause` | test cause Hypotheses against evidence and set their status | 2 | — | diagnostic-record, decision-assumption-log, evidence-register |
+| 16 | `16-validate-root-cause` | test cause Hypotheses against evidence, set their status, and propose acceptance as testable to the owner | 2 | — | diagnostic-record, decision-assumption-log, evidence-register |
 | 17 | `17-map-capability-network` | map the Outcome-relevant dependencies between Capabilities | 5 | — | capability-network |
 | 18 | `18-identify-system-constraint` | identify the System Constraint and its likely migration | 5 | — | system-constraint |
-| 19 | `19-assess-system-effects` | answer the system-effect questions for a selected Initiative | 5 | — | system-effect-assessment |
+| 19 | `19-assess-system-effects` | answer the system-effect questions for an Initiative before its selection is decided; refine them at system level | 4-5 | — | system-effect-assessment |
 | 20 | `20-design-target-operating-architecture` | integrate Capability Target States into one Target Operating Architecture | 5 | HG-TOA | target-operating-architecture |
 | 21 | `21-design-transition-states` | design independently operable Transition States | 6 | — | transition-state |
 | 22 | `22-build-transformation-portfolio` | build the portfolio and bound transformation WIP | 6 | HG-INITIATIVE, HG-BUDGET | transformation-portfolio |
@@ -71,7 +71,7 @@ Phase: `EXECUTION_MODEL.md` §1. Human gates: `STANDARD.md` §8. Produces: artif
 | 39 | `39-audit-framework-integrity` | check the AITM-SMB repository's integrity before a release | maintenance | — | none (findings) |
 | 40 | `40-handle-incident` | record and triage incidents; demote authority when a trigger fires | 7-8 | HG-AUTHORITY | incident-record |
 
-"Human gates" lists the gates a skill's output requires (`human_gate: true`); the closing Decisions go to the decision-assumption-log once the named human gives them. Every skill still stops at any other gate whose trigger occurs. Each skill's frontmatter and `## Produces` are authoritative; report any drift from this table (skill 39).
+"Human gates" lists the gates a skill's output requires (`human_gate: true`); the skill records each as a proposed gate Decision in the decision-assumption-log, and the named human's approval updates it ([`AGENTS.md`](../AGENTS.md) §4). Every skill still stops at any other gate whose trigger occurs. Each skill's frontmatter and `## Produces` are authoritative; report any drift from this table (skill 39).
 
 ---
 
@@ -94,30 +94,30 @@ Orchestrators and the specialists they invoke (conditions in each orchestrator):
 01 discover transformation   Phase 0   36, 37
 02 map current system        Phase 1   11
 03 diagnose capabilities     Phase 2   12, 16
-04 design interventions      Phase 3   13, 14 (AI_* candidates)
-05 prioritize initiatives    Phase 4   none (modules: its Normative sources)
+04 design interventions      Phase 3   13 (AI_* candidates), 14 (AI_* candidates proposed for selection)
+05 prioritize initiatives    Phase 4   19 (each candidate proposed for selection, before HG-INITIATIVE)
 06 design target system      Phase 5   15, 17, 18, 19, 24, 23, 20 (24 again after 20)
 07 build roadmap             Phase 6   21, 22, 25, 26, 27
-08 design operating model    Phase 7   28, 30, 31, 32, 29, 35, 34
+08 design operating model    Phase 7   28, 30, 31, 34, 32, 29, 26, 35
 09 measure evolution         Phase 8   26, 33, 34
 10 audit engagement          any       38
 ```
 
 A specialist MAY also run on its own for a bounded task. It then verifies its own inputs and stops at its own gates.
 
-A first Compact engagement, step by step: `QUICKSTART.md`.
+A first Compact engagement, step by step: [`QUICKSTART.md`](../QUICKSTART.md).
 
 ---
 
 ## 4. Conventions
 
-Paths: every path in a skill is relative to the AITM root, the directory containing `MANIFEST.md` (`AGENT_CONTEXT_POLICY.md`). Skills are not self-contained: they need the whole AITM root. Install it as one skill through the root `SKILL.md`; do not copy single skills out.
+Paths: every path in a skill is relative to the AITM root, the directory containing [`MANIFEST.md`](../MANIFEST.md) ([`AGENT_CONTEXT_POLICY.md`](../AGENT_CONTEXT_POLICY.md)). Skills are not self-contained: they need the whole AITM root. Install it as one skill through the root [`SKILL.md`](../SKILL.md); do not copy single skills out.
 
-Context: every skill assumes the Core bundle and the active profiles are loaded (`AGENT_CONTEXT_POLICY.md`).
+Context: every skill assumes the Core bundle and the active profiles are loaded ([`AGENT_CONTEXT_POLICY.md`](../AGENT_CONTEXT_POLICY.md)).
 
-Produces: names each artifact contract (`artifacts/<name>.md`) the skill writes to, and the records it creates or updates; the contracts named are exactly those whose `produced_by` lists the skill (`artifacts/_ARTIFACT_CONTRACT.md` §2). Engagement instances go to the engagement workspace (`artifacts/_ARTIFACT_CONTRACT.md` §6), never into the AITM root. Any skill MAY also append Evidence, Evidence Debt, and Uncertainties to the Evidence Register; Decisions (including gate approvals), Assumptions, and Risks to the Decision & Assumption Log; and Metric records to the Transformation Scorecard `metrics` list. Such appends are not listed in `## Produces`.
+Produces: names each artifact contract (`artifacts/<name>.md`) the skill writes to, and the records it creates or updates; the contracts named are exactly those whose `produced_by` lists the skill ([`artifacts/_ARTIFACT_CONTRACT.md`](../artifacts/_ARTIFACT_CONTRACT.md) §2). Engagement instances go to the engagement workspace ([`artifacts/_ARTIFACT_CONTRACT.md`](../artifacts/_ARTIFACT_CONTRACT.md) §6), never into the AITM root. Appends not listed in `## Produces`: [`artifacts/_ARTIFACT_CONTRACT.md`](../artifacts/_ARTIFACT_CONTRACT.md) §2.
 
-Frontmatter (shape: `skills/_SKILL_TEMPLATE.md`):
+Frontmatter (shape: [`skills/_SKILL_TEMPLATE.md`](_SKILL_TEMPLATE.md)):
 
 ```text
 name                        equals the directory name
@@ -132,9 +132,11 @@ human_gate                  true | false
 gates                       only when human_gate is true: the STANDARD.md §8 gate IDs
 ```
 
-`human_gate: true` means the skill's output requires a `STANDARD.md` §8 approval before downstream use; `gates` names those gates. The skill then stops with `HUMAN_DECISION_REQUIRED` until a Decision closing each gate is recorded. `human_gate: false` does not exempt a skill from any gate whose trigger occurs.
+`human_gate: true` means the skill's output requires a [`STANDARD.md`](../STANDARD.md) §8 approval before downstream use; `gates` names those gates. The skill then records each gate as a proposed Decision and stops with `HUMAN_DECISION_REQUIRED` until the named human approves it ([`AGENTS.md`](../AGENTS.md) §4). `human_gate: false` does not exempt a skill from any gate whose trigger occurs.
 
-Handoff: every skill emits the `aitm_output` block defined in `AGENT_OUTPUT_STANDARD.md`.
+Status at gates, for every skill: a gate reached, or a required upstream gate still open, yields `HUMAN_DECISION_REQUIRED` unless a higher-precedence status applies, and the gate is always listed in `open_gates`; `BLOCKED` is only for a missing input or an unresolved normative conflict ([`PUBLIC_API.md`](../PUBLIC_API.md) §8).
+
+Handoff: every skill emits the `aitm_output` block defined in [`AGENT_OUTPUT_STANDARD.md`](../AGENT_OUTPUT_STANDARD.md).
 
 ---
 
@@ -142,4 +144,4 @@ Handoff: every skill emits the `aitm_output` block defined in `AGENT_OUTPUT_STAN
 
 Skill numbers (01–40 in 1.1.0) are the stable identifiers for the 1.x line. Directory slugs and titles are not; 1.1.0 renamed `04-map-ai-opportunities` to `04-design-interventions` and `06-design-target-architecture` to `06-design-target-system`.
 
-New 1.x skills use new numbers (1.1.0 added 40); a number is never repurposed. Extension skills: `EXTENSION_MODEL.md`.
+New 1.x skills use new numbers (1.1.0 added 40); a number is never repurposed. Extension skills: [`EXTENSION_MODEL.md`](../EXTENSION_MODEL.md).

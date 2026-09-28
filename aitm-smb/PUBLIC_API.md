@@ -62,9 +62,9 @@ EVL-###  Evaluation
 INC-###  Incident
 ```
 
-All other prefixes registered in `ontology/ONTOLOGY.md` are reserved and MUST NOT be repurposed within 1.x.
+All other prefixes registered in [`ontology/ONTOLOGY.md`](ontology/ONTOLOGY.md) are reserved and MUST NOT be repurposed within 1.x.
 
-Identifier format, uniqueness, and supersession: `ontology/ONTOLOGY.md`.
+Identifier format, uniqueness, and supersession: [`ontology/ONTOLOGY.md`](ontology/ONTOLOGY.md).
 
 ---
 
@@ -82,7 +82,7 @@ Outcome
 
 1.x-compatible Extensions MUST preserve this trace.
 
-This is the compatibility floor for Extensions. The minimum valid path of an application is `EXECUTION_MODEL.md` §6; conformance requirements are in `CONFORMANCE.md` §1.
+This is the compatibility floor for Extensions. The minimum valid path of an application is [`EXECUTION_MODEL.md`](EXECUTION_MODEL.md) §6; conformance requirements are in [`CONFORMANCE.md`](CONFORMANCE.md) §1.
 
 ---
 
@@ -123,7 +123,7 @@ CONTROL
 FEEDBACK
 ```
 
-Definitions: `design/INTERVENTION_PATTERNS.md`. Challenge order: `STANDARD.md` §5.
+Definitions: [`design/INTERVENTION_PATTERNS.md`](design/INTERVENTION_PATTERNS.md). Challenge order: [`STANDARD.md`](STANDARD.md) §5.
 
 An `AI_*` family names the kind of AI contribution; authority is set only by the autonomy level (§7).
 
@@ -142,7 +142,7 @@ L4 — Execute within bounded policy
 L5 — Pursue bounded objective and escalate exceptions
 ```
 
-Authority definitions per level: `diagnostics/AUTONOMY_SUITABILITY.md` §2. Levels are assessed per action class of a Capability. They are authority levels, not maturity or software-architecture levels (`STANDARD.md` §6).
+Authority definitions per level: [`diagnostics/AUTONOMY_SUITABILITY.md`](diagnostics/AUTONOMY_SUITABILITY.md) §2. Levels are assessed per action class of a Capability. They are authority levels, not maturity or software-architecture levels ([`STANDARD.md`](STANDARD.md) §6).
 
 Extensions MAY add controls around a level but MUST NOT silently reinterpret its authority.
 
@@ -160,11 +160,11 @@ INSUFFICIENT_EVIDENCE
 
 - `COMPLETE` — all required outputs produced; all required validations passed; no gate left open.
 - `PARTIAL` — some outputs produced; no blocker; remaining work is listed.
-- `BLOCKED` — a required input, dependency, or unresolved normative conflict prevents progress.
-- `HUMAN_DECISION_REQUIRED` — work stopped at a human gate (`STANDARD.md` §8); `open_gates` lists it.
+- `BLOCKED` — a required input or dependency is missing, or an unresolved normative conflict prevents progress. An open gate is not a blocker.
+- `HUMAN_DECISION_REQUIRED` — work stopped at a human gate ([`STANDARD.md`](STANDARD.md) §8) that is not approved, including a required upstream gate that is still open; `open_gates` lists it.
 - `INSUFFICIENT_EVIDENCE` — proceeding would require invented business facts.
 
-When several apply, report the first in this order: `BLOCKED`, `INSUFFICIENT_EVIDENCE`, `HUMAN_DECISION_REQUIRED`, `PARTIAL`, `COMPLETE`; list the others in `status_reason` (`AGENT_OUTPUT_STANDARD.md`).
+When several apply, report the first in this order: `BLOCKED`, `INSUFFICIENT_EVIDENCE`, `HUMAN_DECISION_REQUIRED`, `PARTIAL`, `COMPLETE`; list the others in `status_reason` ([`AGENT_OUTPUT_STANDARD.md`](AGENT_OUTPUT_STANDARD.md)). A gate that is reached or required and not approved is listed in `open_gates` whichever status is reported.
 
 Domain result enums elsewhere (e.g. pilot result `INSUFFICIENT_EVIDENCE`) are separate `result` values, not agent statuses.
 
@@ -180,4 +180,4 @@ Within AITM-SMB 1.x:
 - deprecated artifacts will retain redirect guidance;
 - new optional modules may be added without changing Core semantics.
 
-An incompatible change requires AITM-SMB 2.0. Version classes: `VERSIONING.md`.
+An incompatible change requires AITM-SMB 2.0. Version classes: [`VERSIONING.md`](VERSIONING.md).

@@ -4,7 +4,7 @@
 
 ## 1. One-page method
 
-AITM-SMB transforms an SMB in twelve steps. The steps are the one-page view; the executable phases are `EXECUTION_MODEL.md` §1.
+AITM-SMB transforms an SMB in twelve steps. The steps are the one-page view; the executable phases are [`EXECUTION_MODEL.md`](EXECUTION_MODEL.md) §1.
 
 | Step | Phase |
 |---|---|
@@ -25,7 +25,7 @@ AITM-SMB transforms an SMB in twelve steps. The steps are the one-page view; the
 
 ## 2. Canonical reasoning chain
 
-The canonical transformation chain is defined only in `STANDARD.md` §2.
+The canonical transformation chain is defined only in [`STANDARD.md`](STANDARD.md) §2.
 
 The steps in §1 traverse that chain; they are not a second chain.
 
@@ -33,7 +33,7 @@ The steps in §1 traverse that chain; they are not a second chain.
 
 ## 3. Minimum valid path
 
-Every application, including Compact, MUST preserve the minimum valid path in `EXECUTION_MODEL.md` §6.
+Every application, including Compact, MUST preserve the minimum valid path in [`EXECUTION_MODEL.md`](EXECUTION_MODEL.md) §6.
 
 No profile may skip these semantic layers.
 
@@ -41,7 +41,7 @@ No profile may skip these semantic layers.
 
 ## 4. Mandatory human gates
 
-Human approval is required at the gates in `STANDARD.md` §8 (`HG-*`), at whichever step their trigger occurs.
+Human approval is required at the gates in [`STANDARD.md`](STANDARD.md) §8 (`HG-*`), at whichever step their trigger occurs.
 
 ---
 
@@ -62,13 +62,13 @@ What prevents that capability today?
 What explains the gap?
 
 ### Intervention
-What is the simplest effective change? (full challenge: `DECISION_MODEL.md` §1)
+What is the simplest effective change? (full challenge: [`DECISION_MODEL.md`](DECISION_MODEL.md) §1)
 
 ### AI
 What specifically requires probabilistic intelligence?
 
 ### Autonomy
-Why are assistance and explicit human approval insufficient? (full challenge: `DECISION_MODEL.md` §3)
+Why are assistance and explicit human approval insufficient? (full challenge: [`DECISION_MODEL.md`](DECISION_MODEL.md) §3)
 
 ### System
 What upstream, downstream, shared-resource, incentive, and Constraint Migration effects will this change create? (INV-09)

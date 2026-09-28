@@ -73,10 +73,12 @@ successfully resolved customer issues
 
 ## 5. Economic hypothesis
 
+Instances: the Initiative extension `economic_hypothesis` in the Transformation Roadmap ([`artifacts/transformation-roadmap.md`](../artifacts/transformation-roadmap.md)), keyed by its `INI-###`.
+
 ```yaml
 economic_hypothesis:
-  initiative_id:        # INI-###, set when the Initiative is selected (Phase 4)
-  intervention_ids: []  # INT-### it concerns before an Initiative exists
+  initiative_id:        # INI-### whose record holds it
+  intervention_ids: []  # INT-### it concerns
   current_cost:
   expected_future_cost:
   expected_value:       # estimate and its §3 value class(es)
@@ -92,11 +94,11 @@ Use across the lifecycle:
 
 ```text
 Phase 3  economic assumptions of candidate Interventions (ASM-###)
-Phase 4  economic hypothesis of each material candidate, prepared before HG-BUDGET
+Phase 4  economic hypothesis on each material candidate's Initiative, prepared before HG-BUDGET
 Phase 8  hypothesis evaluated against measured cost and value
 ```
 
-Before `HG-BUDGET` (`STANDARD.md` §8), every material candidate carries an economic hypothesis. The Decision closing `HG-BUDGET` cites it: the `INI-###` or `INT-###` it concerns in `subject_ids`, its `key_assumptions` in `assumption_ids`, and its `downside_case` in `rationale`.
+Before `HG-BUDGET` ([`STANDARD.md`](../STANDARD.md) §8), every material candidate carries an economic hypothesis. The Decision closing `HG-BUDGET` cites it: the `INI-###` that holds it in `subject_ids`, its `key_assumptions` in `assumption_ids`, and its `downside_case` in `rationale`.
 
 ---
 

@@ -32,7 +32,7 @@ system_constraint:
 
 ## Rules
 
-Do not label every bottleneck a system constraint (`design/CONSTRAINT_ANALYSIS.md` §4).
+Do not label every bottleneck a system constraint ([`design/CONSTRAINT_ANALYSIS.md`](../design/CONSTRAINT_ANALYSIS.md) §4).
 
 A System Constraint is not a design Constraint; design Constraints go in `constraints` fields.
 

@@ -22,7 +22,7 @@ Framework governance ([`NORMATIVE_INDEX.md`](NORMATIVE_INDEX.md)): this file cov
 - AI-first assumptions;
 - unverifiable maturity claims.
 
-Every addition answers at least one question: what decision does it improve, what risk does it control, what evidence does it produce ([`APPLICATION_PROFILES.md`](APPLICATION_PROFILES.md) §9, INV-15)? If none, leave it out.
+Every addition answers at least one question: what decision does it improve, what risk does it control, what evidence does it produce ([`APPLICATION_PROFILES.md`](APPLICATION_PROFILES.md) §9; INV-15, a core invariant in [`STANDARD.md`](STANDARD.md) §3)? If none, leave it out.
 
 ## How to contribute
 

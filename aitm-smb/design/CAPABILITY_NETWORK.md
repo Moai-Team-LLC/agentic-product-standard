@@ -34,13 +34,13 @@ SHARES_*_WITH          mutual; record once
 CONSTRAINS, ENABLES    the target depends on the source, which limits it or makes it possible
 ```
 
-Record each dependency once, with one relation. Each dependency record realizes the trace relation `Capability DEPENDS_ON Capability` (`TRACEABILITY.md` §2).
+Record each dependency once, with one relation. Each dependency record realizes the trace relation `Capability DEPENDS_ON Capability` ([`TRACEABILITY.md`](../TRACEABILITY.md) §2).
 
 ---
 
 ## 3. Capability dependency record
 
-Capability Network (`CPN-###`) and Capability Dependency (`DEP-###`) records: record contract `artifacts/capability-network.md`.
+Capability Network (`CPN-###`) and Capability Dependency (`DEP-###`) records: record contract [`artifacts/capability-network.md`](../artifacts/capability-network.md).
 
 ---
 

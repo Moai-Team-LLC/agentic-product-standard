@@ -12,7 +12,7 @@ produced_by: [08-design-operating-model, 29-plan-rollout]
 
 ## Purpose
 
-Expand a validated transformation in controlled stages, each entered only after its gates are verified (`execution/ROLLOUT_MODEL.md`).
+Expand a validated transformation in controlled stages, each entered only after its gates are verified ([`execution/ROLLOUT_MODEL.md`](../execution/ROLLOUT_MODEL.md)).
 
 ## Record
 
@@ -21,7 +21,7 @@ rollout:
   id: ROL-###
   initiative_id:            # INI-###
   pilot_id:                 # PLT-### the rollout follows; empty when no pilot was required
-  promotion_decision_id:    # DEC-### closing HG-PROMOTION, for a material pilot
+  promotion_decision_id:    # DEC-### closing HG-PROMOTION, for a material pilot; it records any waiver of unmet pilot criteria
   evaluation_ids: []        # EVL-### the promotion relied on
   current_scope:
   target_scope:
@@ -43,16 +43,16 @@ rollout:
 
 ## Rules
 
-A rollout that follows a material pilot starts only after `HG-PROMOTION` (`STANDARD.md` §8).
+A rollout that follows a material pilot starts only after `HG-PROMOTION` ([`STANDARD.md`](../STANDARD.md) §8).
 
-A stage whose `autonomy_level` is above the currently approved level requires `HG-AUTHORITY` before it starts and MUST NOT exceed the Authority Ceiling (`artifacts/autonomy-assessment.md`).
+A stage whose `autonomy_level` is above the currently approved level (AUT `current_level`) requires `HG-AUTHORITY` before it starts (criteria: [`governance/AUTHORITY_ESCALATION_MODEL.md`](../governance/AUTHORITY_ESCALATION_MODEL.md) §3 (b)) and MUST NOT exceed the Authority Ceiling ([`artifacts/autonomy-assessment.md`](autonomy-assessment.md)). A stage that only widens scope at the approved level, for the same action class and ceiling, is not an authority increase ([`STANDARD.md`](../STANDARD.md) §8).
 
 Readiness is verified before each stage (skill 35; Governed: Gate E).
 
 ## Validation
 
 - [ ] linked to one Initiative and, where a pilot preceded it, to that pilot, its evaluations, and the promotion Decision
-- [ ] every stage names its dimensions and scope, and the `execution/ROLLOUT_MODEL.md` §3 gates are verified before it starts
+- [ ] every stage names its dimensions and scope, and the [`execution/ROLLOUT_MODEL.md`](../execution/ROLLOUT_MODEL.md) §3 gates are verified before it starts
 - [ ] no stage exceeds the Authority Ceiling; a stage above the approved level has an `HG-AUTHORITY` Decision
-- [ ] rollback or recovery is stated for each material stage (`execution/ROLLOUT_MODEL.md` §5)
-- [ ] completion criteria cover `execution/ROLLOUT_MODEL.md` §6
+- [ ] rollback or recovery is stated for each material stage ([`execution/ROLLOUT_MODEL.md`](../execution/ROLLOUT_MODEL.md) §5)
+- [ ] completion criteria cover [`execution/ROLLOUT_MODEL.md`](../execution/ROLLOUT_MODEL.md) §6

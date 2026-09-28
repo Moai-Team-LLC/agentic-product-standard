@@ -89,7 +89,7 @@ Automated support intake
 → overloaded expert escalation
 ```
 
-When the overload passes the constraint test, the System Constraint has moved: Constraint Migration (`design/CONSTRAINT_ANALYSIS.md` §5). Otherwise it is a local bottleneck.
+When the overload passes the constraint test, the System Constraint has moved: Constraint Migration ([`design/CONSTRAINT_ANALYSIS.md`](CONSTRAINT_ANALYSIS.md) §5). Otherwise it is a local bottleneck.
 
 ---
 
@@ -130,7 +130,7 @@ What happens to the rest of the system if it improves?
 
 ## 6. Required system checks
 
-Before approving a Target Operating Architecture (`HG-TOA`, `STANDARD.md` §8) verify:
+Before approving a Target Operating Architecture (`HG-TOA`, [`STANDARD.md`](../STANDARD.md) §8) verify:
 
 1. downstream capacity;
 2. upstream information quality;

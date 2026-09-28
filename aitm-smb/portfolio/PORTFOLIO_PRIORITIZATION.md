@@ -6,7 +6,7 @@ Individual initiative attractiveness is not enough.
 
 Portfolio selection considers interactions.
 
-Used in Phase 4 when the Portfolio profile is active (`methodology/04-prioritization.md`). The criteria are assessed in the Prioritization Matrix (`artifacts/prioritization-matrix.md`); change saturation and the WIP limit are recorded in the Transformation Portfolio (`artifacts/transformation-portfolio.md`).
+Used in Phase 4 when the Portfolio profile is active ([`methodology/04-prioritization.md`](../methodology/04-prioritization.md)). The criteria are assessed in the Prioritization Matrix ([`artifacts/prioritization-matrix.md`](../artifacts/prioritization-matrix.md)); change saturation and the WIP limit are recorded in the Transformation Portfolio ([`artifacts/transformation-portfolio.md`](../artifacts/transformation-portfolio.md)).
 
 ---
 
@@ -71,4 +71,4 @@ change capacity is saturated
 shared architecture is unstable
 ```
 
-An Initiative selected while a stop condition holds requires a Decision (`DEC-###`) that records the override and its reason.
+An Initiative selected or activated while a stop condition holds requires an approved Decision (`DEC-###`) that records the override and its reason; its `approved_by` names the portfolio owner (Transformation Portfolio `owner`).

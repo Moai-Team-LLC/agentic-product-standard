@@ -8,18 +8,20 @@ artifact:
   upstream: [01-intent.md]
   downstream: [03-diagnosis.md, 05-target-and-roadmap.md]
   evidence: [EVD-001, EVD-002, EVD-003, EVD-005]
-  assumptions: []
-  decisions: [DEC-001, DEC-003, DEC-008]
+  assumptions: [ASM-003]
+  decisions: [DEC-001, DEC-003, DEC-009]
   open_questions: []
 ```
 
 # Capability Map and CURRENT State
 
-Fictional, informative example (see `examples/compact-scenario-b/README.md`). Phase 1 (Observe): skills 02 and 11. Contract: `artifacts/capability-map.md`; records: Capability `CORE_MODEL.md` §2, State `CORE_MODEL.md` §3.
+Fictional, informative example (see [`examples/compact-scenario-b/README.md`](README.md)). Phase 1 (Observe): skills 02 and 11. Contract: [`artifacts/capability-map.md`](../../artifacts/capability-map.md); records: Capability [`CORE_MODEL.md`](../../CORE_MODEL.md) §2, State [`CORE_MODEL.md`](../../CORE_MODEL.md) §3.
 
-One Capability is in scope. It passes the granularity test (`diagnostics/CAPABILITY_DISCOVERY.md` §4): a clear purpose, one owner, it affects OUT-001, and it can be assessed, improved and measured (MET-003, MET-004) independently of order capture and of the warehouse. It is named as an organizational ability, not after the order desk (a department) or the order system (a tool).
+One Capability is in scope. It passes the granularity test ([`diagnostics/CAPABILITY_DISCOVERY.md`](../../diagnostics/CAPABILITY_DISCOVERY.md) §4): a clear purpose, one owner, it affects OUT-001, and it can be assessed, improved and measured (MET-003, MET-004) independently of order capture and of the warehouse. It is named as an organizational ability, not after the order desk (a department) or the order system (a tool).
 
-Profile re-check at the Phase 1 exit (`PROFILE_SELECTION.md` §6), 2026-03-20: one Capability, no system replacement, no sensitive data beyond names and delivery addresses. Every Compact use-when condition still holds, so DEC-001 stands and no new profile Decision was needed.
+Profile re-check at the Phase 1 exit ([`PROFILE_SELECTION.md`](../../PROFILE_SELECTION.md) §6), 2026-03-20: one Capability, no system replacement, no sensitive data beyond names and delivery addresses, no second transformation or shared enabler in view. The answer DEC-001 marked `[OPEN]`, legal exposure through key-account delivery terms, is now answered: the Operations Director and the Finance Lead read the key-account contracts, which provide re-delivery and credit notes for wrong or late deliveries and nothing beyond them. Every Compact use-when condition still holds and no Governed or Portfolio condition does, so DEC-001 stands and no new profile Decision was needed.
+
+Phase 1 exit: STA-001 rests on Evidence (EVD-001, EVD-002, EVD-003, EVD-005). The one estimate carried from Phase 0, ASM-003, was validated by EVD-002; no part of the State rests on agent inference.
 
 ## Capability
 
@@ -33,7 +35,7 @@ capability:
     point of order entry.
   owner: Operations Director
   outcome_ids: [OUT-001]
-  value_stream_ids: [order to delivery]   # named only; Compact keeps no Business System Map
+  value_stream_ids: [order-to-delivery]   # the value-stream name used in ATI-001; Compact keeps no Business System Map
   current_state_id: STA-001
   target_state_id: STA-002
   metric_ids: [MET-003, MET-004]
@@ -45,7 +47,7 @@ capability:
     is where most exceptions start, and the handling of exception and change
     emails. Excludes pricing and credit checks, warehouse picking and dispatch
     (downstream, a separate ability) and invoicing. target_state_id was set in
-    Phase 5 (DEC-008).
+    Phase 5 (DEC-009).
 ```
 
 ## CURRENT State
@@ -90,8 +92,9 @@ state:
   metric_ids: [MET-001, MET-002, MET-003, MET-004, MET-005]
   economics: >-
     About 5,200 CU per week in exception cost - credit notes and re-delivery
-    freight 3,100 (measured), order-desk handling time about 1,060 and warehouse
-    re-picks about 1,040 (estimated from the observation).
+    freight 3,100 (finance records, EVD-005), order-desk handling time about
+    1,060 and warehouse re-picks about 1,040 (timed observation, EVD-002, at the
+    Finance Lead's loaded rate of 35 CU an hour).
   feedback: exception causes are not recorded consistently and are not fed back to order entry or to customers
   evidence_ids: [EVD-001, EVD-002, EVD-003, EVD-005]
   assumption_ids: []

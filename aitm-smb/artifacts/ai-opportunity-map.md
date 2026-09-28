@@ -14,7 +14,7 @@ AITM-SMB does not treat AI opportunities as the primary solution space.
 
 Use:
 
-- `artifacts/intervention-map.md` to represent all intervention candidates;
-- `artifacts/ai-suitability-assessment.md` when a candidate intervention uses AI.
+- [`artifacts/intervention-map.md`](intervention-map.md) to represent all intervention candidates;
+- [`artifacts/ai-suitability-assessment.md`](ai-suitability-assessment.md) when a candidate intervention uses AI.
 
 No new execution should produce this deprecated artifact.

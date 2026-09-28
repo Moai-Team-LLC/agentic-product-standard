@@ -12,7 +12,7 @@ produced_by: [40-handle-incident]
 
 ## Purpose
 
-Record one incident of an AI-enabled capability: what happened, how it was contained and recovered, and what it changed (`operations/INCIDENT_MODEL.md`). Incident history feeds evaluation datasets, authority reviews, and Phase 8.
+Record one incident of an AI-enabled capability: what happened, how it was contained and recovered, and what it changed ([`operations/INCIDENT_MODEL.md`](../operations/INCIDENT_MODEL.md)). Incident history feeds evaluation datasets, authority reviews, and Phase 8.
 
 ## Record
 
@@ -41,12 +41,12 @@ incident:
 
 ## Rules
 
-When the incident matches a demotion trigger (`governance/AUTHORITY_ESCALATION_MODEL.md` §4), authority MAY be reduced at once and is recorded in `authority_change` and the Autonomy Assessment. Restoring it requires `HG-AUTHORITY` (`STANDARD.md` §8).
+When the incident matches a demotion trigger ([`governance/AUTHORITY_ESCALATION_MODEL.md`](../governance/AUTHORITY_ESCALATION_MODEL.md) §4), authority MAY be reduced at once and is recorded in `authority_change` and the Autonomy Assessment. Restoring it requires `HG-AUTHORITY` ([`STANDARD.md`](../STANDARD.md) §8).
 
 ## Validation
 
-- [ ] linked to a Capability, with class and severity per `operations/INCIDENT_MODEL.md` §2–§3
+- [ ] linked to a Capability, with class and severity per [`operations/INCIDENT_MODEL.md`](../operations/INCIDENT_MODEL.md) §2–§3
 - [ ] detection time, impact, affected state, containment, and recovery are recorded
 - [ ] root cause and corrective action are stated before `status: closed`
-- [ ] a material incident lists its feedback updates (`operations/INCIDENT_MODEL.md` §4)
+- [ ] a material incident lists its feedback updates ([`operations/INCIDENT_MODEL.md`](../operations/INCIDENT_MODEL.md) §4)
 - [ ] any authority reduction is recorded, and no authority is restored without `HG-AUTHORITY`

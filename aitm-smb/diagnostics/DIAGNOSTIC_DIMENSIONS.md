@@ -1,8 +1,8 @@
 # AITM-SMB Diagnostic Dimensions
 
-The dimensions a capability diagnosis inspects (rule: `diagnostics/DIAGNOSTIC_MODEL.md` §4).
+The dimensions a capability diagnosis inspects (rule: [`diagnostics/DIAGNOSTIC_MODEL.md`](DIAGNOSTIC_MODEL.md) §4).
 
-They are the diagnostic lens over the `STANDARD.md` §4 system model: People → Roles; Decision Rights → Decisions; Process → Demand and Flow; Data → Information; Metrics → Feedback; the other dimensions share their names.
+They are the diagnostic lens over the [`STANDARD.md`](../STANDARD.md) §4 system model: People → Roles; Decision Rights → Decisions; Process → Demand and Flow; Data → Information; Metrics → Feedback; the other dimensions share their names.
 
 ## 1. Demand
 
@@ -36,6 +36,7 @@ Questions:
 - How many handoffs exist?
 - Which work is batched?
 - Where is rework introduced?
+- Which upstream Capabilities does the work depend on (the Capability's `dependencies`), and where do they delay or degrade it?
 
 Signals:
 

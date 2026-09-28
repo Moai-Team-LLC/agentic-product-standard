@@ -15,7 +15,7 @@ This prevents automating symptoms.
 
 Definitions:
 
-- **Cause** — a condition explaining why a Gap exists (`CORE_MODEL.md` §5).
+- **Cause** — a condition explaining why a Gap exists ([`CORE_MODEL.md`](../CORE_MODEL.md) §5).
 - **Cause Hypothesis** — a proposed explanation for a Gap. It MUST NOT be treated as validated truth.
 - **Validated Cause** — a Cause Hypothesis supported by sufficient Evidence to justify intervention design (§7 `validated`).
 
@@ -136,9 +136,9 @@ A single AI assistant may improve only one cause.
 
 ## 7. Root-cause record
 
-Record contract: the Hypothesis record in `artifacts/decision-assumption-log.md`, with `kind: cause`, `cause_class` from §3, competing hypotheses in `alternative_hypothesis_ids`, and the validation method in `test`.
+Record contract: the Hypothesis record in [`artifacts/decision-assumption-log.md`](../artifacts/decision-assumption-log.md), with `kind: cause`, `cause_class` from §3, competing hypotheses in `alternative_hypothesis_ids` (where none is reasonable, the reason in `alternatives_note`), and the validation method in `test`.
 
-`confidence` describes evidence strength (`diagnostics/DIAGNOSTIC_MODEL.md` §5).
+`confidence` describes the strength of the Evidence behind the recorded `status`, also for `rejected` ([`diagnostics/DIAGNOSTIC_MODEL.md`](DIAGNOSTIC_MODEL.md) §5).
 
 Status meaning:
 
@@ -146,10 +146,13 @@ Status meaning:
 hypothesized          proposed; not yet tested
 testing               its test is under way
 accepted_as_testable  explicitly accepted for intervention design as a testable
-                      hypothesis; its test states how it will be confirmed or rejected
+                      hypothesis by a Decision (DEC-###); its test states how it
+                      will be confirmed or rejected
 validated             a Validated Cause (§1): the §4 evidence test was applied and
                       evidence_for cites the Evidence (EVD-###)
 rejected              Evidence contradicts it, or a competing hypothesis explains the Gap
 ```
 
-The Gap's `cause_status` summarizes the status of its cause Hypotheses (`CORE_MODEL.md` §4). A Gap is intervention-ready only when a cause is `validated` or `accepted_as_testable` (`diagnostics/DIAGNOSTIC_MODEL.md` §6).
+`accepted_as_testable` requires an approved Decision (`DEC-###`, not a [`STANDARD.md`](../STANDARD.md) §8 gate) by the Capability or Outcome owner that lists the `HYP-###` in `subject_ids`. An agent proposes it in `decisions_needed` and MUST NOT set it without that Decision.
+
+The Gap's `cause_status` summarizes the status of its cause Hypotheses ([`CORE_MODEL.md`](../CORE_MODEL.md) §4). A Gap is intervention-ready only when a cause is `validated` or `accepted_as_testable` ([`diagnostics/DIAGNOSTIC_MODEL.md`](DIAGNOSTIC_MODEL.md) §6).

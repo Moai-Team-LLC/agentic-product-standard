@@ -12,7 +12,7 @@ produced_by: [07-build-roadmap, 25-design-pilot]
 
 ## Purpose
 
-Define a bounded operational test of a transformation Hypothesis under real or production-representative conditions (`execution/PILOT_MODEL.md` §1), fixed before the pilot runs.
+Define a bounded operational test of a transformation Hypothesis under real or production-representative conditions ([`execution/PILOT_MODEL.md`](../execution/PILOT_MODEL.md) §1), fixed before the pilot runs.
 
 ## Record
 
@@ -40,17 +40,20 @@ pilot:
   evidence_plan:            # evidence to collect; evaluations are pre-registered in the Evaluation Plan
   owner:
   decision_owner:           # human who decides promotion after the pilot (HG-PROMOTION)
+
+slices: []                  # optional: SLC records the pilot runs (execution/DELIVERY_SLICE.md §2)
+experiments: []             # optional: EXP records that serve the pilot (execution/EXPERIMENT_MODEL.md §3)
 ```
 
-Level meanings: `diagnostics/AUTONOMY_SUITABILITY.md` §2.
+Level meanings: [`diagnostics/AUTONOMY_SUITABILITY.md`](../diagnostics/AUTONOMY_SUITABILITY.md) §2. SLC and EXP records held here are not repeated in [`artifacts/transformation-roadmap.md`](transformation-roadmap.md).
 
 ## Rules
 
-The pilot's evaluations are pre-registered in `artifacts/evaluation-plan.md` (`pilot_id` set) before the pilot runs. Its result is recorded there as `pilot_result`.
+The pilot's evaluations are pre-registered in [`artifacts/evaluation-plan.md`](evaluation-plan.md) (`pilot_id` set) before the pilot runs. Its result is recorded there as `pilot_result`.
 
-`autonomy_level` MUST NOT exceed the approved Authority Ceiling (`artifacts/autonomy-assessment.md`). A level above the currently approved one requires a Decision closing `HG-AUTHORITY` before the pilot starts; accepting a material Risk (`RSK-###`) requires `HG-RISK` (`STANDARD.md` §8).
+`autonomy_level` MUST NOT exceed the approved Authority Ceiling ([`artifacts/autonomy-assessment.md`](autonomy-assessment.md)). A level above the currently approved one (AUT `current_level`) requires a Decision closing `HG-AUTHORITY` before the pilot starts (criteria: [`governance/AUTHORITY_ESCALATION_MODEL.md`](../governance/AUTHORITY_ESCALATION_MODEL.md) §3 (a)); accepting a material Risk (`RSK-###`) requires `HG-RISK` ([`STANDARD.md`](../STANDARD.md) §8).
 
-Governed: Execution Gate C (`artifacts/execution-gate.md`) passes before the pilot starts.
+Governed: Execution Gate C ([`artifacts/execution-gate.md`](execution-gate.md)) passes before the pilot starts.
 
 ## Validation
 
@@ -58,5 +61,5 @@ Governed: Execution Gate C (`artifacts/execution-gate.md`) passes before the pil
 - [ ] pilot type and autonomy level stated; the level is within the Authority Ceiling and approved
 - [ ] baseline (or Evidence Debt for its absence) and comparison method stated
 - [ ] success and stop criteria and the Evaluation Plan are fixed before execution
-- [ ] none of the invalidity conditions in `execution/PILOT_MODEL.md` §5 holds
+- [ ] none of the invalidity conditions in [`execution/PILOT_MODEL.md`](../execution/PILOT_MODEL.md) §5 holds
 - [ ] guardrails, rollback, owner, and decision owner are named

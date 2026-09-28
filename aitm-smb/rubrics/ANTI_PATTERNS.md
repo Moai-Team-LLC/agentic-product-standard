@@ -1,6 +1,6 @@
 # AITM-SMB Anti-Patterns
 
-**Status:** Informative (`NORMATIVE_INDEX.md` tier 13). Patterns a review should reject; the rules they break are normative in `STANDARD.md` §3.
+**Status:** Informative ([`NORMATIVE_INDEX.md`](../NORMATIVE_INDEX.md) tier 13). Patterns a review should reject; the rules they break are normative in [`STANDARD.md`](../STANDARD.md) §3.
 
 ## Tool-first transformation
 "We bought an AI assistant license; now define the transformation."

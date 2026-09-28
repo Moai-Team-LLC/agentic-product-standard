@@ -26,7 +26,7 @@ Support
 
 ## 3. Adoption record
 
-Record contract: `artifacts/adoption-plan.md`.
+Record contract: [`artifacts/adoption-plan.md`](../artifacts/adoption-plan.md).
 
 An adoption record states, per Capability, the affected roles and behavior changes, required skills and training, incentive changes, trust and workflow-fit risks, support model, feedback channel, and adoption metrics. It SHOULD address every §2 dimension that the change touches.
 

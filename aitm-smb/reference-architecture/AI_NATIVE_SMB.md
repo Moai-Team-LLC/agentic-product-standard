@@ -38,7 +38,7 @@ GOVERNANCE & ECONOMICS
 authority / audit / risk / cost / SLOs
 ```
 
-The AI Capability Layer and the Agents branch are present only where a selected Intervention justifies AI (INV-05). A Capability without AI (`maturity/MATURITY_MODEL.md` M0) runs on the human system, applications, deterministic automation, and the data and platform layers alone.
+The AI Capability Layer and the Agents branch are present only where a selected Intervention justifies AI (INV-05). A Capability without AI ([`maturity/MATURITY_MODEL.md`](../maturity/MATURITY_MODEL.md) M0) runs on the human system, applications, deterministic automation, and the data and platform layers alone.
 
 ## Principle
 

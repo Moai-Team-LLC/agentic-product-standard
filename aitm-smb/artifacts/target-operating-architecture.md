@@ -43,15 +43,15 @@ target_operating_architecture:
 
 ## Rules
 
-`status: approved` requires a Decision closing `HG-TOA` that lists this `TOA-###` in `subject_ids` (`STANDARD.md` §8). Phase 6 relies only on an approved TOA.
+`status: approved` requires a Decision closing `HG-TOA` that lists this `TOA-###` in `subject_ids` ([`STANDARD.md`](../STANDARD.md) §8). Phase 6 relies only on an approved TOA.
 
-Before approval, run the system checks in `design/SYSTEM_TRANSFORMATION_MODEL.md` §6 and the consistency rules in `design/TARGET_OPERATING_ARCHITECTURE.md` §4.
+Before approval, run the system checks in [`design/SYSTEM_TRANSFORMATION_MODEL.md`](../design/SYSTEM_TRANSFORMATION_MODEL.md) §6 and the consistency rules in [`design/TARGET_OPERATING_ARCHITECTURE.md`](../design/TARGET_OPERATING_ARCHITECTURE.md) §4.
 
 ## Validation
 
 - [ ] composes the Capability Target State of every Capability in `capability_ids` (`target_state_ids`)
 - [ ] role ownership, decision authority, information and knowledge ownership, and application boundaries are explicit
-- [ ] AI authority does not exceed the approved Authority Ceilings (`artifacts/autonomy-assessment.md`)
+- [ ] AI authority does not exceed the approved Authority Ceilings ([`artifacts/autonomy-assessment.md`](autonomy-assessment.md))
 - [ ] local metrics do not conflict with system Outcomes; system-level Metrics exist (`metric_ids`)
 - [ ] pre-approval system checks done, including downstream capacity and likely Constraint Migration
 - [ ] approved through `HG-TOA` before Phase 6 uses it

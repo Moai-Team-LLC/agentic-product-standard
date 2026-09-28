@@ -23,8 +23,8 @@ autonomy:
   intervention_id:            # INT-### (type AI_*)
   action_class:               # the action class assessed; levels are per action class
   recommended_level: L0 | L1 | L2 | L3 | L4 | L5
-  current_level: L0 | L1 | L2 | L3 | L4 | L5   # level in operation; L0 before any AI runs
-  # dimensions (diagnostics/AUTONOMY_SUITABILITY.md §3): low | medium | high, with a note
+  current_level: L0 | L1 | L2 | L3 | L4 | L5   # currently approved level in operation; L0 before any AI runs
+  # dimensions (diagnostics/AUTONOMY_SUITABILITY.md §3): low | medium | high | not_relevant, with a note (for not_relevant: the reason)
   reversibility:              # Action Reversibility
   financial_impact:
   customer_impact:
@@ -50,13 +50,13 @@ autonomy:
   assumption_ids: []
 ```
 
-Level meanings: `diagnostics/AUTONOMY_SUITABILITY.md` §2.
+Level meanings: [`diagnostics/AUTONOMY_SUITABILITY.md`](../diagnostics/AUTONOMY_SUITABILITY.md) §2.
 
 ## Rules
 
 `maximum_allowed_level`, `prohibited_actions`, `approval_required`, `escalation_conditions`, and `owner` are the Authority Ceiling for this action class.
 
-Setting or raising the ceiling, and each increase of `current_level` above L0, takes effect only when a Decision closing `HG-AUTHORITY` (`STANDARD.md` §8) lists this `AUT-###` in `subject_ids` and states the level. Until then it is a proposal.
+Setting or raising the ceiling, and each increase of `current_level` above L0, takes effect only when a Decision closing `HG-AUTHORITY` ([`STANDARD.md`](../STANDARD.md) §8) lists this `AUT-###` in `subject_ids` and states the new level and its scope in `statement` (rules: [`diagnostics/AUTONOMY_SUITABILITY.md`](../diagnostics/AUTONOMY_SUITABILITY.md) §6). Until then it is a proposal. Skill 34 performs every grant and sets `current_level` once the Decision is approved. An L0 ceiling grants nothing and needs no gate.
 
 `recommended_level` and `current_level` MUST NOT exceed `maximum_allowed_level`; a higher level requires re-assessing the ceiling first.
 
@@ -65,7 +65,7 @@ Demotion needs no gate: the operating owner lowers `current_level` (or the ceili
 ## Validation
 
 - [ ] linked to one Capability, action class, and `AI_*` Intervention
-- [ ] every dimension (`diagnostics/AUTONOMY_SUITABILITY.md` §3) is rated
+- [ ] every dimension ([`diagnostics/AUTONOMY_SUITABILITY.md`](../diagnostics/AUTONOMY_SUITABILITY.md) §3) is rated, or marked `not_relevant` with a reason
 - [ ] prohibited actions, approval boundaries, and escalation conditions are explicit, and an owner is named
 - [ ] recommended and current level do not exceed `maximum_allowed_level`
 - [ ] the ceiling and every increase of `current_level` are approved through `HG-AUTHORITY` before use

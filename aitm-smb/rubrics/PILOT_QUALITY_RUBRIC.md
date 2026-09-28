@@ -1,6 +1,6 @@
 # Pilot Quality Rubric
 
-**Status:** Informative (`NORMATIVE_INDEX.md` tier 13). Pilot validity is normative in `execution/PILOT_MODEL.md`; Gates C and D in `execution/EXECUTION_GATE_MODEL.md`. Typical use: `skills/25-design-pilot/SKILL.md`, `skills/32-evaluate-pilot/SKILL.md`.
+**Status:** Informative ([`NORMATIVE_INDEX.md`](../NORMATIVE_INDEX.md) tier 13). Pilot validity is normative in [`execution/PILOT_MODEL.md`](../execution/PILOT_MODEL.md); Gates C and D in [`execution/EXECUTION_GATE_MODEL.md`](../execution/EXECUTION_GATE_MODEL.md). Typical use: [`skills/25-design-pilot/SKILL.md`](../skills/25-design-pilot/SKILL.md), [`skills/32-evaluate-pilot/SKILL.md`](../skills/32-evaluate-pilot/SKILL.md).
 
 A strong Pilot answers:
 
@@ -19,3 +19,5 @@ Who owns the decision after the pilot?
 A demo is not a pilot.
 
 A pilot without pre-defined success criteria is not valid evidence.
+
+Unmet criteria never yield a PROMOTE result; promotion then needs a waiver recorded in the `HG-PROMOTION` Decision ([`execution/EXECUTION_GATE_MODEL.md`](../execution/EXECUTION_GATE_MODEL.md) §4).

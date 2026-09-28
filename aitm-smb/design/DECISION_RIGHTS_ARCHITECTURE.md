@@ -4,13 +4,13 @@
 
 AI transformation changes not only tasks but who is allowed to decide.
 
-Decision Rights Architecture makes this explicit for operational business decisions (`BDS-###`). Engagement decisions about the transformation itself are `DEC-###` (`DECISION_MODEL.md`).
+Decision Rights Architecture makes this explicit for operational business decisions (`BDS-###`). Engagement decisions about the transformation itself are `DEC-###` ([`DECISION_MODEL.md`](../DECISION_MODEL.md)).
 
 ---
 
 ## 2. Decision record
 
-Business Decision records (`BDS-###`): record contract `artifacts/decision-rights-map.md`.
+Business Decision records (`BDS-###`): record contract [`artifacts/decision-rights-map.md`](../artifacts/decision-rights-map.md).
 
 Each record names the accountable decision owner, the current and target authority model (§3), and, where AI takes part, the Autonomy Assessment whose Authority Ceiling bounds it.
 
@@ -18,7 +18,7 @@ Each record names the accountable decision owner, the current and target authori
 
 ## 3. Authority models
 
-Each authority model corresponds to one autonomy level (`diagnostics/AUTONOMY_SUITABILITY.md` §2):
+Each authority model corresponds to one autonomy level ([`diagnostics/AUTONOMY_SUITABILITY.md`](../diagnostics/AUTONOMY_SUITABILITY.md) §2):
 
 | Authority model | Autonomy level |
 |---|---|
@@ -30,12 +30,12 @@ Each authority model corresponds to one autonomy level (`diagnostics/AUTONOMY_SU
 | `AI_EXECUTES_WITHIN_POLICY` | L4 — Execute within bounded policy |
 | `AGENT_PURSUES_BOUNDED_OBJECTIVE` | L5 — Pursue bounded objective and escalate exceptions |
 
-The authority of each level is defined only in `diagnostics/AUTONOMY_SUITABILITY.md` §2; the model names do not change it.
+The authority of each level is defined only in [`diagnostics/AUTONOMY_SUITABILITY.md`](../diagnostics/AUTONOMY_SUITABILITY.md) §2; the model names do not change it.
 
 Rules:
 
-- The level of a target authority model MUST NOT exceed the approved Authority Ceiling (`maximum_allowed_level` in `artifacts/autonomy-assessment.md`) for that Capability and action class.
-- Changing a material Decision Right requires `HG-DECISION-RIGHTS`; a change that raises AI authority also requires `HG-AUTHORITY` (`STANDARD.md` §8). Lowering AI authority needs no gate.
+- The level of a target authority model MUST NOT exceed the approved Authority Ceiling (`maximum_allowed_level` in [`artifacts/autonomy-assessment.md`](../artifacts/autonomy-assessment.md)) for that Capability and action class.
+- Changing a material Decision Right requires `HG-DECISION-RIGHTS`; a change that raises AI authority also requires `HG-AUTHORITY` ([`STANDARD.md`](../STANDARD.md) §8). Lowering AI authority needs no gate.
 - Every decision keeps a human decision owner, also at L4 and L5: the role accountable for outcomes and exceptions.
 
 ---

@@ -16,7 +16,7 @@ Pre-register how a pilot, rollout, or operating Capability will be evaluated acr
 
 ## Record
 
-Record contracts: Evaluation `evaluation/EVALUATION_SYSTEM.md` §4; evaluation dataset `evaluation/EVALUATION_DATASET.md` §3.
+Record contracts: Evaluation [`evaluation/EVALUATION_SYSTEM.md`](../evaluation/EVALUATION_SYSTEM.md) §4; evaluation dataset [`evaluation/EVALUATION_DATASET.md`](../evaluation/EVALUATION_DATASET.md) §3.
 
 ```yaml
 evaluation_plan:
@@ -25,7 +25,8 @@ evaluation_plan:
   rollout_id:               # ROL-###, when it evaluates a rollout
   owner:
   registered_on:            # date the plan fields were fixed, before execution
-  evaluations: []           # EVL records, plan fields only (layer, metric_ids, method, sample, threshold, owner)
+  evaluations: []           # EVL records, plan fields only (layer, metric_ids, method, sample, threshold, owner); each inherits initiative_id from the plan
+  not_evaluated: []         # optional: {layer, reason} for each evaluation/EVALUATION_SYSTEM.md §2 layer judged not relevant
   datasets: []              # eval_dataset records, for AI components
 
 results: []                 # append-only; written after execution
@@ -43,16 +44,16 @@ A `results` entry holds the result fields of one EVL record; the record is its p
 
 ## Rules
 
-Plan fields are fixed before execution and MUST NOT be changed after results are known (`execution/PILOT_MODEL.md` §5). Results are appended, never overwritten; a repeated evaluation gets a new EVL record.
+Plan fields are fixed before execution and MUST NOT be changed after results are known ([`execution/PILOT_MODEL.md`](../execution/PILOT_MODEL.md) §5). Results are appended, never overwritten; a repeated evaluation gets a new EVL record.
 
-`pilot_result` is derived from the results against the pilot's pre-defined success and stop criteria. PROMOTE is a recommendation until a Decision closes `HG-PROMOTION` (`STANDARD.md` §8).
+`pilot_result` is derived from the results against the pilot's pre-defined success and stop criteria; unmet success criteria never yield PROMOTE. PROMOTE is a recommendation until a Decision closes `HG-PROMOTION` ([`STANDARD.md`](../STANDARD.md) §8). Promotion despite unmet criteria is waived only in that Decision ([`execution/EXECUTION_GATE_MODEL.md`](../execution/EXECUTION_GATE_MODEL.md) §4); `pilot_result` stays as derived.
 
-A passing AI evaluation does not imply a passing business evaluation (`evaluation/EVALUATION_SYSTEM.md` §5).
+A passing AI evaluation does not imply a passing business evaluation ([`evaluation/EVALUATION_SYSTEM.md`](../evaluation/EVALUATION_SYSTEM.md) §5).
 
 ## Validation
 
 - [ ] linked to an Initiative, and to the pilot or rollout it evaluates
-- [ ] every relevant layer of `evaluation/EVALUATION_SYSTEM.md` §2 has at least one evaluation with a threshold, or is marked not relevant; where AI is used this includes human-AI interaction and technical reliability
+- [ ] every layer of [`evaluation/EVALUATION_SYSTEM.md`](../evaluation/EVALUATION_SYSTEM.md) §2 has at least one evaluation with a threshold, or is listed in `not_evaluated` with a reason; where AI is used, human-AI interaction and technical reliability are evaluated
 - [ ] plan fields were registered before execution and are unchanged in the results
 - [ ] every result states actual, conclusion, limitations, and Evidence
-- [ ] Governed: each AI component has a dataset covering `evaluation/EVALUATION_DATASET.md` §2, with leakage tracked per its §4
+- [ ] Governed: each AI component has a dataset covering [`evaluation/EVALUATION_DATASET.md`](../evaluation/EVALUATION_DATASET.md) §2, with leakage tracked per its §4
