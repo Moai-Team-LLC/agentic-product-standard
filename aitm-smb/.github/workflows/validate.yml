@@ -49,6 +49,9 @@ jobs:
             f && /^## \[/ { exit }
             f { print }
           ' CHANGELOG.md > notes.md
+          # Relative links do not resolve on the Release page; point them at the tagged tree.
+          BASE="https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/"
+          sed -E -i "s#\]\((\.?/)?([^):\#][^):]*)\)#](${BASE}\2)#g" notes.md
           [ -s notes.md ] || { echo "::error::no CHANGELOG.md section for $VERSION"; exit 1; }
           python3 tools/build_dist.py
           gh release create "$GITHUB_REF_NAME" --title "AITM-SMB $VERSION" \

@@ -78,6 +78,9 @@ jobs:
             f && /^## \[/ { exit }
             f { print }
           ' CHANGELOG.md > notes.md
+          # Relative links do not resolve on the Release page; point them at the tagged tree.
+          BASE="https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/aitm-smb/"
+          sed -E -i "s#\]\((\.?/)?([^):\#][^):]*)\)#](${BASE}\2)#g" notes.md
           if [ ! -s notes.md ]; then
             echo "::error::no CHANGELOG.md section for $VERSION"
             exit 1

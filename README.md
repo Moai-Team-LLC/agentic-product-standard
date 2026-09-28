@@ -184,7 +184,7 @@ Generated secrets are written into each member's local `.env` and never printed.
 
 ## 🧭 Upstream: AITM-SMB — deciding *where* AI belongs
 
-This standard answers *how to build* an agentic product. **[AITM-SMB](aitm-smb/README.md)** (AI Transformation Methodology for Small and Medium-Sized Businesses) answers the question that comes before it: *which business capability should change, whether AI belongs in that change at all, and how much authority it may have*. It starts from a measurable business Outcome and a Business Capability, not from an AI use case. It treats AI as one intervention family among eighteen and requires evidence and human decision gates before authority or scale increases.
+This standard answers *how to build* an agentic product. **[AITM-SMB](aitm-smb/README.md)** (AI Transformation Methodology for Small and Medium-Sized Businesses) answers the question that comes before it: *which business capability should change, whether AI belongs in that change at all, and how much authority it may have*. It starts from a measurable business Outcome and a Business Capability, not from an AI use case. It treats AI as optional — four of its eighteen intervention families involve AI, and simpler fixes are challenged first — and it requires evidence and human decision gates before AI authority or scale increases.
 
 AITM-SMB lives in [`aitm-smb/`](aitm-smb/) as a self-contained, split-ready methodology with its own versioning (currently 1.1.0), [skills](aitm-smb/skills/INDEX.md), [artifact contracts](aitm-smb/artifacts/INDEX.md), [worked example](aitm-smb/examples/compact-scenario-b/README.md), and [validator](aitm-smb/tools/validate.py). Start with its [quickstart](aitm-smb/QUICKSTART.md).
 

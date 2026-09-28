@@ -31,7 +31,8 @@ Host AITM-SMB in `aitm-smb/` as a **self-contained, split-ready** folder:
   tooling (`aitm-smb/tools/`), and a standalone workflow copy in
   `aitm-smb/.github/` that is inert until a split. All of its paths are relative
   to the folder root, so `git subtree split --prefix=aitm-smb` produces a working
-  repository without edits.
+  repository whose content needs no path changes; only host URLs and the
+  CODEOWNERS / commit-lint setup are adapted (`aitm-smb/MAINTENANCE.md` §6).
 - It keeps **independent semver**. Releases in this repository are tagged
   `aitm-smb-vX.Y.Z` (the host's own tags stay `vX.Y.Z`) and published by
   `.github/workflows/aitm-smb.yml`, with its Core and Full distributions
@@ -53,8 +54,9 @@ Host AITM-SMB in `aitm-smb/` as a **self-contained, split-ready** folder:
   skill frontmatter repo-wide, and `aitm-smb.yml` runs the methodology's own
   integrity and trace checks.
 - If AITM-SMB grows its own contributor base, splitting it out is mechanical:
-  subtree split, copy `aitm-smb/.github/` into place, and switch to `vX.Y.Z`
-  tags.
+  subtree split (the folder's own `.github/` becomes the new repository's),
+  adapt CODEOWNERS, commit-message lint and host URLs, and switch to `vX.Y.Z`
+  tags — the steps are listed in `aitm-smb/MAINTENANCE.md` §6.
 
 ## Alternatives considered
 
