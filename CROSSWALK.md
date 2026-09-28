@@ -2,7 +2,7 @@
 
 # Regulatory & framework crosswalk
 
-*Standard v4.0.0-rc.1 · as of September 2026.*
+*Standard v4.0.0 · as of September 2026.*
 
 Each Definition of Done item produces evidence — a test, a trace, a record, a gate. This page maps that evidence onto the external frameworks teams are asked about: the **EU AI Act**, the **OWASP Top 10 for Agentic Applications**, the **NIST AI RMF**, and Singapore **IMDA**'s Model AI Governance Framework for Agentic AI.
 

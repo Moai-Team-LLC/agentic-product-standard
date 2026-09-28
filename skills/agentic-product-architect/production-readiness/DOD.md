@@ -1,6 +1,6 @@
 <!-- Generated from canon/ by tools/aps.py — edit the canon, not this file. -->
 
-# Definition of Done — the audit points (Standard v4.0.0-rc.1)
+# Definition of Done — the audit points (Standard v4.0.0)
 
 The normative text of each item is in `STANDARD.md` Part III; this file is the audit view the `production-readiness` skill walks. For every item: the checks to run, why it matters, and the gap teams most often leave. Mark each **pass**, **gap**, or **N/A with a reason** — "N/A because we have no destructive actions" is fine; "N/A because we don't think it matters" is not.
 

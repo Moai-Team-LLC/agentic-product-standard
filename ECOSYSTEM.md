@@ -11,7 +11,7 @@ a migration guide.
 
 | Surface / layer | Reference implementation | Repository | Status | License | Visibility |
 |---|---|---|---|---|---|
-| The contract (the standard itself) | agentic-product-standard | https://github.com/Moai-Team-LLC/agentic-product-standard | Mature — v4.0 release candidate 4.0.0-rc.1 (2026-09-27); latest stable v3.3.1 | MIT | Public |
+| The contract (the standard itself) | agentic-product-standard | https://github.com/Moai-Team-LLC/agentic-product-standard | Mature — v4.0.0 (2026-09-28) | MIT | Public |
 | Knowledge & memory (harness Layer 2 · Stack 4 Memory) | AgenticMind | https://github.com/Moai-Team-LLC/AgenticMind | Public, actively developed, pre-1.0 (tags to v0.12.0; MCP contract v1.2.0) | Apache-2.0 | Public |
 | Runtime & fleet operations (durable execution + scheduling + fleet health) | AgenticOps | https://github.com/Moai-Team-LLC/AgenticOps | v0.1.0 (2026-06-20), early — some modules are skeletons | Apache-2.0 | Public |
 | Evals & observability (harness Layers 6–7 · Stack 6, error taxonomy, improvement loop) | AgenticPerformance (APL) | https://github.com/Moai-Team-LLC/AgenticPerformance | v0.1.0; core/ingest/worker built and tested, SDK next | Apache-2.0 | Public |

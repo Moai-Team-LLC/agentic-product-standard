@@ -1,6 +1,6 @@
 # Crosswalk: AITM-SMB and the Agentic Product Standard
 
-**Status:** Informative. This crosswalk is not an Extension ([`EXTENSION_MODEL.md`](../EXTENSION_MODEL.md) §5) and adds no requirement to either standard. Where it summarizes a rule, the source text governs: for AITM-SMB, the files linked here; for the Agentic Product Standard (APS), its [STANDARD.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/STANDARD.md) and [CONTEXT.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/CONTEXT.md). APS names and Definition of Done (DoD) numbers below follow APS 4.0 (release candidate 4.0.0-rc.1); §7 explains how to read this against APS 3.x.
+**Status:** Informative. This crosswalk is not an Extension ([`EXTENSION_MODEL.md`](../EXTENSION_MODEL.md) §5) and adds no requirement to either standard. Where it summarizes a rule, the source text governs: for AITM-SMB, the files linked here; for the Agentic Product Standard (APS), its [STANDARD.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/STANDARD.md) and [CONTEXT.md](https://github.com/Moai-Team-LLC/agentic-product-standard/blob/main/CONTEXT.md). APS names and Definition of Done (DoD) numbers below follow APS 4.0.0; §7 explains how to read this against APS 3.x.
 
 ## 1. Two standards, two questions
 

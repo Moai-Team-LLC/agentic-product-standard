@@ -2,10 +2,10 @@
 # Edit here, then run `python3 tools/aps.py render` — every badge, title and footer follows.
 standard: The Agentic Product Standard
 short_name: APS
-version: 4.0.0-rc.1        # SemVer of this canon; tags are v<version>
+version: 4.0.0             # SemVer of this canon; tags are v<version>
 version_label: v4.0        # shown in badges, titles and footers
 release_name: Conformance Contract
-date: 2026-09-27
+date: 2026-09-28
 as_of: September 2026
 repo: https://github.com/Moai-Team-LLC/agentic-product-standard
 

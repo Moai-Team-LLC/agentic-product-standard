@@ -6,7 +6,7 @@
 # .github/workflows/ in the repo that owns the server or client, and wire the TODO
 # points.
 #
-# Pin the suite. As of Standard v4.0.0-rc.1 the npm `latest` tag (0.1.16) predates
+# Pin the suite. As of Standard v4.0.0 the npm `latest` tag (0.1.16) predates
 # 2026-07-28 support; the pre-release below provides `--requirements 2026-07-28`.
 # Move the pin deliberately, like any other test dependency.
 #

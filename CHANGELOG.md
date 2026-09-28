@@ -14,9 +14,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `CONTEXT.md` scopes its vocabulary to this standard's own skills and separates **APS-L<n>** / **APS-O<n>** (autonomy and oversight) from **AITM-L<n>** (business authority); README and ECOSYSTEM link the [crosswalk](aitm-smb/docs/crosswalk-agentic-product-standard.md).
 - The `validate` workflow's skill-frontmatter check also covers `aitm-smb/SKILL.md` and `aitm-smb/skills/`.
 
-## [4.0.0-rc.1] — 2026-09-27
+## [4.0.0] — 2026-09-28
 
-The **Conformance Contract** release candidate. v3.x added a license, then a science, then a gate, then a graph — each release grew the Definition of Done and the copies of it drifted. v4.0 stabilizes the contract instead of growing it again. The standard gets one machine-readable source that every document is generated from. It gets a conformance tool that checks a product against that source in CI. The ladder is redrawn on two axes — how much the agent decides, and how closely a human oversees it — which the EU AI Act already treats separately. And the protocol baselines the standard leans on — MCP, A2A, OpenTelemetry, the EU AI Act — are brought up to their state as of September 2026. This is a **major** release: some v3.3-conformant products will not be v4.0-conformant (see *Migration*). It is published as a release candidate for a two-week comment period before 4.0.0.
+The **Conformance Contract**. v3.x added a license, then a science, then a gate, then a graph — each release grew the Definition of Done and the copies of it drifted. v4.0 stabilizes the contract instead of growing it again. The standard gets one machine-readable source that every document is generated from. It gets a conformance tool that checks a product against that source in CI. The ladder is redrawn on two axes — how much the agent decides, and how closely a human oversees it — which the EU AI Act already treats separately. And the protocol baselines the standard leans on — MCP, A2A, OpenTelemetry, the EU AI Act — are brought up to their state as of September 2026. This is a **major** release: some v3.3-conformant products will not be v4.0-conformant (see *Migration*).
+
+It shipped first as release candidate 4.0.0-rc.1. The maintainer cut the final release the same day, ahead of the two-week comment period that `GOVERNANCE.md` describes. The RFC ([#32](https://github.com/Moai-Team-LLC/agentic-product-standard/issues/32)) stays open until 12 Oct 2026, and its corrections land in 4.0.x.
+
+### Since 4.0.0-rc.1
+- The release workflow now rewrites relative links in the release notes to point at the tagged files. Before this, links like `docs/adr/…` broke on the release page; the v3.3.0 and v4.0.0-rc.1 notes are affected.
+- The Action pin examples move to `@v4.0.0`.
+- `GOVERNANCE.md`: the maintainer may shorten a major release's comment period, and the release notes then say so, as these do.
+- `ROADMAP.md`: *Now* covers the feedback on 4.0 and moving the family to the v4.0 baselines.
 
 ### Breaking
 - **Autonomy × Oversight** (Canon 1, [ADR-0004](docs/adr/0004-autonomy-and-oversight-axes.md)). The single L0–L4 ladder becomes two axes:
@@ -110,6 +118,12 @@ The **Conformance Contract** release candidate. v3.x added a license, then a sci
 5. **Optionally, adopt `aps-conformance`.** Start from `templates/conformance/aps-conformance.template.yaml`.
 
 *Sources are cited inline in `STANDARD.md`, `CROSSWALK.md`, and `AGENT_STANDARD.md`'s evidence appendix. The MCP, A2A, OpenTelemetry, Agent Skills, and conformance-suite claims were checked against their primary sources — the specification and repository texts. EUR-Lex, Commission, Council, NIST, IMDA, OWASP, and METR pages could not be fetched from the review environment; those claims rest on search-index excerpts of the primary pages and are stated conservatively. Corrections are welcome — open an issue with the source.*
+
+[4.0.0]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v4.0.0
+
+## [4.0.0-rc.1] — 2026-09-27
+
+The release candidate of 4.0.0. Its notes are folded into [4.0.0] above; everything that changed after it is listed under *Since 4.0.0-rc.1*.
 
 [4.0.0-rc.1]: https://github.com/Moai-Team-LLC/agentic-product-standard/releases/tag/v4.0.0-rc.1
 
