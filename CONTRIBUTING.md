@@ -32,10 +32,6 @@ Especially welcome:
 3. Commit using [Conventional Commits](https://www.conventionalcommits.org/) — e.g. `docs: update memory-vendor matrix for 2026 Q3`. Running `./setup.sh` wires a dependency-free local hook (`.githooks/commit-msg`) that checks this on commit; CI validates every PR commit with `commitlint`. To enable the hook without a full setup: `git config core.hooksPath .githooks`.
 4. Open a PR describing **what changed and why**, with sources for any factual claim.
 
-## Contributing to AITM-SMB
-
-[`aitm-smb/`](aitm-smb/README.md) is a separate methodology with its own semantic contract, semver line, and rules. See [`aitm-smb/CONTRIBUTING.md`](aitm-smb/CONTRIBUTING.md). Use the commit scope `aitm-smb` (for example `docs(aitm-smb): clarify gap record`) and run `python3 tools/validate.py` from inside `aitm-smb/` before opening a PR.
-
 ## Reporting issues without a PR
 
 Open an issue using one of the templates:

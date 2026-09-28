@@ -69,7 +69,7 @@ jobs:
             if ! head -n 10 "$f" | grep -q '^description:'; then
               echo "::error::$f missing 'description:' frontmatter"; status=1
             fi
-          done < <(find skills aitm-smb/skills -name 'SKILL.md'; echo aitm-smb/SKILL.md)
+          done < <(find skills -name 'SKILL.md')
           exit $status
 
       - name: Decision tree stays derived from the 10-question canon

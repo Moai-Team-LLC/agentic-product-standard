@@ -5,15 +5,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### Added
-- **AITM-SMB 1.1.0** in [`aitm-smb/`](aitm-smb/README.md) — the business-level AI transformation methodology that sits upstream of this standard (which capability changes, whether AI belongs, how much authority it gets). Self-contained and split-ready with its own semver, MIT license, 40 agent skills plus a root `SKILL.md` adapter, artifact contracts, a fictional worked example, and a stdlib-only validator. See its [changelog](aitm-smb/CHANGELOG.md).
-- [`.github/workflows/aitm-smb.yml`](.github/workflows/aitm-smb.yml) — validates the methodology and its worked example on every change under `aitm-smb/`, and on an `aitm-smb-vX.Y.Z` tag publishes a GitHub Release with the Core and Full distributions attached (not marked Latest). It publishes the build it validated, after checking that the unpacked Full distribution validates on its own; run manually with an existing tag, it rebuilds and replaces that release's assets without moving the tag.
-- [ADR-0006](docs/adr/0006-host-aitm-smb-as-split-ready-subfolder.md) — why AITM-SMB is hosted here as a split-ready folder, and how its authority ladder relates to this standard's operating point.
-
-### Changed
-- `CONTEXT.md` scopes its vocabulary to this standard's own skills and separates **APS-L<n>** / **APS-O<n>** (autonomy and oversight) from **AITM-L<n>** (business authority); README and ECOSYSTEM link the [crosswalk](aitm-smb/docs/crosswalk-agentic-product-standard.md).
-- The `validate` workflow's skill-frontmatter check also covers `aitm-smb/SKILL.md` and `aitm-smb/skills/`.
-
 ## [4.0.0] — 2026-09-28
 
 The **Conformance Contract**. v3.x added a license, then a science, then a gate, then a graph — each release grew the Definition of Done and the copies of it drifted. v4.0 stabilizes the contract instead of growing it again. The standard gets one machine-readable source that every document is generated from. It gets a conformance tool that checks a product against that source in CI. The ladder is redrawn on two axes — how much the agent decides, and how closely a human oversees it — which the EU AI Act already treats separately. And the protocol baselines the standard leans on — MCP, A2A, OpenTelemetry, the EU AI Act — are brought up to their state as of September 2026. This is a **major** release: some v3.3-conformant products will not be v4.0-conformant (see *Migration*).
