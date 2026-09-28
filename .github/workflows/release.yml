@@ -4,7 +4,7 @@ name: release
 # CHANGELOG.md section. This is the project's automatic "news of an update":
 # it lands on the Releases page, notifies watchers, and feeds /releases.atom.
 # Push a tag to trigger it, e.g.:  git tag v2.0.0 && git push origin v2.0.0
-# Release candidates (v4.0.0-rc.1) publish as GitHub pre-releases.
+# Release candidates (vX.Y.Z-rc.N) publish as GitHub pre-releases.
 
 on:
   push:
@@ -46,6 +46,16 @@ jobs:
             f && /^## \[/ { exit }
             f { print }
           ' CHANGELOG.md > notes.md
+          # CHANGELOG links are relative to the repository root, but on the release page they
+          # would resolve against /releases/tag/. Point them at the files as tagged.
+          python3 - "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME" <<'PY'
+          import re, sys
+          repo, tag = sys.argv[1], sys.argv[2]
+          text = open("notes.md", encoding="utf-8").read()
+          text = re.sub(r"\]\((?!https?:|mailto:|#)([^)\s]+)\)",
+                        lambda m: f"](https://github.com/{repo}/blob/{tag}/{m.group(1)})", text)
+          open("notes.md", "w", encoding="utf-8").write(text)
+          PY
           if [ ! -s notes.md ]; then
             echo "no CHANGELOG section for $VERSION; falling back to auto-generated notes" >&2
             echo "FALLBACK=1" >> "$GITHUB_ENV"

@@ -30,8 +30,10 @@ intentionally lightweight — the project is young — and will grow as the comm
   refuses a tag that does not match the canon, and publishes the matching `CHANGELOG.md`
   section as the GitHub Release.
 - **Major releases ship as a release candidate first** (`vX.0.0-rc.N`, published as a GitHub
-  pre-release) with a public comment period — at least two weeks in GitHub Discussions —
-  before the final tag. Patch releases (consistency fixes, advisories) can ship directly.
+  pre-release) with a public comment period — two weeks in GitHub Discussions or an RFC
+  issue — before the final tag. The maintainer may shorten the period; the release notes then
+  say so, and feedback still open is carried into the next patch or minor release. Patch
+  releases (consistency fixes, advisories) can ship directly.
 - Products pin the `aps-conformance` Action to the exact tag they conform to, so a tag is a
   contract: never move or delete one.
 

@@ -1,8 +1,6 @@
 <!-- canon:begin:standard.title -->
 # The Agentic Product Standard v4.0
 
-> **Release candidate 4.0.0-rc.1** — *Conformance Contract*. Open for comment before the final release; what changed and why: [`CHANGELOG.md`](CHANGELOG.md).
-
 <!-- canon:end:standard.title -->
 
 *The canonical standard for building modern agentic products.*
@@ -816,6 +814,6 @@ The standard is not dogma. It is a **tilt of the field** toward the practices th
 ---
 
 <!-- canon:begin:standard.footer -->
-*v4.0.0-rc.1 · assembled from production practices as of September 2026*
+*v4.0.0 · assembled from production practices as of September 2026*
 
 <!-- canon:end:standard.footer -->

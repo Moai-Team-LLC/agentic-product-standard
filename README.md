@@ -10,7 +10,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Claude Code Skills](https://img.shields.io/badge/Claude%20Code-Skills-d97757.svg)](skills/agentic-product-architect)
-[![Standard v4.0.0-rc.1](https://img.shields.io/badge/Standard-v4.0.0--rc.1-orange.svg)](STANDARD.md)
+[![Standard v4.0.0](https://img.shields.io/badge/Standard-v4.0.0-blue.svg)](STANDARD.md)
 [![Self-assessment scorecard](https://img.shields.io/badge/scorecard-M0–M3-success.svg)](SCORECARD.md)
 [![Conformance: aps-conformance](https://img.shields.io/badge/conformance-aps--conformance-informational.svg)](docs/conformance.md)
 [![Stars](https://img.shields.io/github/stars/Moai-Team-LLC/agentic-product-standard?style=social)](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers)
@@ -324,7 +324,7 @@ Run it with the team against a real deployment each release — the first **No**
 ```yaml
 # .github/workflows/aps-conformance.yml
 - uses: actions/checkout@v4
-- uses: Moai-Team-LLC/agentic-product-standard@v4.0.0-rc.1
+- uses: Moai-Team-LLC/agentic-product-standard@v4.0.0
   with:
     file: aps-conformance.yaml      # start from templates/conformance/aps-conformance.template.yaml
 ```
@@ -436,7 +436,7 @@ Anything enumerable — a principle, a ladder level, a harness layer, a DoD item
 **If this saved you a week of architecture debates, [star the repo](https://github.com/Moai-Team-LLC/agentic-product-standard/stargazers) ⭐ so others find it.**
 
 <!-- canon:begin:readme.footer -->
-*v4.0.0-rc.1 · assembled from production practices as of September 2026*
+*v4.0.0 · assembled from production practices as of September 2026*
 
 <!-- canon:end:readme.footer -->
 
